@@ -39,7 +39,7 @@ set_include_path('.'
 
 $km = new KeyManager;
 
-$key = $km->getKeyObject('');
+$key = $km->getKeyObject('ot_website');
 
 $dbConfig = array(
     'adapter'  => 'PDO_MYSQL',

@@ -34,7 +34,6 @@
             <div id="authStatus">
                 {layout section=auth}
             </div>
-            <div id="appTitle">group<span>r</span></div>
         </div> 
         <div id="bd"> 
             <div class="yui-g" id="content"> 

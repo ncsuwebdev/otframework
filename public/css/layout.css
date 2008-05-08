@@ -4,7 +4,6 @@
 } 
 
 body {
-    background: #ffffff url(../images/bg.jpg) top center repeat-x;
     margin: 0;
     padding: 0;
     color: #555;
@@ -41,7 +40,6 @@ h2 {
 }
 
 h2 span {
-    background: #fff url(../images/booksmall.gif) no-repeat bottom right;
     padding: 10px 50px 0px 0;
     margin: auto;
     line-height: 2em;
