@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<configdata>
+  <production>
+    <tabs>
+      <tab>
+        <module>default</module>
+        <controller>index</controller>
+        <action></action>
+        <display>Home</display>
+        <link></link>
+        <submenu/>
+      </tab>
+      <tab>
+        <module>admin</module>
+        <controller>config</controller>
+        <action></action>
+        <display>Admin</display>
+        <link></link>
+        <submenu>
+          <tab>
+            <module>admin</module>
+            <controller>config</controller>
+            <action></action>
+            <display>App Config</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>trigger</controller>
+            <action></action>
+            <display>App Triggers</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>bug</controller>
+            <action>index</action>
+            <display>Bug Reports</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>cron</controller>
+            <action></action>
+            <display>Cron Status</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>customtext</controller>
+            <action></action>
+            <display>Custom Text Replacement</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>custom</controller>
+            <action></action>
+            <display>Custom Fields</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>emailqueue</controller>
+            <action></action>
+            <display>Email Queue</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>log</controller>
+            <action></action>
+            <display>Logs</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>nav</controller>
+            <action></action>
+            <display>Navigation Editor</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>account</module>
+            <controller>index</controller>
+            <action>all</action>
+            <display>Users</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>acl</controller>
+            <action></action>
+            <display>User Access Roles</display>
+            <link></link>
+          </tab>
+        </submenu>
+      </tab>
+    </tabs>
+  </production>
+</configdata>
