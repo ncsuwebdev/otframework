@@ -1,0 +1,3 @@
+{editable id='home'}
+
+{/editable}
