@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+
+#editButton {
+    float: left;
+}
+
+#editForm {
+    width: 450px;
+    margin: 0 auto;
+}
+
+#fields {
+    border: 1px solid #999;
+    background-color: #CCC;
+}
+
+#realmStatic, #usernameStatic, #roleStatic {
+    background-color: inherit;
+    border: 0px;
+    margin-top: 2px;
+}
+
+form fieldset dt {
+    width: 120px;
+}

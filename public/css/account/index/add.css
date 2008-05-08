@@ -1,0 +1,29 @@
+@CHARSET "UTF-8";
+
+#addButton {
+    float: left;
+}
+
+#addForm {
+    width: 450px;
+    margin: 0 auto;
+}
+
+#fields {
+    border: 1px solid #999;
+    background-color: #CCC;
+}
+
+form fieldset dt {
+    width: 120px;
+}
+
+#loginDescription {
+    display: block;
+    margin: 10px 10px;
+    border: 1px solid #000;
+    background-color: #777;
+    color: #FFF;
+    text-align: center;
+    padding: 5px;
+}

@@ -1,0 +1,20 @@
+@CHARSET "UTF-8";
+
+#nextButton {
+    float: left;
+}
+
+#fields {
+    border: 1px solid #999;
+    background-color: #CCC;
+}
+
+form fieldset dt {
+    width: 120px;
+}
+
+#helperStatic {
+    background-color: inherit;
+    border: 0px;
+    margin-top: 2px;
+}

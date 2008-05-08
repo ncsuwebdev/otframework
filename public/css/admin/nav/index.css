@@ -1,0 +1,61 @@
+ul#navMenuContainer {
+    width: 325px;	
+}
+
+li.navItem {
+    padding: 10px;
+    margin: 10px;
+    width: 100%;
+    border: 1px solid #000000;
+    background-color: #DFEEFF;
+    list-style-position: inside;
+    list-style: none;
+    cursor: pointer;
+}
+
+li.navItem li.subNavItem {
+    padding: 10px;
+    margin: 10px;
+    width: 95%px;
+    border: 1px solid #444444;
+    background-color: #A8B3CF;
+    list-style-position: inside;
+    list-style: none;
+    cursor: pointer;
+}
+
+#alert {
+	display: inline;
+	padding: 3px;
+    margin-left: 10px;
+    border: 1px solid #d6d6d6;
+    border-left-color: #e4e4e4;
+    border-top-color: #e4e4e4;
+    margin-top: 10px;
+    visibility: hidden;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;	
+}
+
+#navEditor {
+    float: right;
+    width: 350px;
+}
+
+#navEditorHandle {
+    height: 38px;
+    background-color: #A8B3CF;
+    line-height: 38px;
+    padding-left: 35px;
+}
+
+#navEditor table {
+	width: 320px;
+	margin-left: 30px;
+	background-color: #A8B3CF;
+}
+
+#navEditor table tr td {
+    padding: 2px 5px 2px 5px;
+}

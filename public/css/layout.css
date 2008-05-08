@@ -1,0 +1,251 @@
+#custom-doc {
+	width: 100%;
+	min-width: 250px;
+} 
+
+body {
+    background: #ffffff url(../images/bg.jpg) top center repeat-x;
+    margin: 0;
+    padding: 0;
+    color: #555;
+    font-family: "Lucida Grande","Lucida Sans Unicode",arial,sans-serif;
+    font-size: .75em;
+    text-align: center;
+}
+
+h1 {
+    font-family: "Lucida Grande","Lucida Sans Unicode",arial,sans-serif;
+    font-size: 2.6em;
+    font-weight: normal;
+    background: #fff url(../images/booksmall.gif) no-repeat bottom left;
+    padding: 0 0 10px 50px;
+    margin: 20px 5px 5px 5px;
+}
+
+h3 {
+    color: #9aba11;
+    font-family: "Lucida Grande","Lucida Sans Unicode",arial,sans-serif;
+    font-weight: normal;
+    word-spacing: 4px;
+    letter-spacing: 3px;
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 0 2px;
+    margin: 0;
+}
+
+h2 {
+    font-family: "Lucida Grande","Lucida Sans Unicode",arial,sans-serif;
+    font-size: 1.4em;
+    margin: auto;
+}
+
+h2 span {
+    background: #fff url(../images/booksmall.gif) no-repeat bottom right;
+    padding: 10px 50px 0px 0;
+    margin: auto;
+    line-height: 2em;
+}
+
+p {
+    line-height: 1.8em;
+}
+
+a {
+    text-decoration: none;
+    color: #68AF00;
+}
+
+a:hover {
+    color: #999999;
+    text-decoration: underline;
+}
+
+#border {
+    width: 700px;
+    padding: 0;
+    margin: 15px auto;
+    background: #fff;
+    
+}
+
+#hd {
+    width: 700px;
+    margin: 0px auto 15px auto;
+    padding: 10px 0 5px 0;
+    text-align: left;
+    font-size: 1.1em;
+    line-height: 1.2em;
+    
+}
+
+#hd a:link, a:visited {
+    color: #669900;
+}
+
+#hd a:hover, a:active {
+    color: #cccccc;
+}
+
+#appTitle {
+    color: #FFF;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+#appTitle span {
+    color: #95CF40; 
+}
+
+#authStatus {
+    color: #CCC;
+    float: right;   
+    font-size: .86em;
+}
+
+#authStatus a {
+    color: #95CF40
+}
+
+#nav {
+    border-top: 1px solid #999999;	
+}
+
+#bd {
+	margin: 0 auto;
+	width: 700px;
+}
+
+#ft {
+	width: 700px;
+    background-color: #ffffff;
+    border-top: 1px solid #86C32A;
+    margin: 30px auto;
+    padding-top: 5px;
+}
+
+
+#ft a {
+    background-color:#fff;
+    border:0;
+}
+
+#ft a:link, a:visited {
+    color:#4B7F00;
+}
+
+#ft a:hover, a:active {
+    color:#999999;
+}
+
+#topmenu {
+    position: relative;
+    top: 13px;
+    left: 0px;
+    width: 100%;
+    margin: 0;
+    line-height:normal;
+    height: 21px;
+    border-bottom: 1px solid #86C32A;
+    z-index: 4;
+}
+
+#topmenu ul {
+    margin:0;
+    padding:0px 0px 0 0px;
+    list-style:none;
+}
+
+#topmenu li {
+    display:inline;
+    margin:0;
+    padding:0;
+}
+
+#topmenu a {
+    float:left;
+    background:url(../images/menuleft.gif) no-repeat left top;
+    margin:0;
+    padding:0 0 0 4px;
+    text-decoration:none;
+    z-index: 3;
+}
+
+#topmenu a span {
+    float:left;
+    display:block;
+    background:url(../images/menuright.gif) no-repeat right top;
+    padding:5px 15px 4px 6px;
+    color:#4B7F00;
+    
+    font-size: .86em;
+}
+      
+#topmenu a span {
+    float:none;
+}
+
+#topmenu a:hover span {
+    color:#999999;
+}
+
+#topmenu a:hover {
+    /*background-position:0% -42px;*/
+}
+
+#topmenu a:hover span {
+    /*background-position:100% -42px;*/
+}
+
+#topmenu div.sub_menu a {
+    background: none;
+    float: right;
+    width: 160px;
+    height: 20px;
+    background-color: #CCC;
+    border-left: solid 1px #FFFFFF;
+    border-bottom: solid 1px #FFFFFF;
+    font-size: 11px;
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+    padding-top: 5px;
+}
+
+#topmenu div.sub_menu {
+    margin: 0;
+    padding: 0;
+    width: 170px;
+    background-color: #C6E38C;
+    padding-bottom: 5px;
+    position: absolute;
+}
+
+#topmenu div.sub_menu a:hover {
+    background-color: #86C32A;
+}
+
+
+select, input, textarea, button {
+    border: 1px solid #514F1C;
+    background-color: #FFFFFF;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 95%;
+}
+
+
+
+input[type="text"], input[type="password"], textarea {
+    padding: 2px 3px;
+}
+input[type="submit"], input[type="button"], button {
+    cursor:pointer;
+    border:outset 1px #ccc;
+    background:#999;
+    color:#666;
+    font-weight:bold;
+    font-size: .9em;
+    background:url(../images/formbg.gif) repeat-x left top;
+    line-height: 20px;
+    height: 20px;
+}

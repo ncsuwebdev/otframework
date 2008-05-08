@@ -1,0 +1,55 @@
+@CHARSET "UTF-8";
+
+#signupButton {
+    float: left;
+}
+
+#signupForm {
+    margin: 0 auto;
+    width: 450px;
+}
+
+#fields {
+    border: 1px solid #999;
+    background-color: #CCC;
+}
+
+#realmStatic {
+    background-color: inherit;
+    border: 0px;
+    margin-top: 2px;
+}
+
+form fieldset dt {
+    width: 130px;
+}
+
+.mooStrengthScoreBarBorder {
+    background: #333;
+    height: 16px;
+    line-height: 16px;
+    margin: 0 0 2px 10px;
+    width: 115px;
+    display: inline;
+}
+
+.mooStrengthScore {
+    color: #000;
+    font-size: 85%;
+    position:absolute;
+    text-align: center;
+    width: 115px;
+    z-index: 10;
+    font-weight: bold;
+    display: inline;
+}
+
+.mooStrengthScoreBar {
+    border: 1px solid #000000;
+    background-image: url(../../../images/mooStrength_gradient.jpg);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    position:absolute;
+    width: 115px;
+    display: inline;
+}
