@@ -168,6 +168,30 @@ div#opt {
     background: #FFFFDF url(../../images/warning.png) no-repeat 3px 3px;
 }
 
+select, input, textarea, button {
+    border: 1px solid #514F1C;
+    background-color: #FFFFFF;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 95%;
+}
+
+
+
+input[type="text"], input[type="password"], textarea {
+    padding: 2px 3px;
+}
+input[type="submit"], input[type="button"], button {
+    cursor:pointer;
+    border:outset 1px #ccc;
+    background:#999;
+    color:#666;
+    font-weight:bold;
+    font-size: .9em;
+    background:url(../images/formbg.gif) repeat-x left top;
+    line-height: 20px;
+    height: 20px;
+}
+
 form dt {
     width: 120px;
     float: left;
