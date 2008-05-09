@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/css/Ot/base.css" />
 <link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/css/Ot/common.css" />
 <link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/css/layout.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/css/nav.css" />
 {foreach from=$css item=c}
 <link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/css/{$c}" />
 {/foreach}
