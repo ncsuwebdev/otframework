@@ -187,7 +187,7 @@ input[type="submit"], input[type="button"], button {
     color:#666;
     font-weight:bold;
     font-size: .9em;
-    background:url(../images/formbg.gif) repeat-x left top;
+    background:url(../../images/formbg.gif) repeat-x left top;
     line-height: 20px;
     height: 20px;
 }
