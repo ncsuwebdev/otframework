@@ -6,5 +6,5 @@
         <a href="http://webapps.ncsu.edu/"><img src="{$sitePrefix}/public/images/minilogo.png" width="128" height="21" alt="OIT - Outreach Technologies" /></a>
     </div>
     <a href="{$sitePrefix}/admin/bug/add/">Report a Bug</a>
-    &nbsp;&nbsp;{editable id='copyright'}&copy {$copyrightDate} North Carolina State University{/editable}
+    &nbsp;&nbsp;{editable id='copyright'}&copy; {$copyrightDate} North Carolina State University{/editable}
 </div>
