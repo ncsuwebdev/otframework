@@ -461,7 +461,7 @@ class Account_IndexController extends Internal_Controller_Action
 		        
 		        $form->addElement($roleSelect);
 	        } else {
-	            $roleStatic = $form->createElement('text', 'roleStatic', array('label' => 'Access Role:'));
+	            $roleStatic = $form->createElement('text', 'role', array('label' => 'Access Role:'));
 	            $roleStatic->setRequired(true)
 	                           ->setValue($this->_userData['role'])
 	                           ->setAttrib('readonly', true)
@@ -501,7 +501,7 @@ class Account_IndexController extends Internal_Controller_Action
              ->addElements(array($firstName, $lastName, $email))
              ;
              
-        $form->addDisplayGroup(array('usernameStatic', 'realmStatic', 'role', 'roleStatic', 'firstName', 'lastName', 'emailAddress'), 'fields')
+        $form->addDisplayGroup(array('usernameStatic', 'realmStatic', 'role', 'firstName', 'lastName', 'emailAddress'), 'fields')
              ->addElement('submit', 'editButton', array('label' => 'Save User'))
              ->addElement('button', 'cancel', array('label' => 'Cancel'))
              ;           
