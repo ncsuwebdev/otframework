@@ -80,7 +80,7 @@ class Account_IndexController extends Internal_Controller_Action
         $userData = array();
         
         $userData['userId'] = Zend_Auth::getInstance()->getIdentity();
-        if ($filter->userId && $this->_acl->isAllowed($this->_role, $this->_resource, 'editAllAccounts')) {
+        if ($filter->userId && $this->_acl->isAllowed($this->_role, 'account_index', 'editAllAccounts')) {
             $userData['userId'] = $filter->userId;
         }
         
@@ -795,5 +795,12 @@ class Account_IndexController extends Internal_Controller_Action
      *
      */
     public function changeUserRoleAction()
+    {}
+    
+    /**
+     * Used to determine if a user should be allowed to edit all accounts
+     *
+     */
+    public function editAllAccountsAction()
     {}
 }
