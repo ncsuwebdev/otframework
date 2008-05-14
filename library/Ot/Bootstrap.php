@@ -314,7 +314,7 @@ class Ot_Bootstrap
               ->registerPlugin(new Ot_Plugin_Htmlheader())
               ->registerPlugin(new Ot_Plugin_TextSubstitution())    
               ->registerPlugin(new Ot_Plugin_Nav())
-              ;
+              ->registerPlugin(new Ot_Plugin_MaintenanceMode());
     }
     
     /**

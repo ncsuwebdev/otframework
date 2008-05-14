@@ -35,5 +35,6 @@
     	<customFieldObjects>
     	   <Ot_Profile>User Profile</Ot_Profile>
     	</customFieldObjects>
+        <maintenanceMode>1</maintenanceMode>
    	</production>
 </configdata>

@@ -38,6 +38,6 @@ class Admin_IndexController extends Internal_Controller_Action
      */
     public function indexAction()
     {    	
-        $this->view->title = 'Welcome to ' . Zend_Registry::get('userConfig')->appTitle->value;
+        $this->view->title = Zend_Registry::get('userConfig')->appTitle->value . " Admin Area"; 
     }
 }

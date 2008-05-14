@@ -12,7 +12,7 @@
       </tab>
       <tab>
         <module>admin</module>
-        <controller>config</controller>
+        <controller>index</controller>
         <action></action>
         <display>Admin</display>
         <link></link>
@@ -71,6 +71,13 @@
             <controller>log</controller>
             <action></action>
             <display>Logs</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>maintenance</controller>
+            <action></action>
+            <display>Maintenance Mode</display>
             <link></link>
           </tab>
           <tab>

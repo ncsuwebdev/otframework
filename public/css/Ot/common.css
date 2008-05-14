@@ -268,3 +268,19 @@ ol li {
 li {
     margin-left: 15px;
 }
+
+
+div.maintenance {
+    font-size: 1.3em;
+    padding: 7px;
+    border: 1px solid #000000;
+    color: #000;
+}
+
+div.maintenanceModeOn {
+    background-color: #DF2929;
+}
+
+div.maintenanceModeOff {
+    background-color: #44DF29;
+}
