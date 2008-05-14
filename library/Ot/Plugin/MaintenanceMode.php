@@ -15,7 +15,7 @@
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
  * @package
- * @subpackage Internal_Plugin_Javascript
+ * @subpackage Ot_Plugin_MaintenanceMode
  * @category   Front Controller Plugin
  * @copyright  Copyright (c) 2007 NC State University Information Technology Division
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
