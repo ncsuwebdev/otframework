@@ -1,0 +1,55 @@
+@CHARSET "UTF-8";
+
+table.elm {
+    border: 1px solid #000;
+    margin-bottom: 10px;
+    width: 650px;
+    padding: 0px;
+    border-collapse: collapse;
+    background-color: #777;
+    color: #FFF;
+
+}
+
+span#listStatus {
+    background-color: #FFFD77;
+    color: #000;
+    line-height: 22px;
+    display: block;
+    width: 400px;
+    padding: 3px;
+    text-align: center;
+}
+
+table.elm a {
+    color: #FFF;
+}
+
+table.elm td {
+    padding: 4px;
+    border: 0px;
+}
+
+table.elm td.description div {
+    width: 440px;
+    overflow: auto;
+}
+
+table.elm td.action {
+    text-align: right;
+}
+
+table.elm td.order {
+    color: #000;
+    font-weight: bold;
+    font-size: 1em;
+    text-align: center;
+    width: 22px;
+    background-image: url(../../../images/menu.gif);
+    background-repeat: repeat-x;
+    background-position: top;
+    background-color: #FFF;
+    cursor: pointer;
+    vertical-align: top;
+    line-height: 22px;
+}

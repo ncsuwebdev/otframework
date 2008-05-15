@@ -1,0 +1,36 @@
+@CHARSET "UTF-8";
+
+#submitButton {
+    float: left;
+}
+
+#fields {
+    border: 1px solid #999;
+    background-color: #CCC;
+}
+
+form fieldset dt {
+    width: 120px;
+}
+
+div.bugText {
+    border: 1px solid #999;
+    width: 500px;
+    margin-bottom: 10px;
+}
+
+div.bugText .header {
+    padding: 2px;
+    background-color: #999;
+    color: #FFF;   
+}
+
+div.bugText .bugContent {
+    padding: 5px;
+    background-color: #FFF;
+}
+
+h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}

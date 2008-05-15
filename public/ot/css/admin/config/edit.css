@@ -1,0 +1,20 @@
+@CHARSET "UTF-8";
+
+#editButton {
+    float: left;
+}
+
+#fields {
+    border: 1px solid #999;
+    background-color: #CCC;
+}
+
+form fieldset dt {
+    width: 250px;
+}
+
+div.description h2 {
+    font-weight: bold;
+    float: left;
+    margin-right: 10px;
+}

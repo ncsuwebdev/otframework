@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configData>
+  <production>
+    <default_index>
+      <index>
+        
+      </index>
+      <search>
+        <home>&lt;ul&gt;&lt;li&gt;&lt;strong&gt;test&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="http://www.google.com" target="_blank" title="Google"&gt;&lt;strong&gt;awesomedfs&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;</home>
+      </search>
+    </default_index>
+    <root>
+      <footer>
+        
+      </footer>
+      <auth>
+        
+      </auth>
+    </root>
+    <admin_acl>
+      <add>
+        <cautionLabel>WARNING!!!</cautionLabel>
+      </add>
+    </admin_acl>
+    <default_documentation>
+      <index>
+        
+      </index>
+    </default_documentation>
+  </production>
+</configData>

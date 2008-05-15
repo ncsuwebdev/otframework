@@ -1,0 +1,200 @@
+table.list {
+    margin-bottom: 5px;
+    border: 1px solid #6e6e6e;
+    border-collapse: collapse;
+}
+
+table.list th {
+    background-color: #000;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 90%;
+    text-align: center;
+    height: 18px;
+    background-image: url(../../images/blk.gif);
+    background-repeat: repeat-x;
+    background-position: top;
+}
+
+table.list td {
+    border: 1px solid #C0C0C0;
+    height: 25px;
+    padding: 3px;
+}
+
+table.list td.noResults {
+    text-align: center;
+    height: 35px;
+    background-color: #FFFFFF;
+    width: 500px;
+}
+
+.row1 {
+    background-color: #FFFFFF;
+}
+
+.row2 {
+    background-color: #F0F0F0;
+}
+
+table.form {
+    display: block;
+    border: 1px solid #E7E7E7;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+table.form td {
+    padding: 5px 7px 5px 7px;
+    vertical-align: top;
+    border: 0px;
+}
+
+table.form label {
+    font-weight: bold;
+}
+
+.sortable th {
+    cursor: pointer;
+}
+
+.floatLeft {
+    float: left;	
+}
+
+.floatRight {
+    float: right;	
+}
+
+.message {
+    border: 1px solid #CC0;
+    background-color: #FFFFDF;
+    padding: 4px 4px 4px 24px;
+    margin: 5px 0 20px 0;
+    background: #FFFFDF url(../../images/warning.png) no-repeat 3px 3px;
+}
+
+form dt {
+    width: 120px;
+    float: left;
+    margin: 0px;
+    padding: 0px;
+    text-align: right;
+    clear: both;
+}
+
+form dt label {
+    font-weight: bold;
+    margin-right: 4px;
+    line-height: 20px;
+}
+
+form dd input {
+    margin-right: 5px;
+}
+
+form dd {
+    margin: 10px 0px;
+}
+
+form fieldset {
+    margin: 0px;
+    padding: 0px;
+}
+
+form fieldset dt {
+    width: 80px;
+}
+
+form fieldset dd {
+    padding-left: 120px;	
+}
+
+form .errors {
+    color: #C00;
+    font-size: .78em;
+    list-style: none;
+    margin-left: 40px;
+}
+
+form ul.errors {
+    margin-bottom: 10px;
+}
+
+.deleteButton {
+    padding: 2px 15px 2px 20px;
+    background-image: url(../../images/delete.png);
+    background-repeat: no-repeat;
+}
+
+.editButton {
+    padding: 2px 15px 2px 20px;
+    background-image: url(../../images/edit.png);
+    background-repeat: no-repeat;
+}
+
+.addButton {
+    padding: 2px 15px 2px 20px;
+    background-image: url(../../images/add.png);
+    background-repeat: no-repeat;
+}
+
+span.required {
+    color: #C00;
+}
+
+ul li {
+    list-style-type: inherit;
+}
+
+ol li {
+    list-style-type: decimal;
+}
+
+li {
+    margin-left: 15px;
+}
+
+div.maintenance {
+    font-size: 1.3em;
+    padding: 7px;
+    border: 1px solid #000000;
+    color: #000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+div.maintenance a {
+	color: #FFF;
+}
+
+div.maintenanceModeOn {
+    background-color: #DF2929;
+}
+
+div.maintenanceModeOff {
+    background-color: #44DF29;
+}
+
+select, input, textarea, button {
+    border: 1px solid #514F1C;
+    background-color: #FFFFFF;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 95%;
+}
+
+input[type="text"], input[type="password"], textarea {
+    padding: 2px 3px;
+}
+input[type="submit"], input[type="button"], button {
+    cursor:pointer;
+    border:outset 1px #ccc;
+    background:#999;
+    color:#666;
+    font-weight:bold;
+    font-size: .9em;
+    background:url(../../images/formbg.gif) repeat-x left top;
+    line-height: 20px;
+    height: 20px;
+}
