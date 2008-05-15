@@ -153,16 +153,19 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         }
         
         if ($auth->hasIdentity() && $config->loginOptions->generateAccountOnFirstLogin == 1) {
-            $account = new Ot_Account();
-            
-            if (is_null($account->find($auth->getIdentity()))) {
-            	            	
-                $module     = $this->_noAccount['module'];
-                $controller = $this->_noAccount['controller'];
-                $action     = $this->_noAccount['action'];
-                
-                $req->uri = str_replace(Zend_Registry::get('sitePrefix'), '', $_SERVER['REQUEST_URI']);             
-            }
+        	
+        	if (!($request->getModuleName() == 'login' && $request->getControllerName() == 'index' && $request->getActionName() == 'logout')) {
+	            $account = new Ot_Account();
+	            
+	            if (is_null($account->find($auth->getIdentity()))) {
+	            	            	
+	                $module     = $this->_noAccount['module'];
+	                $controller = $this->_noAccount['controller'];
+	                $action     = $this->_noAccount['action'];
+	                
+	                $req->uri = str_replace(Zend_Registry::get('sitePrefix'), '', $_SERVER['REQUEST_URI']);             
+	            }
+        	}
         }
         
         $request->setModuleName($module);
