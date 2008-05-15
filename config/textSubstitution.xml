@@ -6,7 +6,7 @@
         
       </index>
       <search>
-        <home>&lt;ul&gt;&lt;li&gt;&lt;strong&gt;test&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="http://www.google.com" target="_blank" title="Google"&gt;&lt;strong&gt;awesomedfs&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;</home>
+        <home></home>
       </search>
     </default_index>
     <root>
@@ -19,7 +19,7 @@
     </root>
     <admin_acl>
       <add>
-        <cautionLabel>WARNING!!!</cautionLabel>
+
       </add>
     </admin_acl>
     <default_documentation>
