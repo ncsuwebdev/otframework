@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/ot/css/Ot/base.css" />
 <link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/ot/css/Ot/common.css" />
 <link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/css/layout.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/css/nav.css" />
 {foreach from=$css item=c}
 <link rel="stylesheet" type="text/css" media="all" href="{$c}" />
 {/foreach}
@@ -29,30 +30,29 @@
 <body>
     <input type="hidden" name="sitePrefix" id="sitePrefix" value="{$sitePrefix}" />
     
-    <div id="doc4" class="yui-t1"> 
+    
+    <div id="doc4" class="yui-t2"> 
         <div id="hd">
             <p class="authInfo">{layout section=auth}</p>
-        </div>
-        <div id="hd2">
-            <div id="title">{$config.appTitle}</div>
+            <span id="title">{$config.appTitle}</span>
         </div> 
         <div id="bd"> 
-            <div id="yui-main" class="content"> 
+            <div id="yui-main"> 
                 <div class="yui-b">
                     <div class="yui-g"> 
-                        <div class="panel">
+                        <div class="content">
                             {layout section=content}
                         </div> 
                     </div> 
-                </div> 
+                </div>
             </div> 
-            <div class="yui-b" id="nav">
+            <div class="yui-b">
                 {layout section=nav}
-            </div>       
+            </div> 
         </div> 
         <div id="ft">
             {layout section=footer}
         </div> 
-    </div>
+    </div> 
 </body>
 </html>
