@@ -7,15 +7,15 @@
         </timezone>
         <appTitle>
             <description>The title of the application.</description>
-            <value>OIT People</value>
+            <value>Web App</value>
         </appTitle>
         <appDescription>
             <description>The applcation description.</description>
-            <value>Connect with your coworkers!</value>
+            <value>App description!</value>
         </appDescription>
         <fromEmailAddress>
             <description>The global from email address.  All email from the system will come from this address.</description>
-            <value>admin@classmate.ncsu.edu</value>
+            <value>admin@app.com</value>
         </fromEmailAddress>
         <fromEmailName>
             <description>The global from email name.  This is the name that will be shown with the fromEmailAddress.</description>
@@ -23,28 +23,8 @@
         </fromEmailName>
         <fileUploadAllowableExtensions>
             <description>The allowable extensions for files.  I would not suggest putting executable files in here...</description>
-            <value>pdf,doc,ppt,html,txt</value>
-        </fileUploadAllowableExtensions>
-        <homeNumberBlogPosts>
-            <description>The number of blog posts that will show on the home page.</description>
-            <value>10</value>
-        </homeNumberBlogPosts>    
-        <profileInitialVotes>
-            <description>Number of votes a user gets initially</description>
-            <value>5</value>
-        </profileInitialVotes>
-        <defaultMinWorkshopSize>
-            <description>Default minimum number of attendees for a workshop</description>
-            <value>0</value>        
-        </defaultMinWorkshopSize>
-        <defaultMaxWorkshopSize>
-            <description>Default maximum number of attendees for a workshop</description>
-            <value>25</value>        
-        </defaultMaxWorkshopSize>
-        <defaultWorkshopWaitListSize>
-            <description>Default waitlist size for a workshop</description>
-            <value>10</value>        
-        </defaultWorkshopWaitListSize>
+            <value>pdf,doc,ppt,html,txt,zip</value>
+        </fileUploadAllowableExtensions>   
         <headerRowRepeat>
             <description>The number of rows displayed in a table before the header cells are repeated.</description>
             <value>25</value>
