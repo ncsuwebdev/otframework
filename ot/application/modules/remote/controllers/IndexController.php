@@ -40,7 +40,7 @@ class Remote_IndexController extends Internal_Controller_Action
     {
     	Zend_Loader::loadClass('Api');
     	
-        $server = new SoapServer(null, array('uri' => "aerial"));
+        $server = new SoapServer(null, array('uri' => "soapservice"));
         $server->setClass('Api');
         $server->setPersistence(SOAP_PERSISTENCE_SESSION);
         $server->handle();
