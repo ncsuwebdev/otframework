@@ -42,10 +42,12 @@ class Ot_Api
 	 */
 	public function __construct()
 	{
-		$config = new Zend_Config_Xml('./application/api.xml', 'production');
+		$configFiles = Zend_Registry::get('configFiles');
 		
-		foreach ($config->apiCalls as $c) {
-			$this->_functions[$c->apiName] = new ApiCall($c->class, $c->method);
+		$config = new Zend_Config_Xml($configFiles['api'], 'production');
+		
+		foreach ($config->apiCalls->call as $c) {
+			$this->_functions[$c->apiName] = new Ot_Api_Call($c->class, $c->method);
 		}		
 	}
 	
@@ -69,7 +71,7 @@ class Ot_Api
         $logger->setEventItem('userId', $this->_userId);
         
 		if (!isset($this->_functions[$function])) {
-			return $this->_error('Function not found');
+			return $this->_error('Function ' . $function . ' was not found');
 		}
 		
 		if (!$this->_hasAccess) {
@@ -77,7 +79,7 @@ class Ot_Api
 		}
 				
 		$call = $this->_functions[$function];		
-		$obj = new $call->class;
+		$obj = new $call->class($this->_userId);
 		
 		$result = call_user_func_array(array($obj, $call->method), $args);		
 		if ($result === false) {
@@ -135,11 +137,14 @@ class Ot_Api
 	public function __setApiCode($accessCode)
 	{
 		$this->_hasAccess = false;
-	    $apiCode = new ApiCode();	            
+	    $apiCode = new Ot_Api_Code();	            
 	    
-        if (!$apiCode->verify($accessCode)) {
-            return $this->_error($apiCode->getMessages());
-        }	
+	    
+	    try {
+	       $apiCode->verify($accessCode);
+	    } catch (Exception $e) {
+            return $this->_error($e->getMessage());
+        }
 
         $this->_hasAccess = true;
         $this->_userId    = $apiCode->getApiUserId();  

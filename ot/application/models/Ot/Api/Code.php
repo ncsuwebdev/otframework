@@ -81,7 +81,7 @@ class Ot_Api_Code extends Ot_Db_Table
     	
     	$this->_apiCodeUser = $result->current()->userId;
     	
-        $config = Zend_Registry::get('config');
+        $config = Zend_Registry::get('appConfig');
         Zend_Loader::loadClass($config->authorization);
 
         $authz = new $config->authorization;   
