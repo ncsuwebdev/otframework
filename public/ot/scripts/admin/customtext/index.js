@@ -9,7 +9,7 @@ window.addEvent('domready', function() {
     tree = new MooTreeControl({
             div: 'fileTree',
             mode: 'folders',
-            theme: sitePrefix + "/public/images/mootree.gif",
+            theme: sitePrefix + "/public/ot/images/mootree.gif",
             grid: true,
             onSelect: function(node, state) {
             
