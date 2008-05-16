@@ -38,13 +38,14 @@ class Remote_IndexController extends Internal_Controller_Action
      */
     public function soapAction()
     {
-    	Zend_Loader::loadClass('Api');
+    	Zend_Loader::loadClass('Ot_Api');
     	
         $server = new SoapServer(null, array('uri' => "soapservice"));
-        $server->setClass('Api');
+        $server->setClass('Ot_Api');
         $server->setPersistence(SOAP_PERSISTENCE_SESSION);
         $server->handle();
         
         $this->_helper->viewRenderer->setNeverRender();
+        $this->_helper->layout->disableLayout();
     }
 }
