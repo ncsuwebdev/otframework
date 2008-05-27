@@ -60,11 +60,11 @@ table.form label {
 }
 
 .floatLeft {
-    float: left;	
+    float: left;    
 }
 
 .floatRight {
-    float: right;	
+    float: right;   
 }
 
 .message {
@@ -75,7 +75,7 @@ table.form label {
     background: #FFFFDF url(../../images/warning.png) no-repeat 3px 3px;
 }
 
-form dt {
+form fieldset dt {
     width: 120px;
     float: left;
     margin: 0px;
@@ -84,17 +84,17 @@ form dt {
     clear: both;
 }
 
-form dt label {
+form fieldset dt label {
     font-weight: bold;
     margin-right: 4px;
     line-height: 20px;
 }
 
-form dd input {
+form fieldset dd input {
     margin-right: 5px;
 }
 
-form dd {
+form fieldset dd {
     margin: 10px 0px;
 }
 
@@ -108,7 +108,7 @@ form fieldset dt {
 }
 
 form fieldset dd {
-    padding-left: 120px;	
+    padding-left: 120px;    
 }
 
 form .errors {
@@ -166,7 +166,7 @@ div.maintenance {
 }
 
 div.maintenance a {
-	color: #FFF;
+    color: #FFF;
 }
 
 div.maintenanceModeOn {
