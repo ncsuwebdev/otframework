@@ -48,4 +48,3 @@ class Ot_Db_Table extends Zend_Db_Table
         return $result;
     }
 }
-?>
