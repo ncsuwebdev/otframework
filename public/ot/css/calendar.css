@@ -1,5 +1,10 @@
 @CHARSET "UTF-8";
 
+th, td, caption {
+    padding: 0em;
+    margin-bottom: 0em; 
+}
+
 button.calendar {
     background: url(../images/calendar/calendar-icon.gif);
     border: 0;
