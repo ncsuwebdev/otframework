@@ -67,6 +67,27 @@ class Ot_Cron_Status extends Ot_Db_Table {
 
         return ($result->status == 'enabled');
     }
+    
+    public function executed($path, $ts)
+    {
+        $data = array(
+           'path'      => $path,
+           'lastRunDt' => $ts,
+        );
+        
+        $this->update($data, null);
+    }
+    
+    public function getLastRunDt($path)
+    {
+        $result = $this->find($path);
+
+        if (is_null($result)) {
+            return 0;
+        }
+
+        return $result->lastRunDt;      
+    }    
 
     public function setCronStatus($path, $status)
     {
