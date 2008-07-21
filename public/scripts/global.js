@@ -37,11 +37,12 @@ window.addEvent('domready', function() {
     $$('label.required').each(function (el) {
        
         var span = new Element('span');
-        span.setAttribute('class', 'required');
+        span.addClass('required');
         span.innerHTML ='*';
         
-        if ($(el.getAttribute('for'))) {
-            span.injectAfter($(el.getAttribute('for')));
+        var target = el.attributes['for'].nodeValue;
+        if ($(target)) {
+            span.injectAfter($(target));
         }
     });
 
