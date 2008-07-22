@@ -28,4 +28,5 @@ form fieldset dt {
     color: #FFF;
     text-align: center;
     padding: 5px;
+    margin-left: -120px;
 }

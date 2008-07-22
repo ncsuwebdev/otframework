@@ -5,7 +5,7 @@
            <local>
                <class>Ot_Auth_Adapter_Local</class>
                <name>Local</name>
-               <description>Authentication using your Unity ID and Password</description>    
+               <description>Authentication using a local ID and Password</description>    
            </local> 
     	   <wrap>
     	       <class>Ot_Auth_Adapter_Wrap</class>
