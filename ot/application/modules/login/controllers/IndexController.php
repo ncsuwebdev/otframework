@@ -356,9 +356,7 @@ class Login_IndexController extends Internal_Controller_Action
                     $et->username    = preg_replace('/@.*/', '', $userId);
                     $et->loginMethod = $config->authentication->$realm->name;
                     $et->dispatch('Login_Index_Forgot');
-		            
-                    die(Zend_Registry::get('siteUrl') . '/login/index/password-reset/?key=' . $code);
-                    
+		                                
 		            $this->_helper->redirector->gotoUrl('/login/?realm=' . $realm);
 	            } else {
 	            	$messages[] = 'The user account you entered was not found';
@@ -713,7 +711,7 @@ class Login_IndexController extends Internal_Controller_Action
 			        	try {
 				            $password = $auth->addAccount($userId, $form->getValue('password'));
 				            
-				            $authz->addUser($userId, $config->loginOptions->defaultRoleOnAuthzInstanceCreation);
+				            $authz->addUser($userId, $config->loginOptions->defaultRoleOnAccountCreation);
 				            
 				            $account->insert($data);
 			        	} catch (Exception $e) {
