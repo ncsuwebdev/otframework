@@ -94,6 +94,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         $decorators = $form->getDecorators();
         $decorators = array_merge(array(new Zend_Form_Decorator_Description()), $decorators);
 
+        unset($decorators['Zend_Form_Decorator_DtDdWrapper']);
         $form->clearDecorators();
         $form->setDecorators($decorators);
         
@@ -141,7 +142,6 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         }              
         
         $form->addElements(array($to, $from, $subject, $body));
-        $form->addDisplayGroup(array('to', 'from', 'subject', 'body'), 'email');
 
         return $form;		
 	}

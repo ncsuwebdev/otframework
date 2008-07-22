@@ -132,10 +132,20 @@ class Admin_ConfigController extends Internal_Controller_Action
         $el->setValue($uc->{$get->key}->value);
         $el->setLabel($get->key . ':');
         
+        $submit = $form->createElement('submit', 'editButton', array('label' => 'Save Config Option'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                        
         $form->addElement($el)
              ->addDisplayGroup(array('keyValue'), 'fields')
-             ->addElement('submit', 'editButton', array('label' => 'Save Config Option'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
+             ->addElements(array($submit, $cancel))
              ;  
 
         $messages = array();

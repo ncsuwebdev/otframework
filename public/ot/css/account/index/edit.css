@@ -2,6 +2,7 @@
 
 #editButton {
     float: left;
+    margin: 0px 10px;
 }
 
 #editForm {
@@ -12,6 +13,7 @@
 #fields {
     border: 1px solid #999;
     background-color: #CCC;
+    margin-bottom: 10px;
 }
 
 #realmStatic, #usernameStatic, #roleStatic {

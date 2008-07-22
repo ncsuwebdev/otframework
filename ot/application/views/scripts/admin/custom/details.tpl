@@ -6,7 +6,7 @@
     {/if}
     <table class="form">
         <tr>
-            <td><label>Object:</label></td>
+            <td width="100"><label>Object:</label></td>
             <td>{$objectId}</td>
         </tr>
         <tr>

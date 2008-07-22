@@ -201,12 +201,20 @@ class Admin_TriggerController extends Internal_Controller_Action
         $thisHelper = new $obj;
 
         $subForm = $thisHelper->addSubForm();
-        
         $form->addSubForm($subForm, $obj);
         
-        $form->addElement('submit', 'nextButton', array('label' => 'Save Action'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
-             ;        
+        $submit = $form->createElement('submit', 'nextButton', array('label' => 'Save Action'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));        
+        
+        $form->addElements(array($submit, $cancel));        
              
         $messages = array();
         if ($this->_request->isPost()) {
@@ -333,9 +341,18 @@ class Admin_TriggerController extends Internal_Controller_Action
         
         $form->addSubForm($subForm, $obj);
         
-        $form->addElement('submit', 'nextButton', array('label' => 'Save'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
-             ;        
+        $submit = $form->createElement('submit', 'nextButton', array('label' => 'Save Action'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));        
+                        
+        $form->addElements(array($submit, $cancel));        
              
         $messages = array();
         if ($this->_request->isPost()) {
@@ -418,9 +435,18 @@ class Admin_TriggerController extends Internal_Controller_Action
              ->setAttrib('id', 'deleteAction')
              ;
         
-        $form->addElement('submit', 'deleteButton', array('label' => 'Delete Action'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
-             ;     	
+        $submit = $form->createElement('submit', 'deleteButton', array('label' => 'Delete Action'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));        
+                             
+        $form->addElements(array($submit, $cancel));     	
         
         if ($this->_request->isPost() && $form->isValid($_POST)) {
         	

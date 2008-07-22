@@ -329,9 +329,19 @@ class Account_IndexController extends Internal_Controller_Action
             $group[] = $a['formRender']->getName();
         }
                 
+        $submit = $form->createElement('submit', 'addButton', array('label' => 'Add Account'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                        
         $form->addDisplayGroup($group, 'fields')
-             ->addElement('submit', 'addButton', array('label' => 'Add Account'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
+             ->addElements(array($submit, $cancel))
              ;        
 
         $messages = array();
@@ -602,9 +612,18 @@ class Account_IndexController extends Internal_Controller_Action
                 
         $form->addDisplayGroup($group, 'fields');
         
-        $form->addElement('submit', 'editButton', array('label' => 'Save User'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
-             ;           
+        $submit = $form->createElement('submit', 'editButton', array('label' => 'Save Account'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                        
+        $form->addElements(array($submit, $cancel));           
 
 
         $messages = array();
@@ -713,9 +732,18 @@ class Account_IndexController extends Internal_Controller_Action
              ->setAttrib('id', 'deleteUser')
              ;
         
-        $form->addElement('submit', 'deleteButton', array('label' => 'Delete User'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
-             ;                   
+        $submit = $form->createElement('submit', 'deleteButton', array('label' => 'Delete Account'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                             
+        $form->addElements(array($submit, $cancel));                   
        
 
         if ($this->_request->isPost() && $form->isValid($_POST)) {
@@ -834,11 +862,22 @@ class Account_IndexController extends Internal_Controller_Action
                         ->addFilter('StringTrim')
                         ->addFilter('StripTags')
                         ;    
+                        
+        $submit = $form->createElement('submit', 'changeButton', array('label' => 'Change My Password'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                                        
 
         $form->addElements(array($oldPassword, $newPassword, $newPasswordConf))
              ->addDisplayGroup(array('oldPassword', 'newPassword', 'newPasswordConf'), 'fields')
-             ->addElement('submit', 'changeButton', array('label' => 'Change My Password'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
+             ->addElements(array($submit, $cancel))
              ;         
 
         $messages = array();
@@ -919,9 +958,18 @@ class Account_IndexController extends Internal_Controller_Action
              ->setAttrib('id', 'deleteApiCode')
              ;
         
-        $form->addElement('submit', 'deleteButton', array('label' => 'Delete Api Code'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
-             ;                   
+        $submit = $form->createElement('submit', 'deleteButton', array('label' => 'Delete API Code'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                             
+        $form->addElements(array($submit, $cancel));                   
        
 
         if ($this->_request->isPost() && $form->isValid($_POST)) {

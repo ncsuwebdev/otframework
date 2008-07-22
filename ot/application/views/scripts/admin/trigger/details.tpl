@@ -48,10 +48,10 @@ You can manage the actions for this trigger here.
                 <td>{$a.name}</td>
                 <td>{$a.helper}</td>
                 {if $acl.edit}
-                <td align="center"><a href="{$sitePrefix}/admin/trigger/edit/?triggerActionId={$a.triggerActionId}"><img src="{$sitePrefix}/public/images/edit.png" alt="Edit Action"></a></td>
+                <td align="center"><a href="{$sitePrefix}/admin/trigger/edit/?triggerActionId={$a.triggerActionId}"><img src="{$sitePrefix}/public/ot/images/edit.png" alt="Edit Action"></a></td>
                 {/if}
                 {if $acl.delete}
-                <td align="center"><a href="{$sitePrefix}/admin/trigger/delete/?triggerActionId={$a.triggerActionId}"><img src="{$sitePrefix}/public/images/delete.png" alt="Delete Action"></a></td>
+                <td align="center"><a href="{$sitePrefix}/admin/trigger/delete/?triggerActionId={$a.triggerActionId}"><img src="{$sitePrefix}/public/ot/images/delete.png" alt="Delete Action"></a></td>
                 {/if}
             </tr>
             {foreachelse}

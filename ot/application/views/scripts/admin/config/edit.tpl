@@ -13,7 +13,7 @@ globally and immediately.
 {/editable}
 <br /><br />
 <div class="description">
-    <h2>Description:</h2>
+    <h3>Description:</h3>
 {$description|empty_alt:"No Description Provided"}
 </div>
 {$form}

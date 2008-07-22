@@ -126,11 +126,19 @@ class Login_IndexController extends Internal_Controller_Action
         $password->addFilter('StringTrim')
                  ->setRequired(true);
 
-        $form->addElement($username)
-             ->addElement($password)
+        $loginButton = $form->createElement('submit', 'loginButton', array('label' => 'Login'));
+        $loginButton->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $signupButton = $form->createElement('button', 'signup', array('label' => 'Sign-Up Now'));
+        $signupButton->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                                 
+        $form->addElements(array($username, $password))
              ->addDisplayGroup(array('realm', 'username', 'password'), 'fields')
-             ->addElement('submit', 'loginButton', array('label' => 'Login'))
-             ->addElement('button', 'signup', array('label' => 'Sign-Up Now'))
+             ->addElements(array($loginButton, $signupButton))
              ;
         
         $formUserId   = null;
@@ -299,12 +307,20 @@ class Login_IndexController extends Internal_Controller_Action
                  ->addFilter('StringTrim')
                  ;
         
-
-        $form->addElement($realmStatic)
-             ->addElement($username)
+        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'Reset My Password'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                
+        $form->addElements(array($realmStatic, $username))
              ->addDisplayGroup(array('realmStatic', 'username'), 'fields')
-             ->addElement('submit', 'resetPasswordButton', array('label' => 'Reset My Password'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
+             ->addElements(array($submit, $cancel))
              ;        
         
 
@@ -466,13 +482,23 @@ class Login_IndexController extends Internal_Controller_Action
                      ->addFilter('StripTags')
                      ;                           
 
+        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'Reset My Password'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                                     
         $form->addElement($realmStatic)
              ->addElement($usernameStatic)
              ->addElement($password)
              ->addElement($passwordConf)
              ->addDisplayGroup(array('realmStatic', 'usernameStatic', 'password', 'passwordConf'), 'fields')
-             ->addElement('submit', 'resetPasswordButton', array('label' => 'Reset My Password'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
+             ->addElements(array($submit, $cancel))
              ;        
         
 
@@ -621,6 +647,17 @@ class Login_IndexController extends Internal_Controller_Action
               ->addFilter('StringTrim')
               ->addValidator('EmailAddress')
               ;
+              
+        $submit = $form->createElement('submit', 'signupButton', array('label' => 'Sign Up Now!'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));              
 
         $group = array('realmStatic', 'username', 'password', 'passwordConf', 'firstName', 'lastName', 'emailAddress');
         
@@ -647,8 +684,7 @@ class Login_IndexController extends Internal_Controller_Action
         }
                 
         $form->addDisplayGroup($group, 'fields')
-             ->addElement('submit', 'signupButton', array('label' => 'Sign Up Now!'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
+             ->addElements(array($submit, $cancel))
              ;            	
     	
         $messages = array();

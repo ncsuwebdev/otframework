@@ -18,3 +18,12 @@ form fieldset dt {
     border: 0px;
     margin-top: 2px;
 }
+
+textarea {
+    width: 400px;
+    height: 100px;
+}
+
+#nextButton {
+    margin-right: 10px;
+}

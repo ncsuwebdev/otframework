@@ -13,6 +13,7 @@ input, button, select {
     border: 1px solid #999;
     background-color: #CCC;
     padding: 5px;
+    margin-bottom: 10px;
 }
 
 #realmStatic {
@@ -52,4 +53,8 @@ form dd {
     text-align: center;
     padding: 5px;
     margin-left: -120px;
+}
+
+#loginButton {
+    margin-right: 10px;
 }

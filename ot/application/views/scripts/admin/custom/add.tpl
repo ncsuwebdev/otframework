@@ -4,7 +4,7 @@
     <form method="post" action="?objectId={$objectId}" id="add" class="checkRequiredFields">
 	   <table class="form">
 	        <tr>
-	            <td><label>Object:</label></td>
+	            <td width="100"><label>Object:</label></td>
 	            <td>{$objectId}</td>
 	        </tr>
 	        <tr>
@@ -14,7 +14,7 @@
 	    </table><br /><br />
 	    <table class="form">
 	        <tr>
-	            <td><label>Label:</label></td>
+	            <td width="130"><label>Label:</label></td>
 	            <td><input type="text" name="label" id="label" value="" size="20" class="required" /></td>
 	        </tr>
 	        <tr>
@@ -40,9 +40,9 @@
             <tr>
                 <td><label>Display Direction:</label></td>
                 <td>
-                    <label for="direction"><input type="radio" value="vertical" checked="checked" name="direction" />Vertical</label>
+                    <label for="direction"><input type="radio" value="vertical" checked="checked" name="direction" /> Vertical</label>
                     <br />
-                    <label for="direction"><input type="radio" value="horizontal" name="direction" />Horizontal</label>
+                    <label for="direction"><input type="radio" value="horizontal" name="direction" /> Horizontal</label>
                 </td>
             </tr>  
 	    </table>

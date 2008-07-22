@@ -7,7 +7,7 @@
     </div>
 </div>
 {/if}
-{editable id="loginMessage"}Select the way you would like to log in to ClassMate below.{/editable}  
+{editable id="loginMessage"}Select the way you would like to log in.{/editable}  
 <br /><br />
 <div id="formLogin">
 {$form}

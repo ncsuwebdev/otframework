@@ -197,3 +197,9 @@ input[type="submit"], input[type="button"], button {
     background:url(../../images/formbg.gif) repeat-x left top;
     height: 20px;
 }
+
+input[type='radio'], input[type='checkbox'] {
+    border: 0px;
+    background-color: transparent;
+    
+}

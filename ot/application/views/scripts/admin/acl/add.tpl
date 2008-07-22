@@ -44,7 +44,7 @@
                     {foreach from=$controllers key=controller item=actions}
                     <tr class="controller">
                         <td title="{$actions.description}" class="td1 description">
-                        <img src="{$sitePrefix}/public/images/help.png" class="info" width="16" height="16" />
+                        <img src="{$sitePrefix}/public/ot/images/help.png" class="info" width="16" height="16" />
                         {$controller|capitalize}
                         </td>
                         <td class="{if $actions.all.access}access{else}{if $actions.someaccess}someAccess{else}noAccess{/if}{/if}">

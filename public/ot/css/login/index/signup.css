@@ -6,12 +6,13 @@
 
 #signupForm {
     margin: 0 auto;
-    width: 500px;
+    width: 550px;
 }
 
 #fields {
     border: 1px solid #999;
     background-color: #CCC;
+    margin-bottom: 10px;
 }
 
 #realmStatic {
@@ -52,4 +53,9 @@ form fieldset dt {
     position:absolute;
     width: 115px;
     display: inline;
+}
+
+
+#signupButton {
+    margin: 0px 10px;
 }

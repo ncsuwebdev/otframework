@@ -2,11 +2,13 @@
 
 #submitButton {
     float: left;
+    margin: 0px 10px;
 }
 
 #fields {
     border: 1px solid #999;
     background-color: #CCC;
+    margin-bottom: 10px;
 }
 
 form fieldset dt {
@@ -33,4 +35,9 @@ div.bugText .bugContent {
 h2 {
     font-weight: bold;
     margin-bottom: 10px;
+}
+
+textarea#text {
+    width: 400px;
+    height: 150px;  
 }

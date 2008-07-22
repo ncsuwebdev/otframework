@@ -147,7 +147,7 @@ class Admin_BugController extends Internal_Controller_Action
         	
         	if ($form->isValid($_POST)) {
 	            $data = array(
-	                'title'           => $form->getValue('title'),
+	                'title'           => $form->getValue('bugTitle'),
 	                'reproducibility' => $form->getValue('reproducibility'),
 	                'severity'        => $form->getValue('severity'),
 	                'priority'        => $form->getValue('priority'),
@@ -211,7 +211,7 @@ class Admin_BugController extends Internal_Controller_Action
              ->setAttrib('id', 'login')
              ;
         
-        $title = new Zend_Form_Element_Text('title');
+        $title = new Zend_Form_Element_Text('bugTitle');
         $title->setLabel('Title:')
               ->addFilter('StringTrim')
               ->addFilter('StripTags')
@@ -248,10 +248,20 @@ class Admin_BugController extends Internal_Controller_Action
                     ->setAttrib('cols', '80')
                     ;
         
+        $submit = $form->createElement('submit', 'submitButton', array('label' => 'Save Bug'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                )); 
+                                    
         $form->addElements(array($title, $status, $reproducibility, $severity, $priority, $description))
-             ->addDisplayGroup(array('title', 'status', 'reproducibility', 'severity', 'priority', 'text'), 'fields')
-             ->addElement('submit', 'submitButton', array('label' => 'Submit Bug'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
+             ->addDisplayGroup(array('bugTitle', 'status', 'reproducibility', 'severity', 'priority', 'text'), 'fields')
+             ->addElements(array($submit, $cancel))
              ;      
                      
         $messages = array();
@@ -261,7 +271,7 @@ class Admin_BugController extends Internal_Controller_Action
         		
 	            $data = array(
 	                'bugId'             => $get->bugId,
-	                'title'             => $form->getValue('title'),
+	                'title'             => $form->getValue('bugTitle'),
 	                'reproducibility'   => $form->getValue('reproducibility'),
 	                'severity'          => $form->getValue('severity'),
 	                'priority'          => $form->getValue('priority'),

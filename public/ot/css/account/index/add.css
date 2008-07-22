@@ -2,6 +2,7 @@
 
 #addButton {
     float: left;
+    margin: 0px 10px;
 }
 
 #addForm {
@@ -12,6 +13,7 @@
 #fields {
     border: 1px solid #999;
     background-color: #CCC;
+    margin-bottom: 10px;
 }
 
 form fieldset dt {

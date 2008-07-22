@@ -14,7 +14,7 @@
 	{/if}
     <table class="form">
         <tr>
-            <td><label>Object:</label></td>
+            <td width="100"><label>Object:</label></td>
             <td>{$objectId}</td>
         </tr>
         <tr>
@@ -24,7 +24,7 @@
     </table><br /><br />
     <table class="form">
         <tr>
-            <td><label>Label:</label></td>
+            <td width="130"><label>Label:</label></td>
             <td>{$attribute.label}</td>
         </tr>
         <tr>
