@@ -1,7 +1,5 @@
 <?php
 /**
- * Website
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -14,23 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Website
- * @subpackage Image
+ * @package    Ot_Api_Code
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @author     Jason Austin <jason_austin@ncsu.edu>
- * @author     Garrison Locke <garrison_locke@ncsu.edu>
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: Semester.php 188 2007-07-31 17:59:10Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
- *
- * @package    Website
- * @subpackage PortalLink
+ * Model to deal with access codes for API access
+ * 
+ * @package    Ot_Api_Code
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
 class Ot_Api_Code extends Ot_Db_Table 

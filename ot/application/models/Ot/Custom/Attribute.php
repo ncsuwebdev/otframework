@@ -16,7 +16,6 @@
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
- * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
  */
 

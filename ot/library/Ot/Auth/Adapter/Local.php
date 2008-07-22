@@ -12,12 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_Auth_Adapter_DbAuth
- * @category   Authenticaiton Adapter
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
- * @license    BSD License
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: DbAuth.php 42 2007-05-22 12:28:29Z jfaustin@EOS.NCSU.EDU $
+ * @package    Ot_Auth_Adapter_Local
+ * @category   Authentication Adapter
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
+ * @version    SVN: $Id: $
  */
 
 /**
@@ -26,10 +25,9 @@
  * registry, however if a different database is required, a new adapter can be setup
  * in the constructor and assigned to the $_db class variable.
  *
- * @package    Ot_Auth_Adapter_DbAuth
- * @category   Authenticaiton Adapter
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
- *
+ * @package    Ot_Auth_Adapter_Local
+ * @category   Authentication Adapter
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapter_Interface, Ot_Auth_Adapter_InterfaceLocal
 {

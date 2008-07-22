@@ -12,15 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot Admin
- * @subpackage Admin_NavController
+ * @package    Admin_NavController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @author     Jason Austin <jason_austin@ncsu.edu>
- * @author     Garrison Locke <garrison_locke@ncsu.edu>
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: LogController.php 210 2007-08-01 18:23:50Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
+ */
+
+/**
+ * Manages the navigational menus.
+ *
+ * @package    Admin_NavController
+ * @category   Controller
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Admin_NavController extends Internal_Controller_Action 
 {

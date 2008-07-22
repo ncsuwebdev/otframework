@@ -1,7 +1,5 @@
 <?php
 /**
- * Cyclone
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -14,22 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Cyclone
- * @subpackage EmailQueue
+ * @package    Ot_Email_Queue
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Information Technology Division
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @author     Jason Austin <jason_austin@ncsu.edu>
- * @author     Garrison Locke <garrison_locke@ncsu.edu>
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: EmailQueue.php 156 2007-07-20 12:57:10Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
  * Model to do all email queue interaction
  *
- * @package    Cyclone
- * @subpackage EmailQueue
+ * @package    Ot_Email_Queue
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Information Technology Division
  *

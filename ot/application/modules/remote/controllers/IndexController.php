@@ -1,8 +1,5 @@
 <?php
-
 /**
- * 
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -17,10 +14,9 @@
  *
  * @package    Remote_IndexController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: IndexController.php 197 2007-08-01 15:17:51Z gplocke@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
@@ -29,12 +25,12 @@
  * @package    
  * @subpackage Remote_IndexController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Remote_IndexController extends Internal_Controller_Action  
 {
     /**
-     *
+     * Allows SOAP access to the application
      */
     public function soapAction()
     {

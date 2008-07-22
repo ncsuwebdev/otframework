@@ -1,7 +1,5 @@
 <?php
 /**
- * Cyclone
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -14,24 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Cyclone
- * @subpackage Internal_Validate_Mac
- * @category   vaidator
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @package    Ot_Validate_Mac
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @author     Jason Austin <jason_austin@ncsu.edu>
- * @author     Garrison Locke <garrison_locke@ncsu.edu>
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: Mac.php 158 2007-07-20 13:44:00Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
  * validates a mac address
  *
- * @package    Cyclone
- * @subpackage Internal_Validate_Mac
- * @category   vaidator
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @package    Ot_Validate_Mac
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Ot_Validate_Mac implements Zend_Validate_Interface
 {

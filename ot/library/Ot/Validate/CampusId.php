@@ -13,19 +13,18 @@
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
  * @package    Ot_Validate_CampusId
- * @category   vaidator
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: UserId.php 158 2007-07-20 13:44:00Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
  * validates an NCSU campus ID
  *
  * @package    Ot_Validate_CampusId
- * @category   vaidator
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Ot_Validate_CampusId implements Zend_Validate_Interface
 {

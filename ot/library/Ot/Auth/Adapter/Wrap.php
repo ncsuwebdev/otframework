@@ -1,7 +1,5 @@
 <?php
 /**
- * Cyclone
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -14,15 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Cyclone
- * @subpackage Ot_Auth_Adapter_WrapAuth
- * @category   Authenticaiton Adapter
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @package    Ot_Auth_Adapter_Wrap
+ * @category   Authentication Adapter
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @author     Jason Austin <jason_austin@ncsu.edu>
- * @author     Garrison Locke <garrison_locke@ncsu.edu>
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: WrapAuth.php 42 2007-05-22 12:28:29Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
@@ -31,12 +25,9 @@
  * are blank because WRAP handles the kerberos authentication to ensure the user is
  * an NCSU user.
  *
- * @package    Cyclone
- * @subpackage Ot_Auth_Adapter_WrapAuth
- * @category   Authenticaiton Adapter
- * @see        http://www.ncsu.edu/wrap
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
- *
+ * @package    Ot_Auth_Adapter_Wrap
+ * @category   Authentication Adapter
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Ot_Auth_Adapter_Wrap implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapter_Interface
 {

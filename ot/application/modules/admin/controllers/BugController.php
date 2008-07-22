@@ -14,18 +14,17 @@
  *
  * @package    Admin_BugController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
  */
 
 /**
- * Bug reports
+ * Manage bug reports for the application
  *
  * @package    Admin_BugController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Admin_BugController extends Internal_Controller_Action 
 {

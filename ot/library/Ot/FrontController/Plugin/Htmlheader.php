@@ -1,7 +1,5 @@
 <?php
 /**
- * 
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -14,17 +12,21 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package
- * @subpackage Internal_Plugin_Javascript
+ * @package    Ot_FrontController_Plugin_Htmlheader
  * @category   Front Controller Plugin
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @author     Jason Austin <jason_austin@ncsu.edu>
- * @author     Garrison Locke <garrison_locke@ncsu.edu>
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: Auth.php 189 2007-07-31 19:27:49Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
+/**
+ * Allows the application to automatically load CSS and Javascript files that are
+ * associated with the dispatched module, controller and action.
+ *
+ * @package    Ot_FrontController_Plugin_Htmlheader
+ * @category   Front Controller Plugin
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ */
 class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstract
 {
     public function postDispatch(Zend_Controller_Request_Abstract $request)

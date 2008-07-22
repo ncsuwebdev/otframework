@@ -14,12 +14,19 @@
  *
  * @package    Ot_FrontController_Plugin_MaintenanceMode
  * @category   Front Controller Plugin
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: Auth.php 189 2007-07-31 19:27:49Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
+/**
+ * Allows the application to be run in maintenance mode, where only admins are 
+ * allowed to view the site.
+ *
+ * @package    Ot_FrontController_Plugin_MaintenanceMode
+ * @category   Front Controller Plugin
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ */
 class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_Abstract
 {
     public function postDispatch(Zend_Controller_Request_Abstract $request)

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,9 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @package    Ot_Bootstrap
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
- * @see        http://webapps.ncsu.edu
  * @version    SVN: $Id: $
  */
 
@@ -23,9 +23,8 @@
  * Main OT Bootstrap file, which is setup as a Singleton pattern.  It allows
  * consistant initilization of all pieces of our Application Framework.
  *
- * @package    OT Library
- * @subpackage Bootstrap
- * @category   Bootstrap class
+ * @package    OT_Bootstrap
+ * @category   Library
  * @copyright  Copyright (c) 2007 NC State University Information Technology Division
  */
 class Ot_Bootstrap

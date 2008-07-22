@@ -1,7 +1,5 @@
 <?php
 /**
- * 
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -14,24 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    
- * @subpackage Ot_Auth_Adapter_Interface
- * @category   Authentication Interface
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @package    Ot_Auth_Adapter_Interface
+ * @category   Authentication Adapter
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @author     Jason Austin <jason_austin@ncsu.edu>
- * @author     Garrison Locke <garrison_locke@ncsu.edu>
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: Interface.php 42 2007-05-22 12:28:29Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
  * Interface to build all Authentication Adapters
  *
- * @package    
- * @subpackage Ot_Auth_Adapter_Interface
- * @category   Authentication Interface
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @package    Ot_Auth_Adapter_Interface
+ * @category   Authentication Adapter
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 interface Ot_Auth_Adapter_Interface
 {

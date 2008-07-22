@@ -1,7 +1,5 @@
 <?php
 /**
- * Cyclone
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -15,11 +13,10 @@
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
  * @package    Ot_Authz_Adapter_Local
- * @category   Authorization Adapter
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: DbAuthz.php 74 2007-05-29 18:02:23Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
@@ -33,8 +30,8 @@
  * adapter can be setup in the constructor and assigned to the $_db class variable.
  *
  * @package    Ot_Authz_Adapter_Local
- * @category   Authorization Adapter
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Ot_Authz_Adapter_Local implements Ot_Authz_Interface, Ot_Authz_Adapter_Interface
 {

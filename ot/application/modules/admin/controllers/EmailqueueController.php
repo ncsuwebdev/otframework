@@ -14,9 +14,8 @@
  *
  * @package    Admin_EmailqueueController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
  */
 
@@ -25,7 +24,7 @@
  *
  * @package    Admin_EmailqueueController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Admin_EmailqueueController extends Internal_Controller_Action 
 {

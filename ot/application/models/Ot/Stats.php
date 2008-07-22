@@ -12,13 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Classmate
- * @subpackage Stats
+ * @package    Ot_Stats
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
- * @author     Jason Austin
- * @author     Garrison Locke
  * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
  */
@@ -26,8 +23,7 @@
 /**
  * Model to interact with the log table and generate interesting statistics
  *
- * @package    Classmate
- * @subpackage Log
+ * @package    Ot_Stats
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *

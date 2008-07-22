@@ -12,18 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Account
+ * @package    Ot_Account
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
- * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
  */
 
 /**
  * Model to interact with user profiles
  *
- * @package    Account
+ * @package    Ot_Account
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *

@@ -196,6 +196,7 @@ input[type="submit"], input[type="button"], button {
     font-size: .9em;
     background:url(../../images/formbg.gif) repeat-x left top;
     height: 20px;
+    padding: 0px 10px;
 }
 
 input[type='radio'], input[type='checkbox'] {

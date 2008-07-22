@@ -12,22 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    RSPM
- * @subpackage Timezone
+ * @package    Ot_Timezone
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
- * @author     Jason Austin
- * @author     Garrison Locke
- * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
  */
 
 /**
  * Model to show all timezones
  *
- * @package    RSPM
- * @subpackage Timezone
+ * @package    Ot_Timezone
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *

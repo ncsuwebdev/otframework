@@ -1,7 +1,5 @@
 <?php
 /**
- * Cyclone
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -14,24 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Cyclone
- * @subpackage Ot_Acl
- * @category   ACL
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @package    Ot_Acl
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @author     Jason Austin <jason_austin@ncsu.edu>
- * @author     Garrison Locke <garrison_locke@ncsu.edu>
- * @see        http://itdapps.ncsu.edu
- * @version    SVN: $Id: Acl.php 189 2007-07-31 19:27:49Z jfaustin@EOS.NCSU.EDU $
+ * @version    SVN: $Id: $
  */
 
 /**
  * Manages all ACL's for the application.
  *
- * @package    Cyclone
- * @subpackage Ot_Acl
+ * @package    Ot_Acl
  * @category   Access Control
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Ot_Acl extends Zend_Acl
 {

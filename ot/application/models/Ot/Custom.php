@@ -12,13 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Custom
+ * @package    Ot_Custom
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
- * @author     Jason Austin
- * @author     Garrison Locke
- * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
  */
 
@@ -26,7 +23,7 @@
  * Model allows simple integration of custom attributes that are tied to parent
  * objects.
  *
- * @package    Custom
+ * @package    Ot_Custom
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *

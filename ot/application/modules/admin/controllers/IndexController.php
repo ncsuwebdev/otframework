@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,21 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Admin
- * @subpackage IndexController
+ * @package    Admin_IndexController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
- * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
  */
 
 /**
  * Main Admin index controller
  *
- * @package    IndexController
+ * @package    Admin_IndexController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Information Technology Division
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
 class Admin_IndexController extends Internal_Controller_Action 
 {

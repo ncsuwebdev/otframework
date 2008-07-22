@@ -1,18 +1,32 @@
 <?php
+/**
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ *
+ * This license is also available via the world-wide-web at
+ * http://itdapps.ncsu.edu/bsd.txt
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to itappdev@ncsu.edu so we can send you a copy immediately.
+ *
+ * @package    Ot_Ldap_Ncsu
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
+ * @version    SVN: $Id: $
+ */
 
 /**
- * PHP 5 only
- *
  * This LDAP module allows easy interaction between PHP and NCSU's LDAP server.  The
  * module extends the main LDAP driver which allows for persistant connections.
  *
- * @category  Ot
- * @package   Ldap
- * @author    Jason Austin
- * @copyright 2007 NC State University Information Technology Division - IT App Dev
- *
+ * @package    Ot_Ldap_Ncsu
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-
 class Ot_Ldap_Ncsu extends Ot_Ldap_Driver
 {
 
