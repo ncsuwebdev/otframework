@@ -18,7 +18,7 @@
             <th width="50">Edit</th>
             {/if}
         </tr>
-        {foreach from=$config item=c}
+        {foreach from=$configList item=c}
         <tr>
             <td class="description" title="{$c.description|empty_alt:"No Description Provided"}">
                 <img src="{$sitePrefix}/public/ot/images/help.png" class="floatRight" width="16" height="16" />

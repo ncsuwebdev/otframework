@@ -86,7 +86,7 @@ class Admin_ConfigController extends Internal_Controller_Action
         }
         
         $this->view->messages = $this->_flashMessenger->getMessages();
-        $this->view->config = $config;
+        $this->view->configList = $config;
     }
 
     /**

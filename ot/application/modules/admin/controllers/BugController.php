@@ -97,7 +97,7 @@ class Admin_BugController extends Internal_Controller_Action
              ->setAttrib('id', 'login')
              ;
         
-        $title = new Zend_Form_Element_Text('title');
+        $title = new Zend_Form_Element_Text('bugTitle');
         $title->setLabel('Title:')
               ->addFilter('StringTrim')
               ->addFilter('StripTags')
@@ -126,11 +126,20 @@ class Admin_BugController extends Internal_Controller_Action
                     ->setAttrib('cols', '80')
                     ;
         
+        $submit = $form->createElement('submit', 'saveButton', array('label' => 'Submit Bug'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));       
+                    
         $form->addElements(array($title, $reproducibility, $severity, $priority, $description))
-             ->addDisplayGroup(array('title', 'reproducibility', 'severity', 'priority', 'description'), 'fields')
-             ->addElement('submit', 'submitButton', array('label' => 'Submit Bug'))
-             ->addElement('button', 'cancel', array('label' => 'Cancel'))
-             ;    	
+             ->addDisplayGroup(array('bugTitle', 'reproducibility', 'severity', 'priority', 'description'), 'fields')
+             ->addElements(array($submit, $cancel));    	
              
         $messages = array();
         

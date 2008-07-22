@@ -11,6 +11,7 @@
 {foreach from=$css item=c}
 <link rel="stylesheet" type="text/css" media="all" href="{$c}" />
 {/foreach}
+<link rel="stylesheet" type="text/css" media="all" href="{$sitePrefix}/public/css/overrides.css" />
 <script type="text/javascript" src="{$sitePrefix}/public/ot/scripts/mootools.v1.11.js"></script>
 <script type="text/javascript" src="{$sitePrefix}/public/ot/scripts/cnet/mootools.extended/Native/element.dimensions.js"></script>
 <script type="text/javascript" src="{$sitePrefix}/public/ot/scripts/cnet/mootools.extended/Native/element.position.js"></script>
@@ -34,7 +35,7 @@
     <div id="doc4" class="yui-t2"> 
         <div id="hd">
             <p class="authInfo">{layout section=auth}</p>
-            <span id="title">{$config.appTitle}</span>
+            <span id="appTitle">{$config.appTitle}</span>
         </div> 
         <div id="bd"> 
             <div id="yui-main"> 

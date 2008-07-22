@@ -7,6 +7,12 @@
 #fields {
     border: 1px solid #999;
     background-color: #CCC;
+    margin-bottom: 10px;
+}
+
+textarea#description {
+    width: 400px;
+    height: 150px;	
 }
 
 form fieldset dt {

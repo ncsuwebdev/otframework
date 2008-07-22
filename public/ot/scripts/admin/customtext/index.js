@@ -122,7 +122,7 @@ function loadFile(path)
                 $each(editableData, (function(item, index) {
                 
                     var opt = new Element('option');
-                    opt.text = index;
+                    opt.setText(index);
                     opt.value = index + "Div";
                     opt.injectInside(dropDown);
                  
