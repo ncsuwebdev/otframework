@@ -184,7 +184,7 @@ class Admin_TriggerController extends Internal_Controller_Action
         ));
                   
         // Create and configure username element:
-        $name = $form->createElement('text', 'name', array('label' => 'Shorcut Name:'));
+        $name = $form->createElement('text', 'name', array('label' => 'Shortcut Name:'));
         $name->setRequired(true)
              ->addFilter('StringTrim');
         
