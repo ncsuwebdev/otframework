@@ -76,16 +76,18 @@ class Ot_Bootstrap
 		require_once 'Zend/Loader.php';
 		Zend_Loader::registerAutoload();
 		
-		// Define the base URL of the application
-		$this->_baseUrl = substr($_SERVER['PHP_SELF'], 0, strpos($_SERVER['PHP_SELF'], '/index.php'));
-		Zend_Registry::set('sitePrefix', $this->_baseUrl);
-	    
-		// Define the base http path to the app
-        $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
-        $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
-        $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
-        $url = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $this->_baseUrl;		
-        Zend_Registry::set('siteUrl', $url);
+		if ($mode == 'http') {
+			// Define the base URL of the application
+			$this->_baseUrl = substr($_SERVER['PHP_SELF'], 0, strpos($_SERVER['PHP_SELF'], '/index.php'));
+			Zend_Registry::set('sitePrefix', $this->_baseUrl);
+		    
+			// Define the base http path to the app
+	        $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
+	        $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
+	        $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
+	        $url = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $this->_baseUrl;		
+	        Zend_Registry::set('siteUrl', $url);
+		}
 		
 		// Register the config file variables so other parts of the app can access them
 		Zend_Registry::set('configFiles', $configFiles);
@@ -142,7 +144,7 @@ class Ot_Bootstrap
 		}
 		
         // Setup standard logging adapters
-        $this->setupLog();  		
+        $this->setupLog($mode);  		
 	}
 	
     /**
@@ -236,7 +238,7 @@ class Ot_Bootstrap
      * Setup of the standard logger for all apps.
      *
      */
-    public function setupLog()
+    public function setupLog($mode)
     {
         
         // Setup logger
@@ -248,7 +250,7 @@ class Ot_Bootstrap
         
         $logger->setEventItem('sid', session_id());
         $logger->setEventItem('timestamp', time());
-        $logger->setEventItem('request', str_replace($this->_baseUrl, '', $_SERVER['REQUEST_URI']));
+        $logger->setEventItem('request', ($mode == 'http') ? str_replace($this->_baseUrl, '', $_SERVER['REQUEST_URI']) : 'cron');
         
         $auth = Zend_Auth::getInstance();
         
