@@ -12,7 +12,7 @@
       </tab>
       <tab>
         <module>admin</module>
-        <controller></controller>
+        <controller>index</controller>
         <action></action>
         <display>Admin</display>
         <link></link>
@@ -57,6 +57,13 @@
             <controller>custom</controller>
             <action></action>
             <display>Custom Fields</display>
+            <link></link>
+          </tab>
+          <tab>
+            <module>admin</module>
+            <controller>backup</controller>
+            <action>index</action>
+            <display>Database Backup</display>
             <link></link>
           </tab>
           <tab>
