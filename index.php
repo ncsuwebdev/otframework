@@ -26,6 +26,7 @@ $configFiles = array(
     'api'              => './config/api.xml',
     'appPhp'           => './config/app.php',
     'app'              => './config/app.xml',
+    'cron'             => './config/cron.xml',
     'nav'              => './config/nav.xml',
     'textSubstitution' => './config/textSubstitution.xml',
     'user'             => './config/user.xml',

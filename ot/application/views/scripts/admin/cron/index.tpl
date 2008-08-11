@@ -1,6 +1,4 @@
-<div id="adminSemesterIndex">
-    This interface provides the ability to enable and disable the execution
-    of any cron jobs that run to maintain data within Cyclone.<br /><br />
+This interface provides the ability to manage cron jobs for {$config.appTitle}.<br /><br />
 
     {if $acl.add}
     <a href="{$sitePrefix}/admin/cron/add/"><img src="{$sitePrefix}/public/images/add.png" alt="Add Cron Job"></a>
@@ -54,4 +52,3 @@
         </tr>
     {/foreach}
     </table>
-</div>

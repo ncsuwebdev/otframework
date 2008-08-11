@@ -42,7 +42,7 @@
             <module>admin</module>
             <controller>cron</controller>
             <action></action>
-            <display>Cron Status</display>
+            <display>Cron Jobs</display>
             <link></link>
           </tab>
           <tab>

@@ -11,16 +11,14 @@ class Ot_Backup {
 	    foreach ($colData as $colName => $value) {
 	    	$columnNames[$colName] = '"' . $colName . '"';
 	    }
-
-	    if (!is_writable('./backup/')) {
-	    	throw new Ot_Exception_Data('Backup folder is not writable');
-	    }
 	    
 	    $fileName = $tableName . '.backup-' . date('Ymd-B') . '.csv';
 	    
-	    $filePath = './backup/' . $fileName;
+	    $filePath = $fileName;
 	    
-	    $fp = fopen($filePath, 'w');
+	    $tmpName = tempnam('/tmp', $fileName);
+	    
+	    $fp = fopen($tmpName, 'w');
 	    
 	    $ret = fputcsv($fp, $columnNames, ',', '"');
 	    
@@ -38,13 +36,13 @@ class Ot_Backup {
 	    
 	    fclose($fp);
 	    
-	    file_get_contents($filePath);
+	    file_get_contents($tmpName);
 	    
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
-		header('Content-Length: ' . filesize($filePath));
+		header('Content-Length: ' . filesize($tmpName));
 		header("Content-Disposition: attachment; filename=$fileName");
-		readfile($filePath);
-		unlink($filePath);
+		readfile($tmpName);
+		unlink($tmpName);
 	}
 }

@@ -29,124 +29,122 @@
  */
 class Ot_Bootstrap
 {
-	
-	/**
-	 * The current instance of the bootstrap
-	 *
-	 * @var Ot_Bootstrap
-	 */
-	protected static $_instance = null;
-	
-	/**
-	 * Base URL of the application
-	 *
-	 * @var unknown_type
-	 */
-	protected $_baseUrl = '';
-	
-	/**
-	 * Database adapter object
-	 *
-	 * @var Zend_Db_Adapter_Abstract
-	 */
-	protected $_db = null;
-	
-	/**
-	 * Main constructor to create a new instance of the bootstrap class
-	 *
-	 * @param string $mode ('http' loads the view instances)
-	 * @param string $env (tells the configs which version of the options to load)
-	 */
-	public function __construct($mode, $configFiles, $env = 'dev')
-	{
-		// We want all errors reported
-		error_reporting(E_ALL|E_STRICT);
-		
-		// This is where any PHP is done before any actions are taken in the 
-		// bootstrap.  A $dbConfig array is set in this file that brings together
-		// all config data for connecting to the database.
-		if (isset($configFiles['appPhp'])) {
-		    require_once $configFiles['appPhp'];
-		}
-		
-		// Setup the include path to point to the desired directories
-		$this->setupIncludePath();
-		
-		// Turn on autoload so we don't have to specifically include classes
-		require_once 'Zend/Loader.php';
-		Zend_Loader::registerAutoload();
-		
-		if ($mode == 'http') {
-			// Define the base URL of the application
-			$this->_baseUrl = substr($_SERVER['PHP_SELF'], 0, strpos($_SERVER['PHP_SELF'], '/index.php'));
-			Zend_Registry::set('sitePrefix', $this->_baseUrl);
-		    
-			// Define the base http path to the app
-	        $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
-	        $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
-	        $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
-	        $url = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $this->_baseUrl;		
-	        Zend_Registry::set('siteUrl', $url);
-		}
-		
-		// Register the config file variables so other parts of the app can access them
-		Zend_Registry::set('configFiles', $configFiles);
-		
-		// This config file contains user editable options
-		if (!isset($configFiles['user'])) {
-			throw new Exception('User config file not set.  Cannot configure application.');
-		}
-		$userConfig = $this->setupConfig($configFiles['user'], $env, 'userConfig');
-		
-		// This config file contains application options such as adapters
-	    if (!isset($configFiles['app'])) {
+    
+    /**
+     * The current instance of the bootstrap
+     *
+     * @var Ot_Bootstrap
+     */
+    protected static $_instance = null;
+    
+    /**
+     * Base URL of the application
+     *
+     * @var unknown_type
+     */
+    protected $_baseUrl = '';
+    
+    /**
+     * Database adapter object
+     *
+     * @var Zend_Db_Adapter_Abstract
+     */
+    protected $_db = null;
+    
+    /**
+     * Main constructor to create a new instance of the bootstrap class
+     *
+     * @param string $mode ('http' loads the view instances)
+     * @param string $env (tells the configs which version of the options to load)
+     */
+    public function __construct($mode, $configFiles, $env = 'dev')
+    {
+        // We want all errors reported
+        error_reporting(E_ALL|E_STRICT);
+        
+        // This is where any PHP is done before any actions are taken in the 
+        // bootstrap.  A $dbConfig array is set in this file that brings together
+        // all config data for connecting to the database.
+        if (isset($configFiles['appPhp'])) {
+            require_once $configFiles['appPhp'];
+        }
+        
+        // Setup the include path to point to the desired directories
+        $this->setupIncludePath();
+        
+        // Turn on autoload so we don't have to specifically include classes
+        require_once 'Zend/Loader.php';
+        Zend_Loader::registerAutoload();
+        
+        // Define the base URL of the application
+        $this->_baseUrl = substr($_SERVER['PHP_SELF'], 0, strpos($_SERVER['PHP_SELF'], '/index.php'));
+        Zend_Registry::set('sitePrefix', $this->_baseUrl);
+        
+        // Define the base http path to the app
+        $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
+        $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
+        $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
+        $url = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $this->_baseUrl;       
+        Zend_Registry::set('siteUrl', $url);
+        
+        // Register the config file variables so other parts of the app can access them
+        Zend_Registry::set('configFiles', $configFiles);
+        
+        // This config file contains user editable options
+        if (!isset($configFiles['user'])) {
+            throw new Exception('User config file not set.  Cannot configure application.');
+        }
+        $userConfig = $this->setupConfig($configFiles['user'], $env, 'userConfig');
+        
+        // This config file contains application options such as adapters
+        if (!isset($configFiles['app'])) {
             throw new Exception('Application config file not set.  Cannot configure application.');
         }
-		$appConfig  = $this->setupConfig($configFiles['app'], $env, 'appConfig');
-		
-		// Set the default timezone based on what the 
-		date_default_timezone_set($userConfig->timezone->value);
-		
-		// Setup our DB connection.  Notice the $dbConfig array is passed here
-		// that is definied in app.php config file
-		if (!isset($dbConfig)) {
-			throw new Exception('Database config var ($dbConfig) not set.  Cannot configure application');
-		}
-		$this->setupDatabase($dbConfig);	
-		
-		// If the mode of execution is http, we want to setup the views.  In the
-		// case of a cron job accessing files, we don't need to define a view
-		// or a front controller
-		if ($mode == 'http') {
-				
-	        // Initialize the Auth module
-	        $this->setupAuth();
-        			
-			// This file contains ACL configuration options that are editable
-			// by the end user
-			if (!isset($configFiles['acl'])) {
-	            throw new Exception('ACL config file not set.  Cannot configure application.');
-	        }
-			$this->setupConfig($configFiles['acl'], $env, 'aclConfig');
-			
-			// This file contains the navigation structure
-		    if (!isset($configFiles['nav'])) {
+        $appConfig  = $this->setupConfig($configFiles['app'], $env, 'appConfig');
+        
+        // Set the default timezone based on what the 
+        date_default_timezone_set($userConfig->timezone->value);
+        
+        // Setup our DB connection.  Notice the $dbConfig array is passed here
+        // that is definied in app.php config file
+        if (!isset($dbConfig)) {
+            throw new Exception('Database config var ($dbConfig) not set.  Cannot configure application');
+        }
+        $this->setupDatabase($dbConfig);    
+        
+        // If the mode of execution is http, we want to setup the views.  In the
+        // case of a cron job accessing files, we don't need to define a view
+        // or a front controller
+        if ($mode == 'http') {
+                
+            // Initialize the Auth module
+            $this->setupAuth();
+                    
+            // This file contains ACL configuration options that are editable
+            // by the end user
+            if (!isset($configFiles['acl'])) {
+                throw new Exception('ACL config file not set.  Cannot configure application.');
+            }
+            $this->setupConfig($configFiles['acl'], $env, 'aclConfig');
+            
+            // This file contains the navigation structure
+            if (!isset($configFiles['nav'])) {
                 throw new Exception('Navigation config file not set.  Cannot configure application.');
             }
-			$this->setupConfig($configFiles['nav'], $env, 'navConfig');
+            $this->setupConfig($configFiles['nav'], $env, 'navConfig');
             
-			// We need to initialize the view
-			$this->setupView();
-			
-			// We initialize the front controller to handle all routing of requests
-			// to the controllers
-			$this->setupFrontController();
-		}
-		
+            // We need to initialize the view
+            $this->setupView();
+            
+            // We initialize the front controller to handle all routing of requests
+            // to the controllers
+            $this->setupFrontController();
+        }
+        
         // Setup standard logging adapters
-        $this->setupLog($mode);  		
-	}
-	
+        $this->setupLog();          
+    }
+    
     /**
      * Privatized clone function for singleton pattern.
      */
@@ -174,13 +172,18 @@ class Ot_Bootstrap
      */
     public function setupIncludePath()
     {
-    	$basepath = preg_replace('/\/ot\/library\/.*$/i', '', dirname(__FILE__));
+        $basepath = preg_replace('/\/ot\/library\/.*$/i', '', dirname(__FILE__));
+        
+        
+        $appbasepath = preg_replace('/\/index.php/i', '', $_SERVER['SCRIPT_FILENAME']);
+        
         set_include_path(get_include_path() . PATH_SEPARATOR . 
             $basepath . '/ot/library' . PATH_SEPARATOR . 
             $basepath . '/ot/application/models/' . PATH_SEPARATOR . 
-            $basepath . '/library' . PATH_SEPARATOR . 
-            $basepath . '/application/models/'         
-        );    	
+            $appbasepath . '/library' . PATH_SEPARATOR . 
+            $appbasepath . '/application/models/'         
+        ); 
+
     }
     
     /**
@@ -198,7 +201,7 @@ class Ot_Bootstrap
      */
     public function setupDatabase($dbConfig)
     {
-    	$this->_db = Zend_Db::factory($dbConfig['adapter'], $dbConfig);
+        $this->_db = Zend_Db::factory($dbConfig['adapter'], $dbConfig);
         Zend_Db_Table::setDefaultAdapter($this->_db);
         Zend_Registry::set('dbAdapter', $this->_db);
     }
@@ -214,7 +217,7 @@ class Ot_Bootstrap
      */
     public function setupConfig($path, $branch, $name)
     {
-    	$config = new Zend_Config_Xml($path, $branch);
+        $config = new Zend_Config_Xml($path, $branch);
         Zend_Registry::set($name, $config);
         
         return $config;
@@ -238,7 +241,7 @@ class Ot_Bootstrap
      * Setup of the standard logger for all apps.
      *
      */
-    public function setupLog($mode)
+    public function setupLog()
     {
         
         // Setup logger
@@ -250,7 +253,7 @@ class Ot_Bootstrap
         
         $logger->setEventItem('sid', session_id());
         $logger->setEventItem('timestamp', time());
-        $logger->setEventItem('request', ($mode == 'http') ? str_replace($this->_baseUrl, '', $_SERVER['REQUEST_URI']) : 'cron');
+        $logger->setEventItem('request', str_replace($this->_baseUrl, '', $_SERVER['REQUEST_URI']));
         
         $auth = Zend_Auth::getInstance();
         
@@ -259,7 +262,7 @@ class Ot_Bootstrap
             $logger->setEventItem('role', Ot_Authz::getInstance()->getRole());
         }
         
-        Zend_Registry::set('logger', $logger);    	
+        Zend_Registry::set('logger', $logger);      
     }
     
     /**
@@ -336,17 +339,17 @@ class Ot_Bootstrap
      */
     public function dispatch()
     {
-    	$front = Zend_Controller_Front::getInstance();
-    	
+        $front = Zend_Controller_Front::getInstance();
+        
         try {
             $front->dispatch();
         } catch (Exception $e) {
-        	
-        	// We remove the request from the namespace if there is an error
+            
+            // We remove the request from the namespace if there is an error
             $req = new Zend_Session_Namespace('request');
             $req->uri = '';
             
             throw $e;
-        }    	
+        }       
     }
 }
