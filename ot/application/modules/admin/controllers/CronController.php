@@ -68,34 +68,17 @@ class Admin_CronController extends Internal_Controller_Action
             $this->view->javascript = 'sortable.js';
         }
         
+        $filter = new Zend_Filter();
+        $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
+        $filter->addFilter(new Zend_Filter_StringToLower());
+        
+        foreach ($jobs as &$j) {
+        	$j['name'] = $filter->filter($j['name']);	
+        }
+        
         $this->view->messages = $this->_flashMessenger->getMessages();
         $this->view->cronjobs = $jobs;
         $this->view->title    = "Cron Job Status";
-    }
-    
-    public function runAction()
-    {
-    	$get = Zend_Registry::get('getFilter');
-        
-        if (!isset($get->name)) {
-        	throw new Ot_Exception_Input('Name is not set in query string.');
-        }
-        
-        $cs = new Ot_Cron_Status();
-        
-        $cj = $cs->find($get->name);
-        
-		if (is_null($cj)) {
-			throw new Ot_Exception_Data('Could not located CRON job');
-		}
-		
-		if ($cj['status'] == 'disabled') {
-			throw new Ot_Exception_Access('You cannot run a CRON job that is disabled');
-		}
-		
-		$as = Zend_Controller_Front::getPlugin('Zend_Controller_Plugin_ActionStack');
-
-		
     }
 
     /**

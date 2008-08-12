@@ -37,3 +37,15 @@
 .disabled a {
     color: #FFF;
 }
+
+#alertBox {
+	border: 1px solid #000;
+	background-color: #66EE00;
+	margin-bottom: 5px;
+	width: 97%;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 5px;
+	font-weight: bold;
+	visibility: hidden;
+}

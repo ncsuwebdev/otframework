@@ -63,6 +63,7 @@ class Cron_IndexController extends Internal_Controller_Action
 		
     	parent::init();
     }
+
     
     /**
      * Cron job to process the email queue

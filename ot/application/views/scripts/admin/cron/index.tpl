@@ -14,6 +14,8 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
     <a href="{$sitePrefix}/admin/cron/add/"><img src="{$sitePrefix}/public/images/add.png" alt="Add Cron Job"></a>
     <a href="{$sitePrefix}/admin/cron/add/">Add Cron Job</a>
     {/if}
+    
+    <div id="alertBox">CRON Job Ran Successfully</div>
 
     {if $acl.toggle}
     <span class="enableAllButton">
@@ -53,7 +55,7 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
             </td>
             <td style="text-align: center;">
             	{if $c.status == 'enabled'}
-            		<a href="{$sitePrefix}/admin/cron/run/?name={$c.name}">Run Now</a>
+            		<a class="runLink" href="{$sitePrefix}/cron/index/{$c.name}">Run Now</a>
                 {else}
                 	Cannot run a disabled job
             	{/if}
