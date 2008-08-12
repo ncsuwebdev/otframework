@@ -24,7 +24,6 @@ require_once './ot/library/Ot/Bootstrap.php';
 $configFiles = array(
     'acl'              => './config/acl.xml',
     'api'              => './config/api.xml',
-    'appPhp'           => './config/app.php',
     'app'              => './config/app.xml',
     'cron'             => './config/cron.xml',
     'nav'              => './config/nav.xml',
@@ -34,6 +33,29 @@ $configFiles = array(
     'custom'           => './config/custom.xml',
 );
 
-$bs = new Ot_Bootstrap('http', $configFiles, 'production');
+require_once './ot/library/Ot/Bootstrap.php';
+$bs = Ot_Bootstrap::getInstance();           
 
-$bs->dispatch();
+/**
+ * Custom data based on the specific application requirements
+ */
+require_once $_SERVER['KEY_MANAGER_PATH'];
+$km = new KeyManager;
+
+$key = $km->getKeyObject('ot_sandbox');
+
+$dbConfig = array(
+    'adapter'  => 'PDO_MYSQL',
+    'username' => $key->user,
+    'password' => $key->password,
+    'host'     => $key->host,
+    'port'     => $key->port,
+    'dbname'   => $key->dbname
+    );
+/**
+ * End Custom Data
+ */
+
+
+// Dispatch the request
+$bs->dispatch($configFiles, $dbConfig);

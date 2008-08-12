@@ -14,7 +14,6 @@
     	   </wrap> 	   
     	</authentication>
     	<authorization>Ot_Authz_Adapter_Local</authorization>
-    	<cronFilePath>./cron</cronFilePath>
     	<loginOptions>
     	   <generateAccountOnFirstLogin>1</generateAccountOnFirstLogin>
     	   <defaultRoleOnAccountCreation>authUser</defaultRoleOnAccountCreation>
