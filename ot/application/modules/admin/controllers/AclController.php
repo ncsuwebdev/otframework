@@ -74,7 +74,20 @@ class Admin_AclController extends Internal_Controller_Action
             'delete' => $this->_acl->isAllowed($this->_role, $this->_resource, 'delete'),
             );
 
-        $this->view->roles = $this->_acl->getAvailableRoles();
+        $roles = $this->_acl->getAvailableRoles();
+      
+        foreach ($roles as &$r) {
+            
+        	$children = $this->_acl->getChildrenOfRole($r['name']);
+            
+            if (count($children) > 0) {
+            	$r['inheritedFrom'] = 1;
+            } else {
+            	$r['inheritedFrom'] = 0;
+            }
+        }
+        
+        $this->view->roles = $roles;
 
         if (count($this->view->roles) != 0) {
             $this->view->javascript = 'sortable.js';
@@ -348,6 +361,21 @@ class Admin_AclController extends Internal_Controller_Action
             if (!isset($filter->originalRoleName)) {
                 throw new Ot_Exception_Input('Role Name can not be blank');
             }
+            
+            $inheritedRoles = array();
+            $inheritedRoles = $this->_acl->getChildrenOfRole($filter->originalRoleName);
+            
+            $roleList = array();
+            
+            foreach ($inheritedRoles as $key => $value) {
+            	$roleList[] = $key;
+            }
+
+            $roleList = implode(', ', $roleList);
+            
+            if (count($inheritedRoles) > 0) {
+				throw new Ot_Exception_Data('This role is depended upon by other roles (' . $roleList . ') and cannot be deleted as long as the other roles depend upon it.');
+            }
 
             $this->_acl->deleteCustomRole($filter->originalRoleName, $this->_configFilePath);
 
@@ -359,8 +387,6 @@ class Admin_AclController extends Internal_Controller_Action
         }
         
         $getFilter = Zend_Registry::get('getFilter');
-
-        $originalRoleName = '';
 
         if (!isset($getFilter->originalRoleName)) {
             throw new Ot_Exception_Input('Role name not set');

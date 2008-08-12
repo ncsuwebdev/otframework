@@ -29,18 +29,22 @@
             {if $acl.edit}
             <td align="center">
                 {if $r.editable}
-                <a href="{$sitePrefix}/admin/acl/edit/?originalRoleName={$r.name}"><img src="{$sitePrefix}/public/ot/images/edit.png" alt="Edit {$r.name}" /></a>
+                <a href="{$sitePrefix}/admin/acl/edit/?originalRoleName={$r.name}"><img src="{$sitePrefix}/public/ot/images/edit.png" alt="Edit {$r.name}" width="16" height="16" /></a>
                 {else}
-                <img src="{$sitePrefix}/public/ot/images/editDisabled.png" alt="Edit Disabled for {$r.name}" />
+                <img src="{$sitePrefix}/public/ot/images/editDisabled.png" alt="Edit Disabled for {$r.name}" width="16" height="16" />
                 {/if}
             </td>
             {/if}
             {if $acl.delete}
             <td align="center">
                 {if $r.editable}
-                <a href="{$sitePrefix}/admin/acl/delete/?originalRoleName={$r.name}"><img src="{$sitePrefix}/public/ot/images/delete.png" alt="Delete {$r.name}" /></a>
+                	{if $r.inheritedFrom}
+                		<img src="{$sitePrefix}/public/ot/images/deleteDisabled.png" alt="Delete Disabled for {$r.name} because it is inherited from another role" width="16" height="16" />
+                	{else}
+                		<a href="{$sitePrefix}/admin/acl/delete/?originalRoleName={$r.name}"><img src="{$sitePrefix}/public/ot/images/delete.png" alt="Delete {$r.name}" width="16" height="16" /></a>
+                	{/if}
                 {else}
-                <img src="{$sitePrefix}/public/ot/images/deleteDisabled.png" alt="Delete Disabled for {$r.name}" />
+                <img src="{$sitePrefix}/public/ot/images/deleteDisabled.png" alt="Delete Disabled for {$r.name}" width="16" height="16" />
                 {/if}
             </td>
             {/if}
