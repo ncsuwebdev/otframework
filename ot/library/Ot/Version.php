@@ -34,16 +34,6 @@ class Ot_Version
 	 *
 	 * @var string
 	 */
-	protected $_version = '1.0.2';
-	
-	/**
-	 * Gets the exception title
-	 *
-	 * @return unknown
-	 */
-	public function getVersion()
-	{
-		return $this->_version;
-	}
+	const VERSION = '1.0.2';
 }
 ?>

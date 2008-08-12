@@ -35,6 +35,15 @@ class Admin_IndexController extends Internal_Controller_Action
      */
     public function indexAction()
     {       
-        $this->view->title = Zend_Registry::get('userConfig')->appTitle->value . " Admin Area"; 
+        $this->view->title = "Application Library Versions";
+
+        $this->view->otVersion = Ot_Version::VERSION;
+        $this->view->zfVersion = Zend_Version::VERSION;
+
+        //require_once 'Smarty.class.php';
+        $smarty = new Smarty();
+        
+        $this->view->smartyVersion = $smarty->_version;
+        
     }
 }
