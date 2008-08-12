@@ -82,5 +82,5 @@ class Cron_IndexController extends Internal_Controller_Action
 		    $this->_logger->info("Mail Sent");
 		}    	
     }
-    
+
 }

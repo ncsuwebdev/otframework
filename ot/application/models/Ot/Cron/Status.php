@@ -29,7 +29,6 @@
  */
 class Ot_Cron_Status extends Ot_Db_Table {
 
-
     /**
      * Name of the table in the database
      *
@@ -42,17 +41,17 @@ class Ot_Cron_Status extends Ot_Db_Table {
      *
      * @var string
      */
-    protected $_primary = 'path';
+    protected $_primary = 'name';
 
     /**
      * Checks to see if a certain cron job is enabled
      *
-     * @param string $path
+     * @param string $name
      * @return boolean
      */
-    public function isEnabled($path)
+    public function isEnabled($name)
     {
-        $result = $this->find($path);
+        $result = $this->find($name);
 
         if (is_null($result)) {
             return false;
@@ -61,19 +60,19 @@ class Ot_Cron_Status extends Ot_Db_Table {
         return ($result->status == 'enabled');
     }
     
-    public function executed($path, $ts)
+    public function executed($name, $ts)
     {
         $data = array(
-           'path'      => $path,
+           'name'      => $name,
            'lastRunDt' => $ts,
         );
         
         $this->update($data, null);
     }
     
-    public function getLastRunDt($path)
+    public function getLastRunDt($name)
     {
-        $result = $this->find($path);
+        $result = $this->find($name);
 
         if (is_null($result)) {
             return 0;
@@ -82,25 +81,25 @@ class Ot_Cron_Status extends Ot_Db_Table {
         return $result->lastRunDt;      
     }    
 
-    public function setCronStatus($path, $status)
+    public function setCronStatus($name, $status)
     {
         $dba = $this->getAdapter();
 
-        if ($path == 'all') {
+        if ($name == 'all') {
 
             $jobs = $this->getAvailableCronJobs();
 
             foreach ($jobs as $j) {
                 $data = array('status' => $status);
-                $job = $this->find($j['path']);
+                $job = $this->find($j['name']);
 
                 if (!is_null($job)) {
-                    $where = $dba->quoteInto('path = ?', $j['path']);
+                    $where = $dba->quoteInto('name = ?', $j['name']);
 
                     $this->update($data, $where);
                 } else {
 
-                    $data['path'] = $j['path'];
+                    $data['name'] = $j['name'];
 
                     $this->insert($data);
                 }
@@ -108,14 +107,14 @@ class Ot_Cron_Status extends Ot_Db_Table {
         } else {
 
             $data = array('status' => $status);
-            $job = $this->find($path);
+            $job = $this->find($name);
 
             if (!is_null($job)) {
-                $where = $dba->quoteInto('path = ?', $path);
+                $where = $dba->quoteInto('name = ?', $name);
 
                 $this->update($data, $where);
             } else {
-                $data['path'] = $path;
+                $data['name'] = $name;
 
                 $this->insert($data);
             }
@@ -126,33 +125,32 @@ class Ot_Cron_Status extends Ot_Db_Table {
 
     public function getAvailableCronJobs()
     {
-        $config = Zend_Registry::get('appConfig');
-
-        if (!is_dir($config->cronFilePath)) {
-            throw new Exception('Cron directory not set correctly in config file');
-        }
-
-        $dir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($config->cronFilePath));
-        $crons = array();
-        foreach ($dir as $file) {
-            $f = str_replace($config->cronFilePath . '/', '', $file);
-            if (preg_match('/\.php$/i', $f)) {
-                $temp = array();
-                $temp['path'] = str_replace(DIRECTORY_SEPARATOR, '_', preg_replace('/\.php$/i', '', $f));
-
-                $data = $this->find($temp['path']);
+    	require_once './application/modules/cron/controllers/IndexController.php';
+        
+    	$class = new ReflectionClass('Cron_IndexController');
+        $methods = $class->getMethods();
+        
+        $jobs = array(); 
+        
+        foreach ($methods as $m) {
+        	        	
+        	if (preg_match('/action/i', $m->name)) {
+        		
+        		$temp = array(); 
+            	$temp['name'] = preg_replace('/action/i', '', $m->name);
+        		
+        		$data = $this->find($temp['name']);
 
                 if (!is_null($data)) {
                     $temp = $data->toArray();
                 } else {
                     $temp['status'] = 'disabled';
                 }
-
-                $crons[] = $temp;
-            }
+             	   
+                $jobs[] = $temp;
+        	}
         }
-
-        return $crons;
+        
+        return $jobs;
     }
 }
-?>

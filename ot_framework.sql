@@ -201,8 +201,7 @@ CREATE TABLE `tbl_ot_bug_text` (
 --
 
 CREATE TABLE `tbl_ot_cron_status` (
-  `path` varchar(255) NOT NULL default '',
-  `schedule` varchar(255) NOT NULL default '',
+  `name` varchar(255) NOT NULL default '',
   `status` enum('enabled','disabled') NOT NULL default 'enabled',
   `lastRunDt` int(11) NOT NULL default '0',
   PRIMARY KEY  (`path`)

@@ -1,3 +1,13 @@
+{if count($messages) != 0}
+<div class="messageContainer">
+    <div class="message">
+    {foreach from=$messages item=m}
+    {$m}<br />
+    {/foreach}
+    </div>
+</div>
+{/if}
+
 This interface provides the ability to manage cron jobs for {$config.appTitle}.<br /><br />
 
     {if $acl.add}
@@ -7,10 +17,10 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
 
     {if $acl.toggle}
     <span class="enableAllButton">
-        <a href="{$sitePrefix}/admin/cron/toggle/?path=all&status=disabled">Enable All</a>
+        <a href="{$sitePrefix}/admin/cron/toggle/?name=all&status=disabled">Enable All</a>
     </span>
     <span class="disableAllButton">
-        <a href="{$sitePrefix}/admin/cron/toggle/?path=all&status=enabled">Disable All</a>
+        <a href="{$sitePrefix}/admin/cron/toggle/?name=all&status=enabled">Disable All</a>
     </span>
     <br /><br />
     {/if}
@@ -20,16 +30,17 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
         <tr>
             <th width="250">Cron Job</th>
             <th width="130">Status</th>
+            <th width="150">Execute</th>
             {if $acl.edit}
             <th width="50">Edit</th>
             {/if}
         </tr>
         {/if}
         <tr class="{cycle values="row1,row2"}">
-            <td>{$c.path}</td>
-            <td style="text-align:center" class="{$c.status}">
+            <td>{$c.name}</td>
+            <td style="text-align:center;" class="{$c.status}">
             {if $acl.toggle}
-            <a href="{$sitePrefix}/admin/cron/toggle/?path={$c.path}">
+            <a href="{$sitePrefix}/admin/cron/toggle/?name={$c.name}">
             {/if}
             {if $c.status == 'enabled'}
             Enabled
@@ -40,9 +51,16 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
             </a>
             {/if}
             </td>
+            <td style="text-align: center;">
+            	{if $c.status == 'enabled'}
+            		<a href="{$sitePrefix}/admin/cron/run/?name={$c.name}">Run Now</a>
+                {else}
+                	Cannot run a disabled job
+            	{/if}
+            </td
             {if $acl.edit}
             <td style="text-align:center">
-                <a href="{$sitePrefix}/admin/cron/edit/?path={$c.path}"><img src="{$sitePrefix}/public/images/edit.png" alt="Edit" /></a>
+                <a href="{$sitePrefix}/admin/cron/edit/?name={$c.name}"><img src="{$sitePrefix}/public/images/edit.png" alt="Edit" /></a>
             </td>
             {/if}
         </tr>

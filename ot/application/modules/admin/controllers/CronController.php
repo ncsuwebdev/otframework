@@ -28,6 +28,26 @@
  */
 class Admin_CronController extends Internal_Controller_Action 
 {
+	
+	/**
+     * Flash messenger variable
+     *
+     * @var unknown_type
+     */
+    protected $_flashMessenger = null;
+    
+    /**
+     * Setup flash messenger and the config file path
+     *
+     */
+    public function init()
+    {        
+        $this->_flashMessenger = $this->getHelper('FlashMessenger');
+        $this->_flashMessenger->setNamespace('cron');
+        
+        parent::init();
+    }
+	
     /**
      * shows all the cron jobs
      *
@@ -47,9 +67,35 @@ class Admin_CronController extends Internal_Controller_Action
         if (count($jobs) != 0) {
             $this->view->javascript = 'sortable.js';
         }
+        
+        $this->view->messages = $this->_flashMessenger->getMessages();
+        $this->view->cronjobs = $jobs;
+        $this->view->title    = "Cron Job Status";
+    }
+    
+    public function runAction()
+    {
+    	$get = Zend_Registry::get('getFilter');
+        
+        if (!isset($get->name)) {
+        	throw new Ot_Exception_Input('Name is not set in query string.');
+        }
+        
+        $cs = new Ot_Cron_Status();
+        
+        $cj = $cs->find($get->name);
+        
+		if (is_null($cj)) {
+			throw new Ot_Exception_Data('Could not located CRON job');
+		}
+		
+		if ($cj['status'] == 'disabled') {
+			throw new Ot_Exception_Access('You cannot run a CRON job that is disabled');
+		}
+		
+		$as = Zend_Controller_Front::getPlugin('Zend_Controller_Plugin_ActionStack');
 
-        $this->view->cronjobs       = $jobs;
-        $this->view->title          = "Cron Job Status";
+		
     }
 
     /**
@@ -62,17 +108,17 @@ class Admin_CronController extends Internal_Controller_Action
 
         $get = Zend_Registry::get('getFilter');
         
-        if (!isset($get->path)) {
-        	throw new Ot_Exception_Input('Path is not set in query string.');
+        if (!isset($get->name)) {
+        	throw new Ot_Exception_Input('Name is not set in query string.');
         }
         
         if (!isset($get->status)) {
-            $cj = $cs->find($get->path);
+            $cj = $cs->find($get->name);
     
             if (is_null($cj)) {
                 $cj = array(
                     'status' => 'disabled',
-                    'path'   => $get->path
+                    'name'   => $get->name
                     );
     
                 $status = 'disabled';
@@ -86,7 +132,7 @@ class Admin_CronController extends Internal_Controller_Action
         }        
         
         $form = new Zend_Form();
-        $form->setAction('?path=' . $get->path)
+        $form->setAction('?name=' . $get->name)
              ->setMethod('post')
              ->setAttrib('id', 'toggleCronJob')
              ;
@@ -95,7 +141,7 @@ class Admin_CronController extends Internal_Controller_Action
         $hidden->setValue(($status == 'enabled') ? 'disable' : 'enable');
         $hidden->clearDecorators();
         $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
+            array('ViewHelper'), // element's view helper
         ));
         
         $form->addElement($hidden)
@@ -106,20 +152,19 @@ class Admin_CronController extends Internal_Controller_Action
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             $status = ($form->getValue('status') == 'enable') ? 'enabled' : 'disabled';
 
-            $result = $cs->setCronStatus($get->path, $status);
+            $result = $cs->setCronStatus($get->name, $status);
 
-            $this->_logger->setEventItem('attributeName', 'cronpath');
-            $this->_logger->setEventItem('attributeId', $get->path);
+            $this->_logger->setEventItem('attributeName', 'cronName');
+            $this->_logger->setEventItem('attributeId', $get->name);
             $this->_logger->info('cron was set to ' . $status);
                         
             $this->_helper->redirector->gotoUrl('/admin/cron/');
         }
         
-        
-        if ($get->path == 'all') {
-            $this->view->displayPath = 'all cron jobs';
+        if ($get->name == 'all') {
+            $this->view->displayName = 'all cron jobs';
         } else {
-            $this->view->displayPath = $get->path;
+            $this->view->displayName = $get->name;
         }
 
         $this->view->status = ($status == 'enabled') ? 'disable' : 'enable';
