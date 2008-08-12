@@ -31,12 +31,21 @@
  */
 class Cron_IndexController extends Internal_Controller_Action 
 {    
+	/**
+	 * Unix timestamp of the date the cron job was last run.
+	 *
+	 * @var int
+	 */
+	protected $_lastRunDt = 0;
+	
     /**
      * Initialization function
      *
      */
     public function init()
     {
+    	set_time_limit(0);
+    	
 		$this->_helper->layout->disableLayout();
 		$this->_helper->viewRenderer->setNoRender();
     	
@@ -47,6 +56,10 @@ class Cron_IndexController extends Internal_Controller_Action
 		if (!$cs->isEnabled($action)) {
 			die();
 		}
+		
+		$this->_lastRunDt = $cs->getLastRunDt($action);
+		
+		$cs->executed($action, time());
 		
     	parent::init();
     }
