@@ -59,7 +59,7 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
                 {else}
                 	Cannot run a disabled job
             	{/if}
-            </td
+            </td>
             {if $acl.edit}
             <td style="text-align:center">
                 <a href="{$sitePrefix}/admin/cron/edit/?name={$c.name}"><img src="{$sitePrefix}/public/images/edit.png" alt="Edit" /></a>
