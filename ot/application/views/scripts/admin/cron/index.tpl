@@ -55,7 +55,7 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
             </td>
             <td style="text-align: center;">
             	{if $c.status == 'enabled'}
-            		<a class="runLink" href="{$sitePrefix}/cron/index/{$c.dashedName}">Run Now</a>
+            		<a class="runLink" href="{$sitePrefix}/cron/index/{$c.name}">Run Now</a>
                 {else}
                 	Cannot run a disabled job
             	{/if}

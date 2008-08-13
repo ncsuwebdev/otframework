@@ -68,14 +68,6 @@ class Admin_CronController extends Internal_Controller_Action
             $this->view->javascript = 'sortable.js';
         }
         
-        $filter = new Zend_Filter();
-        $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
-        $filter->addFilter(new Zend_Filter_StringToLower());
-        
-        foreach ($jobs as &$j) {
-        	$j['dashedName'] = $filter->filter($j['name']);	
-        }
-        
         $this->view->messages = $this->_flashMessenger->getMessages();
         $this->view->cronjobs = $jobs;
         $this->view->title    = "Cron Job Status";
