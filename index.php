@@ -19,6 +19,33 @@
  * @version    SVN: $Id: $
  */
 
+
+/**
+ * Remove this if the OT framework is hosted locally from within the application.
+ * 
+ * Change the version number to change framework versions
+ */
+// Uncomment this and fill in the $otVersion for new applications that do not have the framework hosted locally
+/* 
+	$otVersion = '1.2.3';
+	
+	$paths = array(
+		'./ot'        => $_SERVER['SHARED_LIB_PATH'] . '/OT/' . $otVersion . '/ot',
+		'./public/ot' => $_SERVER['SHARED_LIB_PATH'] . '/OT/' . $otVersion . '/public/ot',
+	);
+	
+	foreach ($paths as $key => $value) {
+		if (readlink($key) != $value) {
+			unlink($key);
+			exec('ln -s ' . $value . ' ' . $key);
+		}
+	}
+*/
+/**
+ * End symlink setup code
+ */
+
+	
 require_once './ot/library/Ot/Bootstrap.php';
 
 $configFiles = array(
