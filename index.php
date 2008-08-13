@@ -27,7 +27,7 @@
  */
 // Uncomment this and fill in the $otVersion for new applications that do not have the framework hosted locally
 /* 
-	$otVersion = '1.2.3';
+	$otVersion = '1.2.4';
 	
 	$paths = array(
 		'./ot'        => $_SERVER['SHARED_LIB_PATH'] . '/OT/' . $otVersion . '/ot',
@@ -35,8 +35,12 @@
 	);
 	
 	foreach ($paths as $key => $value) {
-		if (readlink($key) != $value) {
-			unlink($key);
+		if (is_link($key)) {
+			if (readlink($key) != $value) {
+				unlink($key);
+				exec('ln -s ' . $value . ' ' . $key);
+			}			
+		} else {
 			exec('ln -s ' . $value . ' ' . $key);
 		}
 	}
