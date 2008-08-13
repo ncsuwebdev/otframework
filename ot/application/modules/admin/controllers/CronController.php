@@ -73,7 +73,7 @@ class Admin_CronController extends Internal_Controller_Action
         $filter->addFilter(new Zend_Filter_StringToLower());
         
         foreach ($jobs as &$j) {
-        	$j['name'] = $filter->filter($j['name']);	
+        	$j['dashedName'] = $filter->filter($j['name']);	
         }
         
         $this->view->messages = $this->_flashMessenger->getMessages();
