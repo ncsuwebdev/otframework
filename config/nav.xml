@@ -5,14 +5,6 @@
       <tab>
         <module>default</module>
         <controller>index</controller>
-        <action>index</action>
-        <display>test</display>
-        <link>http://www.google.com</link>
-        <submenu/>
-      </tab>
-      <tab>
-        <module>default</module>
-        <controller>index</controller>
         <action></action>
         <display>Home</display>
         <link></link>
