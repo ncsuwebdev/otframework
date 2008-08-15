@@ -70,6 +70,18 @@ window.addEvent('domready', function() {
         data.display = $('displayBox').value;
         data.link = $('linkBox').value;
         
+        if (data.module == "") {
+        	data.module = "default";
+        }
+        
+        if (data.controller == "") {
+        	data.controller = "index";
+        }
+        
+        if (data.action == "") {
+        	data.action = "index";
+        }
+        
         var jsonStr = Json.toString(data);
         navTree.lastEl.title = jsonStr;
         navTree.lastEl.getFirst().setText(data.display);
