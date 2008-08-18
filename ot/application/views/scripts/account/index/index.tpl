@@ -1,12 +1,3 @@
-{if count($messages) != 0}
-<div class="messageContainer">
-    <div class="message">
-    {foreach from=$messages item=m}
-    {$m}<br />
-    {/foreach}
-    </div>
-</div>
-{/if}
 {editable id="account"}This is the data which is associated with your user
 account.  You may modify this data at any time by clicking on the &quot;My Account&quot;
 link at the top of the page.

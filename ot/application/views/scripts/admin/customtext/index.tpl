@@ -19,26 +19,28 @@
 </div>
 
 <ul id="fileTreeData">
-    {foreach from=$files item=module key=module_key}
-        {if is_array($module)}
-            <li><a>{$module_key}</a>
-            <ul>
-            {foreach from=$module item=controller key=controller_key}
-                {if is_array($controller)}
-                    <li><a>{$controller_key}</a>
-                    <ul>
-                    {foreach from=$controller item=action key=action_key}
-                        <li id="{$module_key}/{$controller_key}/{$action_key}"><a href="{$module_key}/{$controller_key}/{$action_key}" target="file"><!-- icon:_doc; -->{$action_key}</a></li>
-                    {/foreach}
-                    </ul>
-                {else}
-                    <li><a>{$controller_key}</a></li>
-                {/if}
-            {/foreach}
-            </ul>
-        {else}
-            <li><a href="{$module_key}" target="file"><!-- icon:_doc; -->{$module_key}</a></li>
-        {/if}
-    {/foreach}
+    {foreach from=$files item=baseDir key=baseDir_key}
+	    {foreach from=$baseDir item=module key=module_key}
+	        {if is_array($module)}
+	            <li><a>{$module_key}</a>
+	            <ul>
+	            {foreach from=$module item=controller key=controller_key}
+	                {if is_array($controller)}
+	                    <li><a>{$controller_key}</a>
+	                    <ul>
+	                    {foreach from=$controller item=action key=action_key}
+	                        <li id="{$module_key}/{$controller_key}/{$action_key}"><a href="{$module_key}/{$controller_key}/{$action_key}" target="file"><!-- icon:_doc; -->{$action_key}</a></li>
+	                    {/foreach}
+	                    </ul>
+	                {else}
+	                    <li><a>{$controller_key}</a></li>
+	                {/if}
+	            {/foreach}
+	            </ul>
+	        {else}
+	            <li><a href="{$module_key}" target="file"><!-- icon:_doc; -->{$module_key}</a></li>
+	        {/if}
+	    {/foreach}
+	{/foreach}
 </ul>
 <div style="clear: both;"></div>

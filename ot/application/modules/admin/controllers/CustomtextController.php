@@ -29,24 +29,26 @@
  */
 class Admin_CustomtextController extends Internal_Controller_Action 
 {
-     /**
-     * shows the homepage
+	
+	/**
+	 * The directories in which to look for view templates
+	 *
+	 * @var array
+	 */
+    protected $_baseDirs = array(
+		                        'application' => './application/views/scripts/',
+		                        'ot'          => './ot/application/views/scripts/'
+		                    );
+	
+    /**
+     * Shows the tree of templates that have editable text.
      *
      */
     public function indexAction()
     {        
         $this->view->title = 'Custom Text Replacement';
-                
-        $baseDir = './application/views/scripts/';
-        
-        $uc        = Zend_Registry::get('userConfig');
-        $getFilter = Zend_Registry::get('getFilter');
-        
-        $path = (isset($getFilter->path)) ? $getFilter->path : '';
-        
-        $baseDir .= $path;
 
-        $files = $this->_makeTree($baseDir, array('tpl'));
+        $files = $this->_makeTree(array('tpl'));
         
         $this->view->files = $files;
         
@@ -55,7 +57,10 @@ class Admin_CustomtextController extends Internal_Controller_Action
         $this->view->javascript = "mootree.js";
     }
     
-    
+    /**
+     * Gets the contents of a file and determines what is available for editing.
+     *
+     */
     public function getFileAction()
     {
         if ($this->_request->isPost()) {
@@ -73,9 +78,23 @@ class Admin_CustomtextController extends Internal_Controller_Action
             
             $path = $input->path;
             
-            $baseDir = './application/views/scripts/';
+            $foundFiles = 0;
+                        
+            foreach ($this->_baseDirs as $directory) {
+            	            	
+                if (is_file($directory . $path)) {
+                    $file = $directory . $path;
+                    $foundFiles++;
+                }
+            }
             
-            $file = $baseDir . $path;
+            // we found more than one file with this module/controller/action
+            // and this should never happen.
+            if ($foundFiles > 1) {
+               echo Zend_Json_Encoder::encode(-1);
+               return;
+            }
+            
             
             $configFiles = Zend_Registry::get('configFiles');
             $xml = new Zend_Config_Xml($configFiles['textSubstitution'], 'production');
@@ -136,7 +155,7 @@ class Admin_CustomtextController extends Internal_Controller_Action
                 $key = key($o);
                 $value = $o[$key];
                 
-                $retData[$key] = array('original' => html_entity_decode($value));
+                $retData[$key] = array('original' => trim($value));
                 
                 if (isset($customData[$key])) {
                     $retData[$key]['custom'] = html_entity_decode(trim($customData[$key]));
@@ -144,16 +163,17 @@ class Admin_CustomtextController extends Internal_Controller_Action
             }
             
             if (count($retData) == 0) {
-
-                echo Zend_Json_Encoder::encode(0);
-                
+                echo Zend_Json_Encoder::encode(0);               
             } else {
-            
                 echo Zend_Json_Encoder::encode($retData);
-            }        
+            } 
         }
     }
     
+    /**
+     * Saves the file's variables to the custom text xml file.
+     *
+     */
     public function saveFileAction()
     {
         $this->_helper->getStaticHelper('viewRenderer')->setNoRender();
@@ -251,15 +271,31 @@ class Admin_CustomtextController extends Internal_Controller_Action
         return;
     }
     
-    
-    private function _makeTree($directory, $extensions = array()) {
-        // remove trailing slash
-        if (substr($directory, -1) == "/") {
-            $directory = substr($directory, 0, strlen($directory) - 1);
+    /**
+     * Generates the array for the file tree. 
+     */
+    private function _makeTree($extensions = array()) {
+        
+        $tree = array();
+        foreach ($this->_baseDirs as $directory) {
+        	
+	        // remove trailing slash
+	        if (substr($directory, -1) == "/") {
+	            $dir = substr($directory, 0, strlen($directory) - 1);
+	        }
+        	
+            $tree[] = $this->_makeTreeBranch($dir, $extensions);
         }
-        return $this->_makeTreeBranch($directory, $extensions);
+        return $tree;
     }
 
+    /**
+     * Makes the tree for the tree.
+     *
+     * @param unknown_type $directory
+     * @param unknown_type $extensions
+     * @return unknown
+     */
     private function _makeTreeBranch($directory, $extensions = array()) {
         
         if (preg_match('/\.svn/', $directory)) {

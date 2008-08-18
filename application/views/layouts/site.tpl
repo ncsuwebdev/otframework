@@ -42,6 +42,18 @@
                 <div class="yui-b">
                     <div class="yui-g"> 
                         <div class="content">
+                            {if count($messages) != 0}
+							<div class="messageContainer">
+							    <div class="message">
+							    {foreach from=$messages item=m}
+							    {$m}<br />
+							    {/foreach}
+							    </div>
+							</div>
+							{/if}
+							
+							<div id="pageTitle">{$title}</div>
+							
                             {layout section=content}
                         </div> 
                     </div> 

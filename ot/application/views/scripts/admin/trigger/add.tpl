@@ -1,12 +1,3 @@
-{if count($messages) != 0}
-<div class="messageContainer">
-    <div class="message">
-    {foreach from=$messages item=m}
-    {$m}<br />
-    {/foreach}
-    </div>
-</div>
-{/if}
 {editable id="selectHelper"}
 Select the type of action you would like to trigger.
 {/editable}

@@ -13,7 +13,8 @@ window.addEvent('domready', function() {
 	                method: 'get',
 	                onComplete: function(txt, xml) {
 	                    alertBox.start({'opacity': [0, 1]});
-	                    (function() {alertBox.start({'opacity': [1, 0], 'delay': 1000});}).delay(2000);
+	                    (function() {alertBox.start({'opacity': [1, 0], 'delay': 1000});}).delay(1500);
+	                    location.href = location.href;
 	                }
 	            }
 	        ).request();

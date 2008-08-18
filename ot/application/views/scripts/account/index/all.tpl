@@ -1,12 +1,3 @@
-{if count($messages) != 0}
-<div class="messageContainer">
-    <div class="message">
-    {foreach from=$messages item=m}
-    {$m}<br />
-    {/foreach}
-    </div>
-</div>
-{/if}
 <div id="userIndexIndex">
     {if $acl.add}
     <span class="addButton"><a href="{$sitePrefix}/account/index/add/">Add New Account</a></span>

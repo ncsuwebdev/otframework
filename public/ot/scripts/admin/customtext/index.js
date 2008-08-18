@@ -90,6 +90,10 @@ function loadFile(path)
                     $('alertText').setText('No editable text found');
                     alertBox.start({'opacity': [0, 1]});
                     return true;
+                } else if (editableData == -1) {
+                    $('alertText').setText('Error: Multiple files found.  This should not be!');
+                    alertBox.start({'opacity': [0, 1]});
+                    return true;
                 }
                 
                 var replacementsContent = $('replacementsContent');
@@ -159,7 +163,7 @@ function loadFile(path)
                     var textArea = new Element('textarea');
                     textArea.value = item.original;
                     textArea.setProperty('wrap', 'off');
-                    textArea.setProperty('disabled', 'disabled');
+                    textArea.setProperty('readonly', 'true');
                     pOriginal.adopt(textArea);
                     editDiv.adopt(pOriginal);
                     

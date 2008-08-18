@@ -101,6 +101,5 @@ class Ot_View_Smarty extends Zend_View_Abstract
         }
         
         throw new Exception('Script path not found for ' . $file);
-
     }
 }

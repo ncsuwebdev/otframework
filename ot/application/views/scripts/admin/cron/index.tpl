@@ -1,13 +1,3 @@
-{if count($messages) != 0}
-<div class="messageContainer">
-    <div class="message">
-    {foreach from=$messages item=m}
-    {$m}<br />
-    {/foreach}
-    </div>
-</div>
-{/if}
-
 This interface provides the ability to manage cron jobs for {$config.appTitle}.<br /><br />
 
     {if $acl.add}
@@ -30,9 +20,10 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
     {foreach from=$cronjobs item=c name=cronjobs}
         {if $smarty.foreach.cronjobs.index % $config.headerRowRepeat == 0}
         <tr>
-            <th width="250">Cron Job</th>
+            <th width="175">Cron Job</th>
             <th width="130">Status</th>
             <th width="150">Execute</th>
+            <th width="200">Last Run Date</th>
             {if $acl.edit}
             <th width="50">Edit</th>
             {/if}
@@ -60,6 +51,13 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
                 	Cannot run a disabled job
             	{/if}
             </td>
+            <td style="text-align: center;">
+                {if $c.lastRunDt == 0}
+                    Job has never run
+                {else}
+                    {$c.lastRunDt|date_format:$config.longDateCompactFormat} {$c.lastRunDt|date_format:$config.timeFormat}
+                {/if}
+            </td>
             {if $acl.edit}
             <td style="text-align:center">
                 <a href="{$sitePrefix}/admin/cron/edit/?name={$c.name}"><img src="{$sitePrefix}/public/images/edit.png" alt="Edit" /></a>
@@ -68,7 +66,7 @@ This interface provides the ability to manage cron jobs for {$config.appTitle}.<
         </tr>
     {foreachelse}
         <tr>
-            <td class="noResults">No Cron Jobs found</td>
+            <td colspan="5" class="noResults">No Cron Jobs found</td>
         </tr>
     {/foreach}
     </table>

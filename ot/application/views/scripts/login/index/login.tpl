@@ -1,11 +1,3 @@
-{if count($messages) != 0}
-<div class="message">
-{foreach from=$messages item=m}
-{$m}<br />
-{/foreach}
-</div>
-{/if}
-
 Please log in to access your account. <br /><br />
 <form action="" method="post" id="login" class="checkRequiredFields">
 

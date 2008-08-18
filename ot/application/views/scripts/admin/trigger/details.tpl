@@ -1,13 +1,5 @@
 <a href="{$sitePrefix}/admin/trigger/">&lt;&lt; Back to Triggers</a><br /><br />
-{if count($messages) != 0}
-<div class="messageContainer">
-    <div class="message">
-    {foreach from=$messages item=m}
-    {$m}<br />
-    {/foreach}
-    </div>
-</div>
-{/if}
+
 {editable id="triggerDetails"}
 You can manage the actions for this trigger here.
 {/editable}

@@ -1,4 +1,5 @@
-{editable id="customHome"}This system allows for custom attributes to be added to a certain set of 
+{editable id="customHome"}
+This system allows for custom attributes to be added to a certain set of 
 objects within the system.  Select the object below to modify any attributes
 associated with it. 
 {/editable}

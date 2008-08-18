@@ -60,7 +60,6 @@ class Ot_FrontController_Plugin_TextSubstitution extends Zend_Controller_Plugin_
         	    $tmp = html_entity_decode($s);
         	    $s = $tmp;
         	}
-        	
         }
         
         $rootSubs = array();
