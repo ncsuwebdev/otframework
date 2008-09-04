@@ -59,9 +59,6 @@ class Ot_Remedy {
 
     public function __construct($hostname, $username, $password)
     {
-        require_once 'Zend/Http/Client.php';
-        require_once 'Zend/XmlRpc/Client.php';
-
         $this->_config = array(
             'hostname' => $hostname,
             'username' => $username,
