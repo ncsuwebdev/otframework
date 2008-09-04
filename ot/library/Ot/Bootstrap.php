@@ -77,8 +77,8 @@ class Ot_Bootstrap
         if (null === self::$_instance) {
             $instance = new self();
                            
-			$instance->_libraries['ZF']     = $_SERVER['SHARED_LIB_PATH'] . '/Zend/Framework/1.5/';
-			$instance->_libraries['Smarty'] = $_SERVER['SHARED_LIB_PATH'] . '/Smarty/2.6.18/';
+			$instance->_libraries['ZF']     = $_SERVER['SHARED_LIB_PATH'] . '/Zend/Framework/1.6/';
+			$instance->_libraries['Smarty'] = $_SERVER['SHARED_LIB_PATH'] . '/Smarty/2.6.20/';
 			
 			// We want all errors reported
 			error_reporting(E_ALL|E_STRICT);
