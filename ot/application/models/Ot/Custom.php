@@ -158,7 +158,7 @@ class Ot_Custom
             	$elm->size = '20';
                 break;
             case 'textarea':
-                $elm = new Zend_Form_Element_Text($name);
+                $elm = new Zend_Form_Element_Textarea($name);
                 $elm->rows = '3';
                 $elm->cols = '50';
                 break;
