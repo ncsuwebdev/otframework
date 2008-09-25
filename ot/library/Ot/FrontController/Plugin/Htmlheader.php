@@ -55,7 +55,7 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         foreach ($existingCss as &$c) {
             if (is_file('./public/ot/css/' . $c)) {
                 $c = $sitePrefix . '/public/ot/css/' . $c;
-            } elseif (is_file('./public/css/' . c)) {
+            } elseif (is_file('./public/css/' . $c)) {
                 $c = $sitePrefix . '/public/css/' . $c;
             }
         }        
