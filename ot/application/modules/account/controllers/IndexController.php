@@ -293,7 +293,9 @@ class Account_IndexController extends Internal_Controller_Action
         if ($this->_authzAdapter->manageLocally()) {
             $roleSelect = new Zend_Form_Element_Select('role');
             $roleSelect->setLabel('Access Role:');
-    
+            $roleSelect->setRequired(true);
+            $roleSelect->addMultiOption('', '-- Choose Access Role --');
+            
             $roles = $this->_acl->getAvailableRoles();     
                
             foreach ($roles as $r) {
