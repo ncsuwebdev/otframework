@@ -152,6 +152,7 @@ class Account_IndexController extends Internal_Controller_Action
         $this->view->userData = $this->_userData;
         $this->view->title    = "Account for " . $this->_userData['firstName'] . ' ' . $this->_userData['lastName'];
                 
+        $attributes = array();
         if (isset($config->accountPlugin)) {
             $acctPlugin = new $config->accountPlugin;
             $attributes = $acctPlugin->get($this->_userData['userId']);
