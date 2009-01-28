@@ -1,0 +1,14 @@
+Make any changes you would like to the bug.
+<br /><br />
+<?php echo $this->form; ?>
+<h2>Existing Bug Text:</h2>
+<?php foreach ($this->text as $t) : ?>
+    <div class="bugText">
+        <div class="header">
+            Submitted by <?php echo $t['userInfo']['firstName'] . ' ' . $t['userInfo']['lastName']; ?> (<?php echo $t['userInfo']['username']; ?>) on <?php $this->dateFormat($t['postDt'], $this->config->user->dateTimeFormat->val); ?>
+        </div>
+        <div class="bugContent">
+           <?php echo nl2br($t['text']); ?>
+        </div>
+    </div>
+<?php endforeach; ?>

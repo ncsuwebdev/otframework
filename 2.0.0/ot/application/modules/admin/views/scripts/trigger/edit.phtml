@@ -1,0 +1,28 @@
+Modify this action's properties, as well as the shortcut name of the action.
+<?php echo $this->form; ?>
+    <b>Available Variables</b><br /><br />
+    These variables are available for inclusion
+    in your scripts.  The placeholders will be processed with actual data when
+    a trigger is executed.
+    
+    <br /><br />
+    <table class="list">
+    <tbody>
+        <tr class="ui-widget-header">
+            <th width="200">Variable</th>
+            <th width="300">Description</th>
+        </tr>
+        <?php if (count($this->templateVars) > 0) : ?>
+            <?php foreach ($this->templateVars as $key=>$variable) : ?>
+            <tr>
+                <td>[[<?php echo $key; ?>]]</td>
+                <td><?php echo $variable; ?></td>
+            </tr>
+            <?php endforeach; ?>
+        <?php else : ?>
+        <tr>
+            <td colspan="2">No variables available</td>
+        </tr>
+        <?php endif; ?>
+        </tbody>
+    </table>

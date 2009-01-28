@@ -1,0 +1,10 @@
+<?php if ($this->acl['clearCache']) : ?>
+<div>
+    If you are having issues with something that may be cached, you can clear the cache here.
+</div>
+<br />
+
+<form action="<?php echo $this->baseUrl(); ?>/admin/cache/clear">
+    <input type="submit" value="Click here to clear the cache" />
+</form>
+<?php endif; ?>

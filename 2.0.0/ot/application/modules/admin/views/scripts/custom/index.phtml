@@ -1,0 +1,25 @@
+This system allows for custom attributes to be added to a certain set of
+objects within the system.  Select the object below to modify any attributes
+associated with it.
+<br /><br />
+
+<table class="list">
+    <tbody>
+        <tr class="ui-widget-header">
+            <th width="200">Object</th>
+            <th width="350">Description</th>
+        </tr>
+        <?php if (count($this->objects) > 0) : ?>
+	    <?php foreach ($this->objects as $o) : ?>
+	    <tr class="<?php $this->cycle('row1', 'row2'); ?>">
+	        <td><a href="<?php echo $this->baseUrl(); ?>/admin/custom/details/?objectId=<?php echo $o['objectId']; ?>"><?php echo $o['objectId']; ?></a></td>
+	        <td><?php echo $o['description']; ?></td>
+	    </tr>
+	    <?php endforeach; ?>
+        <?php else : ?>
+	    <tr>
+	        <td colspan="2" class="noResults">No objects found.</td>
+	    </tr>
+        <?php endif; ?>
+    </tbody>
+</table>

@@ -1,0 +1,34 @@
+<div class="ui-state-error ui-corner-all">
+    <span class="ui-icon ui-icon-alert"></span>
+    <?php if ($this->message == '') : ?>
+        <?php echo $this->translate('error-error-error:noMessage'); ?>
+    <?php else: ?>
+        <?php echo $this->translate($this->message); ?>
+    <?php endif; ?>
+</div>
+<br />
+<?php if ($this->showTrackback) { ?>
+<div id="trackback">
+    <table class="list">
+        <tbody>
+            <tr>
+                <th width="500">File</th>
+                <th width="150">Function</th>
+                <th width="50">Line</th>
+            </tr>
+            <?php
+            foreach($this->trackback as $t) {
+                echo '<tr>';
+                echo '    <td>' . $t['file'] . '</td>';
+                echo '    <td>' . $t['function'] . '</td>';
+                echo '    <td>' . $t['line'] . '</td>';
+                echo '</tr>';
+            }         
+            ?>
+        </tbody>
+    </table>
+    <br />
+</div>
+<?php } ?>
+    <input type="button" value="Back" id="cancel" />
+<span id="error"></span>

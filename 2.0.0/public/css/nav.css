@@ -1,0 +1,43 @@
+/** 
+ * Nav Skin
+ *
+ * Remove this if you want it to be the default bluish looking style.  If you want
+ * to change the images, you need to copy those CSS declarations from the snapfish.css
+ * file and change them here so you don't change the original.
+ * See: http://users.tpg.com.au/j_birch/plugins/superfish/
+ **/
+ 
+#navBar {
+    background-color: #333333;
+    border-top:     1px solid #444444;
+    height: 34px;
+}
+
+.sf-menu {
+    float:          left;
+    margin-bottom:  0;
+}
+.sf-menu a, .sf-menu div {
+    border-left:    1px solid #666666;
+    border-top:     1px solid #333333;
+    padding:        .75em 1em;
+    text-decoration:none;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+    color:          #FFF;
+}
+.sf-menu li {
+    background:     #333333;
+    
+}
+.sf-menu li li {
+    background:     #444444;
+}
+.sf-menu li li li {
+    background:     #444444;
+}
+.sf-menu li:hover, .sf-menu li.sfHover,
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+    background:     #666666;
+    outline:        0;
+}

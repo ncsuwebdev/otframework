@@ -1,0 +1,59 @@
+<div>
+    <?php if ($this->acl['edit']) : ?>
+       <a href="<?php echo $this->baseUrl(); ?>/admin/custom/edit/?attributeId=<?php echo $this->attribute['attributeId']; ?>" class="ui-state-default ui-corner-all linkButton">Edit<span class="ui-icon ui-icon-pencil"></span></a>
+    <?php endif; ?>
+    <?php if ($this->acl['delete']) : ?>
+       <a href="<?php echo $this->baseUrl(); ?>/admin/custom/delete/?attributeId=<?php echo $this->attribute['attributeId']; ?>" class="ui-state-default ui-corner-all linkButton">Delete<span class="ui-icon ui-icon-minusthick"></span></a>
+    <?php endif; ?>
+    <br /><br />
+
+    <table class="form">
+        <tbody>
+	        <tr>
+	            <td width="100"><label>Object:</label></td>
+	            <td><?php echo $this->objectId; ?></td>
+	        </tr>
+	        <tr>
+	            <td><label>Description:</label></td>
+	            <td><?php echo $this->objectDescription; ?></td>
+	        </tr>
+        </tbody>
+    </table>
+
+    <br /><br />
+
+    <table class="form">
+        <tbody>
+	        <tr>
+	            <td width="130"><label>Label:</label></td>
+	            <td><?php echo $this->attribute['label']; ?></td>
+	        </tr>
+	        <tr>
+	            <td><label>Type:</label></td>
+	            <td><?php echo $this->attribute['type']; ?></td>
+	        </tr>
+	        <tr>
+	            <td><label>Required:</label></td>
+	            <td><?php echo (!empty($this->attribute['required'])) ? 'Yes' : 'No'; ?></td>
+	        </tr>
+	        <tr>
+	            <td><label>Display Direction:</label></td>
+	            <td><?php echo ucwords($this->attribute['direction']); ?></td>
+	        </tr>
+	        <?php if ($this->attribute['type'] == 'radio' || $this->attribute['type'] == 'select') : ?>
+	        <tr>
+	            <td><label>Options:</label></td>
+	            <td>
+                <?php if (count($this->attribute['options']) > 0) : ?>
+    	            <?php foreach ($this->attribute['options'] as $option) : ?>
+    	                <?php echo $option; ?><br />
+    	            <?php endforeach; ?>
+                <?php else : ?>
+                    No Options
+	            <?php endif; ?>
+	            </td>
+	        </tr>
+	        <?php endif; ?>
+        </tbody>
+    </table>
+</div>

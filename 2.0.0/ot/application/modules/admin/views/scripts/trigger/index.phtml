@@ -1,0 +1,28 @@
+Triggers are actions that happen with the applications.  By adding a trigger
+action, you can have the application execute some code at a designated point
+of the application.<br /><br />
+These are all the available triggers in the system.
+<br /><br />
+    
+    <table class="list">
+        <tbody>
+            <tr class="ui-widget-header">
+                <th width="250">Name</th>
+                <th width="350">Description</th>
+            </tr>
+            <?php foreach($this->triggers as $t): ?>
+            <tr>
+                <td>
+                    <?php if ($this->acl['details']):?>
+                    <a href="<?php echo $this->baseUrl(); ?>/admin/trigger/details/?triggerId=<?php echo $t->name; ?>">
+                    <?php endif; ?>
+                    <?php echo $t->name; ?>
+                    <?php if ($this->acl['details']):?>
+                    </a>
+                    <?php endif; ?>
+                </td>
+                <td><?php echo $t->description; ?></td>                
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>

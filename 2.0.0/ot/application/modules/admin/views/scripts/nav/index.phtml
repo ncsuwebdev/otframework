@@ -1,0 +1,50 @@
+<div id="navElementDialog" title="Add New Navigation Element">
+    <form id="navElementForm">
+        <fieldset>
+            <legend>Display</legend>
+        
+            <span><label for="display">Label</label></span>
+            <div class="elm"><input id="displayBox" name="display" type="text" value="" size="25" /></div>
+            
+            <span><label for="externalLink">External Link</label></span>
+            <div class="elm"><input id="externalLink" name="externalLink" type="checkbox" value="yes" size="25" /></div>
+            
+            <span><label for="link">Link</label></span>
+            <div class="elm"><span id="linkPrefix"><?php echo $this->siteUrl; ?>/</span><input id="linkBox" name="link" type="text" value="" size="25" /></div>
+            
+            <div class="ui-state-highlight ui-corner-all"> 
+                <span class="ui-icon ui-icon-info"></span>
+                If no link is specified, the link will be created using the permissions entered below.
+            </div>
+        </fieldset>
+    
+        <fieldset>
+            <legend>Permissions</legend>
+            
+            <span><label for="module">Module</label></span>
+            <div class="elm"><select id="moduleBox" name="module"></select></div>
+            
+            <span><label for="controller">Controller</label></span>
+            <div class="elm"><select id="controllerBox" name="module"></select></div>
+            
+            <span><label for="action">Action</label></span>
+            <div class="elm"><select id="actionBox" name="module"></select></div>
+            
+            <div class="ui-state-highlight ui-corner-all">
+                <span class="ui-icon ui-icon-info"></span>
+                If no permissions are specified, default/index/index will be used.
+            </div>
+            
+        </fieldset>   
+    </form>
+</div>
+
+<a href="#" id="saveNavButton" class="ui-state-default ui-corner-all linkButtonNoIcon">Save Navigation Structure</a>
+&nbsp;
+<a href="#" id="addElementButton" class="ui-state-default ui-corner-all navElementModal linkButton">Add New Item<span class="ui-icon ui-icon-newwin"></span></a>
+
+<div id="navEditorContainer">
+<ul id="masterList">
+    <?php echo $this->editNavTreeHtml; ?>
+</ul>
+</div>

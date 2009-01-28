@@ -1,0 +1,70 @@
+default-index-index:header;default header
+default-index-index:title;Welcome
+error-error-error:title;ERROR!
+error-error-error:noMessage;No error message passed
+error-error-error:404:title;404 Error: Page not found
+error-error-error:404:header;The requested page was not found
+error-error-error:404:message;The page that you requested could not be found.
+error-error-error:404:generic;Processing request failed.
+account-index-index:title;Account for %1$s %2$s:
+account-index-index:header;This is the data which is associated with your user account.  You may modify this data at any time by clicking on the "My Account" link at the top of the page.
+account-index-index:userData;User Data
+account-index-index:userDataHeader;This data is your critical user data.
+account-index-index:linkEditUserData;Edit User Data
+account-index-index:linkChangePassword;Change Password
+account-index-index:linkDeleteUser;Delete User
+account-index-index:remote;Remote API Access
+account-index-index:remoteHeader;Remote access will allow you to access this applications functionality remotely over a SOAP interface.  You will need a code to access the application.
+account-index-index:linkGenerateCode;Generate Code
+account-index-index:linkDeleteCode;Delete Code
+account-index-index:apiCode;SOAP API Code
+account-index-index:noApiCode;No remote access code found
+account-index-all:title;Manage Users
+account-index-all:linkNewAccount;Add New Account
+account-index-all:header;Here you can add users and grant them roles.  Roles are defined by the application administrator.
+account-index-add:title;Add Account
+account-index-add:header;Enter in the information below to add a user to the system.
+account-index-edit:title;Edit Account
+account-index-edit:header;Make any desired changes to your user data.
+account-index-delete:title;Delete User
+account-index-delete:header;You have selected to delete the user <b>%1$s</b> who logs in via <b>%2$s</b>.
+account-index-changePassword:title;Change My Password
+account-index-changePassword:header;You may change your own password by filling in the fields below. If this is the first time logging into the system, you must change your password to proceed. Fill in the following fields to change your password.
+account-index-changePassword:form:oldPassword;Old Password:
+account-index-changePassword:form:newPassword;New Password:
+account-index-changePassword:form:newPasswordConf;New Password Confirm:
+account-index-changePassword:form:submit;Change My Password
+account-index-deleteApiCode:title;Delete API Code
+account-index-deleteApiCode:header;You have selected to delete the API code for <b>%1$s (%2$s %3$s)</b>.
+model-account-username;Username:
+model-account-loginMethod;Login Method:
+model-account-firstName;First Name:
+model-account-lastName;Last Name:
+model-account-emailAddress;Email Address:
+model-account-password;Password;
+model-account-passwordConf;Confirm Password:
+model-account-role;Access Role:
+model-account-timezone;Timezone:
+msg-error-otExceptionAccess:title;You do not have access
+msg-error-otExceptionData:title;Error accessing data
+msg-error-otExceptionInput:title;Error processing application input
+msg-error-noAccount;User Account Not Found
+msg-error-accountTaken;Username is taken.  Please select a different username
+msg-error-invalidForm;You did not fill in valid information into the form.
+msg-error-accountAccessDelete;You are not allowed to delete yourself.
+msg-error-authAdapterSupport;The authentication adapter for your account does not support this feature
+msg-error-passwordMismatch;New passwords do not match
+msg-error-passwordInvalidOriginal;Original Password was incorrect
+msg-error-noRemoteAccess;This application is not configured for remote access
+msg-info-accountCreated;The user account was successfully created.
+msg-info-accountPasswordCreated;A password has been created to the account and emailed to the user.
+msg-info-accountUpdated;The account was successfully updated
+msg-info-passwordChanged;Your password has been changed.  You can now log in with your new credentials
+msg-info-apiCodeCreated;The API Code was successfully created.  This user has remote access now.
+msg-info-apiCodeDeleted;The API Code was successfully deleted.  This user has no more remote access.
+table-header-edit;Edit
+table-header-delete;Delete
+form-button-delete;Yes, Delete
+form-button-save;Save
+form-button-cancel;Cancel
+form-delete-confirm;Are you sure you want to do this?

@@ -1,0 +1,69 @@
+<div>
+    Enter in the information below to add custom attribute to this object.<br /><br />
+    <form method="post" action="?attributeId=<?php echo $this->attribute['attributeId']; ?>" id="edit" class="checkRequiredFields">
+        <table class="form">
+            <tbody>
+	            <tr>
+	                <td width="100"><label>Object:</label></td>
+	                <td><?php echo $this->objectId; ?></td>
+	            </tr>
+	            <tr>
+	                <td><label>Description:</label></td>
+	                <td><?php echo $this->objectDescription; ?></td>
+	            </tr>
+            </tbody>
+        </table>
+
+        <br /><br />
+
+        <table class="form">
+            <tr>
+                <td width="130"><label>Label:</label></td>
+                <td><input type="text" name="label" id="label" value="<?php echo $this->attribute['label']; ?>" size="20" class="required" /></td>
+            </tr>
+            <tr>
+                <td><label>Type:</label></td>
+                <td>
+                    <select id="type" name="type" class="required">
+                        <?php foreach ($this->types as $key => $value) : ?>
+                            <option<?php echo ($key == $this->attribute['type']) ? ' selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+
+                <div id="opt"<?php if ($this->attribute['type'] == 'select' || $this->attribute['type'] == 'radio') { echo ' style="display: block;"'; } ?>>
+                    <?php foreach ($this->attribute['options'] as $o) : ?>
+                        <input type="checkbox" value="<?php echo $o; ?>" name="opt_delete[]" /> <b>Delete "<?php echo $o; ?>"</b><br />
+                    <?php endforeach; ?>
+                    <br /><br />
+                    Add New Options:
+                    <table class="form" id="options">
+                        <tbody>
+	                        <tr id="optionRow">
+	                            <td width="50"><label for="option[]">Option:</label></td>
+	                            <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
+	                        </tr>
+                        </tbody>
+                    </table>
+                    <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span>Add Row</a>
+                    <a id="removeRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-minusthick"></span>Remove Row</a>
+                </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Required:</label></td>
+                <td><input type="checkbox" value="1" name="required" id="required"<?php if ($this->attribute['required']) echo ' checked="checked"'; ?> /></td>
+            </tr>
+            <tr>
+                <td><label>Display Direction:</label></td>
+                <td>
+                    <label for="direction"><input type="radio" value="vertical" name="direction"<?php if ($this->attribute['direction'] == 'vertical') echo ' checked="checked"'; ?> />Vertical</label>
+                    <br />
+                    <label for="direction"><input type="radio" value="horizontal" name="direction" <?php if ($this->attribute['direction'] == 'horizontal') echo ' checked="checked"'; ?> />Horizontal</label>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Save Custom Attribute" />
+        <input type="button" value="Cancel" id="cancel" />
+    </form>
+</div>

@@ -1,0 +1,30 @@
+This is the current configuration of the application.
+<br /><br />    
+<table class="list">
+    <tbody>
+        <tr class="ui-widget-header">
+            <th width="250">Name</th>
+            <th width="350">Value</th>
+            <?php if ($this->acl['edit']) { ?>
+            <th width="50">Edit</th>
+            <?php } ?>
+        </tr>
+        <?php
+        foreach ($this->configList as $key => $value) : ?>
+	        <tr class="<?php $this->cycle('row1', 'row2'); ?>"> 
+	           <td class="description" title="<?php echo (empty($value->description) ? 'No Description Provided' : $value->description); ?>">
+	               <?php echo $key; ?>
+	           </td>
+	           <td><?php echo $value->val; ?></td>
+	            
+                <?php if ($this->acl['edit']) : ?>
+                <td style="text-align: center">
+                    <a href="<?php echo $this->baseUrl(); ?>/admin/config/edit/?key=<?php echo $key; ?>" class="ui-state-default ui-corner-all linkButtonNoText">
+                        <span class="ui-icon ui-icon-pencil"></span>
+                    </a>
+                </td>
+                <?php endif; ?>
+            <tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

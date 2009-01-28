@@ -1,0 +1,15 @@
+<?php if (!$this->maintenanceMode) : ?>
+<div class="ui-corner-all maintenance maintenanceModeOff">
+    This application is not in maintenance mode
+</div>
+<?php endif; ?>
+<br />
+<form action="<?php echo $this->baseUrl(); ?>/admin/maintenance/toggle" method="get">
+<?php if ($this->maintenanceMode == 1) : ?>
+    <input type="hidden" name="status" value="off" />
+    <input type="submit" value="Turn maintenance mode off" />
+<?php else : ?>
+    <input type="hidden" name="status" value="on" />
+    <input type="submit" value="Turn maintenance mode on" />
+<?php endif; ?>
+</form>

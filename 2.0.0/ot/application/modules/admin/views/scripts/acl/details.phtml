@@ -1,0 +1,73 @@
+<div id="aclIndexDetails">
+    These are the individual details for the <?php echo $this->role['name']; ?> access role as they appear
+    in the actual ACL configuration file.<br /><br />
+    <?php if ($this->acl['index']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/" class="ui-state-default ui-corner-all linkButton">Back to ACL List<span class="ui-icon ui-icon-triangle-1-w"></span></a>
+    <?php endif; ?>
+    <?php if ($this->acl['edit'] && $this->role['editable']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/edit/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton">Edit<span class="ui-icon ui-icon-pencil"></span></a>
+    <?php endif; ?>
+    <?php if ($this->acl['delete'] && $this->role['editable']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/delete/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton">Delete<span class="ui-icon ui-icon-minusthick"></span></a>
+    <?php endif; ?>
+    <br /><br />
+    <table class="form">
+        <tbody>
+	        <tr>
+	            <td><label>Role Name:</label></td>
+	            <td><?php echo $this->role['name']; ?></td>
+	        </tr>
+	        <tr>
+	            <td><label>Inherit From:</label></td>
+	            <td><?php echo ($this->role['inheritRoleId'] != 0) ? $this->inheritRole : 'No Inheritance'; ?></td>
+	        </tr>
+	        <tr>
+	            <td><label>Editable?</label></td>
+	            <td><?php echo ($this->role['editable'] == 1) ? 'Yes' : 'No'; ?></td>
+	        </tr>
+        </tbody>
+    </table>
+    
+        <div id="accessList">
+        <h2>Application Access</h2>
+            <?php foreach ($this->resources as $module => $controllers) : ?>
+            <div class="aclSection">
+                <table class="list">
+                    <tbody>
+                    <tr class="ui-widget-header">
+                        <td width="300"><b><?php echo ucwords($module); ?></b></td>
+                        <td width="120">Access:</td>
+                    </tr>
+                    <?php foreach ($controllers as $controller => $actions) : ?>
+                    <tr class="controller">
+                        <td title="<?php echo $actions['description']; ?>" class="td1 description">
+                        <?php echo ucwords($controller); ?>
+                        </td>
+                        <td class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+                        <?php if (!empty($actions['all']['access'])) : ?>
+                            All Access
+                        <?php else: ?>
+                            <?php if (isset($actions['someaccess'])) : ?>
+                            Some Access
+                            <?php else: ?>
+                            No Access
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        </td>
+                    </tr>
+                        <?php foreach ($actions['part'] as $action => $access) : ?>
+                    <tr class="action <?php echo $module . '_' . $controller; ?>" style="display: <?php echo (empty($actions['someaccess']) || !empty($actions['all']['access'])) ? 'none' : ''; ?>;">
+                        <td class="td1 description" title="<?php echo $access['description']; ?>">
+                        <img src="<?php echo $this->baseUrl(); ?>/public/images/help.png" width="16" height="16" class="info" />
+                        <?php echo ucwords($action); ?>
+                        </td>
+                        <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? 'Has Access' : 'No Access'; ?></td>
+                    </tr>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php endforeach; ?>
+        </div>    
+</div>

@@ -1,0 +1,93 @@
+<input type="hidden" id="thisAction" value="<?php echo $this->action; ?>" />
+<div id="aclIndexAdd">
+    Select the name that you would like to call the role.  This system also allows
+    roles to inherit permission from an existing role.  Inhertance is optional
+    but is useful in implementing a tiered access system.<br /><br />
+
+    <?php if (isset($this->roleName)) : ?>
+        <input type="hidden" id="roleNamePreset" value="true" />
+    <?php endif; ?>
+    <form method="post" id="aclEditor" action="" class="checkRequiredFields">
+        <table class="form">
+            <tbody>
+            <tr>
+                <td><label for="roleName">Role Name:</label></td>
+                <td><input type="text" class="required" name="roleName" id="roleName" value="<?php echo $this->roleName; ?>" size="30" maxlength="126" /></td>
+            </tr>
+            <tr>
+                <td style="vertical-align:middle"><label for="inheritRoleId">Inherit From:</label></td>
+                <td>
+                    <select name="inheritRoleId" id="inheritRoleId" class="required">
+                        <?php foreach ($this->roles as $r => $value) : ?>
+                        <option<?php echo ($r == $this->inheritRoleId) ? ' selected=selected' : ''; ?> value="<?php echo $r; ?>"><?php echo $value; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <button type="button" id="prePopulateButton"><?php echo (isset($this->roleName)) ? 'Change Role' : 'Initialize Role'; ?></button>
+                </td>
+            </tr>
+            </tbody>
+        </table><br /><br />
+        
+        <?php if (isset($this->roleName)): ?>
+        <div id="accessList">
+            <?php foreach ($this->resources as $module => $controllers) : ?>
+            <div class="aclSection">
+                <table class="list">
+                    <tbody>
+                    <tr class="ui-widget-header">
+                        <td width="300"><b><?php echo ucwords($module); ?></b></td>
+                        <td width="120">Currently:</td>
+                        <td width="150">Grant/Revoke:</td>
+                    </tr>
+                    <?php foreach ($controllers as $controller => $actions) : ?>
+                    <tr class="controller">
+                        <td title="<?php echo $actions['description']; ?>" class="td1 description">
+                        <?php echo ucwords($controller); ?>
+                        </td>
+                        <td class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+                        <?php if (!empty($actions['all']['access'])) : ?>
+                            All Access
+                        <?php else: ?>
+                            <?php if (isset($actions['someaccess'])) : ?>
+                            Some Access
+                            <?php else: ?>
+                            No Access
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        </td>
+                        <td>
+                        <select size="1" class="allAccess" name="<?php echo $module . '[' . $controller . '][all]'; ?>" id="<?php echo $module . '_' . $controller; ?>">
+                            <option value="<?php if (!empty($actions['all']['access'])) { echo 'allow'; } else { if (!empty($actions['someaccess'])) { echo 'some'; } else { echo 'deny'; }} ?>">No Change</option>
+                        <?php if (empty($actions['all']['access'])) : ?>
+                            <option value="allow">Grant All Access</option>
+                        <?php endif; ?>
+                        <?php if (empty($actions['someaccess']) || !empty($actions['all']['access'])) : ?>
+                            <option value="some"><?php echo (empty($actions['all']['access'])) ? 'Grant' : 'Revoke'; ?> Some Access</option>
+                        <?php endif; ?>
+                        <?php if (!empty($actions['all']['access']) || !empty($actions['someaccess'])) : ?>
+                            <option value="deny">Revoke All Access</option>
+                        <?php endif; ?>
+                        </select>
+                        </td>
+                    </tr>
+                        <?php foreach ($actions['part'] as $action => $access) : ?>
+                    <tr class="action <?php echo $module . '_' . $controller; ?>" style="display: <?php echo (empty($actions['someaccess']) || !empty($actions['all']['access'])) ? 'none' : ''; ?>;">
+                        <td class="td1 description" title="<?php echo $access['description']; ?>">
+                        <img src="<?php echo $this->baseUrl(); ?>/public/images/help.png" width="16" height="16" class="info" />
+                        <?php echo ucwords($action); ?>
+                        </td>
+                        <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? 'Has Access' : 'No Access'; ?></td>
+                        <td class="td3"><input type="checkbox" class="<?php echo $module . '_' . $controller; ?>_action" value="<?php echo (!empty($access['access'])) ? 'deny' : 'allow'; ?>" name="<?php echo $module . '[' . $controller . '][part][' . $action . ']'; ?>" id="<?php echo $module . '_' . $controller . '_part_' . $action; ?>" /> <?php echo (!empty($access['access'])) ? 'Revoke Access' : 'Grant Access'; ?></td>
+                    </tr>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php endforeach; ?>
+			<input type="submit" value="Save Access Role" />
+        	<button type="button" id="cancel">Cancel</button>
+        </div> 
+        <?php endif; ?>       
+    </form>
+</div>

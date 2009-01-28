@@ -1,0 +1,95 @@
+<?php echo $this->translate('account-index-index:header'); ?>
+<br /><br />
+<h3><?php echo $this->translate('account-index-index:userData'); ?>:</h3>
+<?php echo $this->translate('account-index-index:userDataHeader'); ?><br /><br />
+<?php if ($this->acl['edit'] || $this->acl['delete'] || $this->acl['changePassword']): ?>
+    <?php if ($this->acl['edit']): ?>   
+	    <a href="<?php echo $this->baseUrl(); ?>/account/index/edit/?accountId=<?php echo $this->userData['accountId']; ?>" class="ui-state-default ui-corner-all linkButton">
+	    <?php echo $this->translate('account-index-index:linkEditUserData'); ?>
+	    <span class="ui-icon ui-icon-pencil"></span></a>
+    <?php endif; ?>
+    <?php if ($this->acl['changePassword']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/account/index/change-password/" class="ui-state-default ui-corner-all linkButton">
+        <?php echo $this->translate('account-index-index:linkChangePassword'); ?>
+        <span class="ui-icon ui-icon-locked"></span></a>
+    <?php endif; ?>
+    <?php if ($this->acl['delete']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/account/index/delete/?accountId=<?php echo $this->userData['accountId']; ?>" class="ui-state-default ui-corner-all linkButton">
+        <?php echo $this->translate('account-index-index:linkDeleteUser'); ?>
+        <span class="ui-icon ui-icon-minusthick"></span></a>
+    <?php endif; ?>
+    <br /><br />
+<?php endif; ?>
+
+<table class="form">
+    <tbody>
+        <tr>
+            <td><label><?php echo $this->translate('model-account-username'); ?></label></td>
+            <td><?php echo $this->userData['username']; ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate('model-account-loginMethod'); ?></label></td>
+            <td><?php echo $this->userData['authAdapter']['name']; ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate('model-account-role'); ?></label></td>
+            <td><?php echo $this->role['name']; ?></td>
+        </tr>
+        <tr>
+            <td width="95">
+            <label><?php echo $this->translate('model-account-firstName'); ?></label></td>
+            <td><?php echo $this->userData['firstName']; ?></td>
+        </tr> 
+        <tr>
+            <td width="95">
+            <label><?php echo $this->translate('model-account-lastName'); ?></label></td>
+            <td><?php echo $this->userData['lastName']; ?></td>
+        </tr>                 
+        <tr>
+            <td>            
+            <label><?php echo $this->translate('model-account-emailAddress'); ?></label></td>
+            <td><?php echo (empty($this->userData['emailAddress']) ? 'None' : $this->userData['emailAddress']); ?></td>
+        </tr>                 
+        <tr>
+            <td>            
+            <label><?php echo $this->translate('model-account-timezone'); ?></label></td>
+            <td><?php echo (empty($this->userData['timezone']) ? $this->config->user->timezone->val : $this->userData['timezone']); ?></td>
+        </tr> 
+        <?php foreach($this->attributes as $key=>$attr) : ?>
+        <tr>
+            <td>            
+            <label><?php echo ucwords($key); ?>:</label></td>
+            <td><?php echo (empty($attr) ? 'None' : $attr); ?></td>
+        </tr>         
+        <?php endforeach; ?>
+    </tbody>
+</table> 
+<?php if ($this->remote): ?>
+<br />
+<h3><?php echo $this->translate('account-index-index:remote'); ?>:</h3>
+<?php echo $this->translate('account-index-index:remoteHeader'); ?>
+<br /><br />
+
+<?php if ($this->acl['generateApiCode'] || $this->acl['deleteApiCode]']): ?>
+    <?php if ($this->acl['generateApiCode']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/account/index/generate-api-code/?accountId=<?php echo $this->userData['accountId']; ?>" class="ui-state-default ui-corner-all linkButton">
+        <?php echo $this->translate('account-index-index:linkGenerateCode')?>
+        <span class="ui-icon ui-icon-gear"></span></a>
+    <?php endif; ?>
+    <?php if ($this->acl['deleteApiCode'] && $this->userData['apiCode'] != ''): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/account/index/delete-api-code/?accountId=<?php echo $this->userData['accountId']; ?>" class="ui-state-default ui-corner-all linkButton">
+        <?php echo $this->translate('account-index-index:linkDeleteCode'); ?>
+        <span class="ui-icon ui-icon-minusthick"></span></a>
+    <?php endif; ?>
+    <br /><br />
+<?php endif; ?>
+<table class="form">
+    <tbody>
+        <tr>
+            <td><label><?php echo $this->translate('account-index-index:apiCode')?></label></td>
+            <td><?php echo (empty($this->userData['apiCode']) ? $this->translate('account-index-index:noApiCode') : $this->userData['apiCode']); ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<?php endif; ?>

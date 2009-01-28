@@ -1,0 +1,46 @@
+These are the details provided about the bug.
+<br /><br />
+<?php if ($this->acl['index']): ?>
+<a href="<?php echo $this->baseUrl(); ?>/admin/bug/" class="ui-state-default ui-corner-all linkButton">Back to Bug List<span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<?php endif; ?> 
+<?php if ($this->acl['edit']) : ?>
+    <a href="<?php echo $this->baseUrl(); ?>/admin/bug/edit/?bugId=<?php echo $this->bug['bugId']; ?>" class="ui-state-default ui-corner-all linkButton">Edit Bug<span class="ui-icon ui-icon-minusthick"></span></a>
+    <br /><br />
+<?php endif; ?>
+    <table class="form">
+        <tr>
+            <td><label>Status:</label></td>
+            <td><?php echo ucwords($this->bug['status']); ?></td>
+        </tr>
+        <tr>
+            <td><label>Submit Date:</label></td>
+            <td><?php echo $this->dateFormat($this->bug['submitDt'], $this->config->user->dateTimeFormat->val); ?> (<?php echo $this->elapsedTime($this->bug['submitDt']); ?>)</td>
+        </tr>
+        <tr>
+            <td><label>Reproducibility:</label></td>
+            <td><?php echo ucwords($this->bug['reproducibility']); ?></td>
+        </tr>
+        <tr>
+            <td><label>Severity:</label></td>
+            <td><?php echo ucwords($this->bug['severity']); ?></td>
+        </tr>
+        <tr>
+            <td><label>Priority:</label></td>
+            <td><?php echo ucwords($this->bug['priority']); ?></td>
+        </tr>
+        <tr>
+            <td><label>Bug Text:</label></td>
+            <td>
+            <?php foreach ($this->text as $t) : ?>
+            <div class="bugText">
+                <div class="header">
+                    Submitted by <?php echo $t['userInfo']['firstName'] . ' ' . $t['userInfo']['lastName']; ?> (<?php echo $t['userInfo']['username']; ?>) on <?php echo $this->dateFormat($t['postDt'], $this->config->user->dateTimeFormat->val); ?> (<?php echo $this->elapsedTime($this->bug['submitDt']); ?>)
+                </div>
+                <div class="bugContent">
+                    <?php echo nl2br($t['text']); ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            </td>
+        </tr>
+    </table>
