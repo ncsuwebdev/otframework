@@ -1,0 +1,14 @@
+@CHARSET "UTF-8";
+
+h3 {
+    border-bottom: 1px solid #999;
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.passwordButton {
+    padding: 2px 15px 2px 20px;
+    background-image: url(../../../images/key.png);
+    background-repeat: no-repeat;
+}
