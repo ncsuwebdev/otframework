@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+
+div#opt {
+    display: none;
+    padding-top: 20px;
+}
