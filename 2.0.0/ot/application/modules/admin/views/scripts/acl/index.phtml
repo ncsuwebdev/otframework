@@ -1,0 +1,57 @@
+<div id="aclIndexIndex">
+    <?php echo $this->translate('admin-acl-index:header'); ?>
+    <br /><br />
+
+    <?php if ($this->acl['add']): ?>
+    <a href="<?php echo $this->baseUrl(); ?>/admin/acl/add/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <br /><br />
+    <?php endif; ?>
+    <table class="list">
+        <tbody>
+        <tr class="ui-widget-header">
+            <th width="200"><?php echo $this->translate('admin-acl-index:table:roleName'); ?></th>
+            <th width="200"><?php echo $this->translate('admin-acl-index:table:inheritedFrom'); ?></th>
+            <?php if ($this->acl['edit']): ?>
+            <th width="50"><?php echo $this->translate('table-header-edit'); ?></th>
+            <?php endif; ?>
+            <?php if ($this->acl['delete']): ?>
+            <th width="50"><?php echo $this->translate('table-header-delete'); ?></th>
+            <?php endif; ?>
+        </tr>
+        <?php if (count($this->roles) > 0): ?>
+        <?php foreach ($this->roles as $r) : ?>
+        <tr class="<?php $this->cycle('row1', 'row2'); ?>">
+            <td><a href="<?php echo $this->baseUrl(); ?>/admin/acl/details/?roleId=<?php echo $r['roleId']; ?>"><?php echo $r['name']; ?></a></td>
+            <td align="center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("admin-acl-form:noInheritance"); } ?></td>
+            <?php if ($this->acl['edit']): ?>
+            <td align="center">
+                <?php if ($r['editable']): ?>
+                <a href="<?php echo $this->baseUrl(); ?>/admin/acl/edit/?roleId=<?php echo $r['roleId']; ?>" class="ui-state-default ui-corner-all linkButtonNoText"><span class="ui-icon ui-icon-pencil"></span></a>
+                <?php else: ?>
+                <span class="ui-icon ui-icon-locked"></span>
+                <?php endif; ?>
+            </td>
+            <?php endif; ?>
+            <?php if ($this->acl['delete']): ?>
+            <td align="center">
+                <?php if ($r['editable']): ?>
+                	<?php if ($r['inheritedFrom']): ?>
+                		<span class="ui-icon ui-icon-locked"></span>
+                	<?php else: ?>
+                		<a href="<?php echo $this->baseUrl(); ?>/admin/acl/delete/?roleId=<?php echo $r['roleId']; ?>" class="ui-state-default ui-corner-all linkButtonNoText"><span class="ui-icon ui-icon-minusthick"></span></a>
+                	<?php endif; ?>
+                <?php else: ?>
+                    <span class="ui-icon ui-icon-locked"></span>
+                <?php endif; ?>
+            </td>
+            <?php endif; ?>
+        </tr>
+        <?php endforeach; ?>
+        <?php else: ?>
+        <tr>
+            <td colspan="4" class="noResults"><?php echo $this->translate('admin-acl-index:noRoles'); ?></td>
+        </tr>
+        <?php endif; ?>
+        </tbody>
+    </table>
+</div>

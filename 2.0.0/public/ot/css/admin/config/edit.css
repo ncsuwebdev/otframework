@@ -1,0 +1,20 @@
+@CHARSET "UTF-8";
+
+#editButton {
+    float: left;
+}
+
+#fields {
+    border: 1px solid #999;
+    background-color: #CCC;
+    margin-bottom: 10px;
+}
+
+dl.zend_form {
+    margin: 0px 10px 0px 0px;
+    
+}
+
+#editButton {
+    margin: 0px 10px;
+}
