@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configData>
+  <production>
+    <user>
+      <language val="en"/>
+      <appTitle val="Web App"/>
+      <timezone val="America/New_York"/>
+      <appDescription val="App description!gdfgdfsgfdsgfsdgdf"/>
+      <customTheme val=""/>
+    </user>
+  </production>
+</configData>
