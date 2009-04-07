@@ -1,0 +1,260 @@
+#ui-datepicker-div table tr td {
+    padding: 0;
+    margin: 0;    
+}
+
+table.list {
+    margin-bottom: 5px;
+    border: 1px solid #6e6e6e;
+    border-collapse: collapse;
+}
+
+table.list th {
+    font-weight: bold;
+    font-size: 90%;
+    text-align: center;
+    height: 18px;
+    border: 1px solid #C0C0C0;
+}
+
+table.list td {
+    border: 1px solid #C0C0C0;
+    height: 25px;
+    padding: 3px;
+}
+
+table.list td.noResults {
+    text-align: center;
+    height: 35px;
+    background-color: #FFFFFF;
+    width: 500px;
+}
+
+.row1 {
+    background-color: #FFFFFF;
+}
+
+.row2 {
+    background-color: #F0F0F0;
+}
+
+table.form {
+    display: block;
+    border: 1px solid #E7E7E7;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+table.form td {
+    padding: 5px 7px 5px 7px;
+    vertical-align: top;
+    border: 0px;
+}
+
+table.form label {
+    font-weight: bold;
+}
+
+.sortable th {
+    cursor: pointer;
+}
+
+.floatLeft {
+    float: left;    
+}
+
+.floatRight {
+    float: right;   
+}
+
+div.elm {
+    margin-bottom: 10px;
+    line-height: 20px;
+    margin-left: 130px;
+}
+
+div.zend_form {
+	margin: 20px 0px;
+}
+
+div.zend_form label.optional, div.zend_form label.required {
+    float: left;
+    font-weight: bold;
+    display: block;
+    width: 115px;
+    overflow: hidden;
+    line-height: 20px;
+    height: 20px;
+    white-space: nowrap;
+    margin-right: 10px;
+}
+
+ul.errors {
+	background-image: url(../../../ot/images/error_arrow.png);
+	background-repeat: no-repeat;
+	background-position: 10px 0px;
+    font-size: .78em;
+    list-style: none;
+    margin: 0px;
+    padding: 5px 0px;
+    max-width: 400px;
+}
+
+ul.errors li {
+	border: 2px solid #C00;
+    color: #000;	
+    margin: 0px;
+    padding: 0px 10px;
+    background-color: #FFCFCF;
+}
+
+span.required {
+    color: #C00;
+}
+
+ul li {
+    list-style-type: inherit;
+}
+
+ol li {
+    list-style-type: decimal;
+}
+
+li {
+    margin-left: 15px;
+}
+
+div.maintenance {
+    font-size: 1.3em;
+    padding: 7px;
+    border: 1px solid #000000;
+    color: #000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+div.debug {
+    font-size: 1em;
+    padding: 7px;
+    border: 1px solid #000000;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+div.maintenance a {
+    text-decoration: underline;
+    color: #FFF;
+}
+
+div#toggleDebugInfo {
+    float: right; 
+}
+
+div#debugInfo {
+    border-top: 1px solid #555;
+    margin-top: 10px;
+    padding-top: 5px;    
+}
+
+div.debug a {
+    text-decoration: underline;
+    color: #0000FF;
+}
+
+div.debugModeOn, div.debugModeOff {
+    background-color: #FFFFDF;
+}
+
+div.maintenanceModeOn {
+    background-color: #DF2929;
+}
+
+div.maintenanceModeOff {
+    background-color: #44DF29;
+}
+
+body {
+	text-align: left;
+}
+
+
+/** jQueryUi styles **/
+.ui-state-error, .ui-state-highlight {
+    margin: 15px 0 15px 0;
+    padding: 5px;
+}
+
+div.ui-state-error span.ui-icon, div.ui-state-highlight span.ui-icon {
+    float: left;
+    margin-right: .3em;
+}
+
+a.linkButtonNoIcon {
+    padding: .4em 1em .4em 1em;
+    text-decoration: none;
+    position: relative;
+    font-size: .9em;
+    cursor: pointer;
+}
+
+a.linkButtonNoText {
+    padding: .2em 1em .2em 1em;
+    text-decoration: none;
+    position: relative;
+    margin-right: 0px;
+    cursor: pointer;
+}
+
+a.linkButtonNoText span.ui-icon {
+    margin: 0 5px 0 0;
+    position: absolute;
+    left: .35em;
+    top: 50%;
+    margin-top: -8px;
+}
+
+a.linkButton {
+    padding: .4em 1em .4em 20px;
+    text-decoration: none;
+    position: relative;
+    margin-right: 5px;
+    font-size: .9em;
+    cursor: pointer;
+}
+
+a.linkButton span.ui-icon {
+    margin: 0 5px 0 0;
+    position: absolute;
+    left: .2em;
+    top: 50%;
+    margin-top: -8px;
+}
+
+input[type=submit], input[type=button], input[type=reset], button {
+    padding: .3em 1em;
+    font-size: .9em;
+    font-family: inherit;
+    cursor: pointer;
+}
+/** End jQueryUi styles **/
+
+div#loading {
+	background-image: url(../../../ot/images/ajax-loader.gif);
+	background-repeat: no-repeat;
+	width: 50px;
+	height: 50px;
+	margin: 100px auto;
+	display: none;
+}
+
+div#translationInstructions {
+	width: 550px;
+	margin-bottom: 20px;
+}
+
+div#systemMessageCloseButton {
+	text-align: right;
+	width: 30px;
+	float: right;
+}

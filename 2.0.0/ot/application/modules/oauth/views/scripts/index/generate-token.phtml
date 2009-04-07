@@ -1,0 +1,28 @@
+<?php if ($this->accessToken): ?>
+<div class="ui-state-error ui-corner-all"> 
+	<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+	<strong><?php echo $this->translate('oauth-index-generateToken:alert'); ?></strong> 
+	<?php echo $this->translate('oauth-index-generateToken:alertPost'); ?></p>
+</div>
+<?php echo $this->translate('oauth-index-generateToken:headerSubmit'); ?>
+<br /><br />
+
+<div class="access"><?php echo $this->translate('oauth-index-generateToken:accessToken'); ?></div>
+<div class="key"><?php echo $this->accessToken['oauth_token']; ?></div>
+
+<div class="access"><?php echo $this->translate('oauth-index-generateToken:tokenSecret'); ?></div>
+<div class="key"><?php echo $this->accessToken['oauth_token_secret']; ?></div>
+
+<br /><br />
+<a href="<?php echo $this->baseUrl(); ?>/oauth/index/details/?consumerId=<?php echo $this->consumer->consumerId; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('oauth-index-generateToken:back', $this->consumer->name); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+
+<?php else: ?>
+<div class="ui-state-error ui-corner-all"> 
+	<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+	<strong><?php echo $this->translate('oauth-index-generateToken:alert'); ?></strong> 
+	<?php echo $this->translate('oauth-index-generateToken:alertPre'); ?></p>
+</div>
+<?php echo $this->translate('oauth-index-generateToken:header'); ?>
+<br /><br />
+<?php echo $this->form; ?>
+<?php endif; ?>
