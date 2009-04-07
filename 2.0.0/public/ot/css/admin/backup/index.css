@@ -1,0 +1,15 @@
+div.elm {
+    margin-bottom: 10px;
+}
+
+.zend_form label.optional, .zend_form label.required {
+    float: left;
+    font-weight: bold;
+    display: block;
+    width: 75px;
+    overflow: hidden;
+    line-height: 25px;
+    height: 25px;
+    white-space: nowrap;
+    margin-right: 10px;
+}
