@@ -1,0 +1,12 @@
+div.docBlock {
+    border: 1px solid #CCC;
+    background-color: #EDEDED;
+    padding: 10px;
+    width: 75%;
+    margin: 10px 10px 30px 10px;
+}
+
+span.method {
+    font-size: 1.2em;
+    font-weight: bold;    
+}
