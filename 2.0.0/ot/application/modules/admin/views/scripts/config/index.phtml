@@ -1,0 +1,28 @@
+<?php echo $this->translate('admin-config-index:header'); ?>
+<br /><br />    
+<table class="list">
+    <tbody>
+        <tr class="ui-widget-header">
+            <th width="250"><?php echo $this->translate('admin-config-index:table:name'); ?></th>
+            <th width="350"><?php echo $this->translate('admin-config-index:table:value'); ?></th>
+            <?php if ($this->acl['edit']) { ?>
+            <th width="50"><?php echo $this->translate('table-header-edit'); ?></th>
+            <?php } ?>
+        </tr>
+        <?php
+        foreach ($this->configList as $key => $value) : ?>
+	        <tr class="<?php $this->cycle('row1', 'row2'); ?>"> 
+	           <td class="description" title="<?php echo (empty($value->description) ? $this->translate('admin-config-index:noDescription') : $value->description); ?>">
+	               <?php echo $key; ?>
+	           </td>
+	           <td><?php echo $value->val; ?></td>
+	            
+                <?php if ($this->acl['edit']) : ?>
+                <td style="text-align: center">
+                    <a href="<?php echo $this->baseUrl(); ?>/admin/config/edit/?key=<?php echo $key; ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
+                </td>
+                <?php endif; ?>
+            <tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

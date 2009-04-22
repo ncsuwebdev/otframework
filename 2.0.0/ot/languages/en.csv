@@ -1,0 +1,496 @@
+default-index-index:header;default header
+default-index-index:title;Welcome
+error-error-error:title;ERROR!
+error-error-error:noMessage;No error message passed
+error-error-error:404:title;404 Error: Page not found
+error-error-error:404:header;The requested page was not found
+error-error-error:404:message;The page that you requested could not be found.
+error-error-error:generic;Processing request failed.
+error-error-error:file;File
+error-error-error:function;Function
+error-error-error:line;Line
+
+account-index-index:title;Account for %1$s %2$s (%3$s):
+account-index-index:header;
+account-index-index:userData;User Data
+account-index-index:userDataHeader;This data is represents your account within this application.
+account-index-index:linkEditUserData;Edit User Data
+account-index-index:linkChangePassword;Change Password
+account-index-index:linkDeleteUser;Delete User
+account-index-index:connectionHeader;Connections can be made between this application and other apps.  The requesting application must make the request on your behalf, then you will be asked to login here to grant the requesting application access.  You may revoke any unwanted access by these connections at any time.
+
+account-index-index:remote;External Application Access
+account-index-index:remoteHeader;If you would like another application to access this application's data, you will need to individually grant them this access. 
+account-index-index:consumerHasAccessButton;Revoke Access
+
+account-index-all:title;Manage Users
+account-index-all:linkNewAccount;Add New Account
+account-index-all:header;Here you can add users and grant them roles.  Roles are defined by the application administrator.
+
+account-index-add:title;Add Account
+account-index-add:header;Enter in the information below to add a user to the system.
+
+account-index-edit:title;Edit Account
+account-index-edit:header;Make any desired changes to your user data.
+
+account-index-delete:title;Delete User
+account-index-delete:header;You have selected to delete the user <b>%1$s</b> who logs in via <b>%2$s</b>.
+
+account-index-changePassword:title;Change My Password
+account-index-changePassword:header;You may change your own password by filling in the fields below. If this is the first time logging into the system, you must change your password to proceed. Fill in the following fields to change your password.
+account-index-changePassword:form:oldPassword;Old Password:
+account-index-changePassword:form:newPassword;New Password:
+account-index-changePassword:form:newPasswordConf;New Password Confirm:
+account-index-changePassword:form:submit;Change My Password
+
+api-documentation-index:title;API Documentation
+api-documentation-index:method;Method
+api-documentation-index:description;Description
+api-documentation-index:returnValue;Return Value
+api-documentation-index:arguments;Arguments
+api-documentation-index:noArguments;No Arguments Required
+api-documentation-index:noReturnValue;No return value
+
+oauth-index-add:title;Register Application for Remote Access
+oauth-index-add:header;This page allows you to register your application to use this application's API.
+
+oauth-index-delete:title;Remove Application from Remote Access
+oauth-index-delete:header;You have selected to remove <b>%1$s</b> as a registered application from this system.  All access tokens for this application will be removed, and no more access will be granted to %1$s.
+
+oauth-index-details:back;Back to Applications
+oauth-index-details:consumerEditButton;Edit Application
+oauth-index-details:consumerRegenerateButton;Reset Consumer Key/Secret
+oauth-index-details:consumerDeleteButton;Delete Application
+oauth-index-details:header;Header
+oauth-index-details:title;Connection Details for %1$s
+oauth-index-details:generateTokenButton;Make a New Connection
+oauth-index-details:callbackUrl;Callback URL
+oauth-index-details:consumerKey;Consumer Key
+oauth-index-details:consumerSecret;Consumer Secret
+oauth-index-details:requestTokenUrl;Request Token URL
+oauth-index-details:accessTokenUrl;Access Token URL
+oauth-index-details:authorizeUrl;Authorize URL
+oauth-index-details:encryptionNotice;We only support hmac-sha1 signatures.  We do not support the plaintext signature method.
+
+oauth-index-edit:title;Edit Consumer Application's Details
+oauth-index-edit:header;Change the details of the consumer application below.
+
+oauth-index-generateToken:title;Manually create a connection
+oauth-index-generateToken:header;If your application does not require each user to register access to this application, you can create a single access token and use that in your application.  Beware that any API access to this application will be done so under <b>your</b> username, so make sure your application doesn't need user-level access granted.<br /><br />Because you are registering your application manually, some methods that rely on the logged-in-user's credentials will not work as you may expect.  Remember that on every request, you are the logged-in-user.<br /><br />If you are sure that you would like to setup your application this way, you can generate an access token and a token secret.  These keys will only be displayed once, so please record these keys as you will need them when sending API requests to this application.
+oauth-index-generateToken:alert;Alert
+oauth-index-generateToken:alertPost;Record these tokens as this is the only time you will see them!
+oauth-index-generateToken:alertPre;Read carefully before proceeding!
+oauth-index-generateToken:headerSubmit;Here are your access token/secret combination.  Using this, in addition to the Consumer Key/Secret will allow your application to have remote access to this application
+oauth-index-generateToken:accessToken;Access Token
+oauth-index-generateToken:accessSecret;Token Secret
+oauth-index-generateToken:back;Back to %1$s Details
+
+oauth-index-index:title;Applications using %1$s
+oauth-index-index:header;If you are a developer and would like your application to access this application, you will need to register your application here.<br /><Br />This application uses OAuth to manage its remote access.  Once you register, you will be given a Consumer Key/Secret which you will use to access our data.  If you are new to OAuth or would like to set your application up to access our API, you can find out more from the <a href="http://oauth.net">OAuth Website</a>.
+oauth-index-index:addButton;Register an Application
+oauth-index-index:detailsButton;Get Application Details
+oauth-index-index:applicationListText;You have registered the following applications:
+oauth-index-index:noApplications;You have not setup any applications to access this application's data remotely.
+
+oauth-index-allConsumers:title;All Applications using %1$s 
+oauth-index-allConsumers:header;This list consists of every consumer application that has been registered to use %1$s.
+oauth-index-allConsumers:detailsButton;Get Application Details
+oauth-index-allConsumers:applicationListText;The following applications have been registered:
+oauth-index-allConsumers:noApplications;No applications have been setup to access this application's data remotely.
+
+oauth-index-regenerateConsumerKeys:title;Reset Consumer Key/Secret
+oauth-index-regenerateConsumerKeys:header;You have selected to reset the consumer secret/key for <b>%1$s</b>. This will require you to update the secret/key in your application before it will be allowed to communicate with this app.
+
+oauth-server-authorize:title;Authorize Consumer
+oauth-server-authorize:header;The application <b>%1$s</b> would like to have access to this application on your behalf.  If you agree to allowing %1$s access, click the button below authorizing it access.
+
+oauth-server-grant:title;Application Authorized...Redirecting
+oauth-server-grant:header;Access granted to %1$s
+oauth-server-grant:redirectMessage;You will now be redirected back to %1$s.  If you are not redirected, you may <a id="callbackUrl" href="%2$s">click here</a> as well.
+oauth-server-grant:accessNotGranted;You have chosen to allow %1$s access to your account.  You may now return to %1$s and proceed with the authorization process.
+
+oauth-server-deny:title;Application Denied Access
+oauth-server-deny:header;Access denied to %1$s
+oauth-server-deny:info;The access token passed from %1$s has been removed.  The requesting application will not be granted access.  If you would like to grant this access in the future, you can use %1$s to request access again. 
+
+oauth-server-revoke:title;Revoke access to %1$s
+oauth-server-revoke:header;The application <b>%1$s</b> currently has access to this application on your behalf.  Would you like to revoke access from %1$s?
+
+oauth-server-alreadyAuthorized:title;Application Already Authorized
+oauth-server-alreadyAuthorized:hasAccess;%1$s Has Access.
+oauth-server-alreadyAuthorized:info;You have already granted access to %1$s.  If you no longer wish to allow %1$s access to your account, you should remove the access via <b><a href="%2$s/account/">My Account</a></b>.
+
+oauth-server-generateToken:title;Manually create a connection
+
+model-account-username;Username:
+model-account-loginMethod;Login Method:
+model-account-firstName;First Name:
+model-account-lastName;Last Name:
+model-account-emailAddress;Email Address:
+model-account-password;Password;
+model-account-passwordConf;Confirm Password:
+model-account-role;Access Role:
+model-account-timezone;Timezone:
+
+msg-error-otExceptionAccess:title;You do not have access
+msg-error-otExceptionData:title;Error accessing data
+msg-error-otExceptionInput:title;Error processing application input
+msg-error-noAccount;User Account Not Found
+msg-error-apiAccessDenied;You must be authenticated to use this method
+msg-error-invalidTimezone;Timezone is invalid
+msg-error-invalidStatus;Invalid status
+msg-error-optionNotFound;Option not found
+msg-error-accountTaken;Username is taken.  Please select a different username
+msg-error-invalidForm;You did not fill in valid information into the form.
+msg-error-accountAccessDelete;You are not allowed to delete yourself.
+msg-error-authAdapterSupport;The authentication adapter for your account does not support this feature
+msg-error-passwordMismatch;New passwords do not match
+msg-error-passwordInvalidOriginal;Original Password was incorrect
+msg-error-noRemoteAccess;This application is not configured for remote access
+msg-info-requiredDataBeforeContinuing;You must fill out the following information about yourself before continuing.
+msg-info-accountCreated;The user account was successfully created.
+msg-info-accountPasswordCreated;A password has been created to the account and emailed to the user.
+msg-info-accountUpdated;The account was successfully updated
+msg-info-passwordChanged;Your password has been changed.  You can now log in with your new credentials
+msg-info-loginBeforeContinuing;You must log in before continuing
+msg-info-apiCodeCreated;The API Code was successfully created.  This user has remote access now.
+msg-info-apiCodeDeleted;The API Code was successfully deleted.  This user has no more remote access.
+table-header-edit;Edit
+table-header-delete;Delete
+form-button-delete;Yes, Delete
+form-button-save;Save
+form-button-cancel;Cancel
+form-button-yes;Yes
+form-button-no;No
+form-button-edit;Edit
+form-delete-confirm;Are you sure you want to do this?
+
+model-role-form:roleName;Role Name:
+model-role-form:inheritRoleId;Inherit From:
+model-role-form:submit;Save Access Role
+
+admin-acl-form:allAccess;All Access
+admin-acl-form:someAccess;Some Access
+admin-acl-form:noAccess;No Access
+admin-acl-form:hasAccess;Has Access
+admin-acl-form:currently;Currently:
+admin-acl-form:grantRevoke;Grant/Revoke:
+admin-acl-form:noChange;No Change
+admin-acl-form:grantAllAccess;Grant All Access
+admin-acl-form:revokeAllAccess;Revoke All Access
+admin-acl-form:grant;Grant
+admin-acl-form:revoke;Revoke
+admin-acl-form:grantAccess;Grant Access
+admin-acl-form:revokeAccess;Revoke Access
+admin-acl-form:noInheritance;No Inheritance
+admin-acl-form:method;Method
+
+admin-acl-index:title;Manage Access Roles
+admin-acl-index:header;Access Roles provide a simple approach to managing user access within the application. Roles are created by any user with access, allowing them to grand and revoke access to certain resources within the application.  Resources are defined as accessible functions within the application.<br /><br />Below are all active roles that are available to be assigned to users:
+admin-acl-index:linkAdd;Add New Access Role
+admin-acl-index:table:roleName;Role Name
+admin-acl-index:table:inheritedFrom;Inherited From
+admin-acl-index:table:applicationAccess;Application Access
+admin-acl-index:table:remoteAccess;Remote Access
+admin-acl-index:noRoles;No Roles found
+
+admin-acl-details:title;Access Role Details
+admin-acl-details:accessTitle;Application Access
+admin-acl-details:header;These are the individual details for the %1$s access role as they appear in the actual ACL configuration file.
+admin-acl-details:back;Back to ACL List
+admin-acl-details:edit;Edit
+admin-acl-details:delete;Delete
+admin-acl-details:editable;Editable?
+admin-acl-details:form:access;Access
+admin-acl-details:applicationAccess:header;These are the access rules for this role within the application.
+admin-acl-details:applicationAccess:edit;Edit these rules
+admin-acl-details:remoteAccess:header;These are the access rules for this role when someone is accessing this application remotely.
+admin-acl-details:remoteAccess:edit;Edit these rules
+
+admin-acl-add:title;Add Access Role
+admin-acl-add:header;Select the name that you would like to call the role.  This system also allows roles to inherit permission from an existing role.  Inhertance is optional but is useful in implementing a tiered access system.
+
+admin-acl-edit:title;Edit Access Role
+admin-acl-edit:header;Select the name that you would like to call the role.  This system also allows roles to inherit permission from an existing role.  Inhertance is optional but is useful in implementing a tiered access system.
+
+admin-acl-applicationAccess:caution;<b>Caution!</b>  Making changes to this role will affect the following roles which are inherited (directly or indirectly) from this role:
+admin-acl-applicationAccess:via;via
+admin-acl-applicationAccess:title;Edit Application Access Rules
+admin-acl-applicationAccess:header;Set the access rules that will determine a role's access within the application.
+admin-acl-applicationAccess:back;Back to Role Details
+
+admin-acl-remoteAccess:title;Edit Remote Access Rules
+admin-acl-remoteAccess:header;Set the access rules that will determine a role's access to remote procedure calls.
+
+admin-acl-delete:title;Delete Access Role
+admin-acl-delete:header;You have selected to delete the role <b>%1$s</b>.
+admin-acl-delete:accountRoleChange;There are currently users who are assigned this role.  They will be put into the default role of <b>%1$s</b>.
+
+admin-backup-index:title;Backup Admin
+admin-backup-index:header;<p>Select the table you would like to download.</p>
+admin-backup-index:downloadAllSql;Click Here to Download All Tables as SQL
+admin-bug-index:title;Bug Reports
+admin-bug-index:header;These are the bugs which have been filed.
+admin-bug-index:linkNew;New Bug Report
+admin-bug-index:table:title;Bug Title
+admin-bug-index:table:dateTime;Submit Date/Time
+admin-bug-index:table:status;Status
+admin-bug-index:noBugs;No Bugs Found.
+admin-bug-details:title;Bug Details
+admin-bug-details:header;These are the details provided about the bug.
+admin-bug-details:back;Back to Bug List
+admin-bug-details:edit;Edit Bug
+admin-bug-details:form:status;Status:
+admin-bug-details:form:submitDate;Submit Date:
+admin-bug-details:form:reproducibility;Reproducibility:
+admin-bug-details:form:severity;Severity:
+admin-bug-details:form:priority;Priority:
+admin-bug-details:form:text;Bug Text:
+admin-bug-details:submittedBy;Submitted by %1$s %2$s (%3$s) on %4$s (%5$s)
+admin-bug-add:title;File Bug Report
+admin-bug-add:header;If you are experiencing an issue with this application, you can file a bug report here.  If you have a feature request, you should contact your administrator directly.
+admin-bug-edit:title;Edit Bug
+admin-bug-edit:textTitle;Existing Bug Text:
+admin-bug-edit:header;Make any changes you would like to the bug.
+admin-bug-edit:submittedBy;Submitted by %1$s %2$s (%3$s) on %4$s
+admin-cache-index:title;Cache Management
+admin-cache-index:header;If you are having issues with something that may be cached, you can clear the cache here.
+admin-cache-index:linkClear;Click here to clear the cache
+admin-config-index:title;Configuration Admin
+admin-config-index:header;This is the current configuration of the application.
+admin-config-index:table:name;Name
+admin-config-index:table:value;Value
+admin-config-index:noDescription;No Description Provided
+admin-config-edit:form:reset;Reset to Default: 
+admin-config-edit:form:submit;Save Config Option
+admin-config-edit:title;Edit Configuration Option
+admin-config-edit:header;You can edit the application configuration from here. These changes will be made globally and immediately.
+admin-config-edit:description;<b>Description:</b>
+admin-config-edit:noDescription;No Description Provided
+admin-cron-index:title;Cron Job Status
+admin-cron-index:header;This interface provides the ability to manage cron jobs.
+admin-cron-index:linkAdd;Add New Cron Job
+admin-cron-index:successfulAlert;CRON Job Ran Successfully.
+admin-cron-index:linkEnableAll;Enable All
+admin-cron-index:linkDisableAll;Disable All
+admin-cron-index:table:cronJob;Cron Job
+admin-cron-index:table:status;Status
+admin-cron-index:table:execute;Execute
+admin-cron-index:table:lastRunDt;Last Run Date
+admin-cron-index:enabled;Enabled
+admin-cron-index:disabled;Disabled
+admin-cron-index:runNow;Run Now
+admin-cron-index:cannotRun;Cannot run a disabled job
+admin-cron-index:neverRun;Job has never run
+admin-cron-index:noJobsFound;No Cron Jobs Found.
+admin-cron-toggle:title;Toggle Cron Job Status
+admin-cron-toggle:header;Are you sure you want to <b>%1$s</b> <b>%2$s</b>?
+admin-cron-toggle:displayName;all cron jobs
+admin-custom-form:object;Object:
+admin-custom-form:description;Description:
+admin-custom-form:label;Label:
+admin-custom-form:type;Type:
+admin-custom-form:required;Required:
+admin-custom-form:direction;Display Direction:
+admin-custom-form:option;Option:
+admin-custom-form:linkAddRow;Add Row
+admin-custom-form:linkRemoveRow;Remove Row
+admin-custom-form:vertical;Vertical
+admin-custom-form:horizontal;Horizontal
+admin-custom-index:title;Custom Fields
+admin-custom-index:header;This system allows for custom attributes to be added to a certain set of objects within the system.  Select the object below to modify any attributes associated with it.
+admin-custom-index:table:object;Object
+admin-custom-index:table:description;Description
+admin-custom-index:noObjects;No objects found.
+admin-custom-details:title;Attributes for %1$s
+admin-custom-details:linkBack;Back to Object List
+admin-custom-details:linkAdd;Add New Custom Attribute To %1$s
+admin-custom-details:linkSaveOrder;Save Attribute Order
+admin-custom-details:noAttributes;No custom attributes found for this object.
+admin-custom-attributeDetails:title;Attribute Details
+admin-custom-attributeDetails:delete;Delete
+admin-custom-attributeDetails:options;Options:
+admin-custom-attributeDetails;noOptions;No Options
+admin-custom-add:title;Add Custom Attribute to %1$s
+admin-custom-add:header;Enter in the information below to add custom attribute to this object.
+admin-custom-add:linkAdd;Add Custom Attribute
+admin-custom-edit:title;Edit Custom Attribute for %1$s
+admin-custom-edit:header;Enter in the information below to add custom attribute to this object.
+admin-custom-edit:delete;<b>Delete "%1$s"</b>
+admin-custom-edit:addOptions;Add New Options:
+admin-custom-edit:linkSave;Save Custom Attribute
+admin-custom-delete:title;Delete Attribute from %1$s
+admin-custom-delete:header;You have selected to delete the attribute <b>%1$s</b>.  Are you sure you want to do this?  <b>This will remove all data associated with this attribute.</b>
+admin-debug-index:title;Debug Mode Admin
+admin-debug-index:debugInfo;Debug mode will only show up for you.  No one else will see the debug info unless they also turn on debug mode.
+admin-debug-index:notDebug;This application is not in debug mode.
+admin-debug-index:turnOff;Turn debug mode off
+admin-debug-index:turnOn;Turn debug mode on
+admin-emailqueue-index:title;Email Queue
+admin-emailqueue-index:header;The following are the emails that have been sent or are queued to be sent.
+admin-emailqueue-details:title;Queued Email Details
+admin-emailqueue-details:linkBack;Back to Email List
+admin-emailqueue-details:status;Status:
+admin-emailqueue-details:queueDate;Queue Date:
+admin-emailqueue-details:sentDate;Sent Date:
+admin-emailqueue-details:notSent;Not Sent
+admin-emailqueue-details:affected;Affected Attribute:
+admin-emailqueue-details:callId;Call ID:
+admin-emailqueue-details:none;None
+admin-emailqueue-details:message;Message:
+admin-emailqueue-details:to;To:
+admin-emailqueue-details:from;From:
+admin-emailqueue-details:subject;Subject:
+admin-emailqueue-details:body;Body:
+admin-index-index:title;Application Library Versions
+admin-index-index:header;The following library versions are installed for this application:
+admin-index-index:ot;OT Application Framework:
+admin-index-index:zend;Zend Framework:
+admin-index-index:jQuery;jQuery:
+admin-index-index:jQueryUi;JQuery UI:
+admin-log-index:title;Action Logs
+admin-log-index:header;The following are the action logs recorded.
+admin-maintenance-index:title;Maintenance Mode Admin
+admin-maintenance-index:notMaintenance;This application is not in maintenance mode.
+admin-maintenance-index:turnOff;Turn maintenance mode off
+admin-maintenance-index:turnOn;Turn maintenance mode on
+admin-nav-index:title;Navigation Editor
+admin-nav-index:addElement;Add New Navigation Element
+admin-nav-index:display;Display
+admin-nav-index:label;Label
+admin-nav-index:externalLink;External Link
+admin-nav-index:link;Link
+admin-nav-index:permissions;Permissions
+admin-nav-index:module;Module
+admin-nav-index:controller;Controller
+admin-nav-index:action;Action
+admin-nav-index:noPermissions;If no permissions are specified, default/index/index will be used.
+admin-nav-index:linkSave;Save Navigation Structure
+admin-nav-index:linkAdd;Add New Item
+admin-translate-index:header;You may change any of the text on this page by including text in the <b>Change Text To:</b> block.  If you wish to remove an existing text change and reset it back to the default text, check the box marked <b>Remove custom text and reset to default</b>.  When you are done, click <b>Save</b> to save your changes.
+admin-translate-index:section;Section: %1$s
+admin-translate-index:currentText;<b>Current Text is:</b>
+admin-translate-index:changeText;<b>Change Text to: </b>(leave blank for no changes)
+admin-translate-index:removeText;Remove custom text and reset to default
+admin-translate-index:noChange;No text can be changed on this page.
+admin-trigger-availableTitle;<b>Available Variables</b>
+admin-trigger-availableHeader;These variables are available for inclusion in your scripts.  The placeholders will be processed with actual data when a trigger is executed.
+admin-trigger-table:variable;Variable
+admin-trigger-table:description;Description
+admin-trigger-index:title;Trigger Index
+admin-trigger-index:header;Triggers are actions that happen with the applications.  By adding a trigger action, you can have the application execute some code at a designated point of the application.<br /><br />These are all the available triggers in the system.
+admin-trigger-index:name;Name
+admin-trigger-details:title;Trigger Actions for %1$s
+admin-trigger-details:header;You can manage the actions for this trigger here.
+admin-trigger-details:linkBack;Back to Trigger List
+admin-trigger-details:linkAdd;Add New Action
+admin-trigger-details:trigger;Trigger:
+admin-trigger-details:description;Description:
+admin-trigger-details:name;Name
+admin-trigger-details:action;Action
+admin-trigger-details:noActions;No Actions Found.
+admin-trigger-add:title;Select Trigger Type
+admin-trigger-add:header;Select the type of action you would like to trigger.
+admin-trigger-add:noVariables;No variables available.
+admin-trigger-edit:title;Modify Trigger Type
+admin-trigger-edit:header;Modify this action's properties, as well as the shortcut name of the action.
+admin-trigger-delete:title;Delete Action
+admin-trigger-delete:header;You have selected to delete the action <b>%1$s</b> for <b>%2$s</b>.  Are you sure you want to do this?
+msg-error-roleIdNotSet;Role ID not set in query string.
+msg-error-noRole;Role not found.
+msg-error-blankRole;Role Name can not be blank.
+msg-error-unallowedRoleEdit;You are not allowed to edit this role.
+msg-error-unallowedRoleDelete;You are not allowed to delete this role.
+msg-error-dependedRoleCannotDelete;This role is depended upon by other roles (%1$s) and cannot be deleted as long as the other roles depend upon it.
+msg-error-noDefaultRole;The default role was not found.
+msg-error-deleteDefaultRole;You cannot delete this role because it is set as the default role for users who are not logged in.
+msg-error-bugIdNotFound;Bug ID Not found in query string.
+msg-error-noBug;Bug not found.
+msg-error-formError;There was an error processing the form.
+msg-error-configFileNotFound;Config override file not found.
+msg-error-configFileNotWritable;Config override file (%1$s) is not writable, therefore it cannot be edited.
+msg-error-noKey;No key was found in query string.
+msg-error-noConfigKey;Key not found in config file.
+msg-error-savingConfig;Error saving user configuration file to disk.
+msg-error-nameNotSet;Name is not set in query string.
+msg-error-objectNotFound;Object not found in query string.
+msg-error-objectNotSetup;Object not setup in config file.
+msg-error-objectIdNotSet;Object ID was not set, please try again.
+msg-error-attributeIdsNotSet;Attribute IDs were not set, please try again.
+msg-error-attributeIdNotSet;Attribute ID not set in query string.
+msg-error-noAttribute;Attribute not found.
+msg-error-orderNotSaved;There was an error saving the order. %1$s Please try again.
+msg-error-queueIdNotSet;Queue ID not set.
+msg-error-noQueue;Queued email could not be found.
+msg-error-configDirNotWritable;Config directory (%1$s) is not writable, add write permissions to this folder and try again.
+msg-error-statusNotFound;No status was found in query string.
+msg-error-savingNav;Error saving the navigation to the database: 
+msg-error-notValidResource;%1$s_%2$s is not a valid resource.
+msg-error-langDirNotWritable;Langague override directory is not writable.
+msg-error-writingLangFile;Error writing to language file.
+msg-error-triggerIdNotFound;Trigger ID not found in query string.
+msg-error-noTrigger;Trigger does not exist in configuration file.
+msg-error-triggerActionIdNotFound;Trigger Action ID not found in query string.
+msg-error-noTriggerActionId;Trigger action does not exist.
+msg-error-triggerHelperNotFound;Trigger Helper not found.
+msg-info-bugSubmitted;Bug was submitted successfully.
+msg-info-bugUpdated;Bug was saved successfully.
+msg-info-cacheCleared;Cache was cleared successfully.
+msg-info-configUpdated;The value for %1$s has been updated successfully!
+msg-info-newOrderSaved;New order was saved successfully.
+msg-info-attributeAdded;Attribute %1$s successfully added to %2$s.
+msg-info-attributeSaved;%1$s successfully saved.
+msg-info-attributeDeleted;%1$s successfully deleted.
+msg-info-debugOn;Debug mode has been turned on.
+msg-info-debugOff;Debug mode has been turned off.
+msg-info-maintenanceOn;Maintenance mode has been turned on.
+msg-info-maintenanceOff;Maintenance mode has been turned off.
+msg-info-savedNav;Navigation structure saved successfully to the database.
+msg-info-savedLang;Text was successfully saved.
+msg-info-triggerAdded;The action was added successfully.
+msg-info-triggerUpdated;The action was modified successfully.
+msg-info-triggerDeleted;The action was deleted successfully.
+login-index-form:username;Username:
+login-index-index:title;Login
+login-index-index:header;Select the way you would like to log in.
+login-index-index:password;Password:
+login-index-index:login;Login
+login-index-index:signUp;Sign-Up Now
+login-index-index:linkForgot;I Forgot my Password...
+login-index-forgot:linkReset;Reset My Password
+login-index-forgot:title;Forgot My Password
+login-index-forgot:header;If you have forgotten your password, enter your username below and we can send a reset request to the email address we have on file for you.
+login-index-passwordReset:new;New Password:
+login-index-passwordReset:confirm;Confirm Password:
+login-index-passwordReset:linkReset;Reset My Password
+login-index-passwordReset:title;Password Reset
+login-index-passwordReset:header;You can reset your password to whatever you like.
+login-index-signup:title;Sign-up for an Account
+login-index-signup:header;You can create a new account here.  A password will be created for you and sent to the email address you provide.  If you already have an account for %1$s, you can  
+login-index-signup:clickHere;click here to log in.
+login-index-signup:enterId;Enter your requested user ID below, as well as your email address.
+login-index-login:header;Please log in to access your account. 
+login-index-login:userId;User ID:
+login-index-login:password;Password:
+login-index-login:clickHere;Click here if you have forgotten your password.
+login-index-login:noAccountTitle;Don't have an account?
+login-index-login:noAccountHeader;If you want to submit a proposal, you can sign up for an account.  A confirmation email will be sent to the email you provided that contains your password.
+login-index-login:alphanumericOnly;(Should only contain alphanumeric characters)
+login-index-login:email;Email Address:
+login-index-login:linkSignup;Sign Up Now!
+login-index-logout:header;Are you sure you want to log out of the application?
+msg-error-createAccountNotAllowed;You are not allowed to create an account.
+msg-error-invalidUsername;Your entered an invalid username/password.
+msg-error-invalidFormInfo;You did not fill in valid information into the form.
+msg-error-realmNotFound;Realm not found.
+msg-error-authNotSupported;The authentication adapter for your account does not support this feature.
+msg-error-userAccountNotFound;The user account you entered was not found.
+msg-error-noKeyFound;No key found.
+msg-error-invalidKey;The key is not valid.
+msg-error-keyExpired;This key has expired.  You need to generate another request to reset your password and try again.
+msg-error-passwordsNotMatch;The passwords you entered did not match.
+msg-error-authoNotAllowed;The authentication adapter for your account does not allow users to signup.
+msg-error-usernameTaken;This username is already taken.  Please choose another name and try again.
+msg-info-passwordResetRequest;A password reset request was sent to the email address on file.
+msg-info-passwordReset;Your password has been reset.
+msg-info-accountCreated;Your account was created successfully.  You may now log in.
