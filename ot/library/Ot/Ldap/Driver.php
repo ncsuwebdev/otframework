@@ -201,5 +201,3 @@ class Ot_Ldap_Driver
 		return @ldap_get_entries($this->_link, $ldap_result);
 	}
 }
-
-?>
