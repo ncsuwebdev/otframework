@@ -1,0 +1,38 @@
+div.bugText {
+    border: 1px solid #999;
+    width: 500px;
+    margin-bottom: 10px;
+}
+
+div.bugText .header {
+    padding: 2px;
+    background-color: #999;
+    color: #FFF;   
+}
+
+div.bugText .bugContent {
+    padding: 5px;
+    background-color: #FFF;
+}
+
+h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+div.elm {
+    margin-bottom: 10px;
+    line-height: 20px;
+}
+
+label {
+    float: left;
+    font-weight: bold;
+    display: block;
+    width: 100px;
+    overflow: hidden;
+    line-height: 20px;
+    height: 20px;
+    white-space: nowrap;
+    margin-right: 10px;
+}
