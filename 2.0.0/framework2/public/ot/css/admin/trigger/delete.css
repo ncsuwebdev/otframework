@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+
+#deleteButton {
+    float: left;
+    margin-right: 10px;
+}
+
+#fields {
+    border: 1px solid #999;
+    background-color: #CCC;
+}
+
+form fieldset dt {
+    width: 120px;
+}

@@ -1,0 +1,162 @@
+#bd {
+	background-image: none;
+	margin:0px;
+    padding:0px;
+    width: 963px;
+    background-color: #FFF;
+    border-right:#999 solid 1px;
+    border-left:#999 solid 1px;
+}
+
+#hd {
+    width: 965px;
+}
+
+#hd a {
+    color: #FFF;    
+}
+
+.search {
+    float: right;
+    width: 300px;
+    clear: both;
+    text-align: right;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.authInfo {
+    float: right;
+    text-align: right;
+    font: 0.7em Tahoma, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #FFFFFF;
+    padding: 0px 10px;
+}
+
+.authInfo a {
+	color: #FFFFFF;
+}
+
+#brandingBar {
+    height: 20px;
+}
+
+#brandingBarInner {
+    width: 944px;
+    padding: 10px 15px 0px 15px;
+    height: 100%;
+    line-height: 20px;
+}
+
+div#brandingLinks {
+    background-image: url(../images/headerBanner.png);
+    background-repeat: no-repeat;
+    float: left;
+    width: 345px;
+    height: 18px;
+}
+
+.contentBody {
+    padding: 10px;    
+}
+
+a#ncsuBrandingLink {
+    background: none;
+    width: 135px;
+    height: 15px;
+    position: relative;
+    float: left;
+}
+
+a#oitBrandingLink {
+    background: none;
+    width: 185px;
+    height: 15px;
+    position: relative;
+    left: 20px;
+    float: left;   
+}
+
+a#ncsuBrandingLink span, a#oitBrandingLink span {
+    display: none;
+}
+
+#logoBox {
+    background-image:url(../images/header-back-light.png);
+    margin: 0;
+    padding: 0px;
+    height: 90px;
+    width: 965px;
+    color: #FFF;
+}
+
+#oitLogo {
+	margin-left: 15px;
+	background-image:url(../images/oit_logo.png);
+	background-repeat: no-repeat;
+	background-position: 0px 5px;
+	height: 45px;
+	padding: 10px 0px 0px 100px;
+    font-size: 3em;
+    color: #FFF;
+    display: block;
+}
+
+a#homeLink {
+    text-decoration: none; 
+}
+
+#pageTitle {
+	font-size: 1.5em;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+th, td {
+	border:0px solid #000000;
+	padding:0.5em;
+}
+
+div#overrideTranslate {
+    text-align: right;
+    margin-top: 20px;
+}
+
+#ft {
+    margin: auto;
+    background: #FFFFFF url(../images/sub-bottom-back-1col.png) no-repeat;
+    padding-top:28px;
+    height:70px;
+    width:965px;
+    color:#333333;
+    text-align: center;
+    font-size:90%;
+}
+
+#header-nav-menu {
+    height: 29px;
+    width: 100%;
+    background-image: url(../images/superfish/menu-tile.png);
+    background-repeat: repeat-x;
+    margin-top: 1px;
+}
+
+#ft a, #ft a:visited {
+    color:#333;
+    text-decoration:none;
+}
+
+#ft a:hover {
+    color:#666;
+    text-decoration:underline;
+}
+
+a, a:visited, a:active {
+    color:#AA0000;
+}
+
+a:hover {
+    color:#666666;
+}
