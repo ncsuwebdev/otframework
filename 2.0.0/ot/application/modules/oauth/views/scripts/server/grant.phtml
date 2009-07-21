@@ -1,8 +1,0 @@
-<div id="grant">
-<?php echo $this->translate('oauth-server-grant:header', $this->consumer->name); ?>
-</div>
-<?php if ($this->consumer->callbackUrl != ''): ?>
-    <?php echo $this->translate('oauth-server-grant:redirectMessage', $this->consumer->name, $this->callbackUrl); ?>
-<?php else: ?>
-    <?php echo $this->translate('oauth-server-grant:accessNotGranted', $this->consumer->name); ?>
-<?php endif; ?>
