@@ -1,0 +1,72 @@
+<?php echo $this->translate('admin-cron-index:header'); ?>
+<br /><br />
+
+    <?php if ($this->acl['add']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/admin/cron/add/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-cron-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <?php endif; ?>
+    
+    <div id="alertWrapper">
+    <div id="alertBox"><?php echo $this->translate('admin-cron-index:successfulAlert'); ?></div>
+    </div>
+
+    <?php if ($this->acl['toggle']): ?>
+    <a href="<?php echo $this->baseUrl(); ?>/admin/cron/toggle/?name=all&status=disabled" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-cron-index:linkEnableAll'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <a href="<?php echo $this->baseUrl(); ?>/admin/cron/toggle/?name=all&status=enabled" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-cron-index:linkDisableAll'); ?><span class="ui-icon ui-icon-minusthick"></span></a>  
+    <br /><br />
+    <?php endif; ?>
+    
+    <table class="list">
+        <tr class="ui-widget-header">
+            <th width="175"><?php echo $this->translate('admin-cron-index:table:cronJob'); ?></th>
+            <th width="130"><?php echo $this->translate('admin-cron-index:table:status'); ?></th>
+            <th width="150"><?php echo $this->translate('admin-cron-index:table:execute'); ?></th>
+            <th width="200"><?php echo $this->translate('admin-cron-index:table:lastRunDt'); ?></th>
+            <?php if ($this->acl['edit']): ?>
+            <th width="50"><?php echo $this->translate('table-header-edit'); ?></th>
+            <?php endif; ?>
+        </tr>
+        
+        <?php if (count($this->cronjobs) > 0): ?>
+        <?php foreach ($this->cronjobs  as $c): ?>
+        <tr class="<?php $this->cycle('row1', 'row2'); ?>">
+            <td><?php echo $c['name']; ?></td>
+            <td style="text-align:center;" class="<?php echo $c['status']; ?>">
+            <?php if ($this->acl['toggle']): ?>
+            <a href="<?php echo $this->baseUrl(); ?>/admin/cron/toggle/?name=<?php echo $c['name']; ?>">
+            <?php endif; ?>
+            <?php if ($c['status'] == 'enabled'): ?>
+            <?php echo $this->translate('admin-cron-index:enabled'); ?>
+            <?php else: ?>
+            <?php echo $this->translate('admin-cron-index:disabled'); ?>
+            <?php endif; ?>
+            <?php if ($this->acl['toggle']): ?>
+            </a>
+            <?php endif; ?>
+            </td>
+            <td style="text-align: center;">
+            	<?php if ($c['status'] == 'enabled'): ?>
+            		<a class="runLink" href="<?php echo $this->baseUrl(); ?>/cron/index/<?php echo $c['name']; ?>"><?php echo $this->translate('admin-cron-index:runNow'); ?></a>
+                <?php else: ?>
+                	<?php echo $this->translate('admin-cron-index:cannotRun'); ?>
+            	<?php endif; ?>
+            </td>
+            <td style="text-align: center;">
+                <?php if ((!array_key_exists('lastRunDt', $c)) || ($c['lastRunDt'] == 0)): ?>
+                    <?php echo $this->translate('admin-cron-index:neverRun'); ?>
+                <?php else: ?>
+                    <?php echo $this->elapsedTime($c['lastRunDt']); ?>
+                <?php endif; ?>
+            </td>
+            <?php if ($this->acl['edit']): ?>
+            <td style="text-align:center">
+                <a href="<?php echo $this->baseUrl(); ?>/admin/cron/edit/?name=<?php echo $c['name']; ?>"><img src="<?php echo $this->baseUrl(); ?>/images/edit.png" alt="<?php echo $this->translate('table-header-edit'); ?>" /></a>
+            </td>
+            <?php endif; ?>
+        </tr>
+        <?php endforeach; ?>
+        <?php else: ?>
+        <tr>
+            <td colspan="5" class="noResults"><?php echo $this->translate('admin-cron-index:noJobsFound'); ?></td>
+        </tr>
+        <?php endif; ?>
+    </table>
