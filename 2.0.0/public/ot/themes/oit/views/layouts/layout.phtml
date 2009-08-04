@@ -1,0 +1,82 @@
+<?php echo $this->doctype('XHTML1_STRICT'); ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<?php 
+$this->headMeta()->appendName('keywords', $this->config->user->metaKeywords->val)
+                 ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
+                 ->appendHttpEquiv('Content-Language', 'en-US');             
+                 
+echo $this->headMeta() . "\n";
+
+$this->headTitle($this->config->user->appTitle->val)
+     ->headTitle(strip_tags($this->title))
+     ->headTitle()->setSeparator(' - ');
+
+echo "\n";
+
+echo $this->headTitle() . "\n\n";
+echo $this->headLink() . "\n\n";
+echo $this->headScript() . "\n";
+
+$this->overrideTranslation()->js(); 
+echo "\n";
+?>
+</head>
+
+<body>
+<input type="hidden" name="baseUrl" id="baseUrl" value="<?php echo $this->baseUrl(); ?>" />
+    <div id="doc2" class="yui-t7">
+        <div id="hd">
+            <div id="logoBox">
+                <div id="brandingBar">
+                    <div id="brandingBarInner">
+                        <div id="brandingLinks">
+                            <a id="ncsuBrandingLink" target="_blank" href="http://www.ncsu.edu"><span>ncsu.edu</span></a>
+                            <a id="oitBrandingLink" target="_blank" href="http://oit.ncsu.edu"><span>oit.ncsu.edu</span></a>
+                        </div>
+                        <div class="authInfo"><?php echo $this->render('auth.phtml'); ?></div>
+                    </div>
+                </div>  
+                <div class="ui-helper-clearfix"></div>         
+                <a id="homeLink" href="<?php echo $this->baseUrl(); ?>">        
+                    <span id="oitLogo"> 
+                        <span class="title"><?php echo $this->config->user->appTitle->val; ?></span>
+                    </span>  
+                </a>
+                <br /><br />
+            </div>
+            <div id="header-nav-menu">
+            <?php echo $this->render('nav.phtml'); ?>
+            </div>
+        </div>
+        
+        <div id="bd">
+            <div id="yui-main">
+                <div class="yui-b">
+                    <div class="yui-g" id="mainContent">
+                        <div class="contentBody">
+                            <?php if (!empty($this->messages) != 0) : ?>
+                            <div id="systemMessages" class="ui-state-highlight ui-corner-all">
+                                <span class="ui-icon ui-icon-info"></span>
+                                    <?php foreach ($this->messages as $m) : ?>
+                                        <?php echo $this->translate($m); ?><br />
+                                    <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+                            <div id="pageTitle"><?php echo $this->title; ?></div>
+                            <?php echo $this->layout()->content; ?>
+                            <?php $this->overrideTranslation()->link('Edit Text For This Page'); ?> 
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ft">
+            <?php echo $this->render('footer.phtml'); ?>
+        </div>
+    </div>
+  </body>
+</html>
+
