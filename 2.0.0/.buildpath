@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path=""/>
+	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry kind="lib" path="/afs/unity.ncsu.edu/web/i/itdapps5/lib/Zend/Framework/1.8.4"/>
+	<buildpathentry kind="lib" path="/afs/unity.ncsu.edu/web/i/itdapps5/lib/Zend/Framework/1.6.1"/>
+</buildpath>

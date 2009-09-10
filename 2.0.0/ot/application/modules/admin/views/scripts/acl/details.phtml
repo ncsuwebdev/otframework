@@ -1,0 +1,118 @@
+
+    <?php echo $this->translate('admin-acl-details:header', $this->role['name']); ?>
+    <br /><br />
+    <?php if ($this->acl['index']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+    <?php endif; ?>
+    <?php if ($this->acl['edit'] && $this->role['editable']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/edit/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:edit'); ?><span class="ui-icon ui-icon-pencil"></span></a>
+    <?php endif; ?>
+    <?php if ($this->acl['delete'] && $this->role['editable']): ?>
+        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/delete/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:delete'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
+    <?php endif; ?>
+    <br /><br />
+    <table class="form">
+        <tbody>
+	        <tr>
+	            <td><label><?php echo $this->translate('model-role-form:roleName'); ?></label></td>
+	            <td><?php echo $this->role['name']; ?></td>
+	        </tr>
+	        <tr>
+	            <td><label><?php echo $this->translate('model-role-form:inheritRoleId'); ?></label></td>
+	            <td><?php echo ($this->role['inheritRoleId'] != 0) ? $this->inheritRole : $this->translate('admin-acl-form:noInheritance'); ?></td>
+	        </tr>
+	        <tr>
+	            <td><label><?php echo $this->translate('admin-acl-details:editable') ?></label></td>
+	            <td><?php echo ($this->role['editable'] == 1) ? $this->translate('form-button-yes') : $this->translate('form-button-no'); ?></td>
+	        </tr>
+        </tbody>
+    </table>
+<div id="access" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+	<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+       <li class="ui-state-default ui-corner-top"><a href="#tabs-application"><span><?php echo $this->translate('admin-acl-index:table:applicationAccess'); ?></span></a></li>
+       <li class="ui-state-default ui-corner-top"><a href="#tabs-remote"><span><?php echo $this->translate('admin-acl-index:table:remoteAccess'); ?></span></a></li>
+	</ul>
+    <div id="tabs-application" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+	    <?php if ($this->acl['application-access'] && $this->role['editable']): ?>
+	        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/application-access/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:applicationAccess:edit'); ?><span class="ui-icon ui-icon-newwin"></span></a>
+	        <br /><br />
+	    <?php endif; ?>     
+    	<?php echo $this->translate('admin-acl-details:applicationAccess:header'); ?>
+    	<br /><br />   
+	    <div class="accessTable"> 
+        <?php foreach ($this->resources as $module => $controllers) : ?>
+        <div class="aclSection">
+            <table class="list">
+                <tbody>
+                <tr class="ui-widget-header">
+                    <td width="300"><b><?php echo ucwords($module); ?></b></td>
+                    <td width="120"><?php echo $this->translate('admin-acl-details:form:access'); ?></td>
+                </tr>
+                <?php foreach ($controllers as $controller => $actions) : ?>
+                <tr class="controller">
+                    <td title="<?php echo $actions['description']; ?>" class="td1 description">
+                    <?php echo ucwords($controller); ?>
+                    </td>
+                    <td class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+                    <?php if (!empty($actions['all']['access'])) : ?>
+                        <?php echo $this->translate('admin-acl-form:allAccess'); ?>
+                    <?php else: ?>
+                        <?php if (isset($actions['someaccess'])) : ?>
+                        <?php echo $this->translate('admin-acl-form:someAccess'); ?>
+                        <?php else: ?>
+                        <?php echo $this->translate('admin-acl-form:noAccess'); ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    </td>
+                </tr>
+                <?php if (isset($actions['part'])): ?>
+                    <?php foreach ($actions['part'] as $action => $access) : ?>
+                <tr class="action <?php echo $module . '_' . $controller; ?>" style="display: <?php echo (empty($actions['someaccess']) || !empty($actions['all']['access'])) ? 'none' : ''; ?>;">
+                    <td class="td1 description" title="<?php echo $access['description']; ?>">
+                    <img src="<?php echo $this->baseUrl(); ?>/images/help.png" width="16" height="16" class="info" />
+                    <?php echo ucwords($action); ?>
+                    </td>
+                    <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('admin-acl-form:hasAccess') : $this->translate('admin-acl-form:noAccess'); ?></td>
+                </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endforeach; ?>
+        </div>
+    </div>  
+    <div id="tabs-remote" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+	    <?php if ($this->acl['remote-access'] && $this->role['editable']): ?>
+	        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/remote-access/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:remoteAccess:edit'); ?><span class="ui-icon ui-icon-transferthick-e-w"></span></a>
+	        <br /><br />
+	    <?php endif; ?>     	
+    	<?php echo $this->translate('admin-acl-details:remoteAccess:header'); ?>
+    	<br /><br />   
+	    <div class="accessTable">    
+        <table class="list">
+            <tbody>
+            <tr class="ui-widget-header">
+                <td width="300"><b><?php echo $this->translate('admin-acl-form:method'); ?></b></td>
+                <td width="120"><?php echo $this->translate('admin-acl-details:form:access'); ?></td>
+            </tr>
+            <?php foreach ($this->remoteResources as $method => $access) : ?>
+            <tr class="controller">
+                <td title="<?php echo $access['description']; ?>" class="td1 description">
+                <?php echo $method; ?>
+                </td>
+                <td class="<?php if ($access['access']) { echo 'access'; } else { echo 'noAccess'; } ?>">
+                <?php if ($access['access']) : ?>
+                    <?php echo $this->translate('admin-acl-form:allAccess'); ?>
+                <?php else: ?>
+                    <?php echo $this->translate('admin-acl-form:noAccess'); ?>
+                <?php endif; ?>
+                </td>
+            </tr> 
+            <?php endforeach; ?>
+            </tbody>
+         </table>   
+         </div>
+    </div>  
+</div>

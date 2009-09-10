@@ -1,0 +1,9 @@
+<?php echo $this->translate('admin-backup-index:header'); ?>
+
+<?php echo $this->form; ?>
+
+<br /><br />
+
+<?php if ($this->downloadAllSql) : ?>
+<a class="ui-state-default ui-corner-all linkButtonNoIcon" href="<?php echo $this->baseUrl(); ?>/admin/backup/download-all-sql"><?php echo $this->translate('admin-backup-index:downloadAllSql'); ?></a>
+<?php endif; ?>
