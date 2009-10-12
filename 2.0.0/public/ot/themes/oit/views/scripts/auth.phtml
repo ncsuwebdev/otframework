@@ -1,0 +1,40 @@
+<?php
+$auth = Zend_Auth::getInstance();
+
+if (!$auth->hasIdentity()) {
+    echo '<b>You are not Logged in!</b> <a href="' . $this->baseUrl() . '/login/" id="authLogin" class="authModal">Log in</a> here.';
+} else {
+    
+    $identity = $auth->getIdentity();
+    
+    echo "Welcome ";
+    
+    if ($identity->firstName != '' && $identity->lastName != '') {
+        echo $identity->firstName . ' ' . $identity->lastName;  
+    } else {
+        echo $auth->getIdentity()->username;
+    }
+    
+    echo '&nbsp; | &nbsp;';
+
+    echo '<a href="' . $this->baseUrl() . '/account/" id="authMyAccount">My Account</a>'
+        . '&nbsp; | &nbsp;'
+        . '<a href="' . $this->baseUrl() . '/login/index/logout/" id="authLogout" class="authModal">Sign Out</a>';      
+}
+
+    $translate = Zend_Registry::get('Zend_Translate');
+    if (count($translate->getList()) > 1) {
+        $list = $translate->getList();
+        foreach ($list as &$l) {
+            $l = Ot_Language::getLanguageName($l);
+        }
+        unset($l);
+
+        echo '&nbsp; | &nbsp;';
+        echo $this->formLabel('language_select', 'Language: ');
+        echo $this->formSelect('language_select', $translate->getLocale(), null, $list);
+    } 
+?>
+<div id="authLogoutDialog" title="Logout">
+Are you sure you want to log out?
+</div>

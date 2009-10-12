@@ -1,0 +1,16 @@
+div.elm {
+    margin-bottom: 10px;
+    line-height: 20px;
+}
+
+label {
+    float: left;
+    font-weight: bold;
+    display: block;
+    width: 100px;
+    overflow: hidden;
+    line-height: 20px;
+    height: 20px;
+    white-space: nowrap;
+    margin-right: 10px;
+}

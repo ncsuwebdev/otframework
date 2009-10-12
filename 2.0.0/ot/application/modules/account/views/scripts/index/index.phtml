@@ -1,0 +1,160 @@
+<?php echo $this->translate('account-index-index:header'); ?>
+<br /><br />
+<?php if ($this->acl['delete']): ?>
+    <a href="<?php echo $this->baseUrl(); ?>/account/index/delete/?accountId=<?php echo $this->userData['accountId']; ?>" class="ui-state-default ui-corner-all linkButton">
+    <?php echo $this->translate('account-index-index:linkDeleteUser'); ?>
+    <span class="ui-icon ui-icon-minusthick"></span></a>
+    <br /><br />
+<?php endif; ?>
+
+<div id="oauth">
+	<ul>
+		<li><a href="#tabs-data"><span>Account</span></a></li>
+		<?php foreach ($this->consumers as $c): ?>
+		<li><a href="#tabs-<?php echo $c['consumerId']; ?>"><span><?php echo $c['name']; ?></span></a></li>
+		<?php endforeach; ?>
+        <li><a href="#tabs-connections"><span>Connections to <?php echo $this->config->user->appTitle->val; ?></span></a></li>
+	</ul>
+	<div id="tabs-data">
+	<?php echo $this->translate('account-index-index:userDataHeader'); ?>
+	<br /><br />
+    <?php if ($this->acl['edit'] || $this->acl['changePassword']) : ?>
+        <?php if ($this->acl['edit']): ?>   
+    	    <a href="<?php echo $this->baseUrl(); ?>/account/index/edit/?accountId=<?php echo $this->userData['accountId']; ?>" class="ui-state-default ui-corner-all linkButton">
+    	    <?php echo $this->translate('account-index-index:linkEditUserData'); ?>
+    	    <span class="ui-icon ui-icon-pencil"></span></a>
+        <?php endif; ?>
+        <?php if ($this->acl['changePassword']) : ?>
+            <a href="<?php echo $this->baseUrl(); ?>/account/index/change-password/" class="ui-state-default ui-corner-all linkButton">
+            <?php echo $this->translate('account-index-index:linkChangePassword'); ?>
+            <span class="ui-icon ui-icon-locked"></span></a>
+        <?php endif; ?>
+        <br /><br />        
+    <?php endif; ?>	
+		<table class="form">
+		    <tbody>
+		        <tr>
+		            <td width="130"><label><?php echo $this->translate('model-account-username'); ?></label></td>
+		            <td><?php echo $this->userData['username']; ?></td>
+		        </tr>
+		        <tr>
+		            <td><label><?php echo $this->translate('model-account-loginMethod'); ?></label></td>
+		            <td><?php echo $this->userData['authAdapter']['name']; ?></td>
+		        </tr>
+		        <tr>
+		            <td><label><?php echo $this->translate('model-account-role'); ?></label></td>
+		            <td><?php echo $this->role['name']; ?></td>
+		        </tr>
+		        <tr>
+		            <td>
+		            <label><?php echo $this->translate('model-account-firstName'); ?></label></td>
+		            <td><?php echo $this->userData['firstName']; ?></td>
+		        </tr> 
+		        <tr>
+		            <td>
+		            <label><?php echo $this->translate('model-account-lastName'); ?></label></td>
+		            <td><?php echo $this->userData['lastName']; ?></td>
+		        </tr>                 
+		        <tr>
+		            <td>            
+		            <label><?php echo $this->translate('model-account-emailAddress'); ?></label></td>
+		            <td><?php echo (empty($this->userData['emailAddress']) ? 'None' : $this->userData['emailAddress']); ?></td>
+		        </tr>                 
+		        <tr>
+		            <td>            
+		            <label><?php echo $this->translate('model-account-timezone'); ?></label></td>
+		            <td><?php echo (empty($this->userData['timezone']) ? $this->config->user->timezone->val : $this->userData['timezone']); ?></td>
+		        </tr> 
+		        <?php foreach($this->attributes as $key=>$attr) : ?>
+		        <tr>
+		            <td>            
+		            <label><?php echo ucwords($key); ?>:</label></td>
+		            <td><?php echo (empty($attr) ? 'None' : $attr); ?></td>
+		        </tr>         
+		        <?php endforeach; ?>
+		    </tbody>
+		</table> 	
+	</div>
+	<?php foreach ($this->consumers as $c): ?>
+	<div id="tabs-<?php echo $c['consumerId']; ?>">
+		<?php echo $this->config->user->appTitle->val; ?> is setup to interact with your account on <b><?php echo $c['name']; ?></b>.
+		<?php if ($c['authorized']): ?>
+			<div class="access authorized">
+				<span>You are authorized on <?php echo $c['name']; ?>.</span>
+				To revoke access, you must do this from 
+				<?php if ($c['website'] == ''): ?>
+				<?php echo $c['name']; ?>
+				<?php else: ?>
+				<a href="<?php echo $c['website']; ?>"><?php echo $c['name']; ?></a>
+				<?php endif; ?>
+			</div>			
+		<?php else: ?>
+			<div class="access notAuthorized">
+				<span>You are not authorized on <?php echo $c['name']; ?>.</span>
+				<?php if ($this->acl['grantAccess']): ?>
+				<a href="<?php echo $this->baseUrl(); ?>/oauth/client/?consumerId=<?php echo $c['consumerId']; ?>" class="ui-state-default ui-corner-all linkButton">
+				    Authorize Access
+				<span class="ui-icon ui-icon-key"></span></a>
+				<?php endif; ?>
+			</div>		
+		<?php endif; ?>
+		<h2>Service Description</h2>
+		<div class="description">
+			<?php echo nl2br($c['description']); ?>
+		</div>
+	</div>
+	<?php endforeach; ?>	
+    <div id="tabs-connections"> 
+		<?php if ($this->acl['oauth'] || $this->acl['apiDocs']) : ?>
+            <div id="developers">
+    			<span>Developers!</span>
+                <?php if ($this->acl['oauth']) : ?>
+    			     You can setup your application to interact with <b><?php echo $this->config->user->appTitle->val; ?></b>
+    			     <a href="<?php echo $this->baseUrl(); ?>/oauth/">here</a>.
+                     <br />
+                <?php endif; ?>
+                <?php if ($this->acl['apiDocs']) : ?>
+                    <br />
+                    <div style="text-align: center">
+                        <a href="<?php echo $this->baseUrl(); ?>/api/documentation" class="ui-state-default ui-corner-all linkButton">View API Documentation<span class="ui-icon ui-icon-gear"></span></a>
+                    </div>
+                <?php endif; ?>
+    		</div>
+        <?php endif; ?>    
+    	<?php echo $this->translate('account-index-index:connectionHeader'); ?>
+		<div class="ui-helper-clearfix"></div>
+	<?php if (count($this->accessTokens) != 0): ?>
+		<?php foreach ($this->accessTokens as $t): ?>
+		<div class="token">
+			<div class="consumerIcon">
+				<?php if ($t['consumer']['imageId'] != 0): ?>
+				<img src="<?php echo $this->baseUrl(); ?>/image/?imageId=<?php echo $t['consumer']['imageId']; ?>" />
+				<?php else: ?>
+				<img src="<?php echo $this->baseUrl(); ?>/ot/images/consumer.png" alt="consumer" />
+				<?php endif; ?>
+			</div>
+			<?php if ($this->acl['revokeAccess']): ?>
+			<div class="revoke">
+				<a href="<?php echo $this->baseUrl(); ?>/oauth/server/revoke/?consumerId=<?php echo $t['consumerId']; ?>" class="ui-state-default ui-corner-all linkButton">
+				    <?php echo $this->translate('account-index-index:consumerHasAccessButton'); ?>
+				<span class="ui-icon ui-icon-minusthick"></span></a>			
+			</div>
+			<?php endif; ?>
+			<div class="name">
+				<a href="<?php echo $t['consumer']['website']; ?>"><?php echo $t['consumer']['name']; ?></a> has access.
+			</div>
+			<div class="description">
+				<?php echo nl2br($t['consumer']['description']); ?>
+			</div>	
+			<div class="accessToken">
+				Access token generated on <?php echo $this->dateFormat($t['requestDt'], $this->config->user->dateTimeFormat->val); ?>
+			</div>
+			<div class="ui-helper-clearfix"></div>
+		</div>
+		<?php endforeach; ?>
+	<?php else: ?>
+	<b>No connections have been made on your behalf.</b>
+	<?php endif; ?>
+    </div>
+</div>
+<br /><br />

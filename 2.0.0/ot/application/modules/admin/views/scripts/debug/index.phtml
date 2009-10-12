@@ -1,0 +1,17 @@
+<?php if (!$this->debugMode) : ?>
+<div class="ui-corner-all debug debugModeOff">
+    <?php echo $this->translate("admin-debug-index:notDebug"); ?>
+</div>
+<?php endif; ?>
+
+<p><?php echo $this->translate("admin-debug-index:debugInfo"); ?></p>
+
+<form action="<?php echo $this->baseUrl(); ?>/admin/debug/toggle" method="get">
+<?php if ($this->debugMode) : ?>
+    <input type="hidden" name="status" value="off" />
+    <input type="submit" value="<?php echo $this->translate("admin-debug-index:turnOff"); ?>" />
+<?php else : ?>
+    <input type="hidden" name="status" value="on" />
+    <input type="submit" value="<?php echo $this->translate("admin-debug-index:turnOn"); ?>" />
+<?php endif; ?>
+</form>
