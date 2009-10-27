@@ -26,17 +26,15 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class IndexController extends Internal_Controller_Action 
-{
-           
+class IndexController extends Zend_Controller_Action 
+{   
+          
     /**
      * shows the homepage
      *
      */
     public function indexAction()
-    {       
-        $config = Zend_Registry::get('userConfig');
-        
-        $this->view->title = 'Welcome to ' . $config->appTitle->value;
+    {
+        //$this->_helper->pageTitle('default-index-index:title');
     }
 }

@@ -152,7 +152,6 @@ class Account_IndexController extends Internal_Controller_Action
         $this->view->userData = $this->_userData;
         $this->view->title    = "Account for " . $this->_userData['firstName'] . ' ' . $this->_userData['lastName'];
                 
-        $attributes = array();
         if (isset($config->accountPlugin)) {
             $acctPlugin = new $config->accountPlugin;
             $attributes = $acctPlugin->get($this->_userData['userId']);
@@ -294,9 +293,7 @@ class Account_IndexController extends Internal_Controller_Action
         if ($this->_authzAdapter->manageLocally()) {
             $roleSelect = new Zend_Form_Element_Select('role');
             $roleSelect->setLabel('Access Role:');
-            $roleSelect->setRequired(true);
-            $roleSelect->addMultiOption('', '-- Choose Access Role --');
-            
+    
             $roles = $this->_acl->getAvailableRoles();     
                
             foreach ($roles as $r) {

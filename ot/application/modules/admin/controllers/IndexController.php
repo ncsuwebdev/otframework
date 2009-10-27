@@ -26,24 +26,28 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_IndexController extends Internal_Controller_Action 
+class Admin_IndexController extends Zend_Controller_Action 
 {
-           
     /**
      * shows the homepage
      *
      */
     public function indexAction()
     {       
-        $this->view->title = "Application Library Versions";
-
+        $this->_helper->pageTitle('admin-index-index:title');
+        $config = Zend_Registry::get('config');
+        
+        if (!empty($config->app->version)) {
+            $this->view->appVersion = $config->app->version;
+        } else {
+        	$this->view->appVersion = "Unknown";
+        };
+        
+        $this->view->appTitle = $config->user->appTitle;
         $this->view->otVersion = Ot_Version::VERSION;
-        $this->view->zfVersion = Zend_Version::VERSION;
-
-        //require_once 'Smarty.class.php';
-        $smarty = new Smarty();
-        
-        $this->view->smartyVersion = $smarty->_version;
-        
+        $this->view->zfVersion = Zend_Version::VERSION;        
+       
+        // the jQuery and jQueryUi library versions are acquired by the javascript
+        // for this controller and inserted into the page that way
     }
 }

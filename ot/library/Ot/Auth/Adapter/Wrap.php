@@ -57,8 +57,6 @@ class Ot_Auth_Adapter_Wrap implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapt
      *
      */
     const defaultPassword = '';
-
-    protected $_adapterName = 'wrap';
     
     /**
      * Constructor to create new object
@@ -91,8 +89,17 @@ class Ot_Auth_Adapter_Wrap implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapt
             header('location:https://webauth.ncsu.edu/wrap-bin/was16.cgi');
             die();
         }
+        
+        if (strtolower($username) == 'guest') {
+        	$this->autoLogout();
+        	return new Zend_Auth_Result(false, new stdClass(), array('Guest access is not allowed for this application'));
+        }
 
-        return new Zend_Auth_Result(true, $username . '@' . $this->_adapterName, array());
+        $class = new stdClass();
+        $class->username = $username;
+        $class->realm    = 'wrap';
+        
+        return new Zend_Auth_Result(true, $class, array());
 	}
 
 	/**

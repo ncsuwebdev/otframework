@@ -1,2 +1,0 @@
-window.addEvent('domready', function() {
-});

@@ -28,36 +28,19 @@
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-class Login_IndexController extends Internal_Controller_Action 
+class Login_IndexController extends Zend_Controller_Action 
 {
-	/**
-	 * Flash Manager to handle display notifications
-	 *
-	 * @var object
-	 */
-	protected $_flashMessenger = null;
-	
-	/**
-	 * Initialization function
-	 *
-	 */
-	public function init()
-	{
-		$this->_flashMessenger = $this->getHelper('FlashMessenger');
-		$this->_flashMessenger->setNamespace('login');
-		
-		parent::init();
-	}
-
     /**
      * Action when going to the main login page
      *
      */
     public function indexAction()
     {    	
-        $this->view->title = "Login";
+        $this->_helper->pageTitle('login-index-index:title');
+        
+		$req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
-        $config = Zend_Registry::get('appConfig');
+        $config = Zend_Registry::get('config');
 
         $authRealm = new Zend_Session_Namespace('authRealm');
         $authRealm->setExpirationHops(1);
@@ -66,97 +49,100 @@ class Login_IndexController extends Internal_Controller_Action
         	$this->_redirect('/');
         }
         
-        $filter = new Zend_Filter_Input(array('*' => 'StringTrim'), array(), $_GET);
+        $adapters = $config->app->authentication->toArray();
         
-        $appConfig = Zend_Registry::get('appConfig');
-        
-        $form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'login')
-             ;
-        
-        $adapters = $appConfig->authentication->toArray();
-              
-        $sel = new Zend_Form_Element_Select('realm');
-        $sel->setLabel('Login Method:');
-        
-        $form->addElement($sel, 'realm');
+        $loginForms = array();
         
         foreach ($adapters as $key => $value) {
+	        $form = new Zend_Form();
+	        $form->setAttrib('id', $value['class'])
+	             ->setDecorators(array(
+	                 'FormElements',
+	                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+	                 'Form',
+	             ));
+	             
             $a = new $value['class'];
             
-            $class = array();
-            
-            if ($a->autoLogin()) {
-                $class[] = 'autoLogin';
-            } else {
-                $class[] = 'manualLogin';
+            if (!$a->autoLogin()) {
+		        // Create and configure username element:
+		        $username = $form->createElement('text', 'username', array('label' => 'login-index-form:username'));
+		        $username->setRequired(true)
+		                 ->addFilter('StringTrim');
+		        
+		        // Create and configure password element:
+		        $password = $form->createElement('password', 'password', array('label' => 'login-index-index:password'));
+		        $password->addFilter('StringTrim')
+		                 ->setRequired(true);
+		                 
+		        $form->addElements(array($username, $password));
             }
+            
+			$form->setElementDecorators(array(
+                  'ViewHelper',
+                  'Errors',      
+                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+                  array('Label', array('tag' => 'span')),      
+              ));          
+            
+	        $loginButton = $form->createElement('submit', 'loginButton', array('label' => 'login-index-index:login'));
+	        $loginButton->setDecorators(array(
+	                   array('ViewHelper', array('helper' => 'formSubmit'))
+	                 ));   
+
+	        $form->addElement($loginButton);
             
             if ($a->allowUserSignUp()) {
-                $class[] = 'signup';
-            } else {
-                $class[] = 'noSignup';
+                $signupButton = $form->createElement('button', 'signup_' . $key, array('label' => 'login-index-index:signUp'));
+		        $signupButton->setDecorators(array(
+		                   array('ViewHelper', array('helper' => 'formButton'))
+		                ));
+		        $signupButton->setAttrib('class', 'signup');
+		                
+		        $form->addElement($signupButton);
             }
             
-            $sel->addMultiOption($key, $value['name']);
-            
-            $hidden = new Zend_Form_Element_Hidden($key);
-            $hidden->setAttrib('class', implode(' ', $class));
-            $hidden->setValue($value['description']);
-            $hidden->clearDecorators();
-            $hidden->addDecorators(array(
-                array('ViewHelper'),    // element's view helper
-            ));
-            
-            $form->addElement($hidden, $key);
-        }
-                  
-        $sel->setValue($filter->realm);
-        
-        // Create and configure username element:
-        $username = $form->createElement('text', 'username', array('label' => 'Username:'));
-        $username->setRequired(true)
-                 ->addFilter('StringTrim');
-        
-        // Create and configure password element:
-        $password = $form->createElement('password', 'password', array('label' => 'Password:'));
-        $password->addFilter('StringTrim')
-                 ->setRequired(true);
+			$realm = $form->createElement('hidden', 'realm');
+            $realm->setValue($key);
+            $realm->setDecorators(array(
+                array('ViewHelper', array('helper' => 'formHidden'))
+            ));        
 
-        $loginButton = $form->createElement('submit', 'loginButton', array('label' => 'Login'));
-        $loginButton->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+            $form->addElement($realm);
+            
+            $loginForms[$key] = array(
+            	'form'        => $form,
+            	'realm'       => $key,
+            	'name'        => $value['name'],
+            	'description' => $value['description'],
+            	'autoLogin'   => $a->autoLogin(),
+            );
+        }
         
-        $signupButton = $form->createElement('button', 'signup', array('label' => 'Sign-Up Now'));
-        $signupButton->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
-                                 
-        $form->addElements(array($username, $password))
-             ->addDisplayGroup(array('realm', 'username', 'password'), 'fields')
-             ->addElements(array($loginButton, $signupButton))
-             ;
-        
+        $this->view->loginForms = $loginForms;
+                  
         $formUserId   = null;
         $formPassword = null;
         $validForm    = false;
         $messages     = array();
         
+        $get = Zend_Registry::get('getFilter');
+        
+        if (isset($get->realm)) {
+            $realm = $get->realm;
+        }
+                
         if ($this->_request->isPost()) {
         	
         	if (!$form->isValid($_POST)) {
         		$realm = $form->getValue('realm');
         		
-        		$realmElement = $form->getElement($realm);
-        		if (!preg_match('/manualLogin/i', $realmElement->getAttrib('class'))) {
+        		if (isset($loginForms[$realm]) && $loginForms[$realm]['autoLogin']) {
         			$formUserId = '';
         			$formPassword = '';
         			$validForm = true;
         		}
-        		$messages[] = 'You did not fill in valid information into the form.';
+        		$messages[] = 'msg-error-invalidFormInfo';
         	} else {
         		$validForm = true;
         	}
@@ -170,11 +156,11 @@ class Login_IndexController extends Internal_Controller_Action
                 $realm = $form->getValue('realm');
             }
             
-            $userId   = ($formUserId) ? $formUserId : $form->getValue('username') . '@' . $realm;
-            $password = ($formPassword) ? $formPassword : $form->getValue('password');
+            $username   = ($formUserId) ? $formUserId : $form->getValue('username');
+            $password   = ($formPassword) ? $formPassword : $form->getValue('password');
             
             // Set up the authentication adapter
-            $authAdapter = new $config->authentication->$realm->class($userId, $password);
+            $authAdapter = new $config->app->authentication->{$realm}->class($username, $password);
             $auth = Zend_Auth::getInstance();            
             
             $authRealm->realm = $realm;
@@ -184,71 +170,103 @@ class Login_IndexController extends Internal_Controller_Action
             $result = $auth->authenticate($authAdapter);
 
             $authRealm->unsetAll();
-
-            $userId = ($auth->hasIdentity()) ? $auth->getIdentity(): 'nouser';
             
             if ($result->isValid()) {
-		                    
-	            $authz = new $config->authorization($userId);
-	            
-	            try {
-	                $user = $authz->getUser($userId);
-	                
-	                $role = $user['role'];
-	            } catch (Exception $e) {
-	            	if ($config->loginOptions->generateAccountOnFirstLogin == 1) {
-	            	    $authz->addUser($userId, (string)$config->loginOptions->defaultRoleOnAccountCreation);
-	            		$user = $authz->getUser($userId);
-	            		$role = $user['role'];
-	            	} else {
-	            		$role = (string)$config->loginOptions->defaultAuthenticatedRole;
+
+            	$username = $auth->getIdentity()->username;
+            	$realm    = $auth->getIdentity()->realm;
+            	
+            	$account = new Ot_Account();
+            	$thisAccount = $account->getAccount($username, $realm);
+            	
+            	if (is_null($thisAccount)) {
+            		$password = $account->generatePassword();
+            		
+            		$acctData = array(
+	            		'username'  => $username,
+            			'password'  => md5($password),
+            			'realm'     => $realm,
+	            		'role'      => (string)$config->user->newAccountRole->val,
+            			'lastLogin' => time(),
+	            	);
+	            		
+	            	if ($config->app->loginOptions->generateAccountOnLogin != 1) {
+	            		$auth->clearIdentity();
+	            		$authAdapter->autoLogout();
+	            		throw new Ot_Exception_Access('msg-error-createAccountNotAllowed');
 	            	}
+	            	
+	           		$accountId = $account->insert($acctData);
+	            		
+	            	$role = $acctData['role'];
+	            	
+	            	$thisAccount = new stdClass();
+	            	$thisAccount->accountId = $accountId;
+	            	$thisAccount->username  = $acctData['username'];
+	            	$thisAccount->realm     = $realm;
+	            	$thisAccount->role      = $role;
+	            	
+	            } else {
+	            	$role = $thisAccount->role;
+	            	
+	            	$data = array(
+	            		'accountId' => $thisAccount->accountId,
+	            		'lastLogin' => time(),
+	            	);
+	            	
+	            	$account->update($data, null);
 	            }
 	            
-	            $this->_logger->setEventItem('userId', $auth->getIdentity());
-	            $this->_logger->setEventItem('role', '');
-	            $this->_logger->setEventItem('attributeName', 'userId');
-	            $this->_logger->setEventItem('attributeId', $userId);
-	            $this->_logger->login('User Logged In');  
+	            $auth->getStorage()->write($thisAccount);
+	            
+	            $loggerOptions = array(
+	            	'accountId' => $thisAccount->accountId,
+	            	'role'      => $thisAccount->role,
+	            	'attributeName' => 'accountId',
+	            	'attributeId'   => $thisAccount->accountId,
+	            );
+	            
+	            $this->_helper->log(Zend_Log::INFO, 'User Logged In', $loggerOptions);
 
-	            if (isset($config->loginOptions->startpage->$role)) {
-	            	$this->_helper->redirector->gotoUrl($config->loginOptions->startpage->$role);
-	            } else {
-		            $req = new Zend_Session_Namespace('request');
+	            
 		            	
-		            if (isset($req->uri) && $req->uri != '') {
-		            	$this->_helper->redirector->gotoUrl($req->uri);
-		            } else {
-		               $this->_helper->redirector->gotoUrl('/');
-		            }
-	            }
+		        if (isset($req->uri) && $req->uri != '') {
+		        	$uri = $req->uri;
+		        	
+		        	$req->unsetAll();
+		        	
+		         	$this->_helper->redirector->gotoUrl($uri);
+		        } else {
+		            $this->_helper->redirector->gotoUrl('/');
+		        }
             } else {
-                $this->_logger->setEventItem('attributeName', 'userId');
-                $this->_logger->setEventItem('attributeId', $userId);
-                $this->_logger->info('Invalid Login Attempt'); 
-
-                $messages[] = 'Your entered an invalid username/password.';
+            	if (count($result->getMessages()) == 0) {
+                	$messages[] = 'msg-error-invalidUsername';
+            	} else {
+            		$messages = array_merge($messages, $result->getMessages());
+            	}
             }
         }
 
-        $options = $form->getElement('realm')->getMultiOptions();
-        
         // If we have a single adapter that auto logs in, we forward on.
-        if (count($options) == 1) {
-            $key = array_keys($options);
-            
-            $elm = $form->getElement($key[0]);
-            
-            if (preg_match('/autoLogin/i', $elm->class)) {
-            	$authRealm->realm = $key[0];
+        if (count($loginForms) == 1) {
+        	
+        	$method = array_pop($loginForms);
+        	
+            if ($method['autoLogin']) {
+            	$authRealm->realm = $key;
                 $authRealm->autoLogin = true;
             
-                $this->_helper->redirector->gotoUrl('/login/');
+                $this->_helper->redirector->gotoUrl('/login/?realm=' . $authRealm->realm);
             }
         }
         
-        $this->view->messages = array_merge($this->_flashMessenger->getMessages(), $messages);
-        $this->view->form = $form;
+        if (isset($req->uri) && $req->uri != '') {
+	        $messages[] = 'msg-info-loginBeforeContinuing';
+	    }
+        
+        $this->view->realm = $realm;
+        $this->view->messages = array_merge($this->_helper->flashMessenger->getMessages(), $messages);
         
     }
 
@@ -258,116 +276,113 @@ class Login_IndexController extends Internal_Controller_Action
      */
     public function forgotAction()
     {
-        $config = Zend_Registry::get('appConfig');
+        $config = Zend_Registry::get('config');
+        $filter = Zend_Registry::get('getFilter');
         
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_helper->redirector->gotoUrl('/');
             return;
         }            
-
-        $filter = new Zend_Filter_Input(array('*' => 'StringTrim'), array(), $_GET);
         
         if (!$filter->realm) {
-            throw new Ot_Exception_Input('Realm not found');
+            throw new Ot_Exception_Input('msg-error-realmNotFound');
         }
         
         $realm = $filter->realm;
         
-        $auth = new $config->authentication->$realm->class();
+        $auth = new $config->app->authentication->$realm->class();
         
         if (!$auth->manageLocally()) {
-            throw new Ot_Exception_Access('The authentication adapter for your account does not support this feature');
+            throw new Ot_Exception_Access('msg-error-authNotSupported');
         }   
         
         
         $form = new Zend_Form();
-        $form->setAction('?realm=' . $realm)
-             ->setMethod('post')
-             ->setAttrib('id', 'forgotPassword')
-             ;
+        $form->setAttrib('id', 'forgotPassword')
+	         ->setDecorators(array(
+	             'FormElements',
+	             array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+	             'Form',
+	         ));
         
-        $hidden = new Zend_Form_Element_Hidden('realm');
-        $hidden->setValue($realm);
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
-        ));
-            
-        $form->addElement($hidden, 'realm');
+        $hidden = $form->createElement('hidden', 'realm');
+        $hidden->setValue($realm)
+               ->clearDecorators()
+               ->addDecorators(array(
+		           array('ViewHelper'),    // element's view helper
+		       ));
         
-        $realmStatic = $form->createElement('text', 'realmStatic', array('label' => 'Login Method:'));
-        $realmStatic->setValue($config->authentication->$realm->name)
-                    ->setAttrib('readonly', true)
-                    ;
-                
         // Create and configure username element:
-        $username = $form->createElement('text', 'username', array('label' => 'Username:'));
+        $username = $form->createElement('text', 'username', array('label' => 'login-index-form:username'));
         $username->setRequired(true)
-                 ->addFilter('StringTrim')
-                 ;
+                 ->addFilter('StringTrim');
         
-        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'Reset My Password'));
+        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'login-index-forgot:linkReset'));
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit'))
                  ));
         
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
         $cancel->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formButton'))
                 ));
                 
-        $form->addElements(array($realmStatic, $username))
-             ->addDisplayGroup(array('realmStatic', 'username'), 'fields')
-             ->addElements(array($submit, $cancel))
-             ;        
-        
+        $form->addElements(array($username))
+        	 ->setElementDecorators(array(
+               	  'ViewHelper',
+                  'Errors',      
+                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+        	      array('Label', array('tag' => 'span')),      
+             )) 
+             ->addElements(array($hidden, $submit, $cancel));        
 
         $messages = array();
         
         if ($this->_request->isPost()) {
-            if ($form->isValid($_POST)) {        
-	            $userId = $form->getValue('username') . '@' . $realm;
-	            
+            if ($form->isValid($_POST)) {   
+
 	            $account = new Ot_Account();
 	            
-	            $userAccount = $account->find($userId);
+	            $userAccount = $account->getAccount($form->getValue('username'), $form->getValue('realm'));
 	            
 	            if (!is_null($userAccount)) {	                
 		                 
 	            	// Generate key
-	            	$text   = $userId . '-' . time();
-                    $key    = (string)$config->loginOptions->passwordReset->cryptKey;
-                    $iv     = (string)$config->loginOptions->passwordReset->iv;
-                    $cipher = constant((string)$config->loginOptions->passwordReset->cipher);
+	            	$text   = $userAccount->username . '@' . $userAccount->realm . '-' . time();
+                    $key    = (string)$config->app->loginOptions->passwordReset->cryptKey;
+                    $iv     = (string)$config->app->loginOptions->passwordReset->iv;
+                    $cipher = constant((string)$config->app->loginOptions->passwordReset->cipher);
 
                     $code = bin2hex(mcrypt_encrypt($cipher, $key, $text, MCRYPT_MODE_CBC, $iv));
   
-			        $this->_flashMessenger->addMessage('A password reset request was sent to the email address on file');
+			        $this->_helper->flashMessenger->addMessage('msg-info-passwordResetRequest');
 				            
-			        $this->_logger->setEventItem('attributeName', 'userId');
-			        $this->_logger->setEventItem('attributeId', $userId);
-			        $this->_logger->info('User sent password reset request'); 
+			        $loggerOptions = array(
+			        	'attributeName' => 'accountId',
+			        	'attributeId' => $userAccount->accountId,
+			        );
+			        
+			        $this->_helper->log(Zend_Log::INFO, 'User sent password reset request', $loggerOptions);
 			        
 			        $et = new Ot_Trigger();
 			        $et->setVariables($userAccount->toArray());
 			        
-			        $et->resetUrl    = Zend_Registry::get('siteUrl') . '/login/password-reset/?key=' . $code;
-                    $et->username    = preg_replace('/@.*/', '', $userId);
-                    $et->loginMethod = $config->authentication->$realm->name;
+			        $et->resetUrl    = Zend_Registry::get('siteUrl') . '/login/index/password-reset/?key=' . $code;
+                    $et->loginMethod = $config->app->authentication->$realm->name;
+                    
                     $et->dispatch('Login_Index_Forgot');
 		                                
 		            $this->_helper->redirector->gotoUrl('/login/?realm=' . $realm);
 	            } else {
-	            	$messages[] = 'The user account you entered was not found';
+	            	$messages[] = 'msg-error-userAccountNotFound';
 	            }
             } else {
-            	$messages[] = 'You did not fill in valid information into the form.';
+            	$messages[] = 'msg-error-invalidFormInfo';
             }
         }
 
         $this->view->messages = $messages;
-        $this->view->title = "Forgot My Password";             
+        $this->_helper->pageTitle('login-index-forgot:title');             
         $this->view->form = $form;
     }
     
@@ -377,28 +392,28 @@ class Login_IndexController extends Internal_Controller_Action
      */
     public function passwordResetAction()
     {
-        $config = Zend_Registry::get('appConfig');
+        $config = Zend_Registry::get('config');
         
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_helper->redirector->gotoUrl('/');
             return;
         }            
 
-        $filter = new Zend_Filter_Input(array('*' => 'StringTrim'), array(), $_GET);
+        $filter = Zend_Registry::get('getFilter');
         
         if (!$filter->key) {
-            throw new Ot_Exception_Input('No Key Found');
+            throw new Ot_Exception_Input('msg-error-noKeyFound');
         }
         
-        $key    = (string)$config->loginOptions->passwordReset->cryptKey;
-        $iv     = (string)$config->loginOptions->passwordReset->iv;
-        $cipher = constant((string)$config->loginOptions->passwordReset->cipher);        
+        $key    = (string)$config->app->loginOptions->passwordReset->cryptKey;
+        $iv     = (string)$config->app->loginOptions->passwordReset->iv;
+        $cipher = constant((string)$config->app->loginOptions->passwordReset->cipher);        
         $string = pack("H*", $filter->key);
     
         $decryptKey = trim(mcrypt_decrypt($cipher, $key, $string, MCRYPT_MODE_CBC, $iv));
         
         if (!preg_match('/[^@]*@[^-]*-[0-9]*/', $decryptKey)) {
-        	throw new Ot_Exception_Input('The key is not valid');
+        	throw new Ot_Exception_Input('msg-error-invalidKey');
         }
         
         $userId = preg_replace('/\-.*/', '', $decryptKey);
@@ -408,95 +423,82 @@ class Login_IndexController extends Internal_Controller_Action
         
         $now = new Zend_Date();
         
-        $now->subMinute((int)$config->loginOptions->passwordReset->numberMinutesKeyIsActive);
+        $now->subMinute((int)$config->app->loginOptions->passwordReset->numberMinutesKeyIsActive);
         
         if ($timestamp->getTimestamp() < $now->getTimestamp()) {
-        	throw new Ot_Exception_Input('This key has expired.  You need to generate another request to reset your password and try again.');
+        	throw new Ot_Exception_Input('msg-error-keyExpired');
         }
         
         $realm = preg_replace('/^[^@]*@/', '', $userId);
+        $username = preg_replace('/@.*/', '', $userId);
         
-        $auth = new $config->authentication->$realm->class();
+        $auth = new $config->app->authentication->$realm->class();
         
         if (!$auth->manageLocally()) {
-            throw new Ot_Exception_Access('The authentication adapter for your account does not support this feature');
+            throw new Ot_Exception_Access('msg-error-authNotSupported');
         }   
         
         $account = new Ot_Account();
                 
-        $userAccount = $account->find($userId);
+        $thisAccount = $account->getAccount($username, $realm);
                 
-        if (is_null($userAccount)) {
-        	throw new Ot_Exception_Data('User Account not found');
+        if (is_null($thisAccount)) {
+        	throw new Ot_Exception_Data('msg-error-userAccountNotFound');
         }
         
         $form = new Zend_Form();
-        $form->setAction('?key=' . $filter->key)
-             ->setMethod('post')
-             ->setAttrib('id', 'resetPassword')
-             ;
+        $form->setAttrib('id', 'resetPassword')
+	         ->setDecorators(array(
+	             'FormElements',
+	             array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+	             'Form',
+	         ));
         
-        $hidden = new Zend_Form_Element_Hidden('realm');
-        $hidden->setValue($realm);
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
-        ));
-        
-        $form->addElement($hidden, 'realm');
-        
-        $hidden = new Zend_Form_Element_Hidden('userId');
-        $hidden->setValue($userId);
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
-        ));
-            
-        $form->addElement($hidden, 'userId');
-        
-        $realmStatic = $form->createElement('text', 'realmStatic', array('label' => 'Login Method:'));
-        $realmStatic->setValue($config->authentication->$realm->name)
-                    ->setAttrib('readonly', true)
-                    ;
+        $realmHidden = $form->createElement('hidden', 'realm');
+        $realmHidden->setValue($realm)
+              ->clearDecorators()
+              ->addDecorators(array(
+                  array('ViewHelper'),    // element's view helper
+              ));
                 
-        // Create and configure username element:
-        $usernameStatic = $form->createElement('text', 'usernameStatic', array('label' => 'Username:'));
-        $usernameStatic->setValue(preg_replace('/@.*/', '', $userId))        
-                       ->setAttrib('readonly', true)
-                       ;
-        
-        $password = $form->createElement('password', 'password', array('label' => 'Password:'));
+        $usernameHidden = $form->createElement('hidden', 'username');
+        $usernameHidden->setValue($username)
+        	   ->clearDecorators()
+        	   ->addDecorators(array(
+                   array('ViewHelper'),    // element's view helper
+               ));
+                            
+        $password = $form->createElement('password', 'password', array('label' => 'login-index-passwordReset:new'));
         $password->setRequired(true)
                  ->addValidator('StringLength', false, array(6, 20))
                  ->addFilter('StringTrim')
-                 ->addFilter('StripTags')
-                 ;   
+                 ->addFilter('StripTags');   
 
-        $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'Confirm Password:'));
+        $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'login-index-passwordReset:confirm'));
         $passwordConf->setRequired(true)
                      ->addValidator('StringLength', false, array(6, 20))
                      ->addFilter('StringTrim')
-                     ->addFilter('StripTags')
-                     ;                           
+                     ->addFilter('StripTags');                           
 
-        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'Reset My Password'));
+        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'login-index-passwordReset:linkReset'));
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit'))
                  ));
         
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
         $cancel->setAttrib('id', 'cancel');
         $cancel->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formButton'))
                 ));
                                      
-        $form->addElement($realmStatic)
-             ->addElement($usernameStatic)
-             ->addElement($password)
-             ->addElement($passwordConf)
-             ->addDisplayGroup(array('realmStatic', 'usernameStatic', 'password', 'passwordConf'), 'fields')
-             ->addElements(array($submit, $cancel))
-             ;        
+        $form->addElements(array($password, $passwordConf))
+             ->setElementDecorators(array(
+               	  'ViewHelper',
+                  'Errors',      
+                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+        	      array('Label', array('tag' => 'span')),      
+             )) 
+             ->addElements(array($realmHidden, $usernameHidden, $submit, $cancel));        
         
 
         $messages = array();
@@ -505,27 +507,35 @@ class Login_IndexController extends Internal_Controller_Action
             if ($form->isValid($_POST)) {        
                 if ($form->getValue('password') == $form->getValue('passwordConf')) {
                 	
-                    $this->_flashMessenger->addMessage('Your password has been reset');
-                            
-                    $auth->editAccount($userId, $form->getValue('password'));
+                	$data = array(
+                		'accountId' => $thisAccount->accountId,
+                		'password'  => md5($form->getValue('password')),
+                	);
+                	
+                	$account->update($data, null);
+                	
+                    $this->_helper->flashMessenger->addMessage('msg-info-passwordReset');
                     
-                    $this->_logger->setEventItem('attributeName', 'userId');
-                    $this->_logger->setEventItem('attributeId', $userId);
-                    $this->_logger->info('User reset their password'); 
+					$loggerOptions = array(
+			        	'attributeName' => 'accountId',
+			        	'attributeId' => $data['accountId'],
+			        );
+			        
+			        $this->_helper->log(Zend_Log::INFO, 'User reset their password', $loggerOptions);
                     
                     $this->_helper->redirector->gotoUrl('/login/?realm=' . $realm);
                 } else {
-                    $messages[] = 'The passwords you entered did not match';
+                    $messages[] = 'msg-error-passwordsNotMatch';
                 }
             } else {
-                $messages[] = 'You did not fill in valid information into the form.';
+                $messages[] = 'msg-error-invalidFormInfo';
             }
         }
 
         $this->view->messages = $messages;
-        $this->view->title = "Forgot My Password";             
+        $this->_helper->pageTitle('login-index-passwordReset:title');             
         $this->view->form = $form;
-        $this->view->javascript = array('mooStrength.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.passStrength.js');
     }    
     /**
      * Logs a user out
@@ -533,26 +543,18 @@ class Login_IndexController extends Internal_Controller_Action
      */
     public function logoutAction()
     {
-    	//$this->_helper->getExistingHelper('viewRenderer')->setNeverRender();
-    	//$this->_helper->layout->disableLayout();
-    	
-        $config = Zend_Registry::get('appConfig');
+        $config = Zend_Registry::get('config');
         
         $userId = Zend_Auth::getInstance()->getIdentity();
-        foreach ($config->authentication as $a) { 
+        foreach ($config->app->authentication as $a) { 
             $auth = new $a->class;
             $auth->autoLogout();  
         }
-                
-        $this->_logger->setEventItem('attributeName', 'userId');
-        $this->_logger->setEventItem('attributeId', $userId);
-        $this->_logger->login('User Logged Out');
-
-        Zend_Auth::getInstance()->clearIdentity();
         
-        Ot_Authz::getInstance()->clearRole();
+        Zend_Auth::getInstance()->clearIdentity();
                 
-        $this->_helper->redirector->gotoUrl('/index/index/'); 
+        $this->_helper->redirector->gotoUrl('/index/index/');  	
+    	
     } 
     
     /**
@@ -561,170 +563,71 @@ class Login_IndexController extends Internal_Controller_Action
      */
     public function signupAction()
     {    	
-    	$config = Zend_Registry::get('appConfig');
-    	
-        $filter = new Zend_Filter_Input(array('*' => 'StringTrim'), array(), $_GET);
+    	$config = Zend_Registry::get('config');
+        $get = Zend_Registry::get('getFilter');
         
-        if (!$filter->realm) {
-            throw new Ot_Exception_Input('Realm not found');
+        if (!$get->realm) {
+            throw new Ot_Exception_Input('msg-error-realmNotFound');
         }
         
-        $realm = $filter->realm;
-        
-        $auth = new $config->authentication->$realm->class();
-        
-        if (!$auth->manageLocally()) {
-            throw new Ot_Exception_Access('The authentication adapter for your account does not support this feature');
+        if ($config->app->loginOptions->generateAccountOnLogin != 1) {
+        	throw new Ot_Exception_Access('msg-error-createAccountNotAllowed');
         }
         
-        if (!$auth->allowUserSignUp()) {
-            throw new Ot_Exception_Access('The authentication adapter for your account does not allow users to signup');
+        $account = new Ot_Account();
+        
+        $realm = $get->realm;
+        $this->view->realm = $realm;
+        
+        $authAdapter = new $config->app->authentication->$realm->class();
+        
+        if (!$authAdapter->manageLocally()) {
+            throw new Ot_Exception_Access('msg-error-authNotSupported');
         }
         
-        $form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'signup')
-             ;
-        
-        $hidden = new Zend_Form_Element_Hidden('realm');
-        $hidden->setValue($realm);
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
-        ));
-            
-        $form->addElement($hidden, 'realm');
-        
-        $realmStatic = $form->createElement('text', 'realmStatic', array('label' => 'Login Method:'));
-        $realmStatic->setValue($config->authentication->$realm->name);
-        $realmStatic->setAttrib('readonly', true);
-        
-        // Create and configure username element:
-        $username = $form->createElement('text', 'username', array('label' => 'Username:'));
-        $username->setRequired(true)
-                 ->addFilter('StringTrim')
-                 ->addFilter('Alnum')
-                 ->addFilter('StripTags')
-                 ->setAttrib('maxlength', '64')
-                 ;
-                 
-        $password = $form->createElement('password', 'password', array('label' => 'Password:'));
-        $password->setRequired(true)
-                 ->addValidator('StringLength', false, array(6, 20))
-                 ->addFilter('StringTrim')
-                 ->addFilter('StripTags')
-                 ;   
-
-        $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'Confirm Password:'));
-        $passwordConf->setRequired(true)
-                     ->addValidator('StringLength', false, array(6, 20))
-                     ->addFilter('StringTrim')
-                     ->addFilter('StripTags')
-                     ;    
-
-        $firstName = $form->createElement('text', 'firstName', array('label' => 'First Name:'));
-        $firstName->setRequired(true)
-                  ->addFilter('StringToLower')
-                  ->addFilter('StringTrim')
-                  ->addFilter('StripTags')
-                  ->setAttrib('maxlength', '64')
-                  ;
-
-        $lastName = $form->createElement('text', 'lastName', array('label' => 'Last Name:'));
-        $lastName->setRequired(true)
-                 ->addFilter('StringTrim')
-                 ->addFilter('StringToLower')
-                 ->addFilter('StripTags')
-                 ->setAttrib('maxlength', '64')
-                 ;
-        
-        $email = $form->createElement('text', 'emailAddress', array('label' => 'Email Address:'));
-        $email->setRequired(true)
-              ->addFilter('StringTrim')
-              ->addValidator('EmailAddress')
-              ;
-              
-        $submit = $form->createElement('submit', 'signupButton', array('label' => 'Sign Up Now!'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));              
-
-        $group = array('realmStatic', 'username', 'password', 'passwordConf', 'firstName', 'lastName', 'emailAddress');
-        
-        $form->addElements(array($realmStatic, $username, $password, $passwordConf, $firstName, $lastName, $email));
-
-        if (isset($config->accountPlugin)) {
-            $acctPlugin = new $config->accountPlugin;
-            
-            $subform = $acctPlugin->addSubForm();
-            
-            foreach ($subform->getElements() as $e) {
-                $form->addElement($e);
-                $group[] = $e->getName();
-            }
+        if (!$authAdapter->allowUserSignUp()) {
+            throw new Ot_Exception_Access('msg-error-authoNotAllowed');
         }
-        
-        $custom = new Ot_Custom();
-        
-        $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
-        
-        foreach ($attributes as $a) {
-            $form->addElement($a['formRender']);
-            $group[] = $a['formRender']->getName();
-        }
-                
-        $form->addDisplayGroup($group, 'fields')
-             ->addElements(array($submit, $cancel))
-             ;            	
+
+        $form = $account->form(array('realm' => $realm), true);
     	
         $messages = array();
     	if ($this->_request->isPost()) {
     	    if ($form->isValid($_POST)) {
     	    	
     	    	if ($form->getValue('password') == $form->getValue('passwordConf')) {
-		    		$authz = new $config->authorization('nouser');
-			        
-		    		$userId = $form->getValue('username') . '@' . $form->getValue('realm');
-		    		
-			        $user = $auth->getUser($userId);
-			        
-			        if (count($user) == 0) {
-
-			        	$account = new Ot_Account();
-                        $data = array(
-                            'userId'       => $userId,
-                            'emailAddress' => $form->getValue('emailAddress'),
-                            'firstName'    => ucwords($form->getValue('firstName')),
-                            'lastName'     => ucwords($form->getValue('lastName'))
-                        );
-                        
-                        $dba = Zend_Registry::get('dbAdapter');
-                        $dba->beginTransaction();
-                        
-			        	try {
-				            $password = $auth->addAccount($userId, $form->getValue('password'));
-				            
-				            $authz->addUser($userId, $config->loginOptions->defaultRoleOnAccountCreation);
-				            
-				            $account->insert($data);
-			        	} catch (Exception $e) {
-			        		$dba->rollback();
-			        		throw $e;
-			        	}
+		    		    	    		
+                    $accountData = array(
+                        'username'     => $form->getValue('username'),
+                    	'password'     => md5($form->getValue('password')),
+                    	'realm'        => $form->getValue('realm'),
+                    	'role'         => $config->user->newAccountRole->val,
+                        'emailAddress' => $form->getValue('emailAddress'),
+                        'firstName'    => $form->getValue('firstName'),
+                        'lastName'     => $form->getValue('lastName')
+                    );
+                    
+                    $thisAccount = $account->getAccount($accountData['username'], $accountData['realm']);
+                    
+                    if (!is_null($thisAccount)) {
+                    	$messages[] = 'msg-error-usernameTaken';
+                    } else {
+	                    $dba = Zend_Registry::get('dbAdapter');
+	                    $dba->beginTransaction();
+	                        
+	                    try {
+	                    	$accountData['accountId'] = $account->insert($accountData);
+	                    } catch (Exception $e) {
+	                    	$dba->rollback();
+	                    	throw $e;
+	                    }
 			        	
-				        if (isset($config->accountPlugin)) {
-		                    $acctPlugin = new $config->accountPlugin;
+				        if (isset($config->app->accountPlugin)) {
+		                    $acctPlugin = new $config->app->accountPlugin;
 		                    
 		                    $subform = $acctPlugin->addSubForm();
 		                    
-		                    $data = array('userId' => $userId);
+		                    $data = array('accountId' => $accountData['accountId']);
 		                    
 		                    foreach ($subform->getElements() as $e) {
 		                        $data[$e->getName()] = $form->getValue($e->getName());
@@ -738,6 +641,7 @@ class Login_IndexController extends Internal_Controller_Action
 		                    }                   
 		                }		
 
+		                $custom = new Ot_Custom();
 	                    $attributes = $custom->getAttributesForObject('Ot_Profile');
 	        
 	                    $data = array();
@@ -746,7 +650,7 @@ class Login_IndexController extends Internal_Controller_Action
 	                    }                   
 	                    
 	                    try {
-	                        $custom->saveData('Ot_Profile', $userId, $data);
+	                        $custom->saveData('Ot_Profile', $accountData['accountId'], $data);
 	                    } catch (Exception $e) {
 	                        $dba->rollback();
 	                        throw $e;
@@ -754,37 +658,37 @@ class Login_IndexController extends Internal_Controller_Action
 			        	
 			        	$dba->commit();
 				        
-				        $this->_flashMessenger->addMessage('Your account was created successfully.  You may now log in.');
+				        $this->_helper->flashMessenger->addMessage('msg-info-accountCreated');
 				        
-			            $this->_logger->setEventItem('attributeName', 'userId');
-			            $this->_logger->setEventItem('attributeId', $userId);
-			            $this->_logger->info('User Successfully signed up'); 	
+						$loggerOptions = array(
+				        	'attributeName' => 'accountId',
+				        	'attributeId' => $accountData['accountId'],
+				        );
+				        
+				        $this->_helper->log(Zend_Log::INFO, 'User Successfully signed up', $loggerOptions);
 			            
 	                    $et = new Ot_Trigger();
-	                    $et->setVariables($data);
+	                    $et->setVariables($accountData);
 	                    
-	                    $et->password    = $password;
-	                    $et->username    = preg_replace('/@.*/', '', $data['userId']);
-	                    $et->loginMethod = $config->authentication->$realm->name;
+	                    $et->password    = $form->getValue('password');
+	                    $et->loginMethod = $config->app->authentication->$realm->name;
 	                    
 	                    $et->dispatch('Login_Index_Signup');		            
 			
 			            $this->_helper->redirector->gotoUrl('/login/?realm=' . $realm);
-			        } else {
-			           $messages[] = 'User ID is taken.  Please select a different ID';
 			        }
     	    	} else {
-    	    		$messages[] = 'The passwords you entered do not match.';
+    	    		$messages[] = 'msg-error-passwordsNotMatch';
     	    	}
     	    } else {
-    	    	$messages[] = 'You did not fill in valid information into the form.';
+    	    	$messages[] = 'msg-error-invalidFormInfo';
     	    }
     	}
     	
     	$this->view->messages = $messages;
         $this->view->form = $form;
-    	$this->view->title = 'Sign-up for an account';
-    	$this->view->javascript = array('mooStrength.js');
+    	$this->_helper->pageTitle('login-index-signup:title');
+    	$this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.passStrength.js');
     	   	
     }
 }

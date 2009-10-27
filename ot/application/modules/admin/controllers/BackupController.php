@@ -26,63 +26,74 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_BackupController extends Internal_Controller_Action  
-{       
-    /**
-     * Flash messenger variable
-     *
-     * @var unknown_type
-     */
-    protected $_flashMessenger = null;
-    
-    /**
-     * Setup flash messenger and the config file path
-     *
-     */
-    public function init()
-    {
-        
-        $this->_flashMessenger = $this->getHelper('FlashMessenger');
-        $this->_flashMessenger->setNamespace('backup');
-        
-        parent::init();
-    }
-    
+class Admin_BackupController extends Zend_Controller_Action  
+{         
     /**
      * Shows the backup index page
      */
     public function indexAction()
-    {    	    	        
-        $db = Zend_Registry::get('dbAdapter');
+    {    	    	              
+        $backup = new Ot_Backup();
         
-        $tables = $db->listTables();
-        
-        $tableList = array();
-        
-        foreach ($tables as $t) {
-        	$tableList[$t] = $t;
-        }
+        $form = $backup->_form();
                 
-        $this->view->tables = $tableList;
+        if ($this->_request->isPost()) {
+        	
+        	if ($form->isValid($_POST)) {
+        		
+        		$this->_helper->layout->disableLayout();
+                $this->_helper->viewRenderer->setNeverRender();
+	            
+	            $db = Zend_Registry::get('dbAdapter');
+	            $tableName = $_POST['tableName'];
+	            
+	            if (isset($_POST['submitSql'])) {
+	                $type = 'sql';
+	            } else {
+	               $type = 'csv';   
+	            }
+
+  	            // this call sends it to the browser too 
+	            $backup->getBackup($db, $tableName, $type);
+	            
+	            $logOptions = array(
+                        'attributeName' => 'databaseTableBackup',
+                        'attributeId'   => $tableName,
+                );
+                    
+                $this->_helper->log(Zend_Log::INFO, 'Backup of database table ' . $tableName . ' was downloaded', $logOptions);
+        	}
+        }
         
-        $this->view->title = 'Backup Admin';
+        $this->view->form = $form;
+        
+        if (!is_null(`mysqldump`)) {
+            $this->view->downloadAllSql = true;
+        }
+        
+        $this->_helper->pageTitle('admin-backup-index:title');
     }
     
-    /**
-     * Retrieves the backup
-     */
-    public function getBackupAction()
+    public function downloadAllSqlAction()
     {
-    	$this->_helper->layout->disableLayout();
-    	$this->_helper->viewRenderer->setNeverRender();
-    	
-    	if ($this->_request->isPost()) {
-    		$backup = new Ot_Backup();
-    		
-    		$db = Zend_Registry::get('dbAdapter');
-    		$tableName = $_POST['tableName'];
-    		
-    		$backup->getCsv($db, $tableName);
-    	}
+        if (!is_null(`mysqldump`)) {
+            
+            $backup = new Ot_Backup();
+            
+            $this->_helper->layout->disableLayout();
+            $this->_helper->viewRenderer->setNeverRender();
+            
+            $db = Zend_Registry::get('dbAdapter');
+            
+            // this call sends it to the browser too 
+            $backup->getBackup($db, '', 'sqlAll');
+            
+            $logOptions = array(
+                    'attributeName' => 'databaseTableBackup',
+                    'attributeId'   => 'allTables',
+            );
+                
+            $this->_helper->log(Zend_Log::INFO, 'Backup of database table ' . $tableName . ' was downloaded', $logOptions);
+        }
     }
 }

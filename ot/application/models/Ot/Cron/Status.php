@@ -129,7 +129,7 @@ class Ot_Cron_Status extends Ot_Db_Table {
         $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
         $filter->addFilter(new Zend_Filter_StringToLower());
     	
-    	require_once './application/modules/cron/controllers/IndexController.php';
+    	require_once APPLICATION_PATH . '/modules/cron/controllers/IndexController.php';
         
     	$class = new ReflectionClass('Cron_IndexController');
         $methods = $class->getMethods();
@@ -148,7 +148,8 @@ class Ot_Cron_Status extends Ot_Db_Table {
                 if (!is_null($data)) {
                     $temp = $data->toArray();
                 } else {
-                    $temp['status'] = 'disabled';
+                    $temp['status']    = 'disabled';
+                    $temp['lastRunDt'] = 0;
                 }
              	   
                 $jobs[] = $temp;

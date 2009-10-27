@@ -29,56 +29,91 @@
  */
 class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstract
 {
-    public function postDispatch(Zend_Controller_Request_Abstract $request)
+    public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $vr = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
-               
-        if (empty($vr->view) || $vr->getNeverRender()) {
-            return;
-        }
+        $view = Zend_Layout::getMvcInstance()->getView();
 
-        $view     = $vr->view;
-            	
-        $sitePrefix = Zend_Registry::get('sitePrefix');
+        $baseUrl = $view->baseUrl();
         
-        $existingJavascript = (isset($view->javascript)) ? ((is_array($view->javascript)) ? $view->javascript : array($view->javascript)) : array();
-        $existingCss        = (isset($view->css)) ? ((is_array($view->css)) ? $view->css : array($view->css)) : array();
+        $themePath = $view->applicationThemePath;
+                
+        $themeConfig = new Zend_Config_Xml($themePath . '/config.xml', 'production', true);
         
-        foreach ($existingJavascript as &$j) {
-        	if (is_file('./public/ot/scripts/' . $j)) {
-        		$j = $sitePrefix . '/public/ot/scripts/' . $j;
-        	} elseif (is_file('./public/scripts/' . $j)) {
-        		$j = $sitePrefix . '/public/scripts/' . $j;
-        	}
+        $view->headLink()->appendStylesheet($baseUrl . '/ot/css/Ot/common.css');
+        $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
+        
+        if (isset($themeConfig->css->file)) {
+            foreach ($themeConfig->css->file as $c) {
+                $path = $c->path;
+                
+                if (!preg_match('/^http/i', $path)) {
+                    $path = $baseUrl . '/' . $themePath . '/public/css/' . $path;
+                }
+                
+                if ($c->order == 'append') {
+                    $view->headLink()->appendStylesheet($path);
+                } elseif ($c->order == 'prepend') {
+                    $view->headLink()->prependStylesheet($path);
+                }
+            }
         }
         
-        foreach ($existingCss as &$c) {
-            if (is_file('./public/ot/css/' . $c)) {
-                $c = $sitePrefix . '/public/ot/css/' . $c;
-            } elseif (is_file('./public/css/' . $c)) {
-                $c = $sitePrefix . '/public/css/' . $c;
+        $view->headScript()->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js');
+        $view->headScript()->appendFile('http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js');
+        $view->headScript()->appendFile($baseUrl . '/ot/scripts/global.js');
+                
+        if (isset($themeConfig->scripts->file)) {
+            foreach ($themeConfig->scripts->file as $s) {
+                $path = $s->path;
+                
+                if (!preg_match('/^http/i', $path)) {
+                    $path = $baseUrl . '/' . $themePath . '/public/scripts/' . $path;
+                }
+                
+                if ($s->order == 'append') {
+                    $view->headScript()->appendFile($path);
+                } elseif ($s->order == 'prepend') {
+                    $view->headScript()->prependFile($path);
+                }
             }
-        }        
-        
-        $existingJavascript = $this->_autoload('./public/scripts', 'js', $request, $existingJavascript);
-        $existingCss        = $this->_autoload('./public/css', 'css', $request, $existingCss);
-        
-        $view->javascript = $this->_autoload('./public/ot/scripts', 'js', $request, $existingJavascript);
-        $view->css        = $this->_autoload('./public/ot/css', 'css', $request, $existingCss);
-                              
+        }
     }
     
-    protected function _autoload($directory, $extension, $request, $existing)
+    public function postDispatch(Zend_Controller_Request_Abstract $request)
+    {
+        $view = Zend_Layout::getMvcInstance()->getView();
+            	
+        $baseUrl = $view->baseUrl();
+        
+        $css        = array();
+        $javascript = array();
+        
+        // check application directories and append to existing array
+        $javascript = $this->_autoload($baseUrl, './scripts', 'js', $request, $javascript);   
+        $css        = $this->_autoload($baseUrl, './css', 'css', $request, $css);
+        
+        // check OT directories and append to existing array
+        $javascript = $this->_autoload($baseUrl, './ot/scripts', 'js', $request, $javascript);
+        $css        = $this->_autoload($baseUrl, './ot/css', 'css', $request, $css);
+        
+        foreach ($css as $c) {
+            $view->headLink()->appendStylesheet($c);
+        }
+        
+        foreach ($javascript as $j) {
+            $view->headScript()->appendFile($j);
+        }       
+    }
+    
+    protected function _autoload($baseUrl, $directory, $extension, $request, $existing)
     {
         $req = array(
-            'module' => $request->getModuleName(),
+            'module'     => $request->getModuleName(),
             'controller' => $request->getControllerName(),
             'action'     => strtolower($request->getActionName()),
         );
 
         $path = '';
-        
-        $sitePrefix = Zend_Registry::get('sitePrefix');
         
         foreach ($req as $r) {
             $path .= (($path == '') ? '' : '/') . $r; 
@@ -87,7 +122,7 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         
 	        if (is_file($directory . '/' . $autoload)) {
 	        	
-	        	$file = str_replace('./', $sitePrefix . '/', $directory . '/' . $autoload);
+	        	$file = str_replace('./', $baseUrl . '/', $directory . '/' . $autoload);
 	        	
 	             if (is_array($existing)) {
 	                array_push($existing, $file);        

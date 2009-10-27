@@ -28,303 +28,61 @@
  */
 class Ot_Acl extends Zend_Acl
 {
-	protected $_roles = null;
-	
+    protected $_roles = null;
+
     /**
      * Creates a new instance of the ACL's
      *
      */
-    public function __construct()
+    public function __construct($scope = 'application')
     {
-
-    	//$xml = Zend_Registry::get('aclConfig');
-    	
-        $controllers = Zend_Controller_Front::getInstance()->getControllerDirectory();
-
-        // gets all controllers to get the actions in them
-        foreach ($controllers as $key => $value) {
-            foreach (new DirectoryIterator($value) as $file) {
-                if (preg_match('/controller\.php/i', $file)) {
-                    $this->add(new Zend_Acl_Resource($key . '_' . strtolower(preg_replace('/controller\.php/i', '', $file))));  
+        if ($scope == 'application') {
+            $controllers = Zend_Controller_Front::getInstance()->getControllerDirectory();
+    
+            // gets all controllers to get the actions in them
+            foreach ($controllers as $key => $value) {
+                foreach (new DirectoryIterator($value) as $file) {
+                    if (preg_match('/controller\.php/i', $file)) {
+                        $this->add(new Zend_Acl_Resource($key . '_' . strtolower(preg_replace('/controller\.php/i', '', $file))));
+                    }
                 }
+            }
+        } elseif ($scope == 'remote') {
+        
+            $class = new ReflectionClass('Internal_Api');
+                        
+            foreach ($class->getMethods() as $m) {
+                $this->add(new Zend_Acl_Resource($m->getName()));
             }
         }
         
-        $roles = $this->getAvailableRoles();
-        
+        $roles = $this->getAvailableRoles('', $scope);
+
         foreach ($roles as $r) {
-        	$this->addRole(new Zend_Acl_Role($r['name']), ($r['inherit'] != '') ? $r['inherit'] : null);
-        	
-        	foreach ($r['allows'] as $a) {
-        		$this->allow($r['name'],
-        		    ($a['resource'] == '*') ? null : $a['resource'], 
-                    ($a['privilege'] == '*') ? null : $a['privilege']
+            $this->addRole(new Zend_Acl_Role($r['roleId']), ($r['inheritRoleId'] != 0) ? $r['inheritRoleId'] : null);
+
+            foreach ($r['rules'] as $rule) {
+                if ($rule['resource'] == '*' || $this->has($rule['resource'])) {
+                    $this->{$rule['type']}($r['roleId'],
+                        ($rule['resource'] == '*') ? null : $rule['resource'],
+                        ($rule['privilege'] == '*') ? null : $rule['privilege'] 
                     );
-        	}
-        	
-        	foreach ($r['denys'] as $d) {
-        		$this->deny($r['name'],
-                    ($d['resource'] == '*') ? null : $d['resource'], 
-                    ($d['privilege'] == '*') ? null : $d['privilege']
-                    );
-        	}
+                }
+            }
         }
         
         $this->_roles = $roles;
     }
 
-    public function getAvailableRoles($role = '')
+    public function getAvailableRoles($role = '', $scope = 'application')
     {
-    	if (!is_null($this->_roles)) {
-    		return $this->_roles;
-    	}
-    	
-        $xml = Zend_Registry::get('aclConfig');
+        if (!is_null($this->_roles)) {
+            return $this->_roles;
+        }
         
-        $roles = array();
-        foreach ($xml->roles->role as $x) {
-            $temp = array();
-
-            $temp['name']     = (string)$x->name;
-            $temp['inherit']  = (string)$x->inherit;
-            $temp['editable'] = ((int)$x->editable == 1);
-            $temp['allows']   = array();
-            $temp['denys']    = array();
-
-            if ($x->allows instanceof Zend_Config) {
-                if ($x->allows->allow->get('0')) {
-                    foreach ($x->allows->allow as $a) {
-                        $tempAllow = array();
-    
-                        $tempAllow['resource'] = (string)$a->resource;
-                        $tempAllow['privilege'] = (string)$a->privilege;
-    
-                        $temp['allows'][] = $tempAllow;                        
-                    }
-                } else {
-                    $tempAllow = array();
-    
-                    $tempAllow['resource'] = (string)$x->allows->allow->resource;
-                    $tempAllow['privilege'] = (string)$x->allows->allow->privilege;
-    
-                    $temp['allows'][] = $tempAllow;
-                }
-            }
-            
-            if ($x->denys instanceof Zend_Config) {
-                if ($x->denys->deny->get('0')) {
-                    foreach ($x->denys->deny as $d) {
-                        $tempDeny = array();
-    
-                        $tempDeny['resource'] = (string)$d->resource;
-                        $tempDeny['privilege'] = (string)$d->privilege;
-    
-                        $temp['denys'][] = $tempDeny;
-                    }
-                } else {
-                    $tempDeny = array();
-    
-                    $tempDeny['resource'] = (string)$x->denys->deny->resource;
-                    $tempDeny['privilege'] = (string)$x->denys->deny->privilege;
-    
-                    $temp['denys'][] = $tempDeny;
-                }
-            }
-            
-            if ($role != '' && $role == $temp['name']) {
-                return $temp;
-            }
-
-            $roles[] = $temp;
-        }
-
-        return $roles;
-    }
-
-    public function addCustomRole($data, $configFilePath)
-    {
-        if ($this->hasRole($data['name'])) {
-            throw new Exception('Role already exists.  Can not create new role');
-        }
-
-        $this->_writeAclConfig($data, false, $configFilePath);
-    }
-
-    public function editCustomRole($data, $configFilePath)
-    {
-        $this->_writeAclConfig($data, false, $configFilePath);
-    }
-
-    public function deleteCustomRole($roleName, $configFilePath)
-    {
-        $this->_writeAclConfig(array('name' => $roleName), true, $configFilePath);
-    }
-
-    /**
-     * This is a brother to isAllowed, but instead of returning false is a role
-     * has access to all privleges in a resource, it will return true if and only
-     * if the role has access to at least one privlege within the resource.
-     *
-     * @param string $role
-     * @param string $resource
-     * @param string $privilege
-     * @return boolean
-     */
-    public function hasSomeAccess($role, $resource)
-    {
-        $access = $this->getResourcesWithSomeAccess($role);
-
-        if ($access == "*") {
-            return true;
-        }
-
-        return in_array($resource, $access);
-    }
-
-    public function getResourcesWithSomeAccess($role)
-    {
-        $rules = $this->_rules;
-
-        if (isset($rules['allResources']['byRoleId'][$role]) && $rules['allResources']['byRoleId'][$role]['allPrivileges']['type'] === self::TYPE_ALLOW) {
-            return '*';
-        }
-
-        $access = array();
-
-        foreach ($rules['byResourceId'] as $resource => $privilege) {
-            if (isset($privilege['byRoleId'][$role])) {
-                if (isset($privilege['byRoleId'][$role]['allPrivileges']) && $privilege['byRoleId'][$role]['allPrivileges']['type'] === self::TYPE_ALLOW) {
-                    $access[] = $resource;
-                } else {
-                    foreach ($privilege['byRoleId'][$role]['byPrivilegeId'] as $priv => $act) {
-                        if ($act['type'] === self::TYPE_ALLOW) {
-                            $access[] = $resource;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        $parents = $this->_getRoleRegistry()->getParents($role);
-
-        if (count($parents) != 0) {
-
-            foreach ($parents as $key => $value) {
-                $access = array_unique(array_merge($access, $this->getResourcesWithSomeAccess($key)));
-            }
-        }
-
-        return $access;
-    }
-
-    protected function _writeAclConfig($data, $remove, $configFilePath)
-    {
-    	if (!is_writable($configFilePath)) {
-    		throw new Exception('Config file path (' . $configFilePath . ') is not writable');
-    	}
-    	
-        $current = $this->getAvailableRoles();
-        
-        $doc = new DOMDocument('1.0');
-        $doc->formatOutput = true;
-
-        $conf = $doc->createElement('production');
-        $conf = $doc->appendChild($conf);
-        
-        $prod = $doc->createElement('production');
-        $prod = $conf->appendChild($prod);
-        
-        $root = $doc->createElement('roles');
-        $root = $prod->appendChild($root);
-
-        if (!$this->hasRole($data['name'])) {
-            $current = array_merge($current, array($data));
-        }
-
-        $filter = new Zend_Filter();
-        $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
-        $filter->addFilter(new Zend_Filter_StringToLower());
-        
-        $roles = array();
-        foreach ($current as $r) {
-            if ($r['name'] == $data['name']) {
-                if ($remove) {
-                    continue;
-                }
-                $r = $data;
-
-                if (isset($r['newName'])) {
-                    $r['name'] = $r['newName'];
-                }
-            }
-
-            $role = $doc->createElement('role');
-            $role = $root->appendChild($role);
-
-            $name = $doc->createElement('name');
-            $name = $role->appendChild($name);
-
-            $nameValue = $doc->createTextNode($r['name']);
-            $nameValue = $name->appendChild($nameValue);
-
-            $inherit = $doc->createElement('inherit');
-            $inherit = $role->appendChild($inherit);
-
-            $inheritValue = $doc->createTextNode($r['inherit']);
-            $inheritValue = $inherit->appendChild($inheritValue);
-
-            $editable = $doc->createElement('editable');
-            $editable = $role->appendChild($editable);
-
-            $editableValue = $doc->createTextNode($r['editable']);
-            $editableValue = $editable->appendChild($editableValue);
-
-            $allows = $doc->createElement('allows');
-            $allows = $role->appendChild($allows);
-
-            foreach ($r['allows'] as $a) {
-                $allow = $doc->createElement('allow');
-                $allow = $allows->appendChild($allow);
-
-                $resource = $doc->createElement('resource');
-                $resource = $allow->appendChild($resource);
-
-                $resourceValue = $doc->createTextNode($filter->filter($a['resource']));
-                $resourceValue = $resource->appendChild($resourceValue);
-
-                $privilege = $doc->createElement('privilege');
-                $privilege = $allow->appendChild($privilege);
-
-                $privilegeValue = $doc->createTextNode($filter->filter($a['privilege']));
-                $privilegeValue = $privilege->appendChild($privilegeValue);
-            }
-
-            $denys = $doc->createElement('denys');
-            $denys = $role->appendChild($denys);
-
-            foreach ($r['denys'] as $d) {
-                $deny = $doc->createElement('deny');
-                $deny = $denys->appendChild($deny);
-
-                $resource = $doc->createElement('resource');
-                $resource = $deny->appendChild($resource);
-
-                $resourceValue = $doc->createTextNode($filter->filter($d['resource']));
-                $resourceValue = $resource->appendChild($resourceValue);
-
-                $privilege = $doc->createElement('privilege');
-                $privilege = $deny->appendChild($privilege);
-
-                $privilegeValue = $doc->createTextNode($filter->filter($d['privilege']));
-                $privilegeValue = $privilege->appendChild($privilegeValue);
-            }
-
-        }
-
-        $doc->save($configFilePath);
-    }
-    
+        $role = new Ot_Role();
+        return $role->getRoles($scope);
+    }  
 
     /**
      * Gets all the children of a given role
@@ -334,30 +92,118 @@ class Ot_Acl extends Zend_Acl
      * @param array $children
      * @return array
      */
-    public function getChildrenOfRole($role, $roles = '', $children = array())
+    public function getChildrenOfRole($roleId, $roles = '', $children = array())
     {
         if ($roles == '') {
             $roles = $this->getAvailableRoles();
         }
+        
+        foreach ($roles as &$r) {
+            unset($r['rules']);
+        }
+        unset($r);
 
         foreach ($roles as $r) {
-            if ($r['inherit'] == $role) {
-                if (!isset($children[$r['name']])) {
-                    $children[$r['name']] = array();
+            if ($r['inheritRoleId'] == $roleId) {
+                if (!isset($children[$r['roleId']])) {
+                    $children[$r['roleId']] = $roles[$r['roleId']];
+                    $children[$r['roleId']]['parent'] = array();
                 }
-                if (isset($children[$r['inherit']])) {
-                    $children[$r['name']] = array_merge($children[$r['inherit']], array($role));
+                                
+                if (isset($children[$r['inheritRoleId']])) {
+                    $children[$r['roleId']]['parent'] = array_merge($children[$r['roleId']]['parent'], $roles[$roleId]);
                 } else {
-                    $children[$r['name']][] = $role;
+                    $children[$r['roleId']]['parent'] = $roles[$roleId];
                 }
 
-                $children = $this->getChildrenOfRole($r['name'], $roles, $children);
+                $children = $this->getChildrenOfRole($r['roleId'], $roles, $children);
             }
         }
 
         return $children;
-    }
+    }    
 
+    public function getRemoteResources($roleId = 0)
+    {
+        $roles = $this->getAvailableRoles();
+        
+        $role = 0;
+        
+        if ($roleId != 0) {
+            if (!isset($roles[$roleId])) {
+                throw new Ot_Exception('Requested role not found in the access list.');
+            }
+            
+            $role = $roles[$roleId];
+        }
+
+        // Sets the denys for the role
+        $denys = array();
+        if (isset($role['rules'])) {
+            foreach ($role['rules'] as $rule) {
+                if ($rule['type'] == 'deny') {
+                    $denys[$rule['resource']] = $rule['privilege'];
+                }
+            }
+        }
+                
+        $result = array();
+
+        $filter = new Zend_Filter();
+        $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
+        $filter->addFilter(new Zend_Filter_StringToLower());
+
+        $class = new ReflectionClass('Internal_Api');
+        
+        foreach ($class->getMethods() as $method) {
+            $resource = $method->getName();
+            if ($role != '') {
+                $result[$resource]['access'] = $this->isAllowed($role['roleId'], $resource);
+            } else {
+                $result[$resource]['access'] = false;
+            }
+
+            $result[$resource]['description'] = $this->_getDescriptionFromCommentBlock($method->getDocComment());
+
+            $noInheritance = (isset($role['inheritRoleId']) && $role['inheritRoleId'] == 0);
+            $inherit = (isset($role['inheritRoleId'])) ? $role['inheritRoleId'] : '';
+
+            $result[$resource]['inheritRoleId'] = 0;
+
+            while (!$noInheritance) {
+                $iAllows = array();
+                $iDenys  = array();
+
+                if (isset($roles[$inherit]['rules'])) {
+                    foreach ($roles[$inherit]['rules'] as $rule) {
+                        if ($rule['type'] == 'allow') {
+                            $iAllows[] = $rule['resource'];
+                        } else {
+                            $iDenys[] = $rule['resource'];
+                        }
+                    }
+                }
+
+                if ($result[$resource]['access'] == false) {
+                    if (in_array($resource, $iDenys) && $result[$resource]['inheritRoleId'] == 0) {
+                        $result[$resource]['inheritRoleId'] = $inherit;
+                    }
+                } else {
+                    if (in_array($resource, $iAllows) && $result[$resource]['inheritRoleId'] == 0) {
+                        $result[$resource]['inheritRoleId'] = $inherit;
+                    }
+                }
+
+                if (isset($roles[$inherit]['inheritRoleId']) && $roles[$inherit]['inheritRoleId'] != 0) {
+                    $inherit = $roles[$inherit]['inheritRoleId'];
+                } else {
+                    $noInheritance = true;
+                }
+            }
+        }
+        
+        return $result;
+    }
 
     /**
      * Gets all resources with permissions based on the passed role
@@ -365,7 +211,7 @@ class Ot_Acl extends Zend_Acl
      * @param string $role
      * @return array
      */
-    public function getResources($role = '')
+    public function getResources($roleId = 0)
     {
         $controllers = Zend_Controller_Front::getInstance()->getControllerDirectory();
 
@@ -374,34 +220,33 @@ class Ot_Acl extends Zend_Acl
         }
 
         $roles = $this->getAvailableRoles();
-
-        $temp = array();
-
-        // gets the role from teh acl, with all allows and denys set
-        foreach ($roles as $r) {
-            $temp[$r['name']] = $r;
-            if ($role != '' && $r['name'] == $role) {
-                $role = $r;
-                break;
+        
+        $role = 0;
+        
+        if ($roleId != 0) {
+            if (!isset($roles[$roleId])) {
+                throw new Ot_Exception('Requested role not found in the access list.');
             }
+            
+            $role = $roles[$roleId];
         }
 
         // Sets the denys for the role
         $denys = array();
-        if (isset($role['denys'])) {
-            foreach ($role['denys'] as $d) {
-                $denys[$d['resource']] = $d['privilege'];
+        if (isset($role['rules'])) {
+            foreach ($role['rules'] as $rule) {
+                if ($rule['type'] == 'deny') {
+                    $denys[$rule['resource']] = $rule['privilege'];
+                }
             }
         }
-
-        $roles = $temp;
-
+                
         $result = array();
-        
+
         $filter = new Zend_Filter();
         $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
-        $filter->addFilter(new Zend_Filter_StringToLower());        
-        
+        $filter->addFilter(new Zend_Filter_StringToLower());
+
         // gets all controllers to get the actions in them
         foreach ($controllers as $key => $value) {
             foreach (new DirectoryIterator($value) as $file) {
@@ -418,13 +263,13 @@ class Ot_Acl extends Zend_Acl
                         preg_replace('/controller/i', '', $classname));
 
                     $controllerName = $filter->filter($controllerName);
-                    
+
                     $resource = strtolower($key . '_' . $controllerName);
 
-                    $result[$key][$controllerName]['all'] = array('access' => false, 'inherit' => '');
+                    $result[$key][$controllerName]['all'] = array('access' => false, 'inheritRoleId' => '');
 
                     $noInheritance = false;
-                    $inherit = (isset($role['name'])) ? $role['name'] : '';
+                    $inherit = $roleId;
 
                     $allows = array();
                     while (!$noInheritance) {
@@ -432,16 +277,14 @@ class Ot_Acl extends Zend_Acl
                         $iAllows = array();
                         $iDenys  = array();
 
-                        if (isset($roles[$inherit]['allows'])) {
-                            foreach ($roles[$inherit]['allows'] as $a) {
-                                $allows[$a['resource']] = $a['privilege'];
-                                $iAllows[$a['resource']] = $a['privilege'];
-                            }
-                        }
-
-                        if (isset($roles[$inherit]['denys'])) {
-                            foreach ($roles[$inherit]['denys'] as $a) {
-                                $iDenys[$a['resource']] = $a['privilege'];
+                        if (isset($roles[$inherit]['rules'])) {
+                            foreach ($roles[$inherit]['rules'] as $rule) {
+                                if ($rule['type'] == 'allow') {
+                                    $allows[$rule['resource']] = $rule['privilege'];
+                                    $iAllows[$rule['resource']] = $rule['privilege'];
+                                } else {
+                                    $iDenys[$rule['resource']] = $rule['privilege'];
+                                }
                             }
                         }
 
@@ -452,13 +295,13 @@ class Ot_Acl extends Zend_Acl
                             if (!(isset($denys[$resource]) && $denys[$resource] == '*')) {
                                 $result[$key][$controllerName]['all']['access'] = true;
                                 if (isset($iAllows[$resource]) && $iAllows[$resource] == '*') {
-                                    $result[$key][$controllerName]['all']['inherit'] = $inherit;
+                                    $result[$key][$controllerName]['all']['inheritRoleId'] = $inherit;
                                 }
                             }
                         }
 
-                        if (isset($roles[$inherit]['inherit']) && $roles[$inherit]['inherit'] != '') {
-                            $inherit = $roles[$inherit]['inherit'];
+                        if (isset($roles[$inherit]['inheritRoleId']) && $roles[$inherit]['inheritRoleId'] != 0) {
+                            $inherit = $roles[$inherit]['inheritRoleId'];
                         } else {
                             $noInheritance = true;
                         }
@@ -470,54 +313,55 @@ class Ot_Acl extends Zend_Acl
                     $methods = $class->getMethods();
 
                     $result[$key][$controllerName]['description'] = $this->_getDescriptionFromCommentBlock($class->getDocComment());
-                    
+                    if (!isset($result[$key][$controllerName]['part'])) {
+                        $result[$key][$controllerName]['part'] = array();
+                    }
+
                     foreach ($methods as $m) {
                         if (preg_match('/action/i', $m->name) &&
                             basename($class->getMethod($m->name)->getFileName()) == $file) {
 
                             $action = $filter->filter(preg_replace('/action/i', '', $m->name));
-                            
+
                             if ($role != '') {
-                                $result[$key][$controllerName]['part'][$action]['access'] = $this->isAllowed($role['name'], $resource, $action);
+                                $result[$key][$controllerName]['part'][$action]['access'] = $this->isAllowed($role['roleId'], $resource, $action);
                             } else {
                                 $result[$key][$controllerName]['part'][$action]['access'] = false;
                             }
-                            
+
                             $result[$key][$controllerName]['part'][$action]['description'] = $this->_getDescriptionFromCommentBlock($m->getDocComment());
 
-                            $noInheritance = (isset($role['inherit']) && $role['inherit'] == '');
-                            $inherit = (isset($role['inherit'])) ? $role['inherit'] : '';
+                            $noInheritance = (isset($role['inheritRoleId']) && $role['inheritRoleId'] == 0);
+                            $inherit = (isset($role['inheritRoleId'])) ? $role['inheritRoleId'] : '';
 
-                            $result[$key][$controllerName]['part'][$action]['inherit'] = '';
+                            $result[$key][$controllerName]['part'][$action]['inheritRoleId'] = 0;
 
                             while (!$noInheritance) {
                                 $iAllows = array();
                                 $iDenys  = array();
 
-                                if (isset($roles[$inherit]['allows'])) {
-                                    foreach ($roles[$inherit]['allows'] as $a) {
-                                        $iAllows[] = $a['resource'] . '_' . $a['privilege'];
-                                    }
-                                }
-
-                                if (isset($roles[$inherit]['denys'])) {
-                                    foreach ($roles[$inherit]['denys'] as $a) {
-                                        $iDenys[] = $a['resource'] . '_' . $a['privilege'];
+                                if (isset($roles[$inherit]['rules'])) {
+                                    foreach ($roles[$inherit]['rules'] as $rule) {
+                                        if ($rule['type'] == 'allow') {
+                                            $iAllows[] = $rule['resource'] . '_' . $rule['privilege'];
+                                        } else {
+                                            $iDenys[] = $rule['resource'] . '_' . $rule['privilege'];
+                                        }
                                     }
                                 }
 
                                 if ($result[$key][$controllerName]['part'][$action]['access'] == false) {
-                                    if (in_array($resource . '_' . $action, $iDenys) && $result[$key][$controllerName]['part'][$action]['inherit'] == '') {
-                                        $result[$key][$controllerName]['part'][$action]['inherit'] = $inherit;
+                                    if (in_array($resource . '_' . $action, $iDenys) && $result[$key][$controllerName]['part'][$action]['inheritRoleId'] == 0) {
+                                        $result[$key][$controllerName]['part'][$action]['inheritRoleId'] = $inherit;
                                     }
                                 } else {
-                                    if (in_array($resource . '_' . $action, $iAllows) && $result[$key][$controllerName]['part'][$action]['inherit'] == '') {
-                                        $result[$key][$controllerName]['part'][$action]['inherit'] = $inherit;
+                                    if (in_array($resource . '_' . $action, $iAllows) && $result[$key][$controllerName]['part'][$action]['inheritRoleId'] == 0) {
+                                        $result[$key][$controllerName]['part'][$action]['inheritRoleId'] = $inherit;
                                     }
                                 }
 
-                                if (isset($roles[$inherit]['inherit']) && $roles[$inherit]['inherit'] != '') {
-                                    $inherit = $roles[$inherit]['inherit'];
+                                if (isset($roles[$inherit]['inheritRoleId']) && $roles[$inherit]['inheritRoleId'] != 0) {
+                                    $inherit = $roles[$inherit]['inheritRoleId'];
                                 } else {
                                     $noInheritance = true;
                                 }
@@ -539,13 +383,13 @@ class Ot_Acl extends Zend_Acl
 
         return $result;
     }
-    
+
     protected function _getDescriptionFromCommentBlock($str)
     {
         $str = preg_replace('/@[^\n]*/', '', $str);
         $str = preg_replace('/\s*\*\s/', '', $str);
         $str = preg_replace('/(\/\*|\*\/)*/', '', $str);
-        
+
         return trim($str);
-    }    
+    }
 }

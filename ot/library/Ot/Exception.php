@@ -43,7 +43,7 @@ class Ot_Exception extends Exception
 	 */
 	public function getTitle()
 	{
+				
 		return $this->_title;
 	}
 }
-?>

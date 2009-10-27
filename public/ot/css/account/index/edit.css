@@ -1,27 +1,6 @@
 @CHARSET "UTF-8";
 
-#editButton {
-    float: left;
-    margin: 0px 10px;
-}
 
-#editForm {
-    width: 450px;
-    margin: 0 auto;
-}
-
-#fields {
-    border: 1px solid #999;
-    background-color: #CCC;
-    margin-bottom: 10px;
-}
-
-#realmStatic, #usernameStatic, #roleStatic {
-    background-color: inherit;
-    border: 0px;
-    margin-top: 2px;
-}
-
-form fieldset dt {
-    width: 120px;
+div.zend_form label.optional, div.zend_form label.required {
+	width: 125px;
 }

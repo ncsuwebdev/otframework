@@ -29,7 +29,7 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Information Technology Division
  */
-class Cron_IndexController extends Internal_Controller_Action 
+class Cron_IndexController extends Zend_Controller_Action 
 {    
 	/**
 	 * Unix timestamp of the date the cron job was last run.
@@ -47,7 +47,7 @@ class Cron_IndexController extends Internal_Controller_Action
     	set_time_limit(0);
     	
 		$this->_helper->layout->disableLayout();
-		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->viewRenderer->setNeverRender();
     	
 		$action = $this->_request->getActionName();
 		
@@ -84,16 +84,18 @@ class Cron_IndexController extends Internal_Controller_Action
 		
 		    } catch (Exception $e) {
 		        $m['status'] = 'error';
-		        $m['sentDt'] = 0;
 		    }
 		
 		    $where = $eq->getAdapter()->quoteInto('queueId = ?', $m['queueId']);
 		
 		    $eq->update($m, $where);
 		    
-		    $this->_logger->setEventItem('attributeName', 'queueId');
-		    $this->_logger->setEventItem('attributeId', $m['queueId']);
-		    $this->_logger->info("Mail Sent");
+		    $logOptions = array(
+                    'attributeName' => 'queueId',
+                    'attributeId'   => $m['queueId'],
+            );
+                
+            $this->_helper->log(Zend_Log::INFO, 'Mail Sent', $logOptions);
 		}    	
     }
 

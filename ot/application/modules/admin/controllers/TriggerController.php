@@ -26,7 +26,7 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_TriggerController extends Internal_Controller_Action  
+class Admin_TriggerController extends Zend_Controller_Action  
 {	
 	/**
 	 * Trigger config file
@@ -36,23 +36,13 @@ class Admin_TriggerController extends Internal_Controller_Action
 	protected $_triggerConfig = '';
 	
 	/**
-	 * Flash Messenger object
-	 *
-	 * @var unknown_type
-	 */
-	protected $_flashMessenger = null;
-	
-	/**
 	 * Setup controller vars
 	 *
 	 */
 	public function init()
 	{
-		$this->_flashMessenger = $this->getHelper('FlashMessenger');
-        $this->_flashMessenger->setNamespace('trigger');
-        
-		$files = Zend_Registry::get('configFiles');
-        $this->_triggerConfig = new Zend_Config_Xml($files['trigger'], 'production');
+		$config = Zend_Registry::get('config');
+        $this->_triggerConfig = $config->triggers->trigger;
         
         parent::init();
 	}
@@ -62,28 +52,13 @@ class Admin_TriggerController extends Internal_Controller_Action
      */
     public function indexAction()
     {
-        $this->view->title = "Trigger Index";
+        $this->_helper->pageTitle('admin-trigger-index:title');
         
         $this->view->acl = array(
-            'details'   => $this->_acl->isAllowed($this->_role, $this->_resource, 'details'),
+            'details'   => $this->_helper->hasAccess('details')
             );
-
-        $triggers = array();
-        foreach ($this->_triggerConfig->triggers as $key => $value) {
-
-        	$triggers[] = array(
-        	   'name' => $key,
-        	   'description' => $value->description,
-        	);
-        }
         
-        if (count($triggers) != 0) {
-            $this->view->javascript = array(
-               'sortable.js',
-            );
-        }        
-        
-        $this->view->triggers = $triggers;
+        $this->view->triggers = $this->_triggerConfig;
     }
     
     /**
@@ -93,44 +68,49 @@ class Admin_TriggerController extends Internal_Controller_Action
     public function detailsAction()
     {
         $this->view->acl = array(
-            'add'    => $this->_acl->isAllowed($this->_role, $this->_resource, 'add'),
-            'edit'   => $this->_acl->isAllowed($this->_role, $this->_resource, 'edit'),
-            'delete' => $this->_acl->isAllowed($this->_role, $this->_resource, 'delete'),
+            'index'        => $this->_helper->hasAccess('index'),
+            'add'          => $this->_helper->hasAccess('add'),
+            'edit'         => $this->_helper->hasAccess('edit'),
+            'delete'       => $this->_helper->hasAccess('delete'),
+            'changeStatus' => $this->_helper->hasAccess('change-status'),
             );        
         
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->triggerId)) {
-        	throw new Ot_Exception_Input('Trigger ID not found in query string.');
+        	throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
         }
         
-        if (!($this->_triggerConfig->triggers->{$get->triggerId} instanceof Zend_Config)) {
-            throw new Ot_Exception_Data('Trigger does not exist in configuration file.');
+        $thisTrigger = null;
+        foreach ($this->_triggerConfig as $t) {
+            if ($t->name == $get->triggerId) {
+                $thisTrigger = $t;
+                break;
+            }
+        }
+        
+        if (is_null($thisTrigger)) {
+            throw new Ot_Exception_Data('msg-error-noTrigger');
         }
         
         $this->view->triggerId = $get->triggerId;
-        $this->view->triggerDescription = $this->_triggerConfig->triggers->{$get->triggerId}->description;
-        $this->view->title = "Trigger Actions for " . $get->triggerId;
+        $this->view->trigger = $thisTrigger;
+        $this->_helper->pageTitle('admin-trigger-details:title', $get->triggerId);
         
         $action = new Ot_Trigger_Action();
 
         $where = $action->getAdapter()->quoteInto('triggerId = ?', $get->triggerId);
         $actions = $action->fetchAll($where)->toArray();
         
-        $config = Zend_Registry::get('appConfig');
+        $config = Zend_Registry::get('config');
         
         foreach ($actions as &$a) {
-        	$a['helper'] = $config->triggerPlugins->{$a['helper']};
+        	$a['helper'] = $config->app->triggerPlugins->{$a['helper']};
         }
         
-        if (count($actions) != 0) {
-        	$this->view->javascript = array(
-        	   'sortable.js',
-        	);
-        }
         $this->view->actions = $actions;
         
-        $this->view->messages = $this->_flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
     
     /**
@@ -142,78 +122,34 @@ class Admin_TriggerController extends Internal_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->triggerId)) {
-            throw new Ot_Exception_Input('Trigger ID not found in query string.');
+            throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
         }
         
-        if (!($this->_triggerConfig->triggers->{$get->triggerId} instanceof Zend_Config)) {
-            throw new Ot_Exception_Data('Trigger does not exist in configuration file.');
+        $thisTrigger = null;
+        foreach ($this->_triggerConfig as $t) {
+            if ($t->name == $get->triggerId) {
+                $thisTrigger = $t;
+                break;
+            }
+        }
+        
+        if (is_null($thisTrigger)) {
+            throw new Ot_Exception_Data('msg-error-noTrigger');
         }
         
         $this->view->triggerId = $get->triggerId;
-        $this->view->triggerDescription = $this->_triggerConfig->triggers->{$get->triggerId}->description;
-        $this->view->title = "Select Trigger Type";
+        $this->view->trigger = $thisTrigger;
+        $this->_helper->pageTitle('admin-trigger-add:title');
+        
+        $action = new Ot_Trigger_Action();
 
-        $config = Zend_Registry::get('appConfig');
-        $types = array();
-        
-        foreach ($config->triggerPlugins as $key => $value) {
-        	$types[$key] = $value;
-        }
-        
-        if (count($types) == 0) {
-        	throw new Ot_Exception_Data('No helpers are defined in the application config file.');
-        }
-        
-        $form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'addAction')
-             ;
-        
-        $helpers = new Zend_Form_Element_Select('helper');
-        $helpers->setLabel('Action:')
-                ->addMultiOptions($types)
-                ->setValue($get->helper)
-                ;
-                
-        $hidden = new Zend_Form_Element_Hidden('triggerId');
-        $hidden->setValue($get->triggerId);
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
-        ));
-                  
-        // Create and configure username element:
-        $name = $form->createElement('text', 'name', array('label' => 'Shortcut Name:'));
-        $name->setRequired(true)
-             ->addFilter('StringTrim');
-        
-        $form->addElements(array($hidden, $helpers, $name));
-        $form->addDisplayGroup(array('triggerId', 'helper', 'name'), 'fields'); 
+        $values = array('triggerId' => $get->triggerId);
         
         if (isset($get->helper)) {
-        	$obj = $get->helper;
-        } else {
-        	$obj = key($types);
+            $values['helper'] = $get->helper;
         }
-        	
-        $thisHelper = new $obj;
-
-        $subForm = $thisHelper->addSubForm();
-        $form->addSubForm($subForm, $obj);
         
-        $submit = $form->createElement('submit', 'nextButton', array('label' => 'Save Action'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));        
-        
-        $form->addElements(array($submit, $cancel));        
+        $form = $action->form($values);
              
         $messages = array();
         if ($this->_request->isPost()) {
@@ -228,40 +164,42 @@ class Admin_TriggerController extends Internal_Controller_Action
         		
         		$triggerActionId = $action->insert($data);
         		
-        		$subData = array(
-        		  'triggerActionId' => $triggerActionId,
-        		);
-
-        		$elements = $subForm->getElements();
-        		foreach ($elements as $key => $value) {
-        			$subData[$key] = $subForm->getValue($key);
-        		}
+        	    $subForm = $form->getSubForm($form->getValue('helper'));
+                
+                $elements = $subForm->getElements();
+                
+                $subData = array();
+                foreach ($elements as $key => $value) {
+                    $subData[$key] = $subForm->getValue($key);
+                }
+                $subData['triggerActionId'] = $triggerActionId;                
         		
+                $obj = $form->getValue('helper');
+                $thisHelper = new $obj;
+                
         		$thisHelper->addProcess($subData);
         		
-        		$this->_logger->setEventItem('attributeName', 'triggerActionId');
-                $this->_logger->setEventItem('attributeId', $triggerActionId);
-                $this->_logger->info('Trigger Action added'); 
+        		$logOptions = array(
+                        'attributeName' => 'triggerActionId',
+                        'attributeId'   => $triggerActionId,
+                    );
+                    
+                $this->_helper->log(Zend_Log::INFO, 'Trigger Action added', $logOptions);
         		
-        		$this->_flashMessenger->addMessage('The action was added successfully.');
+        		$this->_helper->flashMessenger->addMessage('msg-info-triggerAdded');
         		
         		$this->_helper->redirector->gotoUrl('/admin/trigger/details/?triggerId=' . $get->triggerId);
         		
         	} else {
-        		$messages[] = 'There was an error processing the form';
+        		$messages[] = 'msg-error-formError';
         	}
         }
         
         $vars = array();
-        foreach ($this->_triggerConfig->triggers->{$get->triggerId}->vars as $key => $value) {
-            $vars[$key] = $value;
+               
+        foreach ($thisTrigger->var as $var) {
+            $vars[$var->name] = $var->description;
         }
-        
-        if (count($vars) != 0) {
-            $this->view->javascript = array(
-               'sortable.js',
-            );
-        } 
                 
         $this->view->messages = $messages;
         $this->view->templateVars = $vars;        
@@ -277,7 +215,7 @@ class Admin_TriggerController extends Internal_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->triggerActionId)) {
-            throw new Ot_Exception_Input('Trigger Action ID not found in query string.');
+            throw new Ot_Exception_Input('msg-error-triggerActionIdNotFound');
         }
         
         $action = new Ot_Trigger_Action();
@@ -285,119 +223,89 @@ class Admin_TriggerController extends Internal_Controller_Action
         $thisAction = $action->find($get->triggerActionId);
         
         if (is_null($thisAction)) {
-        	throw new Ot_Exception_Data('Trigger action does not exist.');
+        	throw new Ot_Exception_Data('msg-error-noTriggerActionId');
         }
         
         $triggerId = $thisAction->triggerId;
-        
-        if (!($this->_triggerConfig->triggers->{$triggerId} instanceof Zend_Config)) {
-            throw new Ot_Exception_Data('Trigger does not exist in configuration file.');
+         
+        $thisTrigger = null;
+        foreach ($this->_triggerConfig as $t) {
+            if ($t->name == $triggerId) {
+                $thisTrigger = $t;
+                break;
+            }
         }
         
-        $this->view->triggerId = $triggerId;
-        $this->view->triggerDescription = $this->_triggerConfig->triggers->{$triggerId}->description;
-        $this->view->title = "Select Trigger Type";
-
-        $config = Zend_Registry::get('appConfig');
+        if (is_null($thisTrigger)) {
+            throw new Ot_Exception_Data('msg-error-noTrigger');
+        }
+       
+        $this->view->trigger = $thisTrigger;
         
-        if (!isset($config->triggerPlugins->{$thisAction->helper})) {
-            throw new Ot_Exception_Data('Trigger Helper not found');
+        $this->_helper->pageTitle('admin-trigger-edit:title');
+
+        $config = Zend_Registry::get('config');
+        
+        if (!isset($config->app->triggerPlugins->{$thisAction->helper})) {
+            throw new Ot_Exception_Data('msg-error-triggerHelperNotFound');
         }
         
-        $form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'editAction')
-             ;
-                
-        $hidden = new Zend_Form_Element_Hidden('triggerActionId');
-        $hidden->setValue($get->triggerActionId);
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
-        ));
+        $values = array('triggerActionId' => $get->triggerActionId);
+        $values = array_merge($values, $thisAction->toArray());
         
-        $helperStatic = $form->createElement('text', 'helperStatic', array('label' => 'Action:'));
-        $helperStatic->setValue($config->triggerPlugins->{$thisAction->helper})
-                    ->setAttrib('size', '40')
-                    ->setAttrib('readonly', true)
-                    ;        
-                  
-        // Create and configure username element:
-        $name = $form->createElement('text', 'name', array('label' => 'Shorcut Name:'));
-        $name->setRequired(true)
-             ->addFilter('StringTrim')
-             ->setValue($thisAction->name);
-        
-        $form->addElements(array($hidden, $helperStatic, $name));
-        $form->addDisplayGroup(array('triggerId', 'helperStatic', 'name'), 'fields'); 
-        
-        $obj = $thisAction->helper;
-        
-        $thisHelper = new $obj;
-
-        $subForm = $thisHelper->editSubForm($get->triggerActionId);
-        
-        $form->addSubForm($subForm, $obj);
-        
-        $submit = $form->createElement('submit', 'nextButton', array('label' => 'Save Action'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));        
-                        
-        $form->addElements(array($submit, $cancel));        
+        $form = $action->form($values);      
              
         $messages = array();
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
-                $action = new Ot_Trigger_Action();
                 
                 $data = array(
-                  'triggerActionId' => $get->triggerActionId,
+                  'triggerActionId' => $form->getValue('triggerActionId'),
                   'name'            => $form->getValue('name'),
                 );
                 
                 $action->update($data, null);
-                
-                $subData = array(
-                  'triggerActionId' => $get->triggerActionId,
-                );
 
+                $subForm = $form->getSubForm($form->getValue('helper'));
+                
                 $elements = $subForm->getElements();
+                
+                $subData = array();
                 foreach ($elements as $key => $value) {
                     $subData[$key] = $subForm->getValue($key);
                 }
+                $subData['triggerActionId'] = $form->getValue('triggerActionId');
+                
+                $obj = $form->getValue('helper');
+                $thisHelper = new $obj;               
                 
                 $thisHelper->editProcess($subData);
                 
-                $this->_logger->setEventItem('attributeName', 'triggerActionId');
-                $this->_logger->setEventItem('attributeId', $get->triggerActionId);
-                $this->_logger->info('Trigger Action modified');  
+                $logOptions = array(
+                       'attributeName' => 'triggerActionId',
+                       'attributeId'   => $get->triggerActionId,
+                );
+                    
+                $this->_helper->log(Zend_Log::INFO, 'Trigger Action modified', $logOptions);
             
-                $this->_flashMessenger->addMessage('The action was modified successfully.');
+                $this->_helper->flashMessenger->addMessage('msg-info-triggerUpdated');
                 
                 $this->_helper->redirector->gotoUrl('/admin/trigger/details/?triggerId=' . $triggerId);
                 
             } else {
-                $messages[] = 'There was an error processing the form';
+                $messages[] = 'msg-error-formError';
             }
         }
         
         $vars = array();
-        foreach ($this->_triggerConfig->triggers->{$triggerId}->vars as $key => $value) {
-            $vars[$key] = $value;
-        }
-        
-        if (count($vars) != 0) {
-            $this->view->javascript = array(
-               'sortable.js',
-            );
+        //echo count($thisTrigger->var);
+        //print_r($thisTrigger->var);
+	    if (!isset($thisTrigger->var->name)) {
+	        foreach ($thisTrigger->var as $var) {
+	            $vars[$var->name] = $var->description;
+	        }
+        } else {
+            $vars[$thisTrigger->var->name] = $thisTrigger->var->description;
         }
         
         $this->view->messages = $messages;
@@ -411,11 +319,10 @@ class Admin_TriggerController extends Internal_Controller_Action
      */
     public function deleteAction()
     {
-    	
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->triggerActionId)) {
-            throw new Ot_Exception_Input('Trigger Action ID not found in query string.');
+            throw new Ot_Exception_Input('msg-error-triggerActionIdNotFound');
         }
         
         $action = new Ot_Trigger_Action();
@@ -423,29 +330,12 @@ class Admin_TriggerController extends Internal_Controller_Action
         $thisAction = $action->find($get->triggerActionId);
         
         if (is_null($thisAction)) {
-            throw new Ot_Exception_Data('Trigger action does not exist.');
+            throw new Ot_Exception_Data('msg-error-noTriggerActionId');
         }
             	
         $triggerId = $thisAction->triggerId;
         
-        $form = new Zend_Form();
-        $form->setAction('?triggerActionId=' . $get->triggerActionId)
-             ->setMethod('post')
-             ->setAttrib('id', 'deleteAction')
-             ;
-        
-        $submit = $form->createElement('submit', 'deleteButton', array('label' => 'Delete Action'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));        
-                             
-        $form->addElements(array($submit, $cancel));     	
+        $form = Ot_Form_Template::delete('deleteTrigger');     	
         
         if ($this->_request->isPost() && $form->isValid($_POST)) {
         	
@@ -459,11 +349,14 @@ class Admin_TriggerController extends Internal_Controller_Action
         	
         	$thisHelper->deleteProcess($get->triggerActionId);
         	
-        	$this->_logger->setEventItem('attributeName', 'triggerActionId');
-            $this->_logger->setEventItem('attributeId', $get->triggerActionId);
-            $this->_logger->info('Trigger Action deleted');          
+        	$logOptions = array(
+                       'attributeName' => 'triggerActionId',
+                       'attributeId'   => $get->triggerActionId,
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, 'Trigger Action deleted', $logOptions);
         
-            $this->_flashMessenger->addMessage('The action was deleted successfully.');
+            $this->_helper->flashMessenger->addMessage('msg-info-triggerDeleted');
             
             $this->_helper->redirector->gotoUrl('/admin/trigger/details/?triggerId=' . $triggerId);
         }
@@ -471,6 +364,68 @@ class Admin_TriggerController extends Internal_Controller_Action
         $this->view->form = $form;
         $this->view->action = $thisAction->toArray();
         $this->view->triggerId = $triggerId;
-        $this->view->title = 'Delete Action';
+        $this->_helper->pageTitle('admin-trigger-delete:title');
+    }
+    
+    /**
+     * Allows users to enable/disable trigger action
+     *
+     */
+    public function changeStatusAction()
+    {
+        $get = Zend_Registry::get('getFilter');
+        
+        if (!isset($get->triggerActionId)) {
+            throw new Ot_Exception_Input('msg-error-triggerActionIdNotFound');
+        }
+        
+        $action = new Ot_Trigger_Action();
+        
+        $thisAction = $action->find($get->triggerActionId);
+        
+        if (is_null($thisAction)) {
+            throw new Ot_Exception_Data('msg-error-noTriggerActionId');
+        }
+        
+        $triggerId = $thisAction->triggerId;
+                
+        $buttonText = 'form-button-enable';
+        $status = 'enable';
+        
+        if ($thisAction->enabled == 1) {
+            $buttonText = 'form-button-disable';
+        	$status = 'disable';
+        }
+        
+        $this->view->status = $status;
+        
+        $form = Ot_Form_Template::delete('changeStatus', $buttonText);     	
+        
+        
+        if ($this->_request->isPost() && $form->isValid($_POST)) {
+
+        	$data = array(
+        	              'triggerActionId' => $get->triggerActionId,
+        	              'enabled' => !$thisAction->enabled,
+        	        );
+        	
+        	$action->update($data, null);
+        	
+        	$logOptions = array(
+                       'attributeName' => 'triggerActionId',
+                       'attributeId'   => $get->triggerActionId,
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, 'Trigger Action deleted', $logOptions);
+        
+            $this->_helper->flashMessenger->addMessage('msg-info-triggerActionStatus');
+            
+            $this->_helper->redirector->gotoUrl('/admin/trigger/details/?triggerId=' . $triggerId);
+        }
+        
+        $this->view->form = $form;
+        $this->view->action = $thisAction->toArray();
+        $this->view->triggerId = $triggerId;
+        $this->_helper->pageTitle('admin-trigger-changeStatus:title',array(ucwords($status)));
     }
 }

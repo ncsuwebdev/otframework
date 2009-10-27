@@ -1,11 +1,12 @@
-window.addEvent('domready', function() {
-    var helper = $('helper');
-        
-    helper.addEvent('change', function(e) {
-        location.href = $('sitePrefix').value + 
-            '/admin/trigger/add/?triggerId=' +
-            $('triggerId').value +
-            '&helper=' +
-            helper.options[helper.options.selectedIndex].value
+$('document').ready(function() {
+	
+	var currentVal = $('#helper').val();
+	
+    $('#helper').change(function(e) {   	
+    	if (confirm('Changing the trigger action will reset your form.  Are you sure you want to continue?')) {
+    		location.href = $('#baseUrl').val() + '/admin/trigger/add/?triggerId=' + $('#triggerId').val() + '&helper=' + $('#helper').val();
+    	} else {
+    		$('#helper').val(currentVal);
+    	}
     });
 });

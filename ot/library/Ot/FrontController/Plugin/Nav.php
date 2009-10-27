@@ -29,6 +29,8 @@
  */
 class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
 {
+    
+    protected $_treeNodes = array();
 
     /**
      * Pre-dispatch code that builds the navigation array based on the access
@@ -37,127 +39,113 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
      * @param Zend_Controller_Request_Abstract $request
      */
     public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
-    { 
+    {
+        $baseUrl = Zend_Layout::getMvcInstance()->getView()->baseUrl();  
+        $acl     = Zend_Registry::get('acl');
+
         $viewTabs = array();
+         
+        $config   = Zend_Registry::get('config');
+        $identity = Zend_Auth::getInstance()->getIdentity();
         
-        $nav        = Zend_Registry::get('navConfig');
-        $sitePrefix = Zend_Registry::get('sitePrefix');        
-        $acl        = Zend_Registry::get('acl');
-        $config     = Zend_Registry::get('appConfig');
+        $nav = new Ot_Nav();
+        $tabs = $nav->getNav();
         
-        $authz = Ot_Authz::getInstance();
-        
-        $role = ($authz->getRole() == '') ? (string)$config->loginOptions->defaultRole : $authz->getRole();
-        
-        $sitePrefix = Zend_Registry::get('sitePrefix');
+        $role = (empty($identity->role)) ? (string)$config->user->defaultRole->val : $identity->role;
+                      
+        foreach ($tabs as $tab) {
+        	
+            $tabResource = $tab->module . '_' . (($tab->controller == '') ? 'index' : $tab->controller);
+            
+            $tabData = array();
+    
+            $tabData['display']    = $tab->display;
+            $tabData['link']       = $this->_makeLink($baseUrl, $tab->link, $tab->target);
+            $tabData['module']     = $tab->module;
+            $tabData['controller'] = $tab->controller;
+            $tabData['action']     = $tab->action;
+            $tabData['target']     = (preg_match('/^http/i', $tabData['link'])) ? '_blank' : '_self';
+            $tabData['parent']     = $tab->parent;
+            $tabData['id']         = $tab->id;
+            $tabData['allowed']    = $acl->isAllowed($role, $tabResource, ($tab->action == '') ? 'index' : $tab->action);
+            $tabData['show']       = $tabData['allowed'];
 
-        if ($nav->tabs->tab->get('0')) {
-            foreach ($nav->tabs->tab as $main) {
-                $tab = array(); 
-            
-                $tab = $this->_readNav($main, $role);
-                
-                if (!is_null($tab)) {
-                    $viewTabs[] = $tab;
-                }
-            }
-            
-        } else {
-            
-            $tab = array(); 
-            $tab = $this->_readNav($nav->tabs->tab, $role);
-
-            if (!is_null($tab)) {
-                $viewTabs[] = $tab;
-            }
+			$viewTabs[$tabData['id']] = $tabData;                
         }
-
+                
+        $this->_treeNodes = $viewTabs;
+        
+        $navTree = array('id' => 0);
+                        
+        $navTree['children'] = $this->_buildTree($navTree);
+           
         $vr = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
         $view = $vr->view;
-        $view->nav = $viewTabs;
+        
+        $view->navTreeHtml = $nav->generateHtml($navTree);
+        Zend_Registry::set('navArray', $navTree);
     }
-    
-    private function _readNav($main, $role)
+       
+    protected function _buildTree($node)
     {
-        $sitePrefix = Zend_Registry::get('sitePrefix');  
-        $acl        = Zend_Registry::get('acl');
-        
-        $tab = array();
-            
-        $tabRes = $main->module . '_' . (($main->controller == '') ? 'index' : $main->controller);
+        $children = $this->_getChildren($node['id']);
 
-        $tab['display'] = $main->display;
-        $tab['link']    = $this->_makeLink($sitePrefix, $main->module, $main->controller, $main->action, $main->link);
-        $tab['target']  = (preg_match('/^http/i', $tab['link'])) ? '_blank' : '_self';
-        $tab['sub']     = array();
-        
-        if ($main->submenu instanceof Zend_Config) {
-            
-            if ($main->submenu->tab->get('0')) {
-                
-                foreach ($main->submenu->tab as $sub) {
-                    
-                    $subTab = array();
-                    
-                    $subTabRes = $sub->module . '_' . (($sub->controller == '') ? 'index' : $sub->controller);
-
-                    if ($acl->isAllowed($role, $subTabRes, ($sub->action == '') ? 'index' : $sub->action)) {
-                        $subTab['display'] = $sub->display;
-                        $subTab['link' ]   = $this->_makeLink($sitePrefix, $sub->module, $sub->controller, $sub->action, $sub->link);
-                        $subTab['target'] = (preg_match('/^http/', $subTab['link'])) ? '_blank' : '_self';
-                            
-                        $tab['sub'][] = $subTab;
-                    }
-                }  
-            } else {
-                $sub = $main->submenu->tab;
-                
-                $subTab = array();
-                        
-                $subTabRes = $sub->module . '_' . (($sub->controller == '') ? 'index' : $sub->controller);
-                        
-                if ($acl->isAllowed($role, $subTabRes, ($sub->action == '') ? 'index' : $sub->action)) {
-                    $subTab['display'] = $sub->display;
-                    $subTab['link' ]   = $this->_makeLink($sitePrefix, $sub->module, $sub->controller, $sub->action, $sub->link);
-                    $subTab['target'] = (preg_match('/^http/', $subTab['link'])) ? '_blank' : '_self';
-                            
-                    $tab['sub'][] = $subTab;
-                }
-            }
+        foreach ($children as $key => $child) {
+        	
+        	$kids = $this->_buildTree($child);
+        	
+        	$keepers = array();
+        	foreach ($kids as $k) {
+        		if ($k['show']) {
+        			$children[$key]['show'] = true;
+        			$keepers[] = $k;
+        		}
+        	}
+        	
+            $children[$key]['children'] = $keepers;
         }
-
-        if (!$acl->isAllowed($role, $tabRes, ($main->action == '') ? 'index' : $main->action)) {
-            if (count($tab['sub']) != 0) {
-                $tab['link'] = '';
-            } else {
-                $tab = null;
-            }
-        }
-        
-        return $tab;
+                    
+        return $children;        
     }
     
+    protected function _getChildren($parentId)
+    {
+        $children = array();
+        
+        foreach ($this->_treeNodes as $key => $n) {
+            
+            if ($n['id'] == $parentId) {
+                
+                unset($this->_treeNodes[$key]);
+                
+            } else if ($n['parent'] == $parentId) {
+                $children[] = $n;
+                
+                unset($this->_treeNodes[$key]);
+            }
+        }
+                
+        return $children;
+    }
     
     /**
      * Generates a link for the navigation menu
      *
-     * @param string $sitePrefix
+     * @param string $baseUrl
      * @param string $module
      * @param string $controller
      * @param string $action
      * @param string $link
      * @return string
      */
-    protected function _makeLink($sitePrefix, $module, $controller, $action, $link)
-    {   	
-        if ($link == '') {
-            return $sitePrefix . '/' . 
-                (($module != 'default') ? $module . '/' : '') . 
-                (($controller != '') ? $controller . '/' : 'index/') . 
-                (($action != '') ? $action . '/' : 'index/');
+    protected function _makeLink($baseUrl, $link, $target)
+    {   
+    	if ($link == '') {
+    		return '';	
+    	} elseif ($target == "_self") {
+            return $baseUrl . '/' . $link;
+        } else {
+            return (preg_match('/^http/', $link)) ? $link : $baseUrl . ((preg_match('/^\//', $link)) ? '/' : '') . $link;
         }
-        
-        return (preg_match('/^http/', $link)) ? $link : $sitePrefix . ((preg_match('/^\//', $link)) ? '/' : '') . $link; 
-    	
     }
 }

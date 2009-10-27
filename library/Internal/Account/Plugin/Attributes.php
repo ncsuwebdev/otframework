@@ -31,6 +31,15 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
 {
     protected $_name = 'tbl_account_attributes';
     
+    public function __construct()
+    {
+    	$config = Zend_Registry::get('config');
+    	
+    	if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
+			$this->_name = $config->app->tablePrefix . $this->_name;
+		}
+    }
+    
     public function addSubForm()
     {
         return $this->_getForm();
@@ -53,12 +62,12 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
     {
         $dba = Zend_Registry::get('dbAdapter');
         
-        $where = $dba->quoteInto('userId = ?', $data['userId']);
+        $where = $dba->quoteInto('accountId = ?', $data['accountId']);
         
         $select = $dba->select();
 
         $select->from($this->_name)
-               ->where('userId = ?', $data['userId']);
+               ->where('accountId = ?', $data['accountId']);
 
         $result = $dba->fetchAll($select);
 
@@ -73,7 +82,7 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
     {
         $dba = Zend_Registry::get('dbAdapter');
         
-        $where = $dba->quoteInto('userId = ?', $id);
+        $where = $dba->quoteInto('accountId = ?', $id);
 
         return $dba->delete($this->_name, $where);
     }
@@ -85,7 +94,7 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
         $select = $dba->select();
 
         $select->from($this->_name)
-               ->where('userId = ?', $id);
+               ->where('accountId = ?', $id);
 
         $result = $dba->fetchAll($select);
 

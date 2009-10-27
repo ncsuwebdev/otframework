@@ -61,6 +61,9 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         $auth = Zend_Auth::getInstance();
         $acl  = new Ot_Acl();
         
+        $view = Zend_Layout::getMvcInstance()->getView();
+        $baseUrl = $view->baseUrl();
+        
         Zend_Registry::set('acl', $acl);
         
         // Get the requested module, controller, and action
@@ -74,92 +77,91 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             $resource = null;
         }
         
-        $config = Zend_Registry::get('appConfig');
-        $role = '';
+        $config  = Zend_Registry::get('config');
+        $role    = (string)$config->user->defaultRole->val;
+        $defaultRole = $role;
         
-        $authz = Ot_Authz::getInstance();
-
-        if (!$acl->isAllowed((string)$config->loginOptions->defaultRole, $resource, $action)) {
-
-            // already logged in
-            if ($auth->hasIdentity() && $auth->getIdentity() != '' && !is_null($auth->getIdentity())) {
-
-                $roles = $authz->authorize(new $config->authorization($auth->getIdentity()));
+        $account = new Ot_Account();
+        $thisAccount = null;
         
-                if ($roles->isValid()) {
-                    $role = $authz->getRole();
+        if ($auth->hasIdentity() && $auth->getIdentity() != '' && !is_null($auth->getIdentity())) {
+        	
+            // We check to see if the adapter allows auto logging in, if it does we do it
+            if (call_user_func(array($config->app->authentication->{$auth->getIdentity()->realm}->class, 'autoLogin'))) {
+
+                // Set up the authentication adapter
+                $authAdapter = new $config->app->authentication->{$auth->getIdentity()->realm}->class;
+            
+                // Attempt authentication, saving the result
+                $result = $auth->authenticate($authAdapter);
+            
+                if (!$result->isValid()) {
+                    throw new Exception('Error getting login credentials');
                 }
-            }      
+            }     
             
-        } else {
-            $auth = Zend_Auth::getInstance();
-
-            if ($auth->hasIdentity() && $auth->getIdentity() != '' && !is_null($auth->getIdentity())) {
-
-                $authZAdapter = new $config->authorization($auth->getIdentity());
-                    
-                $realm = preg_replace('/^[^@]*@/', '', $auth->getIdentity());
-                    
-                // We check to see if the adapter allows auto logging in, if it does we do it
-               if (call_user_func(array($config->authentication->$realm->class, 'autoLogin'))) {
-
-                    // Set up the authentication adapter
-                    $authAdapter = new $config->authentication->$realm->class;
-            
-                    // Attempt authentication, saving the result
-                    $result = $auth->authenticate($authAdapter);
-            
-                    if (!$result->isValid()) {
-                        throw new Exception('Error getting login credentials');
-                    }
-                }                    
-        
-                $roles = $authz->authorize($authZAdapter);
-        
-                if ($roles->isValid()) {
-                    $role = $authz->getRole();
-                }
-            }
-        }
-
-        if (is_null($role)) {
-            $role = (string)$config->loginOptions->defaultAuthenticatedRole;
-            $authz->overrideRole($role);
-        } elseif ($role == '') {
-            $role = (string)$config->loginOptions->defaultRole;
-            $authz->overrideRole($role);
+            $thisAccount = $account->getAccount($auth->getIdentity()->username, $auth->getIdentity()->realm);
+        	
+        	if (is_null($thisAccount)) {
+        		$auth->clearIdentity();
+        		
+        		$request->setModuleName($this->_noAuth['module']);
+        		$request->setControllerName($this->_noAuth['controller']);
+       			$request->setActionName($this->_noAuth['action']); 
+       			
+       			return;
+        	}               	
+        	
+        	if (!$acl->hasRole($thisAccount->role)) {
+        		$thisAccount->role = (string)$config->user->defaultRole->val;
+        	}
+       			
+        	$auth->getStorage()->write($thisAccount);
+        	
+        	date_default_timezone_set((isset($account->timezone) && $account->timezone != '') ? $account->timezone : date_default_timezone_get());
+        		
+        	$role = $thisAccount->role;
         }
         
-        if (!$acl->hasRole($role)) {
-            throw new Ot_Exception_Access('The role that you are in (' . $role . ') is not defined in the ACL.  Contact your system administrator.');
+        if ($role == '' || !$acl->hasRole($role)) {
+            $role = (string)$config->user->defaultRole->val;
         }
-                
-        $req = new Zend_Session_Namespace('request');
         
-        if (!$acl->isAllowed($role, $resource, $action) && !is_null($resource)) {
+        $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
+        
+        if (!$acl->isAllowed($role, $resource, $action) && !is_null($resource) && !$acl->isAllowed($defaultRole, $resource, $action)) {
             if (!$auth->hasIdentity()) {
                 $module     = $this->_noAuth['module'];
                 $controller = $this->_noAuth['controller'];
                 $action     = $this->_noAuth['action'];
                 
-                $req->uri = str_replace(Zend_Registry::get('sitePrefix'), '', $_SERVER['REQUEST_URI']);
+                $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);
             } else {
                 throw new Ot_Exception_Access('You do not have the proper credentials to access this page.');
             }
         }
         
-        if ($auth->hasIdentity() && $config->loginOptions->generateAccountOnFirstLogin == 1) {
+        if ($auth->hasIdentity() && $config->user->requiredAccountFields->val != '') {
         	
         	if (!($request->getModuleName() == 'login' && $request->getControllerName() == 'index' && $request->getActionName() == 'logout')) {
-	            $account = new Ot_Account();
 	            
-	            if (is_null($account->find($auth->getIdentity()))) {
+        		$required = explode(',', $config->user->requiredAccountFields->val);
+        		
+        		$valid = true;
+        		foreach ($required as $r) {
+        			if (isset($thisAccount->$r) && empty($thisAccount->$r)) {
+        				$valid = false;
+        				break;
+        			}
+        		}
+        		
+	            if (!$valid) {
 	            	            	
 	                $module     = $this->_noAccount['module'];
 	                $controller = $this->_noAccount['controller'];
 	                $action     = $this->_noAccount['action'];
 	                
-	                $req->uri = str_replace(Zend_Registry::get('sitePrefix'), '', $_SERVER['REQUEST_URI']);             
+	                $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);             
 	            }
         	}
         }
@@ -167,5 +169,6 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         $request->setModuleName($module);
         $request->setControllerName($controller);
         $request->setActionName($action);  
+
     }
 }

@@ -26,105 +26,90 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_LogController extends Internal_Controller_Action 
+class Admin_LogController extends Zend_Controller_Action
 {
     /**
-     * displays logs based on search criteria
+     * Display a list of all users in the system.
+     *
      */
     public function indexAction()
     {
-    	$al = new Ot_Log();
-
-        $get = Zend_Registry::get('getFilter');
-
-        $where = '';
-        $dba = $al->getAdapter();
-
-        $attr = array('userId', 'role', 'attributeName', 'attributeId', 'request', 'sid', 'priority');
-
-        foreach ($attr as $a) {
-            if (isset($get->$a) && $get->$a != '') {
-                if ($where != '') {
-                    $where .= ' AND ';
-                }
-
-                $where .= $dba->quoteInto($a . ' = ?', $get->$a);
-
-                $this->view->$a = $get->$a;
-            }
-        }
-
-        if (isset($get->beginDt) && isset($get->endDt) && $get->endDt != '' && $get->beginDt != '') {
-            if ($where != '') {
-                $where .= ' AND ';
-            }
-
-            $where .= '(' .
-                $dba->quoteInto('timestamp >= ?', strtotime($get->beginDt . ' 00:00:00')) .
-                ' AND ' .
-                $dba->quoteInto('timestamp <= ?', strtotime($get->endDt . ' 00:00:00')) .
-                ')';
-
-            $this->view->beginDt = $get->beginDt;
-            $this->view->endDt = $get->endDt;
-        }
-
-
-        $result = array();
-        if ($where != '') {
-            $result = $al->fetchAll($where, 'timestamp DESC');
-
-            $result = $result->toArray();
-        }
+        $this->_helper->pageTitle('admin-log-index:title');  
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.flexigrid.pack.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/ot/css/jquery.plugin.flexigrid.css'); 
         
-        $javascript = array('calendar.js');
-        $css        = array('calendar.css');
-
-        if (count($result) != 0) {
-            $javascript[] = 'sortable.js';
+        if ($this->_request->isXmlHttpRequest()) {
+        	
+        	$filter = Zend_Registry::get('postFilter');
+        	
+        	$this->_helper->layout->disableLayout();
+        	$this->_helper->viewRenderer->setNeverRender();
+        	
+        	$log = new Ot_Log();
+        	
+        	$sortname  = (isset($filter->sortname)) ? $filter->sortname : 'timestamp';
+        	$sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
+        	$rp        = (isset($filter->rp)) ? $filter->rp : 40;
+        	$page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
+        	$qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
+        	$query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
+        	
+        	$acl = Zend_Registry::get('acl');
+        	$roles = $acl->getAvailableRoles();
+        	
+        	$where = null;
+        	
+        	if (!is_null($query)) {
+        		if ($qtype == 'role') {
+        			foreach ($roles as $r) {
+        				if ($query == $r['name']) {
+        					$query = $r['roleId'];
+        					break;
+        				}
+        			}
+        		}
+        		
+        		$where = $log->getAdapter()->quoteInto($qtype . ' = ?', $query);
+        	}
+        	        	
+        	$logs = $log->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+        	        	
+        	$response = array(
+        		'page' => $page + 1,
+        		'total' => $log->fetchAll($where)->count(),
+        		'rows'  => array()
+        	);
+        	
+        	$config = Zend_Registry::get('config');
+                	
+	        $account = new Ot_Account();
+	        $accounts = $account->fetchAll(null, array('firstName', 'lastName'));
+	        
+	        foreach ($accounts as $a) {
+	        	$accountMap[$a->accountId] = $a->firstName . ' ' . $a->lastName;
+	        }
+	        
+        	foreach ($logs as $l) {
+        		$row = array(
+        			'id'   => $l->accountId,
+        			'cell' => array(
+        				$l->accountId,
+        		        (isset($accountMap[$l->accountId])) ? $accountMap[$l->accountId] : 'Unknown',
+        				(isset($roles[$l->role]['name'])) ? $roles[$l->role]['name'] : $l->role, 
+        				$l->request,
+        				$l->sid, 
+        				strftime($config->user->dateTimeFormat->val, $l->timestamp),
+        				$l->message,
+        				$l->priorityName,
+        				$l->attributeName,
+        				$l->attributeId,       				
+        			),
+        		);
+        		
+        		$response['rows'][] = $row;
+        	}
+        	echo Zend_Json::encode($response);
+	        return;
         }
-
-        $this->view->javascript = $javascript;
-        $this->view->css        = $css;
-        $this->view->logs       = $result;
-
-        $this->view->priorityTypes = array(
-            '' => '',
-            'EMERG',
-            'ALERT',
-            'CRIT',
-            'ERR',
-            'WARN',
-            'NOTICE',
-            'INFO',
-            'DEBUG',
-            'LOGIN',
-            );
-
-        $this->view->title          = "Action Logs";
-    }
-
-    /**
-     * shows the details of the log message
-     *
-     */
-    public function detailsAction()
-    {
-        $al = new Ot_Log();
-
-        $get    = Zend_Registry::get('getFilter');
-
-        if (!isset($get->logId)) {
-            throw new Ot_Exception_Input('Log ID not set');
-        }
-
-        $log = $al->find($get->logId);
-
-        if (is_null($log)) {
-            throw new Ot_Exception_Data('Log message could not be found');
-        }
-
-        $this->view->log            = $log->toArray();
-        $this->view->title          = "Action Log Details";
     }
 }

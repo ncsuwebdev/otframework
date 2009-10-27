@@ -1,0 +1,54 @@
+<?php echo $this->translate('admin-theme-index:header'); ?>
+<br /><br />
+<?php
+// This shows a table of the themes with information from the $themes array
+if (false) : ?>
+<table class="list">
+    <tr class="ui-widget-header">
+        <th width="175">ID</th>
+        <th width="130">Name</th>
+        <th width="130">Description</th>
+        <th width="130">Path</th>
+        <th width="130">Url</th>
+    </tr>
+    <?php foreach ($this->themes as $id => $data): ?>
+        <tr class="<?php $this->cycle('row1', 'row2'); ?>">
+            <td><?php echo $id; ?></td>
+            <td><?php echo $data['name']; ?></td>
+            <td><?php echo $data['description']; ?></td>
+            <td><?php echo $data['path']; ?></td>
+            <td><?php echo $data['url']; ?></td>
+            
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>
+
+<h3>Current Theme</h3>
+<center>
+    <div class="activeTheme">
+        <?php echo $this->themes[$this->currentTheme]['name']; ?>
+        <?php if (file_exists($this->themes[$this->currentTheme]["path"] . '/public/images/theme.png')) : ?>
+        	<?php echo '<img src="' . $this->baseUrl() . '/' . $this->themes[$this->currentTheme]['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
+        <?php else : ?>
+        	<div style="height:200px;width:200px;"><br /><br /><br /><br />[No Preview Available]</div>
+        <?php endif; ?>
+        <?php echo $this->themes[$this->currentTheme]['description']; ?>
+    </div>
+</center>
+<hr />
+<h3>Additional Themes</h3>
+<?php foreach ($this->themes as $id => $theme) : ?>
+    <?php if ($id != $this->currentTheme) : ?>
+	    <a href="<?php echo $this->baseUrl(); ?>/admin/theme/select?theme=<?php echo $id; ?>" class="themePreview">
+            <?php echo $theme['name']; ?>
+            <?php if (file_exists($theme['path'] . '/public/images/theme.png')) : ?>
+            	<?php echo '<img src="' . $this->baseUrl() . '/' . $theme['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
+            <?php else : ?>
+            	<div style="height:200px;width:200px;"><br /><br /><br /><br />[No Preview Available]</div>
+            <?php endif; ?>
+            <?php echo $theme['description']; ?>
+        </a>
+    <?php endif; ?>
+<?php endforeach; ?>
+<div class="ui-helper-clearfix"></div>

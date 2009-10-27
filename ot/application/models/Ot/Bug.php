@@ -125,7 +125,7 @@ class Ot_Bug extends Ot_Db_Table
         return parent::fetchAll($where, 'submitDt DESC');
     }
     
-    public function getColumnOptions($col)
+    protected function _getColumnOptions($col)
     {
     	$info = $this->info();
     	
@@ -144,5 +144,99 @@ class Ot_Bug extends Ot_Db_Table
         
         return array_combine($dataType, $dataType);
     }
+    
+    /**
+     * Gets the form for adding and editing a ticket
+     *
+     * @param array $values
+     * @return Zend_Form
+     */
+    public function form($values = array())
+    {
+        $form = new Zend_Form();
+        $form->setAttrib('id', 'bugForm')
+             ->setDecorators(array(
+                     'FormElements',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     'Form',
+             ));
+             
+        $title = $form->createElement('text', 'title', array('label' => 'Title:'));
+        $title->setRequired(true)
+              ->addFilter('StringTrim')
+              ->addFilter('StripTags')
+              ->setAttrib('maxlength', '64')
+              ->setValue((isset($values['title']) ? $values['title'] : ''));
+              
+        if (isset($values['bugId'])) {
+              
+            $status = $form->createElement('select', 'status', array('label' => 'Status:'));
+            $status->addMultiOptions($this->_getColumnOptions('status'))
+                   ->setValue((isset($values['status'])) ? $values['status'] : '');
+        }
+
+        $reproducibility = $form->createElement('select', 'reproducibility', array('label' => 'Reproducibility:'));
+        $reproducibility->addMultiOptions($this->_getColumnOptions('reproducibility'))
+                        ->setValue((isset($values['reproducibility'])) ? $values['reproducibility'] : '');
+        
+        $severity = $form->createElement('select', 'severity', array('label' => 'Severity:'));
+        $severity->addMultiOptions($this->_getColumnOptions('severity'))
+                 ->setValue((isset($values['severity'])) ? $values['severity'] : '');
+        
+        $priority = $form->createElement('select', 'priority', array('label' => 'Priority:'));
+        $priority->addMultiOptions($this->_getColumnOptions('priority'))
+                 ->setValue((isset($values['priority'])) ? $values['priority'] : '');
+
+        $description = $form->createElement('textarea', 'description', array('label' => 'Description:'));
+        
+        $description->setRequired(true)
+                    ->addFilter('StringTrim')
+                    ->addFilter('StripTags')
+                    ->setAttrib('style', 'width: 300px; height: 150px;')
+                    ->setValue((isset($values['description']) ? $values['description'] : ''));
+                    
+        if (isset($values['bugId'])) {
+            $description->setRequired(false);
+            $description->setLabel('Add Note:');    
+        }
+
+        $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+
+        $form->addElement($title);
+        
+        if (isset($values['bugId'])) {
+            $form->addElement($status);
+        }
+        
+        $form->addElements(array($reproducibility, $severity, $priority, $description));
+
+        $form->setElementDecorators(array(
+                  'ViewHelper',
+                  'Errors',
+                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                  array('Label', array('tag' => 'span')),
+              ))
+             ->addElements(array($submit, $cancel));
+
+        if (isset($values['bugId'])) {
+
+            $bugId = $form->createElement('hidden', 'bugId');
+            $bugId->setValue($values['bugId']);
+            $bugId->setDecorators(array(
+                array('ViewHelper', array('helper' => 'formHidden'))
+            ));
+
+            $form->addElement($bugId);
+        }
+        return $form;
+    }
 }
-?>

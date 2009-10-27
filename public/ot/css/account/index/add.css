@@ -1,32 +1,5 @@
 @CHARSET "UTF-8";
 
-#addButton {
-    float: left;
-    margin: 0px 10px;
-}
-
-#addForm {
-    width: 450px;
-    margin: 0 auto;
-}
-
-#fields {
-    border: 1px solid #999;
-    background-color: #CCC;
-    margin-bottom: 10px;
-}
-
-form fieldset dt {
-    width: 120px;
-}
-
-#loginDescription {
-    display: block;
-    margin: 10px 10px;
-    border: 1px solid #000;
-    background-color: #777;
-    color: #FFF;
-    text-align: center;
-    padding: 5px;
-    margin-left: -120px;
+div.zend_form label.optional, div.zend_form label.required {
+	width: 150px;
 }

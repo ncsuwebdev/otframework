@@ -1,60 +1,6 @@
 @CHARSET "UTF-8";
 
-input, button, select {
-    /*margin-bottom: 10px;*/
-}
-
-#formLogin {
-    margin: 0 auto;
-    width: 450px;
-}
-
-#fields {
-    border: 1px solid #999;
-    background-color: #CCC;
-    padding: 5px;
-    margin-bottom: 10px;
-}
-
-#realmStatic {
-    background-color: inherit;
-    border: 0px;
-    margin-top: 2px;
-}
-
-form fieldset dt {
-    width: 120px;
-}
-
-#loginButton {
-    float: left;
-}
-
-dl {
-    padding: 0px;
-}
-
-#forgotLink {
-	display: block;
-	text-align: center;
-	margin: 10px 0 0 0;
-}
-
-form dd {
-    margin: 10px 0px;
-}
-
-#loginDescription {
-    display: block;
-    margin: 10px 10px;
-    border: 1px solid #000;
-    background-color: #777;
-    color: #FFF;
-    text-align: center;
-    padding: 5px;
-    margin-left: -120px;
-}
-
-#loginButton {
-    margin-right: 10px;
+#loginForms {
+	width: 400px;
+	margin: 0 auto;
 }

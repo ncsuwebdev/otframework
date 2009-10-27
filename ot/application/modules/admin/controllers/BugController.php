@@ -26,8 +26,8 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_BugController extends Internal_Controller_Action 
-{
+class Admin_BugController extends Zend_Controller_Action 
+{    
     /**
      * shows all open bugs
      *
@@ -39,16 +39,13 @@ class Admin_BugController extends Internal_Controller_Action
         $bugs = $bug->getBugs();
 
         $this->view->acl = array(
-            'add'     => $this->_acl->isAllowed($this->_role, $this->_resource, 'add'),
-            'details' => $this->_acl->isAllowed($this->_role, $this->_resource, 'details'),
+            'add'     => $this->_helper->hasAccess('add'),
+            'details' => $this->_helper->hasAccess('details')
             );
 
-        if ($bugs->count() != 0) {
-            $this->view->javascript = 'sortable.js';
-        }
-
         $this->view->bugs = $bugs->toArray();
-        $this->view->title = 'Bug Reports';
+        $this->_helper->pageTitle('admin-bug-index:title');
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
 
     /**
@@ -57,10 +54,15 @@ class Admin_BugController extends Internal_Controller_Action
      */
     public function detailsAction()
     {
+        $this->view->acl = array(
+            'index' => $this->_helper->hasAccess('index'),
+            'edit'  => $this->_helper->hasAccess('edit')
+            );
+        
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->bugId)) {
-            throw new Ot_Exception_Input('Bug ID Not found in query string');
+            throw new Ot_Exception_Input('msg-error-bugIdNotFound');
         }
 
         $bug = new Ot_Bug();
@@ -68,18 +70,21 @@ class Admin_BugController extends Internal_Controller_Action
         $thisBug = $bug->find($get->bugId);
         
         if (is_null($thisBug)) {
-            throw new Ot_Exception_Data('Bug not found');
+            throw new Ot_Exception_Data('msg-error-noBug');
         }
 
         $bt = new Ot_Bug_Text();
-        $this->view->text = $bt->getBugText($get->bugId)->toArray();
+        $text = $bt->getBugText($get->bugId)->toArray();
         
-        $this->view->acl = array(
-            'edit' => $this->_acl->isAllowed($this->_role, $this->_resource, 'edit'),
-            );
+        $otAccount = new Ot_Account();
+        foreach ($text as &$t) {
+            $t['userInfo'] = $otAccount->find($t['accountId'])->toArray();
+        }
+        
+        $this->view->text = $text;
 
         $this->view->bug = $thisBug->toArray();
-        $this->view->title = 'Bug Details';
+        $this->_helper->pageTitle('admin-bug-details:title');
     }
 
     /**
@@ -90,92 +95,48 @@ class Admin_BugController extends Internal_Controller_Action
     {
     	$bug = new Ot_Bug();
     	
-    	$form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'login')
-             ;
-        
-        $title = new Zend_Form_Element_Text('bugTitle');
-        $title->setLabel('Title:')
-              ->addFilter('StringTrim')
-              ->addFilter('StripTags')
-              ->setRequired(true)
-              ->setAttrib('maxlength', '64')
-              ;
-              
-        $reproducibility = new Zend_Form_Element_Select('reproducibility');
-        $reproducibility->setLabel('Reproducibility:');
-        $reproducibility->addMultiOptions($bug->getColumnOptions('reproducibility'));
-        
-        $severity = new Zend_Form_Element_Select('severity');
-        $severity->setLabel('Severity:');
-        $severity->addMultiOptions($bug->getColumnOptions('severity'));
-        
-        $priority = new Zend_Form_Element_Select('priority');
-        $priority->setLabel('Priority:');
-        $priority->addMultiOptions($bug->getColumnOptions('priority'));
-        
-        $description = new Zend_Form_Element_Textarea('description');
-        $description->setLabel('Description:')
-                    ->addFilter('StringTrim')
-                    ->addFilter('StripTags')
-                    ->setRequired(true)
-                    ->setAttrib('rows', '5')
-                    ->setAttrib('cols', '80')
-                    ;
-        
-        $submit = $form->createElement('submit', 'saveButton', array('label' => 'Submit Bug'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));       
-                    
-        $form->addElements(array($title, $reproducibility, $severity, $priority, $description))
-             ->addDisplayGroup(array('bugTitle', 'reproducibility', 'severity', 'priority', 'description'), 'fields')
-             ->addElements(array($submit, $cancel));    	
+    	$form = $bug->form(); 	
              
         $messages = array();
         
         if ($this->_request->isPost()) {
-        	
+
         	if ($form->isValid($_POST)) {
+        	    
+        	    $time = time();
+        	    
 	            $data = array(
-	                'title'           => $form->getValue('bugTitle'),
+	                'title'           => $form->getValue('title'),
 	                'reproducibility' => $form->getValue('reproducibility'),
 	                'severity'        => $form->getValue('severity'),
 	                'priority'        => $form->getValue('priority'),
-	                'submitDt'        => time(),
+	                'submitDt'        => $time,
 	                'status'          => 'new',
 	                'text'            => array(
-	                    'userId' => Zend_Auth::getInstance()->getIdentity(),
-	                    'postDt' => time(),
-	                    'text'   => $form->getValue('description'),
+	                    'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
+	                    'postDt'    => $time,
+	                    'text'      => $form->getValue('description'),
 	                    ),
 	                );
-	                
-	            $bug = new Ot_Bug;
 	
 	            $bugId = $bug->insert($data);
 	            
-	            $this->_logger->setEventItem('attributeName', 'bugId');
-	            $this->_logger->setEventItem('attributeId', $bugId);
-	            $this->_logger->info('Bug was added');
+	            $logOptions = array(
+                        'attributeName' => 'bugId',
+                        'attributeId'   => $bugId,
+                );
+                    
+                $this->_helper->log(Zend_Log::INFO, 'Bug was added', $logOptions);
+                $this->_helper->flashMessenger->addMessage('msg-info-bugSubmitted');
 	
 	            $this->_helper->redirector->gotoUrl('/admin/bug/details/?bugId=' . $bugId);
         	} else {
-        		$messages[] = 'There was an error processing your form.';
+        		$messages[] = 'msg-error-formError';
         	}
-        	
         }
         
         $this->view->messages = $messages;
-        $this->view->title = 'File Bug Report';
+        $this->_helper->pageTitle('admin-bug-add:title');
         $this->view->form = $form;
 
     }
@@ -190,7 +151,7 @@ class Admin_BugController extends Internal_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->bugId)) {
-            throw new Ot_Exception_Input('Bug ID Not found in query string');
+            throw new Ot_Exception_Input('msg-error-bugIdNotFound');
         }
 
         $bug = new Ot_Bug();
@@ -198,70 +159,20 @@ class Admin_BugController extends Internal_Controller_Action
         $thisBug = $bug->find($get->bugId);
         
         if (is_null($thisBug)) {
-            throw new Ot_Exception_Data('Bug not found');
+            throw new Ot_Exception_Data('msg-error-noBug');
         }
+        
+        $form = $bug->form($thisBug->toArray());
 
         $bt = new Ot_Bug_Text();
-        $this->view->text = $bt->getBugText($get->bugId)->toArray();
-
-        $form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'login')
-             ;
+        $text = $bt->getBugText($get->bugId)->toArray();
         
-        $title = new Zend_Form_Element_Text('bugTitle');
-        $title->setLabel('Title:')
-              ->addFilter('StringTrim')
-              ->addFilter('StripTags')
-              ->setRequired(true)
-              ->setAttrib('maxlength', '64')
-              ->setValue($thisBug->title)
-              ;
-              
-        $status = new Zend_Form_Element_Select('status');
-        $status->setLabel('Status:');
-        $status->addMultiOptions($bug->getColumnOptions('status'));
-        $status->setValue($thisBug->status);
+        $otAccount = new Ot_Account();
+        foreach ($text as &$t) {
+            $t['userInfo'] = $otAccount->find($t['accountId'])->toArray();
+        }
         
-        $reproducibility = new Zend_Form_Element_Select('reproducibility');
-        $reproducibility->setLabel('Reproducibility:');
-        $reproducibility->addMultiOptions($bug->getColumnOptions('reproducibility'));
-        $reproducibility->setValue($thisBug->reproducibility);
-        
-        $severity = new Zend_Form_Element_Select('severity');
-        $severity->setLabel('Severity:');
-        $severity->addMultiOptions($bug->getColumnOptions('severity'));
-        $severity->setValue($thisBug->severity);
-        
-        $priority = new Zend_Form_Element_Select('priority');
-        $priority->setLabel('Priority:');
-        $priority->addMultiOptions($bug->getColumnOptions('priority'));
-        $priority->setValue($thisBug->priority);
-        
-        $description = new Zend_Form_Element_Textarea('text');
-        $description->setLabel('Add Text:')
-                    ->addFilter('StringTrim')
-                    ->addFilter('StripTags')
-                    ->setAttrib('rows', '5')
-                    ->setAttrib('cols', '80')
-                    ;
-        
-        $submit = $form->createElement('submit', 'submitButton', array('label' => 'Save Bug'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                )); 
-                                    
-        $form->addElements(array($title, $status, $reproducibility, $severity, $priority, $description))
-             ->addDisplayGroup(array('bugTitle', 'status', 'reproducibility', 'severity', 'priority', 'text'), 'fields')
-             ->addElements(array($submit, $cancel))
-             ;      
+        $this->view->text = $text;
                      
         $messages = array();
         
@@ -270,45 +181,47 @@ class Admin_BugController extends Internal_Controller_Action
         		
 	            $data = array(
 	                'bugId'             => $get->bugId,
-	                'title'             => $form->getValue('bugTitle'),
+	                'title'             => $form->getValue('title'),
 	                'reproducibility'   => $form->getValue('reproducibility'),
 	                'severity'          => $form->getValue('severity'),
 	                'priority'          => $form->getValue('priority'),
                     'status'            => $form->getValue('status'),
 	                );
 	
-	            $bug = new Ot_Bug;
-	
 	            $thisBug = $bug->find($data['bugId']);
 	            
 	            if (is_null($thisBug)) {
-	                throw new Exception('Bug not found');
+	                throw new Exception('msg-error-noBug');
 	            }
 	            
-	            if ($form->getValue('text') != '') {
+	            if ($form->getValue('description') != '') {
 	            	$data['text'] = array(
-	            	    'bugId'  => $get->bugId,
-	            	    'postDt' => time(),
-	            	    'userId' => Zend_Auth::getInstance()->getIdentity(),
-	            	    'text'   => $form->getValue('text'),
+	            	    'bugId'     => $get->bugId,
+	            	    'postDt'    => time(),
+	            	    'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
+	            	    'text'      => $form->getValue('description'),
 	            	);
 	            }
 	                
 	            $bug->update($data, null);
 	            
-                $this->_logger->setEventItem('attributeName', 'bugId');
-                $this->_logger->setEventItem('attributeId', $get->bugId);
-                $this->_logger->info('Bug was modified');	            
+	            $logOptions = array(
+                        'attributeName' => 'bugId',
+                        'attributeId'   => $get->bugId,
+                );
+                    
+                $this->_helper->log(Zend_Log::INFO, 'Bug was modified', $logOptions);
+                $this->_helper->flashMessenger->addMessage('msg-info-bugUpdated');
 	            
 	            $this->_helper->redirector->gotoUrl('/admin/bug/details/?bugId=' . $get->bugId);
         	} else {
-        		$messages[] = 'There were problems processing the form.';
+        		$messages[] = 'msg-error-formError';
         	}
 
         }
         
-        $this->view->title = 'Edit Bug';
+        $this->_helper->pageTitle('admin-bug-edit:title');
         $this->view->messages = $messages;
-        $this->view->form = $form;
+        $this->view->form     = $form;
     }    
 }

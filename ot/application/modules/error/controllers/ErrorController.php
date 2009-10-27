@@ -26,7 +26,7 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Error_ErrorController extends Internal_Controller_Action
+class Error_ErrorController extends Zend_Controller_Action
 {
     /**
      * Error action to process any errors coming from the application
@@ -36,28 +36,38 @@ class Error_ErrorController extends Internal_Controller_Action
     {
         $errors = $this->_getParam('error_handler');
         
+        $config = Zend_Registry::get('config');
+        
         $this->getResponse()->clearBody();
+                
+        $title = '';
+        $message = '';
         
         switch ($errors->type) {
 	        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
 	        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
 	            // 404 error -- controller or action not found
 	            $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
-	            $this->view->title   = 'ERROR! 404 Error: Page not found';
-	            $this->view->message = 'The requested page was not found';
+	            $message = 'error-error-error:404:message';
+	            $title = 'error-error-error:404:header';
 	            break;
 	        default:
 	            $exception = $errors->exception;
 	            if ($exception instanceof Ot_Exception) {
-	            	$this->view->title = 'ERROR! ' . $exception->getTitle();
+	            	$title = $exception->getTitle();
 	            } else {
-	            	$this->view->title         = 'ERROR! Processing request failed.';
-	            	$this->view->showTrackback = true;
-	            	$this->view->trackback     = $exception->getTrace();
+	            	$title = 'error-error-error:generic';
 	            }
 	            
-	            $this->view->message = $exception->getMessage();
+	            $this->view->showTrackback = $config->user->showTrackbackOnErrors->val;
+	            $this->view->trackback     = $exception->getTrace();
+	            $message = $exception->getMessage();
 	            break;
         }
+        
+        $this->_helper->pageTitle($title);
+        
+        $this->view->title = $this->view->translate('error-error-error:title') . ' ' . $this->view->title;
+        $this->view->message = $message;
     }
 }

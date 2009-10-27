@@ -73,6 +73,3 @@ class Ot_Validate_Phone implements Zend_Validate_Interface
         return $this->_messages;
     }
 }
-
-?>
-

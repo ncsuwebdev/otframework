@@ -178,4 +178,3 @@ class Ot_Email_Queue extends Ot_Db_Table {
         }
     }
 }
-?>

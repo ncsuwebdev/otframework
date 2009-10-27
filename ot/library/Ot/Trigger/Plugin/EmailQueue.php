@@ -35,6 +35,15 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
 	 */
 	protected $_name = 'tbl_ot_trigger_helper_emailqueue';
 	
+	public function __construct()
+	{
+		$config = Zend_Registry::get('config');
+    	
+    	if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
+			$this->_name = $config->app->tablePrefix . $this->_name;
+		}
+	}
+	
 	/**
 	 * Subform to add a new trigger
 	 *
@@ -42,7 +51,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
 	 */
 	public function addSubForm()
 	{
-		$description = 'Create an email template to be sent to users when a trigger is executed.';
+		$description = 'This email will be sent using the email queue, rather than being sent immediately.';
 		
 		$form = $this->_getForm();
 		$form->setDescription($description);
@@ -71,7 +80,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
 	{
 		$data = $this->get($id);
 		
-        $description = 'Modify the email template to be sent to users when a trigger is executed.';
+        $description = 'This email will be sent using the email queue, rather than being sent immediately.';
         
         $form = $this->_getForm($data);
         $form->setDescription($description);
@@ -165,13 +174,11 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
 	protected function _getForm($data = array())
 	{        
         $form = new Zend_Form_SubForm();
-        
-        $decorators = $form->getDecorators();
-        $decorators = array_merge(array(new Zend_Form_Decorator_Description()), $decorators);
-
-        unset($decorators['Zend_Form_Decorator_DtDdWrapper']);
-        $form->clearDecorators();
-        $form->setDecorators($decorators);
+        $form->setDecorators(array(
+                     'Description',
+                     'FormElements',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form'))
+             ));
         
         $to = $form->createElement('text', 'to', array('label' => 'To:'));
         $to->setRequired(true)
@@ -216,7 +223,13 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
             $body->setValue($data['body']);
         }              
         
-        $form->addElements(array($to, $from, $subject, $body));
+        $form->addElements(array($to, $from, $subject, $body))
+             ->setElementDecorators(array(
+                      'ViewHelper',
+                      'Errors',
+                      array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                      array('Label', array('tag' => 'span')),
+                 ));
 
         return $form;		
 	}

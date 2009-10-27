@@ -26,239 +26,216 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_NavController extends Internal_Controller_Action 
+class Admin_NavController extends Zend_Controller_Action
 {
-     /**
-     * shows the homepage
+    
+    /**
+     * The counter for the ids of the navigation elements.  This gets assigned
+     * when writing the new nav structure to the config file.
+     *
+     * @var int
+     */
+    protected $_idCounter = 0;
+    
+    /**
+     * A filter for making sure the navigation elements are correct
+     */
+    protected $_filter;
+    
+    /**
+     * The Ot_Nav database table object so we don't have to create it
+     * multiple times
+     */
+    protected $_otNav;
+    
+    /**
+     * The ACL object for the application.  It's kept here because it's referenced
+     * in a recursive method (processChildren()) and we don't need to get it
+     * each time. 
+     */
+    protected $_acl;
+    
+    /**
+     * 
+     */
+    public function init()
+    {
+        $this->_acl = Zend_Registry::get('acl');
+        parent::init();
+    }
+    
+    /**
+     * Shows the editable nav structure.  This allows a user to add, edit, and 
+     * delete, and reorder navigation elements.  Nothing is actually saveable
+     * unless access to the Save action is granted.
      *
      */
     public function indexAction()
-    {        
-        $this->view->title = 'Navigation Editor';
-        
-        $nav = new Zend_Config_Xml('./config/nav.xml', 'production');
-        
-        $navData = array();
-        
-        if (isset($nav->tabs->tab->{0})) {
-            foreach ($nav->tabs->tab as $t) {
-                $navData['tabs']['tab'][] = $this->_getNavInfo($t);
-            }            
-        } else {
-            $navData['tabs']['tab'][] = $this->_getNavInfo($nav->tabs->tab);
-        }
-       
-        $this->view->navData = $navData;
-    }
-    
-    private function _getNavInfo($t)
     {
-        $tmp = array();
-        $tmp['module'] = $t->module;
-        $tmp['controller'] = $t->controller;
-        $tmp['action'] = $t->action;
-        $tmp['display'] = htmlentities($t->display, ENT_QUOTES);
-        $tmp['link'] = $t->link;
-        $tmp['info'] = Zend_Json_Encoder::encode($tmp);
-            
-        if (isset($t->submenu->tab)) {
-            
-            if (isset($t->submenu->tab->{0})) {                   
+        $this->acl = array(
+                        'save' => $this->_helper->hasAccess('save')
+                     );
+        
+        $this->_helper->pageTitle('admin-nav-index:title');;
+        
+        $this->view->siteUrl = Zend_Registry::get('siteUrl');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.jtree.js')
+                                 ->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.json.js');
+                                 
+        $nav = new Ot_Nav();
+        $this->view->editNavTreeHtml = $nav->generateHtml(Zend_Registry::get('navArray'), true);
+    }
+
+    
+    /**
+     * Allows the user to get the resources available in the system to which 
+     * access can be assigned.  This is the list of modules, controllers, and 
+     * actions.  Access to this should be granted if the user has permission
+     * to the index action.
+     *
+     */
+    public function getResourcesAction()
+    {
+        $this->_helper->getStaticHelper('viewRenderer')->setNeverRender();
+        $this->_helper->getStaticHelper('layout')->disableLayout();
+        
+        $aclResources = $this->_acl->getResources();
                 
-                foreach ($t->submenu->tab as $subt) {
-                    $tmpSub = array();
-                    $tmpSub['module'] = $subt->module;
-                    $tmpSub['controller'] = $subt->controller;
-                    $tmpSub['action'] = $subt->action;
-                    $tmpSub['display'] = htmlentities($subt->display, ENT_QUOTES);
-                    $tmpSub['link'] = $subt->link;
-                    $tmpSub['info'] = Zend_Json_Encoder::encode($tmpSub);
-                    $tmp['submenu']['tab'][] = $tmpSub;
+        $resources = array();
+        
+        foreach ($aclResources as $module => $controllers) {
+            
+            $mod = array();
+            
+            $mod['name'] = $module;
+            foreach ($controllers as $controller => $controllerData) {
+                $con = array();
+                $con['name'] = $controller;
+                
+                foreach ($controllerData['part'] as $action => $actionData) {
+                    $con['actions'][] = $action;
                 }
                 
-            } else {
-                
-                $tmpSub = array();
-                $tmpSub['module'] = $t->submenu->tab->module;
-                $tmpSub['controller'] = $t->submenu->tab->controller;
-                $tmpSub['action'] = $t->submenu->tab->action;
-                $tmpSub['display'] = htmlentities($t->submenu->tab->display, ENT_QUOTES);
-                $tmpSub['link'] = $t->submenu->tab->link;
-                $tmpSub['info'] = Zend_Json_Encoder::encode($tmpSub);
-                $tmp['submenu']['tab'][] = $tmpSub;
-                
+                $mod['controllers'][$controller] = $con;
             }
+            
+            $resources['modules'][$module] = $mod;
         }
         
-        return $tmp;
+        echo Zend_Json::encode($resources);
     }
-    
+
+    /**
+     * Allows the user to save the navigation structure to the database.
+     *
+     */
     public function saveAction()
     {
-        $this->_helper->getStaticHelper('viewRenderer')->setNoRender();
+        $this->_helper->getStaticHelper('viewRenderer')->setNeverRender();
         $this->_helper->getStaticHelper('layout')->disableLayout();
         
         if ($this->_request->isPost()) {
-            
-            $rawData = Zend_Json_Decoder::decode($_POST['data']);            
 
-            $data = array();
-            foreach ($rawData as $r) {
-                $tmp = array();
-                $tmp = Zend_Json_Decoder::decode($r['title']);
-
-                if ($r['children']) {
-                    foreach ($r['children'] as $child) {
-                        $tmp['submenu'][] = Zend_Json_Decoder::decode($child['title']);
-                    }
-                }
-                $data[] = $tmp;
-            }           
+            $rawData = Zend_Json_Decoder::decode($_POST['data']);
             
-            $filePath = './config/nav.xml';
+            $rawData = array(
+                        'display'      => 'root',
+                        'permissions'  => '',
+                        'link'         => '',
+                        'children'     => $rawData
+                      );
             
-            if (file_exists($filePath)) {
+            $this->_filter = new Zend_Filter();
+            $this->_filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
+            $this->_filter->addFilter(new Zend_Filter_StringToLower());
+            
+            $this->_otNav = new Ot_Nav();
+                        
+            // put all this stuff in a transaction to make sure nothing gets screwed up
+            $this->_otNav->getAdapter()->beginTransaction();
+            
+            // empty the table
+            $this->_otNav->delete(true);
+            
+            // adds ids and parent ids to the array as well as splits apart the link into module, controller, and action
+            try {
+                $this->_processChildren($rawData);
+            } catch (Exception $e) {
                 
-                $xml = simplexml_load_file($filePath);
-             
-            } else {
-                $retData = array('rc' => '0', 'msg' => 'Error loading navigation xml file');
+                $this->_otNav->getAdapter()->rollBack();
+                
+                $retData = array('rc' => '0', 'msg' => $this->view->translate('msg-error-savingNav') . ' ' . $e->getMessage());
                 echo Zend_Json_Encoder::encode($retData);
                 return;
             }
-            
-            if (!is_writable($filePath)) {
-                $retData = array('rc' => '0', 'msg' => 'Navigation xml file is not writable');
-                echo Zend_Json_Encoder::encode($retData);
-                return;
-            }
-            
-            $filter = new Zend_Filter();
-            $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
-            $filter->addFilter(new Zend_Filter_StringToLower());
-            
-            foreach ($data as &$t) {
-                
-                if ($t['module'] == "") {
-                    $t['module'] = "default";
-                }
-                
-                if ($t['controller'] == "") {
-                    $t['controller'] = "index";
-                }
-                
-                $t['module'] = $filter->filter($t['module']);
-                $t['controller'] = $filter->filter($t['controller']);
-                $t['action'] = $filter->filter($t['action']);
-                
-                try {
-                    $this->_acl->get($t['module'] . "_" . $t['controller']);
-                } catch (Exception $e) {
-                     $retData = array('rc' => '0', 'msg' => "Save Failed! " . $t['module'] . "_" . $t['controller'] . " is not a valid resource");
-                     echo Zend_Json_Encoder::encode($retData);
-                     return;               
-                }
-            }
-            
-            $doc = new DOMDocument('1.0');
-            $doc->preserveWhiteSpace = false;
-            $doc->formatOutput = true;
     
-            $conf = $doc->createElement('configdata');
-            $conf = $doc->appendChild($conf);
+            $this->_otNav->getAdapter()->commit();
             
-            $prod = $doc->createElement('production');
-            $prod = $conf->appendChild($prod);
+            $cache = Zend_Registry::get('cache');
+            $cache->remove('configObject');
             
-            $root = $doc->createElement('tabs');
-            $root = $prod->appendChild($root);
-            
-            foreach ($data as &$t) {
-                
-                $tab = $doc->createElement('tab');
-                $tab = $root->appendChild($tab);
+            $logOptions = array(
+                       'attributeName' => 'navigation',
+                       'attributeId'   => 'modified',
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, 'Navigation structure modified', $logOptions);
     
-                $module = $doc->createElement('module');
-                $module = $tab->appendChild($module);
-    
-                $moduleValue = $doc->createTextNode($t['module']);
-                $moduleValue = $module->appendChild($moduleValue);
-    
-                $controller = $doc->createElement('controller');
-                $controller = $tab->appendChild($controller);
-    
-                $controllerValue = $doc->createTextNode($t['controller']);
-                $controllerValue = $controller->appendChild($controllerValue);
-                
-                $action = $doc->createElement('action');
-                $action = $tab->appendChild($action);
-    
-                $actionValue = $doc->createTextNode($t['action']);
-                $actionValue = $action->appendChild($actionValue);
-                
-                $display = $doc->createElement('display');
-                $display = $tab->appendChild($display);
-    
-                $displayValue = $doc->createTextNode($t['display']);
-                $displayValue = $display->appendChild($displayValue);
-                
-                $link = $doc->createElement('link');
-                $link = $tab->appendChild($link);
-    
-                $linkValue = $doc->createTextNode($t['link']);
-                $linkValue = $link->appendChild($linkValue);
-
-                $submenu = $doc->createElement('submenu');
-                $submenu = $tab->appendChild($submenu);
-                
-                if (isset($t['submenu'])) {
-                    foreach ($t['submenu'] as $s) {
-    
-                        $submenuTab = $doc->createElement('tab');
-                        $submenuTab = $submenu->appendChild($submenuTab);
-            
-                        $module = $doc->createElement('module');
-                        $module = $submenuTab->appendChild($module);
-            
-                        $moduleValue = $doc->createTextNode($s['module']);
-                        $moduleValue = $module->appendChild($moduleValue);
-            
-                        $controller = $doc->createElement('controller');
-                        $controller = $submenuTab->appendChild($controller);
-            
-                        $controllerValue = $doc->createTextNode($s['controller']);
-                        $controllerValue = $controller->appendChild($controllerValue);
-                        
-                        $action = $doc->createElement('action');
-                        $action = $submenuTab->appendChild($action);
-            
-                        $actionValue = $doc->createTextNode($s['action']);
-                        $actionValue = $action->appendChild($actionValue);
-                        
-                        $display = $doc->createElement('display');
-                        $display = $submenuTab->appendChild($display);
-            
-                        $displayValue = $doc->createTextNode($s['display']);
-                        $displayValue = $display->appendChild($displayValue);
-                        
-                        $link = $doc->createElement('link');
-                        $link = $submenuTab->appendChild($link);
-            
-                        $linkValue = $doc->createTextNode($s['link']);
-                        $linkValue = $link->appendChild($linkValue);
-                    }
-                }
-            } 
-            
-            if (!$doc->save($filePath)) {
-                $retData = array('rc' => '0', 'msg' => 'Error saving navigation xml file to disk.');
-                echo Zend_Json_Encoder::encode($retData);
-                return;
-            }
-
-            $retData = array('rc' => '1', 'msg' => 'Nav saved successfully');
+            $retData = array('rc' => '1', 'msg' => $this->view->translate('msg-info-savedNav'));
             echo Zend_Json_Encoder::encode($retData);
             return;
+        }
+    }
+    
+    /**
+     * Recursively processes the array of navigation elements to insert them
+     * into the database correctly
+     *
+     * @param array $a
+     * @param int $parent
+     */
+    protected function _processChildren(&$a, $parent = 0)
+    {
+        $permissions     = explode(':', $a['permissions']);
+        $a['module']     = (isset($permissions[0]) ? $permissions[0] : '');
+        $a['controller'] = (isset($permissions[1]) ? $permissions[1] : '');
+        $a['action']     = (isset($permissions[2]) ? $permissions[2] : '');
+        
+        $a['parent'] = $parent;
+        $a['id']     = $this->_idCounter++;
+       
+        if ($a['id'] != 0) {
+        
+            if ($a['module'] == '') {
+                $a['module'] = 'default';
+            }
+    
+            if ($a['controller'] == '') {
+                $a['controller'] = 'index';
+            }
+            
+            try {
+                $this->_acl->get($a['module'] . "_" . $a['controller']);
+            } catch (Exception $e) {
+                 throw new Exception($this->view->translate('msg-error-notValidResource', array($a['module'], $a['controller'])));
+            }
+            
+            $tab = array(
+                    'id'         => $a['id'],
+                    'parent'     => $a['parent'],
+                    'display'    => $a['display'],
+                    'module'     => $this->_filter->filter($a['module']),
+                    'controller' => $this->_filter->filter($a['controller']),
+                    'action'     => $this->_filter->filter($a['action']),
+                    'link'       => $a['link'],
+                    'target'     => $a['target']
+                   );
+                   
+            $this->_otNav->insert($tab);
+        }
+            
+        foreach ($a['children'] as &$c) {
+            $this->_processChildren($c, $a['id']);
         }
     }
 }

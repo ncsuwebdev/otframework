@@ -72,6 +72,3 @@ class Ot_Validate_Mac implements Zend_Validate_Interface
         return $this->_messages;
     }
 }
-
-?>
-

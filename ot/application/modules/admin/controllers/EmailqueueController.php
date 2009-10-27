@@ -26,118 +26,93 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_EmailqueueController extends Internal_Controller_Action 
+class Admin_EmailqueueController extends Zend_Controller_Action
 {
     /**
-     * displays emails based on the search criteria
+     * Display a list of all users in the system.
+     *
      */
     public function indexAction()
     {
-        $eq = new Ot_Email_Queue();
-
-        $get = Zend_Registry::get('getFilter');
+        $this->_helper->pageTitle('admin-emailqueue-index:title');  
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.flexigrid.pack.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/ot/css/jquery.plugin.flexigrid.css'); 
         
-        $where = '';
-        $dba = $eq->getAdapter();
-
-        $attr = array('status', 'attributeName', 'attributeId');
-
-        foreach ($attr as $a) {
-            if (isset($get->$a) && $get->$a != '') {
-                if ($where != '') {
-                    $where .= ' AND ';
-                }
-
-                $where .= $dba->quoteInto($a . ' = ?', $get->$a);
-
-                $this->view->$a = $get->$a;
-            }
+        if ($this->_request->isXmlHttpRequest()) {
+        	
+        	$filter = Zend_Registry::get('postFilter');
+        	
+        	$this->_helper->layout->disableLayout();
+        	$this->_helper->viewRenderer->setNeverRender();
+        	
+        	$queue = new Ot_Email_Queue();
+        	
+        	$sortname  = (isset($filter->sortname)) ? $filter->sortname : 'queueDt';
+        	$sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
+        	$rp        = (isset($filter->rp)) ? $filter->rp : 40;
+        	$page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
+        	$qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
+        	$query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
+        	
+        	
+        	$where = null;
+        	if (!is_null($query)) {
+        		$where = $queue->getAdapter()->quoteInto($qtype . ' = ?', $query);
+        	}
+        	        	
+        	$emails = $queue->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+        	        	
+        	$response = array(
+        		'page' => $page + 1,
+        		'total' => count($queue->fetchAll($where)),
+        		'rows'  => array()
+        	);
+        	
+        	$config = Zend_Registry::get('config');
+	        
+        	foreach ($emails as $e) {
+        		$row = array(
+        			'id'   => $e['queueId'],
+        			'cell' => array(
+        				implode(', ', $e['zendMailObject']->getRecipients()),
+                		$e['zendMailObject']->getSubject(),        		
+        				ucwords($e['status']),
+        				strftime($config->user->dateTimeFormat->val, $e['queueDt']), 
+        				($e['sentDt'] == 0) ? 'Not Sent Yet' : strftime($config->user->dateTimeFormat->val, $e['sentDt']),
+        				$e['attributeName'],
+        				$e['attributeId']     				
+        			)
+        		);
+        		
+        		$response['rows'][] = $row;
+        	}
+        	echo Zend_Json::encode($response);
+	        return;
         }
-
-        if (isset($get->queueBeginDt) && isset($get->queueEndDt) && $get->queueBeginDt != '' && $get->queueEndDt != '') {
-            if ($where != '') {
-                $where .= ' AND ';
-            }
-
-            $where .= '(' .
-                $dba->quoteInto('queueDt >= ?', strtotime($get->queueBeginDt . ' 00:00:00')) .
-                ' AND ' .
-                $dba->quoteInto('queueDt <= ?', strtotime($get->queueEndDt . ' 00:00:00')) .
-                ')';
-
-            $this->view->queueBeginDt = $get->queueBeginDt;
-            $this->view->queueEndDt = $get->queueEndDt;
-        }
-
-        if (isset($get->sentBeginDt) && isset($get->sentEndDt) && $get->sentEndDt != '' && $get->sentBeginDt != '') {
-            if ($where != '') {
-                $where .= ' AND ';
-            }
-
-            $where .= '(' .
-                $dba->quoteInto('sentDt >= ?', strtotime($get->sentBeginDt . ' 00:00:00')) .
-                ' AND ' .
-                $dba->quoteInto('sentDt <= ?', strtotime($get->sentEndDt . ' 00:00:00')) .
-                ')';
-
-            $this->view->sentBeginDt = $get->sentBeginDt;
-            $this->view->sentEndDt = $get->sentEndDt;
-        }
-
-        $result = array();
-        if ($where != '') {
-            $result = $eq->fetchAll($where, 'queueDt DESC');
-        }
-
-        for ($i = 0; $i < count($result); $i++) {
-            $result[$i]['msg'] = array(
-                'to' => implode(', ', $result[$i]['zendMailObject']->getRecipients()),
-                'from' => $result[$i]['zendMailObject']->getFrom(),
-                'subject' => $result[$i]['zendMailObject']->getSubject(),
-                );
-        }
-
-        $javascript = array(
-            'calendar.js'
-        );
-
-        if (count($result) != 0) {
-             $javascript[] = 'sortable.js';
-        }
-        
-        $this->view->javascript = $javascript;
-        $this->view->css = array('calendar.css');
-
-        $this->view->emails = $result;
-
-        $this->view->statusTypes = array(
-            ''        => '',
-            'waiting' => 'Waiting',
-            'sent'    => 'Sent',
-            'error'   => 'Error',
-            );
-
-        $this->view->title          = "Email Queue";
-    }
-
+    }	
+    
     /**
      * Shows the details of an email that is in the queue
      *
      */
     public function detailsAction()
     {
+        $this->view->acl = array(
+            'index' => $this->_helper->hasAccess('index')
+            );
+        
         $eq = new Ot_Email_Queue();
 
-        $get    = Zend_Registry::get('getFilter');
+        $get = Zend_Registry::get('getFilter');
 
         if (!isset($get->queueId)) {
-            throw new Ot_Exception_Input('Queue ID not set');
+            throw new Ot_Exception_Input('msg-error-queueIdNotSet');
         }
 
         $email = $eq->find($get->queueId);
 
         if (is_null($email)) {
-            throw new Ot_Exception_Data('Queued email could not be found');
+            throw new Ot_Exception_Data('msg-error-noQueue');
         }
 
         $email['msg'] = array(
@@ -148,7 +123,7 @@ class Admin_EmailqueueController extends Internal_Controller_Action
             'header'  => $email['zendMailObject']->getHeaders(),
             );
 
-        $this->view->email          = $email;
-        $this->view->title          = "Queued Email Details";
+        $this->view->email = $email;
+        $this->_helper->pageTitle('admin-emailqueue-details:title');
     }
 }

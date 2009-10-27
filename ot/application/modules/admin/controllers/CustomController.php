@@ -27,56 +27,30 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_CustomController extends Internal_Controller_Action 
+class Admin_CustomController extends Zend_Controller_Action
 {
-    
-    /**
-     * Flash Messenger object
-     *
-     * @var unknown_type
-     */
-    protected $_flashMessenger = null;
-    
-    /**
-     * Setup controller vars
-     *
-     */
-    public function init()
-    {
-        $this->_flashMessenger = $this->getHelper('FlashMessenger');
-        $this->_flashMessenger->setNamespace('custom');
-        
-        parent::init();
-    }	
-	
     /**
      * Shows all available nodes to add attributes to
      */
     public function indexAction()
     {
-    	$config = Zend_Registry::get('appConfig');
-    	
-        $this->view->title = "Custom Fields";
-        
+    	$config = Zend_Registry::get('config');
+
+        $this->_helper->pageTitle('admin-custom-index:title');
+
         $this->view->acl = array(
-            'details'   => $this->_acl->isAllowed($this->_role, $this->_resource, 'details'),
+            'details'   => $this->_helper->hasAccess('details')
             );
 
         $objects = array();
-        foreach ($config->customFieldObjects as $key => $value) {
+        foreach ($config->app->customFieldObjects as $key => $value) {
 
             $objects[] = array(
                'objectId' => $key,
                'description' => $value,
             );
         }
-        
-        if (count($objects) != 0) {
-            $this->view->javascript = array(
-               'sortable.js',
-            );
-        }        
-        
+
         $this->view->objects = $objects;
 
     }
@@ -88,72 +62,89 @@ class Admin_CustomController extends Internal_Controller_Action
     public function detailsAction()
     {
         $this->view->acl = array(
-            'add'    => $this->_acl->isAllowed($this->_role, $this->_resource, 'add'),
-            'edit'   => $this->_acl->isAllowed($this->_role, $this->_resource, 'edit'),
-            'delete' => $this->_acl->isAllowed($this->_role, $this->_resource, 'delete'),
-            'attributeDetails' => $this->_acl->isAllowed($this->_role, $this->_resource, 'attributeDetails'),
-            );   
+            'index'            => $this->_helper->hasAccess('index'),
+            'add'              => $this->_helper->hasAccess('add'),
+            'edit'             => $this->_helper->hasAccess('edit'),
+            'delete'           => $this->_helper->hasAccess('delete'),
+            'attributeDetails' => $this->_helper->hasAccess('attributeDetails')
+            );
 
         $get = Zend_Registry::get('getFilter');
         if (!isset($get->objectId)) {
-        	throw new Ot_Exception_Input('Object not found in query string.');
+        	throw new Ot_Exception_Input('msg-error-objectNotFound');
         }
-        
-        $config = Zend_Registry::get('appConfig');
-        
-        if (!isset($config->customFieldObjects->{$get->objectId})) {
-        	throw new Ot_Exception_Input('Object not setup in config file');
+
+        $config = Zend_Registry::get('config');
+
+        if (!isset($config->app->customFieldObjects->{$get->objectId})) {
+        	throw new Ot_Exception_Input('msg-error-objectNotSetup');
         }
-        
+
         $custom = new Ot_Custom();
         $attributes = $custom->getAttributesForObject($get->objectId);
+
+        $this->_helper->pageTitle('admin-custom-details:title', $get->objectId);
         
-        $this->view->attributes = $attributes;
-        $this->view->title = 'Attributes for ' . $get->objectId;
-        $this->view->objectId = $get->objectId;
-        $this->view->objectDescription = $config->customFieldObjects->{$get->objectId};
+        $this->view->attributes        = $attributes;
+        $this->view->objectId          = $get->objectId;
+        $this->view->objectDescription = $config->app->customFieldObjects->{$get->objectId};
+        $this->view->messages          = $this->_helper->flashMessenger->getMessages();
     }
-    
+
     /**
      * Updates the display order of the attributes from the AJAX request
      *
      */
-    public function orderAttributesAction()
+    public function saveAttributeOrderAction()
     {
-    	$this->_helper->viewRenderer->setNoRender();
+    	$this->_helper->viewRenderer->setNeverRender();
     	$this->_helper->layout->disableLayout();
-    	
-    	
+
         if ($this->_request->isPost()) {
+            
+            $post = Zend_Registry::get('postFilter');
+            
+            if (!isset($post->objectId)) {
+                $ret = array('rc' => 0, 'msg' => 'msg-error-objectIdNotSet');
+                echo Zend_Json_Encoder::encode($ret);
+                return;
+            }
+            
+            if (!isset($post->attributeIds)) {
+                $ret = array('rc' => 0, 'msg' => 'msg-error-attributeIdsNotSet');
+                echo Zend_Json_Encoder::encode($ret);
+                return;
+            }
 
-            $filter = new Zend_Filter();
-            $filter->addFilter(new Zend_Filter_StringTrim())
-                   ->addfilter(new Zend_Filter_HtmlEntities())
-                   ;
-
-            $objectId = $filter->filter($_POST['objectId']);
-            $order = $filter->filter($_POST['order']);
-            $order = explode(',', $order);
-
-            for ($x = 0; $x < count($order); $x++) {
-                $order[$x] = (int)$order[$x];
+            $objectId = $post->objectId;
+            $attributeIds = $post->attributeIds;
+            
+            foreach ($attributeIds as &$id) {
+                $id = (int)substr($id, strpos($id, '_')+1);
             }
 
             $custom = new Ot_Custom();
 
             try {
-                $custom->updateAttributeOrder($objectId, $order);
-                echo "New order saved successfully."; 
+                $custom->updateAttributeOrder($objectId, $attributeIds);
+                $ret = array('rc' => 1, 'msg' => 'msg-info-newOrderSaved');
+                echo Zend_Json_Encoder::encode($ret);
+                return;
             } catch (Exception $e) {
-            	echo "Saving new order failed - " . $e->getMessage();
+            	$ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-orderNotSaved', $e->getMessage()));
+                echo Zend_Json_Encoder::encode($ret);
+                return;
             }
-            
-            $this->_logger->setEventItem('attributeName', 'objectId');
-            $this->_logger->setEventItem('attributeId', $objectId);
-            $this->_logger->info($objectId . ' had attributes reordered');
+
+            $logOptions = array(
+                        'attributeName' => 'objectId',
+                        'attributeId'   => $objectId,
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, $objectId . ' had attributes reordered', $logOptions);
         }
-    }   
-    
+    }
+
     /**
      * Shows the details of a selected attribute
      *
@@ -161,42 +152,42 @@ class Admin_CustomController extends Internal_Controller_Action
     public function attributeDetailsAction()
     {
         $this->view->acl = array(
-            'add'    => $this->_acl->isAllowed($this->_role, $this->_resource, 'add'),
-            'edit'   => $this->_acl->isAllowed($this->_role, $this->_resource, 'edit'),
-            'delete' => $this->_acl->isAllowed($this->_role, $this->_resource, 'delete'),
-            );  
-                	
+            'add'    => $this->_helper->hasAccess('add'),
+            'edit'   => $this->_helper->hasAccess('edit'),
+            'delete' => $this->_helper->hasAccess('delete')
+            );
+
     	$get = Zend_Registry::get('getFilter');
-    	
+
     	$custom = new Ot_Custom();
     	$attr   = new Ot_Custom_Attribute();
-    	
+
     	if (!isset($get->attributeId)) {
-    		throw new Ot_Exception_Input('Attribute ID not set in query string');
+    		throw new Ot_Exception_Input('msg-error-attributeIdNotSet');
     	}
-    	
+
     	$attribute = $attr->find($get->attributeId);
 
     	if (is_null($attribute)) {
-    		throw new Ot_Exception_Data('Attribute not found');
+    		throw new Ot_Exception_Data('msg-error-noAttribute');
     	}
-    	
+
     	$attribute = $attribute->toArray();
-    	
+
     	$attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
-    	
-        $config = Zend_Registry::get('appConfig');
-        
-        if (!isset($config->customFieldObjects->{$attribute['objectId']})) {
-            throw new Ot_Exception_Input('Object not setup in config file');
-        }   
-        
+
+        $config = Zend_Registry::get('config');
+
+        if (!isset($config->app->customFieldObjects->{$attribute['objectId']})) {
+            throw new Ot_Exception_Input('msg-error-objectNotSetup');
+        }
+
     	$this->view->attribute = $attribute;
         $this->view->objectId = $attribute['objectId'];
-        $this->view->objectDescription = $config->customFieldObjects->{$attribute['objectId']};
-    	$this->view->title = 'Attribute Details';
+        $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
+    	$this->_helper->pageTitle('admin-custom-attributeDetails');
     }
-    
+
     /**
      * Adds a new attribute to a node
      *
@@ -205,33 +196,32 @@ class Admin_CustomController extends Internal_Controller_Action
     {
         $get = Zend_Registry::get('getFilter');
         if (!isset($get->objectId)) {
-            throw new Ot_Exception_Input('Object not found in query string.');
+            throw new Ot_Exception_Input('msg-error-objectNotFound');
         }
-        
-        $config = Zend_Registry::get('appConfig');
-        
-        if (!isset($config->customFieldObjects->{$get->objectId})) {
-            throw new Ot_Exception_Input('Object not setup in config file');
-        }    	
-        
+
+        $config = Zend_Registry::get('config');
+
+        if (!isset($config->app->customFieldObjects->{$get->objectId})) {
+            throw new Ot_Exception_Input('msg-error-objectNotSetup');
+        }
+
         $custom = new Ot_Custom();
-    	
+
         if ($this->_request->isPost()) {
-            
+
             $filter = new Zend_Filter();
             $filter->addFilter(new Zend_Filter_StringTrim())
-                   ->addfilter(new Zend_Filter_HtmlEntities())
-                   ;
-                   
+                   ->addfilter(new Zend_Filter_HtmlEntities());
+
             $options = array();
             if (isset($_POST['option'])) {
 	            foreach ($_POST['option'] as $o) {
 	                if ($o != '') {
-                        $options[] = $filter->filter($o); 
+                        $options[] = $filter->filter($o);
                     }
 	            }
             }
-            
+
             $data = array(
                 'objectId'    => $get->objectId,
                 'label'     => $filter->filter($_POST['label']),
@@ -241,27 +231,35 @@ class Admin_CustomController extends Internal_Controller_Action
                 'direction' => $filter->filter($_POST['direction']),
                 'order'     => 0,
                 );
-            
-            $attr = new Ot_Custom_Attribute();
-            
-            $id = $attr->insert($data);
-            
-            $this->_logger->setEventItem('attributeName', 'objectId');
-            $this->_logger->setEventItem('attributeId', $data['objectId']);
-            $this->_logger->info('Attribute ' . $data['label'] . ' added'); 
 
-            $this->_logger->setEventItem('attributeName', 'attributeId');
-            $this->_logger->setEventItem('attributeId', $id);
-            $this->_logger->info('Attribute ' . $data['label'] . ' added');             
+            $attr = new Ot_Custom_Attribute();
+
+            $id = $attr->insert($data);
+
+            $logOptions = array(
+                        'attributeName' => 'objectId',
+                        'attributeId'   => $data['objectId'],
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, 'Attribute ' . $data['label'] . ' added', $logOptions);
             
+            $logOptions = array(
+                        'attributeName' => 'attributeId',
+                        'attributeId'   => $id,
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, $data['label'] . ' added', $logOptions);
+            
+            $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-attributeAdded', array($data['label'], $data['objectId'])));
+
             $this->_helper->redirector->gotoUrl('/admin/custom/details/?objectId=' . $data['objectId']);
-            
         }
-        
+
         $this->view->types = $custom->getTypes();
-	    $this->view->title = "Add Custom Attribute to " . $get->objectId;
+	    $this->_helper->pageTitle('admin-custom-add:title', $get->objectId);
 	    $this->view->objectId = $get->objectId;
-        $this->view->objectDescription = $config->customFieldObjects->{$get->objectId};
+	    	    
+        $this->view->objectDescription = $config->app->customFieldObjects->{$get->objectId};
     }
 
     /**
@@ -272,64 +270,62 @@ class Admin_CustomController extends Internal_Controller_Action
     {
         $custom = new Ot_Custom();
         $attr = new Ot_Custom_Attribute();
-        
+
         $get = Zend_Registry::get('getFilter');
-        
+
         if (!isset($get->attributeId)) {
-            throw new Ot_Exception_Input('Attribute ID not set in query string');
+            throw new Ot_Exception_Input('msg-error-attributeIdNotSet');
         }
-            
+
         $attribute = $attr->find($get->attributeId);
-    
+
         if (is_null($attribute)) {
-            throw new Ot_Exception_Data('Attribute not found');
+            throw new Ot_Exception_Data('msg-error-noAttribute');
         }
-            
-        $attribute = $attribute->toArray();         
-            
+
+        $attribute = $attribute->toArray();
+
         $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
-            
-        $config = Zend_Registry::get('appConfig');
-        
-        if (!isset($config->customFieldObjects->{$attribute['objectId']})) {
-            throw new Ot_Exception_Input('Object not setup in config file');
-        }               
-        
+
+        $config = Zend_Registry::get('config');
+
+        if (!isset($config->app->customFieldObjects->{$attribute['objectId']})) {
+            throw new Ot_Exception_Input('msg-error-objectNotSetup');
+        }
+
         if ($this->_request->isPost()) {
-            
+
             $filter = new Zend_Filter();
             $filter->addFilter(new Zend_Filter_StringTrim())
-                   ->addfilter(new Zend_Filter_HtmlEntities())
-                   ;
-                   
+                   ->addfilter(new Zend_Filter_HtmlEntities());
 
             $options = array();
             if (isset($_POST['option'])) {
                 foreach ($_POST['option'] as $o) {
                 	if ($o != '') {
-                        $options[] = $filter->filter($o); 
+                        $options[] = $filter->filter($o);
                 	}
                 }
             }
-            
+
             $attribute = $attr->find($get->attributeId);
-    
+
             if (is_null($attribute)) {
-                throw new Ot_Exception_Data('Attribute not found');
+                throw new Ot_Exception_Data('msg-error-noAttribute');
             }
-            
-            $attribute = $attribute->toArray();         
-            
+
+            $attribute = $attribute->toArray();
+
             $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
-            
+
             foreach ($_POST['opt_delete'] as $opt) {
             	$key = array_search($filter->filter($opt), $attribute['options']);
             	unset($attribute['options'][$key]);
             }
-            
+
             $attribute['options'] = array_merge($attribute['options'], $options);
-            
-            
+
+
             $data = array(
                        'attributeId' => $get->attributeId,
                        'label'       => $filter->filter($_POST['label']),
@@ -337,7 +333,7 @@ class Admin_CustomController extends Internal_Controller_Action
                        'required'    => $filter->filter($_POST['required']),
                        'direction'   => $filter->filter($_POST['direction']),
                     );
-                    
+
             if (($data['type'] == 'select' || $data['type'] == 'radio') && is_array($attribute['options'])) {
             	$data['options'] = $custom->convertOptionsToString($attribute['options']);
             } else {
@@ -345,20 +341,24 @@ class Admin_CustomController extends Internal_Controller_Action
             }
 
             $attr->update($data, null);
+
+            $logOptions = array(
+                        'attributeName' => 'nodeAddtributeId',
+                        'attributeId'   => $data['attributeId'],
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, 'Attribute ' . $data['label'] . ' modified', $logOptions);
             
-            $this->_logger->setEventItem('attributeName', 'nodeAttributeId');
-            $this->_logger->setEventItem('attributeId', $data['attributeId']);
-            $this->_logger->info('Attribute ' . $data['label'] . ' modified');              
-            
+            $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-attributeSaved', $data['label']));
+
             $this->_helper->redirector->gotoUrl('/admin/custom/details/?objectId=' . $attribute['objectId']);
-            
         }
-        
-        $this->view->title = "Edit Custom Attribute for " . $attribute['objectId'];
-        $this->view->objectId = $attribute['objectId'];
-        $this->view->objectDescription = $config->customFieldObjects->{$attribute['objectId']};
-        $this->view->attribute = $attribute;
-        $this->view->types = $custom->getTypes();         
+
+        $this->_helper->pageTitle('admin-custom-edit:title', $attribute['objectId']);
+        $this->view->objectId          = $attribute['objectId'];
+        $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
+        $this->view->attribute         = $attribute;
+        $this->view->types             = $custom->getTypes();
     }
 
     /**
@@ -366,53 +366,59 @@ class Admin_CustomController extends Internal_Controller_Action
      *
      */
     public function deleteAction()
-    {        
+    {
         $custom = new Ot_Custom();
         $attr = new Ot_Custom_Attribute();
-        
+
         $get = Zend_Registry::get('getFilter');
-        
+
         if (!isset($get->attributeId)) {
-            throw new Ot_Exception_Input('Attribute ID not set in query string');
+            throw new Ot_Exception_Input('msg-error-attributeIdNotSet');
         }
-            
+
         $attribute = $attr->find($get->attributeId);
-    
+
         if (is_null($attribute)) {
-            throw new Ot_Exception_Data('Attribute not found');
+            throw new Ot_Exception_Data('msg-error-noAttribute');
         }
-            
-        $attribute = $attribute->toArray();         
-            
+
+        $attribute = $attribute->toArray();
+
         $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
-            
-        $config = Zend_Registry::get('appConfig');
+
+        $config = Zend_Registry::get('config');
+
+        if (!isset($config->app->customFieldObjects->{$attribute['objectId']})) {
+            throw new Ot_Exception_Input('msg-error-objectNotSetup');
+        }
+
+        $form = Ot_Form_Template::delete('deleteAttribute');
         
-        if (!isset($config->customFieldObjects->{$attribute['objectId']})) {
-            throw new Ot_Exception_Input('Object not setup in config file');
-        }          
-        
-        if ($this->_request->isPost()) {  
+        if ($this->_request->isPost() && $form->isValid($_POST)) {
 
             $where = $attr->getAdapter()->quoteInto('attributeId = ?', $get->attributeId);
             $attr->delete($where);
-            
+
             $val = new Ot_Custom_Attribute_Value();
             $val->delete($where);
-            
-            $this->_logger->setEventItem('attributeName', 'objectAttributeId');
-            $this->_logger->setEventItem('attributeId', $get->attributeId);
-            $this->_logger->info('Attribute and all values were deleted');             
-                        
-            
+
+            $logOptions = array(
+                        'attributeName' => 'objectAttributeId',
+                        'attributeId'   => $get->attributeId,
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, 'Attribute and all values were deleted', $logOptions);
+
+            $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-attributeDeleted', $attribute['label']));
+
             $this->_helper->redirector->gotoUrl('/admin/custom/details/?objectId=' . $attribute['objectId']);
-        	
+
         }
-        
-	    $this->view->attribute = $attribute;
-        $this->view->objectId = $attribute['objectId'];
-        $this->view->objectDescription = $config->customFieldObjects->{$attribute['objectId']};
-	    $this->view->title = 'Delete Attribute from ' . $attribute['objectId'];
+
+        $this->view->form              = $form;
+	    $this->view->attribute         = $attribute;
+        $this->view->objectId          = $attribute['objectId'];
+        $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
+	    $this->_helper->pageTitle('admin-custom-delete:title', $attribute['objectId']);
     }
-	
 }

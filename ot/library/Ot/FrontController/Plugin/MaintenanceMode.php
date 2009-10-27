@@ -31,28 +31,31 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
 {
     public function postDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $vr     = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
-        $layout = Zend_Controller_Action_HelperBroker::getStaticHelper('layout');
+        $layout = Zend_Layout::getMvcInstance();
+        
+        // the name "maintenanceMode" is also referred to in the Admin_MaintenanceController,
+        // so if you change the filename, it needs to be changed there too
+        $maintenanceModeFileName = 'maintenanceMode';
                
-        $config = Zend_Registry::get('appConfig');
+        $config = Zend_Registry::get('config');
         
-        $zcf = Zend_Controller_Front::getInstance();
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        $role = (empty($identity->role)) ? (string)$config->user->defaultRole->val : $identity->role;
         
-        $role  = (is_null(Ot_Authz::getInstance()->getRole()) ? (string)$config->loginOptions->defaultRole : Ot_Authz::getInstance()->getRole());
         $acl = Zend_Registry::get('acl');
-
-        if ($config->maintenanceMode) {
+        
+        $view = $layout->getView();
+        $viewRenderer = Zend_Controller_Action_HelperBroker::getExistingHelper('ViewRenderer');
+        
+        if (is_file(APPLICATION_PATH . '/../overrides/' . $maintenanceModeFileName) && (!$request->isXmlHttpRequest() && !$viewRenderer->getNeverRender())) {
             if (!$acl->isAllowed($role, 'admin_maintenance', 'index')) {
                 if (!($request->getModuleName() == 'login' && $request->getControllerName() == 'index' && $request->getActionName() == 'index')) {
-                    $layout->setLayoutPath('./ot/application/views/layouts');
+                    $layout->setLayoutPath(OT_APPLICATION_PATH . '/layouts');
                     $layout->setLayout('maintenance');
                 }
-            } else {        
-        	    $view = $vr->view;
-        	
+            } else {
                 $response = $this->getResponse();
-
-        	    $response->setBody($view->render('maintenanceHeader.tpl') . $response->getBody());
+        	    $response->setBody($view->render('maintenanceHeader.phtml') . $response->getBody());
             }
         }
     }

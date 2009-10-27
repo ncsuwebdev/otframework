@@ -27,7 +27,8 @@
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-final class Ot_Timezone {
+final class Ot_Timezone
+{
         
     protected static $_timezoneList = array(
     
@@ -397,5 +398,4 @@ final class Ot_Timezone {
     {
         return self::$_timezoneList;
     }
-    
 }

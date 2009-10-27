@@ -33,7 +33,7 @@ class Ot_Image extends Ot_Db_Table
      *
      * @var string
      */
-    public $_name = 'tbl_image';
+    public $_name = 'tbl_ot_image';
 
     /**
      * Primary key for the database

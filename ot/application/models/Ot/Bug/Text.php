@@ -56,4 +56,3 @@ class Ot_Bug_Text extends Ot_Db_Table
         return parent::fetchAll($where, 'postDt ' . $order);
     }
 }
-?>

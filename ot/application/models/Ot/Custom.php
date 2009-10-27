@@ -398,21 +398,13 @@ class Ot_Custom
     	
         $dba = $attr->getAdapter();
         
-        $inTransaction = false;
-        
-        try { 
-            $dba->beginTransaction();
-        } catch (Exception $e) {
-            $inTransaction = true;
-        }
+        $dba->beginTransaction();
 
         $i = 1;
         foreach ($order as $o) {
 
             if (!is_integer($o)) {                
-                if (!$inTransaction) {
-                    $dba->rollBack();
-                }
+                $dba->rollBack();
                 throw new Ot_Exception_Input("New position was not an integer.");
             }
 
@@ -425,15 +417,12 @@ class Ot_Custom
             try {
                 $attr->update($data, $where);
             } catch(Exception $e) {
-                if (!$inTransaction) {
-                    $dba->rollBack();
-                }
+                $dba->rollBack();
                 throw $e;
             }
             $i++;
         }
-        if (!$inTransaction) {
-            $dba->commit();
-        }
+        
+        $dba->commit();
     }    	
 }

@@ -26,28 +26,8 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_CronController extends Internal_Controller_Action 
+class Admin_CronController extends Zend_Controller_Action 
 {
-	
-	/**
-     * Flash messenger variable
-     *
-     * @var unknown_type
-     */
-    protected $_flashMessenger = null;
-    
-    /**
-     * Setup flash messenger and the config file path
-     *
-     */
-    public function init()
-    {        
-        $this->_flashMessenger = $this->getHelper('FlashMessenger');
-        $this->_flashMessenger->setNamespace('cron');
-        
-        parent::init();
-    }
-	
     /**
      * shows all the cron jobs
      *
@@ -57,20 +37,24 @@ class Admin_CronController extends Internal_Controller_Action
         $this->view->acl = array(
             'add'    => false,
             'edit'   => false,
-            'toggle' => $this->_acl->isAllowed($this->_role, $this->_resource, 'toggle'),
+            'toggle' => $this->_helper->hasAccess('toggle'),
+            'acl'    => $this->_helper->hasAccess('index', 'admin_acl')
             );
+            
+        $config = Zend_Registry::get('config');
+            
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'cron_index', $config->user->defaultRole->val);
+        
+        $role = new Ot_Role();
+        $this->view->defaultRole =  $role->find($config->user->defaultRole->val);
 
         $cs = new Ot_Cron_Status();
 
         $jobs = $cs->getAvailableCronJobs();
-
-        if (count($jobs) != 0) {
-            $this->view->javascript = 'sortable.js';
-        }
         
-        $this->view->messages = $this->_flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->view->cronjobs = $jobs;
-        $this->view->title    = "Cron Job Status";
+        $this->_helper->pageTitle('admin-cron-index:title');
     }
 
     /**
@@ -84,7 +68,7 @@ class Admin_CronController extends Internal_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->name)) {
-        	throw new Ot_Exception_Input('Name is not set in query string.');
+        	throw new Ot_Exception_Input('msg-error-nameNotSet');
         }
         
         if (!isset($get->status)) {
@@ -109,41 +93,58 @@ class Admin_CronController extends Internal_Controller_Action
         $form = new Zend_Form();
         $form->setAction('?name=' . $get->name)
              ->setMethod('post')
-             ->setAttrib('id', 'toggleCronJob')
-             ;
+             ->setAttrib('id', 'toggleCronJob');
        
         $hidden = $form->createElement('hidden', 'status');
         $hidden->setValue(($status == 'enabled') ? 'disable' : 'enable');
         $hidden->clearDecorators();
         $hidden->addDecorators(array(
-            array('ViewHelper'), // element's view helper
+            array('ViewHelper')
         ));
-        
-        $form->addElement($hidden)
-             ->addElement('submit', 'toggleButton', array('label' => 'Yes'))
-             ->addElement('button', 'cancel', array('label' => 'No, Go Back'))
-             ;         
+               
+        $submit = $form->createElement('submit', 'submitButton', array('label' => 'form-button-yes'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+                 
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+                        
+        $form->addElements(array($hidden))
+             ->setElementDecorators(array(
+                  'ViewHelper',
+                  'Errors',      
+                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+                  array('Label', array('tag' => 'span')),      
+              ))
+             ->addElements(array($submit, $cancel));
         
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             $status = ($form->getValue('status') == 'enable') ? 'enabled' : 'disabled';
 
-            $result = $cs->setCronStatus($get->name, $status);
+            $cs->setCronStatus($get->name, $status);
 
-            $this->_logger->setEventItem('attributeName', 'cronName');
-            $this->_logger->setEventItem('attributeId', $get->name);
-            $this->_logger->info('cron was set to ' . $status);
+            $logOptions = array(
+                        'attributeName' => 'cronName',
+                        'attributeId'   => $get->name,
+            );
+                    
+            $this->_helper->log(Zend_Log::INFO, 'cron was set to ' . $status, $logOptions);
                         
             $this->_helper->redirector->gotoUrl('/admin/cron/');
         }
         
         if ($get->name == 'all') {
-            $this->view->displayName = 'all cron jobs';
+            $this->view->displayName = 'admin-cron-toggle:displayName';
         } else {
             $this->view->displayName = $get->name;
         }
 
         $this->view->status = ($status == 'enabled') ? 'disable' : 'enable';
-        $this->view->title  = "Toggle Cron Job Status";
+        $this->_helper->pageTitle('admin-cron-toggle:title');
         $this->view->form   = $form;
     }
 }

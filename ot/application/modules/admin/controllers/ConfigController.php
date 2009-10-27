@@ -26,66 +26,24 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Admin_ConfigController extends Internal_Controller_Action  
+class Admin_ConfigController extends Zend_Controller_Action  
 {   
-	/**
-	 * Path to the config file
-	 *
-	 * @var string
-	 */
-	protected $_configFilePath = '';
-	
-	/**
-	 * Flash messenger variable
-	 *
-	 * @var unknown_type
-	 */
-	protected $_flashMessenger = null;
-	
-	/**
-	 * Setup flash messenger and the config file path
-	 *
-	 */
-	public function init()
-	{
-		$configFiles = Zend_Registry::get('configFiles');
-        
-        $this->_configFilePath = $configFiles['user'];
-        
-        $this->_flashMessenger = $this->getHelper('FlashMessenger');
-        $this->_flashMessenger->setNamespace('config');
-        
-        parent::init();
-	}
-	
     /**
      * Shows all configurable options
      */
     public function indexAction()
-    {
-        $this->view->title = "Configuration Admin";
-        
+    {       
         $this->view->acl = array(
-            'edit' => $this->_acl->isAllowed($this->_role, $this->_resource, 'edit'),
+            'edit' => $this->_helper->hasAccess('edit')
         );
         
-        $uc = Zend_Registry::get('userConfig');
-                
-        $config = array();
-        foreach ($uc as $key => $value) {
-            $config[] = array(
-                'key'         => $key, 
-                'value'       => $value->value, 
-                'description' => $value->description
-            );
-        }
+        $this->view->configList = Zend_Registry::get('config')->user;
         
-        if (count($config) != 0) {
-        	$this->view->javascript = 'sortable.js';
-        }
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/ot/css/jquery.plugin.tipsy.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.tipsy.js');
         
-        $this->view->messages = $this->_flashMessenger->getMessages();
-        $this->view->configList = $config;
+        $this->view->messages   = $this->_helper->flashMessenger->getMessages();
+        $this->_helper->pageTitle('admin-config-index:title');
     }
 
     /**
@@ -93,24 +51,32 @@ class Admin_ConfigController extends Internal_Controller_Action
      *
      */
     public function editAction()
-    {
-        $this->view->title = "Edit Application Configuration";
+    {       
+    	$config = Zend_Registry::get('config');
+    	
+        $overrideFile = APPLICATION_PATH . '/../overrides/config/config.xml';
         
-        if (!is_writable($this->_configFilePath)) {
-            throw new Ot_Exception_Data('User Config File (' . $this->_configFilePath . ') is not writable, therefore it cannot be edited');
+        if (!file_exists($overrideFile)) {
+            throw new Ot_Exception_Data("msg-error-configFileNotFound");
         }
         
+        if (!is_writable($overrideFile)) {
+        	throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $overrideFile));
+        }
+                
         $get = Zend_Registry::get('getFilter');
-        if (!isset($get->key)) {
-        	throw new Ot_Exception_Input('No key was found in query string.');
-        }
         
+        if (!isset($get->key)) {
+        	throw new Ot_Exception_Input('msg-error-noKey');
+        }
         
         $form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'editConfig')
-             ;
+        $form->setAttrib('id', 'configEditForm')
+             ->setDecorators(array(
+                     'FormElements',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     'Form',
+             ));
         
         if ($get->key == 'timezone') {
         	$tz = Ot_Timezone::getTimezoneList();
@@ -122,65 +88,98 @@ class Admin_ConfigController extends Internal_Controller_Action
         	$el->setAttrib('size', '40');
         }
         
-        $uc = Zend_Registry::get('userConfig');
+        $config = Zend_Registry::get('config');
         
-        if (!($uc->{$get->key} instanceof Zend_Config)) {
-        	throw new Ot_Exception_Input('Key not found in config file');
+        if (!isset($config->user->{$get->key})) {
+        	throw new Ot_Exception_Input('msg-error-noConfigKey');
         }
         
-        $el->setValue($uc->{$get->key}->value);
+        $el->setValue($config->user->{$get->key}->val);
         $el->setLabel($get->key . ':');
         
-        $submit = $form->createElement('submit', 'editButton', array('label' => 'Save Config Option'));
+        $reset = $form->createElement('checkbox', 'resetToDefault', array('label' => 'admin-config-edit:form:reset '));
+        
+        $submit = $form->createElement('submit', 'editButton', array('label' => 'admin-config-edit:form:submit'));
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit'))
                  ));
         
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
         $cancel->setAttrib('id', 'cancel');
         $cancel->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formButton'))
                 ));
                         
-        $form->addElement($el)
-             ->addDisplayGroup(array('keyValue'), 'fields')
-             ->addElements(array($submit, $cancel))
-             ;  
+        $form->addElements(array($el, $reset));
+
+        $form->setElementDecorators(array(
+                  'ViewHelper',
+                  'Errors',
+                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                  array('Label', array('tag' => 'span')),
+              ))
+             ->addElements(array($submit, $cancel)); 
 
         $messages = array();
         
         if ($this->_request->isPost()) {
         	if ($form->isValid($_POST)) {
         		
-	            if (file_exists($this->_configFilePath)) {
-	                $xml = simplexml_load_file($this->_configFilePath);
-	            } else {
-	                throw new Ot_Exception_Data("Error reading user configuration file");
-	            }
+        		if ($form->getValue('resetToDefault') || ($form->getValue('keyValue') != $config->user->{$get->key}->val)) {
+					$xml = simplexml_load_file($overrideFile);
+	        			            
+					$logMessage = '';
+					
+					if ($form->getValue('resetToDefault') && isset($xml->production->user->{$get->key})) {
+	        			unset($xml->production->user->{$get->key});
+	        			
+	        			$logMessage = 'Key was reset to default';
+	        		} else {
+		        		if (!isset($xml->production->user->{$get->key})) {
+		        			$xml->production->user->addChild($get->key);
+		        			$xml->production->user->{$get->key}['val'] = $form->getValue('keyValue');
+		        		} else {
+		        			$xml->production->user->{$get->key}->attributes()->val = $form->getValue('keyValue');
+		        		}	        	
+
+		        		$logMessage = 'User config was edited';
+	        		}
+		            
+		            $xmlStr = $xml->asXml();
+		            
+		            if (!file_put_contents($overrideFile, $xmlStr, LOCK_EX)) {
+		                throw new Ot_Exception_Data("msg-error-savingConfig");
+		            }
+		            
+		            // this formats the xml file if the xmllint command is available.  If it's
+                    // not, it should just return nothing and nothing bad will happen.  It's merely
+                    // a bonus feature for boxes that have xmllib2 all up ons their box.
+                    $cmd = "xmllint --format --output $overrideFile $overrideFile";
+                    exec($cmd, $result, $rc);		            
+		            
+		            $cache = Zend_Registry::get('cache');
+		            $cache->remove('configObject');
+		            
+		            $logOptions = array(
+	                        'attributeName' => 'userConfig',
+	                        'attributeId'   => $get->key,
+	                );
+	                    
+	                $this->_helper->log(Zend_Log::INFO, $logMessage, $logOptions);   
+	                     			
+        		}
 	            
-	            $xml->production->{$get->key}->value = $form->getValue('keyValue');
-	            
-	            $xmlStr = $xml->asXml();
-	
-	            if (!file_put_contents($this->_configFilePath, $xmlStr, LOCK_EX)) {
-	                throw new Ot_Exception_Data("Error saving user configuration file to disk");
-	            }
-	            
-	            $this->_logger->setEventItem('attributeName', 'userConfig');
-	            $this->_logger->setEventItem('attributeId', '0');
-	            $this->_logger->info("User config was edited");
-	            
-	            $this->_flashMessenger->addMessage('The value for ' . $get->key . ' has been updated!');
+	            $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-configUpdated', $get->key));
 	            
 	            $this->_helper->redirector->gotoUrl('/admin/config/');
         	} else {
-        		$messages[] = 'The form was not filled out properly';
+        		$messages[] = 'msg-error-formError';
         	}
         }
         
-        $this->view->messages = $messages;
-        $this->view->form = $form;
-        $this->view->description = $uc->{$get->key}->description;
-        $this->view->title = "Edit configuration option";
+        $this->view->messages    = $messages;
+        $this->view->form        = $form;
+        $this->view->description = $config->user->{$get->key}->description;
+        $this->_helper->pageTitle('admin-config-edit:title');
     }
 }

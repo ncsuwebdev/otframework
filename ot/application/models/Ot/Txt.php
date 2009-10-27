@@ -95,6 +95,11 @@ final class Ot_Txt
             'address' => 'vmobl.com',
             'limit'   => '160',
             ),
+        'unicel' => array(
+            'display' => 'Unicel',
+            'address' => 'utext.com',
+            'limit' => '140',
+            ),
         );
 
     /**

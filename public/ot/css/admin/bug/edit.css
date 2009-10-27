@@ -1,20 +1,3 @@
-@CHARSET "UTF-8";
-
-#submitButton {
-    float: left;
-    margin: 0px 10px;
-}
-
-#fields {
-    border: 1px solid #999;
-    background-color: #CCC;
-    margin-bottom: 10px;
-}
-
-form fieldset dt {
-    width: 120px;
-}
-
 div.bugText {
     border: 1px solid #999;
     width: 500px;
@@ -37,7 +20,19 @@ h2 {
     margin-bottom: 10px;
 }
 
-textarea#text {
-    width: 400px;
-    height: 150px;  
+div.elm {
+    margin-bottom: 10px;
+    line-height: 20px;
+}
+
+label {
+    float: left;
+    font-weight: bold;
+    display: block;
+    width: 100px;
+    overflow: hidden;
+    line-height: 20px;
+    height: 20px;
+    white-space: nowrap;
+    margin-right: 10px;
 }

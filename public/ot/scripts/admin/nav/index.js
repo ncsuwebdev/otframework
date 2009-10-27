@@ -1,443 +1,279 @@
-var sitePrefix = "";
-var navTree = null;
-var alertFx = null;
+var baseUrl = "";
+var saveUrl = "";
+var resources = null;
 
-window.addEvent('domready', function() {
-    
-    sitePrefix = $('sitePrefix').value;
-    var saveUrl = sitePrefix + "/admin/nav/save";
-    
-    alertFx = new Fx.Styles($('alert'), {
-            duration: 3000,
-            wait: false,
-            transition: Fx.Transitions.Quad.easeOut
-        });
-    
-    navTree = new Nested('navMenuContainer',
-                {
-                    onComplete: function(el) {
-                        var depth = this.getDepth(el);
-                        if (depth == 0) {
-                            el.removeClass('subNavItem');
-                            el.addClass('navItem');
-                        } else {
-                            el.removeClass('navItem');
-                            el.addClass('subNavItem');
-                        }
-                        
-                    }
-                });
-                
-    $('addElementButton').addEvent('click', function(e) {
-        var li = new Element('li');
-        li.title = '{"module":"","controller":"","action":"","display":"New Element","link":""}';
-        li.addClass('navItem');
-        var span = new Element('span');
-        span.setText('New Element');
-        li.adopt(span);
-        li.injectTop($('navMenuContainer'));
-    });
-    
-    $('resetNavButton').addEvent('click', function(e) {
-        window.location = window.location;
-    });
-   
-    $('saveNavButton').addEvent('click', function(e) {
-        var jsonStr = Json.toString(navTree.serialize());
-        var varStr = Object.toQueryString({data: jsonStr});
-        
-        new Ajax(saveUrl,
-                {
-                    method: 'post',
-                    data: varStr,
-                    onComplete: function(txt, xml) {
-                        var result = Json.evaluate(txt);
-                        if (result.rc == "0") {
-                            alert(result.msg);
-                        } else {
-                            window.location = window.location;
-                        }
-                    }
-                
-                }).request();
-    });
-    
-    $('saveElementButton').addEvent('click', function(e) {
-        var data = {};
-        data.module = $('moduleBox').value;
-        data.controller = $('controllerBox').value;
-        data.action = $('actionBox').value;
-        data.display = $('displayBox').value;
-        data.link = $('linkBox').value;
-        
-        if (data.module == "") {
-        	data.module = "default";
-        }
-        
-        if (data.controller == "") {
-        	data.controller = "index";
-        }
-        
-        if (data.action == "") {
-        	data.action = "index";
-        }
-        
-        var jsonStr = Json.toString(data);
-        navTree.lastEl.title = jsonStr;
-        navTree.lastEl.getFirst().setText(data.display);
-        
-        navTree.fx.start({
-            'opacity': [1, 0]
-        });
-        
-        $('alert').setText('Element Details Stored!');
-        alertFx.start({
-            'background-color': ['#fff36f', '#fff'],
-            'opacity': [1, 0]
-        });
-        
-    });
-    
-    $('cancelElementButton').addEvent('click', function(e) {
-        navTree.fx.start({
-            'opacity': [1, 0]
-        });
-    });
-    
-    $('deleteElementButton').addEvent('click', function(e) {
-        if (confirm("Are you sure you want to delete this element?")) {
-            if (confirm("Are you really sure you want to delete this element?\n\nAny children of this element will be removed as well.\n\nYou cannot undo this action.")) {
-                navTree.lastEl.remove();
-                
-                navTree.fx.start({
-                    'opacity': [1, 0]
-                });
-                
-                $('alert').setText('Element Removed Successfully!');
-                alertFx.start({
-                    'background-color': ['#fff36f', '#fff'],
-                    'opacity': [1, 0]
-                });
-                        
-            }
-        }
-    });
-    
-});
+var currentModule = "";
+var currentController = "";
 
-var Nested = new Class({
+var newElementIdCounter = 0;
 
-    fx: null,
-    lastEl: null,
+var currentElementId = "";
 
-    getOptions: function() {
-        return {
-            childTag: 'li',
-            ghost: true,
-            childStep: 30, // attempts to become a child if the mouse is moved this number of pixels right
-            handleClass: null, 
-            onStart: Class.empty,
-            onComplete: Class.empty,
-            collapse: false, // true/false
-            collapseClass: 'nCollapse', // Class added to collapsed items
-            expandKey: 'shift', // control | shift
-            lock: null, // parent || depth || class
-            lockClass: 'unlocked'
-        };
-    },
+$('document').ready(function() {
 
-    initialize: function(list, options) {
-        this.setOptions(this.getOptions(), options);
-        if (!this.options.expandKey.match(/^(control|shift)$/)) {
-            this.options.expandKey = 'shift';
-        }
-        
-        this.fx = new Fx.Styles($('navEditor'), {
-            duration: 1000,
-            wait: false,
-            transition: Fx.Transitions.Quad.easeOut
-        });
-        
-        this.list = $(list);
-        this.options.parentTag = this.list.nodeName.toLowerCase();
-        this.bound = {};
-        this.bound.start = this.start.bindWithEvent(this);
-        
-        this.list.addEvent('dblclick', this.edit.bindWithEvent(this));
-        
-        this.list.addEvent('mousedown', this.bound.start);
-        if (this.options.collapse) {
-            this.bound.collapse = this.collapse.bindWithEvent(this);
-            //this.list.addEvent('click', this.bound.collapse);
-        }
-        
-        if (this.options.initialize) {
-            this.options.initialize.call(this);
-        }
-    },
+    baseUrl = $('#baseUrl').val();
+    saveUrl = baseUrl + "/admin/nav/save";
     
-    edit: function(event) {
-        var el = $(event.target);
+    $('ul#masterList li').each(function() {
+        var newId = "navEditor_" + $(this).attr('id');
+        $(this).attr('id', newId);
         
-        if (el.getTag() == "span") {
-            el = el.getParent();
-        }
-        
-        this.lastEl = el;
-        
-        if (el.getTag() == 'li') {
-        
-            var data = Json.evaluate(el.title);
-            $('moduleBox').value = data.module;
-            $('controllerBox').value = data.controller;
-            $('actionBox').value = data.action;
-            $('displayBox').value = data.display;
-            $('linkBox').value = data.link;
+        var link = $(this).children('a:not(.controlButton)').attr('href');
+        var linkTarget = $(this).children('a').attr('target').toLowerCase();
             
-            $('navEditor').setPosition({
-            relativeTo: el,
-            position: 'topRight'
-            });
-            
-            $('navEditor').setStyle('display', 'block');
-            this.fx.start({
-                'opacity': [0, 1]
-            });
-        }
-    },
-
-    start: function(event) {
-        var el = $(event.target);
-        
-        navTree.fx.start({
-            //'background-color': ['#fff36f', '#fff'],
-            'opacity': [0, 1]
-        });
-        $('navEditor').setStyle('display', 'none');
-        
-        if (this.options.handleClass) {
-            while (el.nodeName != this.options.childTag.toLowerCase() && !el.hasClass(this.options.handleClass) && el != this.list) {
-                el = el.getParent();
-            }
-            if (!el.hasClass(this.options.handleClass)) return true;
-        } 
-        while (el.nodeName.toLowerCase() != this.options.childTag.toLowerCase() && el != this.list) {
-            el = el.parentNode;
-        }
-        if (el.nodeName.toLowerCase() != this.options.childTag.toLowerCase()) return true;
-        el = $(el);
-        if (this.options.lock == 'class' && !el.hasClass(this.options.lockClass)) return;
-        if (this.options.ghost) { // Create the ghost
-            this.ghost = el.clone().setStyles({
-                'list-style-type': 'none',
-                'opacity': 0.5,
-                'position': 'absolute',
-                'visibility': 'hidden',
-                'width': el.getStyle('width'),
-                'top': event.page.y+'px',
-                'left': (event.page.x)+'px'
-            }).injectInside(document.body);
-        }
-        el.depth = this.getDepth(el);
-        el.moved = false;
-        this.bound.movement = this.movement.bindWithEvent(this, el);
-        this.bound.end = this.end.bind(this, el);
-        this.list.removeEvent('mousedown', this.bound.start);
-        this.list.addEvent('mousedown', this.bound.end);
-        this.list.addEvent('mousemove', this.bound.movement);
-        document.addEvent('mouseup', this.bound.end);
-        if (window.ie) { // IE fix to stop selection of text when dragging
-            this.bound.stop = this.stop.bindWithEvent(this);
-            $(document.body).addEvent('drag', this.bound.stop).addEvent('selectstart', this.bound.stop);
-        }
-        this.fireEvent('onStart', el);
-        event.stop();
-    },
-
-    collapse: function(event) {
-        var el = $(event.target);
-        if (this.options.handleClass) {
-            while (el.nodeName.toLowerCase() != this.options.childTag.toLowerCase() && !el.hasClass(this.options.handleClass) && el != this.list) {
-                el = el.getParent();
-            }
-            if (!el.hasClass(this.options.handleClass)) return true;
-        } 
-        while (el.nodeName.toLowerCase() != this.options.childTag.toLowerCase() && el != this.list) {
-            el = el.parentNode;
-        }
-        if (el == this.list) return;
-        el = $(el);
-        if (!el.moved) {
-            var sub = $E(this.options.parentTag.toLowerCase(), el);
-            if (sub) {
-                if (sub.getStyle('display') == 'none') {
-                    sub.setStyle('display', 'block');
-                    el.removeClass(this.options.collapseClass);
-                } else {
-                    sub.setStyle('display', 'none');
-                    el.addClass(this.options.collapseClass);
-                }
-            }
-        }
-        event.stop();
-    },
-    
-    stop: function(event) {
-        event.stop();
-        return false;
-    },
-    
-    getDepth: function(el, add) {
-        var counter = (add) ? 1 : 0;
-        while (el != this.list) {
-            if (el.nodeName.toLowerCase() == this.options.parentTag.toLowerCase()) counter += 1;
-            el = el.parentNode;
-        }
-        return counter;
-    },
-    
-    movement: function(event, el) {
-        var dir, over, check, items;
-        var dest, move, prev, prevParent;
-        var abort = false;
-        if (this.options.ghost && el.moved) { // Position the ghost
-            this.ghost.setStyles({
-                'position': 'absolute',
-                'visibility': 'visible',
-                'top': event.page.y+'px',
-                'left': (event.page.x)+'px'
-            });
-        }
-        
-        if (this.getDepth(el) == 0) {
-            el.removeClass('subNavItem');
-            el.addClass('navItem');
-        } else {
-            el.removeClass('navItem');
-            el.addClass('subNavItem');
-        }
-        
-        over = event.target;
-        while (over.nodeName.toLowerCase() != this.options.childTag.toLowerCase() && over != this.list) {
-            over = over.parentNode;
-        }
-        if (over == this.list) return;
-        if (event[this.options.expandKey] && over != el && over.hasClass(this.options.collapseClass)) {
-            check = $E(this.options.parentTag.toLowerCase(), over);
-            over.removeClass(this.options.collapseClass);
-            check.setStyle('display', 'block');
-        }
-        // Check if it's actually inline with a child element of the event firer
-        orig = over;
-        if (el != over) {
-            items = $ES(this.options.childTag.toLowerCase(), over);
-            items.each(function(item) {
-                if (event.page.y > item.getTop() && item.offsetHeight > 0) over = item;
-            });
-        }
-        // Make sure we end up with a childTag element
-        if (over.nodeName.toLowerCase() != this.options.childTag.toLowerCase()) return;
-            
-        // store the previous parent 'ol' to remove it if a move makes it empty
-        prevParent = el.getParent();
-        dir = (event.page.y < el.getTop()) ? 'up' : 'down';
-        move = 'before';
-        dest = el;
-
-        if (el != over) {
-            check = over;
-            while (check != null && check != el) {
-                check = check.parentNode;
-            } // Make sure we're not trying to move something below itself
-            if (check == el) return;
-            if (dir == 'up') {
-                move = 'before'; dest = over;
+        if (linkTarget == "_self") {
+            if (baseUrl != "") {            
+                link = link.split(baseUrl + "/");
+                link = link[1];
             } else {
-                sub = $E(this.options.childTag.toLowerCase(), over);
-                if (sub && sub.offsetHeight > 0) {
-                    move = 'before'; dest = sub;
-                } else {
-                    move = 'after'; dest = over;
-                }
+                link = link.substring(1, link.length);
             }
-        }
+            $(this).children('a:not(.controlButton)').attr('href', link);
+        }    
+        addControlButtons($(this));
+    });
+    
+	initTree('ul#masterList');
+	
+	$('#externalLink').click(function() {
+		if ($('#externalLink:checked').val() != null) {
+			$('#linkPrefix').hide();
+		} else {
+			$('#linkPrefix').show();
+		}
+	});
+	
+	$('#moduleBox').change(function() {
+		
+		if ($(this).val() == "") {
+			$('#controllerBox').empty();
+			$('#actionBox').empty();
+			return;
+		}
+		
+		$('#controllerBox').empty();
+		currentModule = $(this).val();
+		$('<option>').attr('value', '').text('Choose A Controller').appendTo('#controllerBox');
+		$.each(resources.modules[currentModule].controllers, function(i,item) {
+			$('<option>').attr('value', item.name).text(item.name).appendTo('#controllerBox');	
+		});
+		
+		$('#controllerBox').change();
+	});
+	
+	$('#controllerBox').change(function() {
+		
+		if ($(this).val() == "") {
+			$('#actionBox').empty();
+			return;
+		}
+		
+		$('#actionBox').empty();
+		currentController = $(this).val();
+		$('<option>').attr('value', '').text('Choose An Action').appendTo('#actionBox');
+		$.each(resources.modules[currentModule].controllers[currentController].actions, function(i,item) {
+			$('<option>').attr('value', item).text(item).appendTo('#actionBox');	
+		});
+	});
+	
+	$('#saveNavButton').click(function() {
+		
+		var dataArray = serialize($('ul#masterList'));
+		var str = $.toJSON(dataArray);
+		
+		$.post(saveUrl, {data: str}, 
+			  function (data) {
+			    alert(data.msg);
+			    if (data.rc == 1) {
+			    	window.location.reload(true);
+			    }
+			  }, "json");
+	});
+	
+	$.getJSON(baseUrl + "/admin/nav/get-resources", 
+	    function(data) {
+    		resources = data;
+    		$('<option>').attr('value', '').text('Choose A Module').appendTo('#moduleBox');
+    		$.each(data.modules, function(i,item) {
+    			$('<option>').attr('value', item.name).text(item.name).appendTo('#moduleBox');
+    	});
+    });
+	
+	$("#navElementDialog").dialog({ 
+        modal: true, 
+        autoOpen: false,
+        resizable: false,
+        width: 700,
+        height: 500,
+        overlay: { 
+            opacity: 0.5, 
+            background: "black" 
+        },
+        buttons: {
+        	 
+            "Cancel": function() {
+        		
+	        	$('#moduleBox').val('').change();
+	    		$('#controllerBox').val('');
+	    		$('#actionBox').val('');
+	    		$('#displayBox').val('');
+	    		$('#linkBox').val('');	    		
+	    		$('#externalLink').attr('checked', false);
+	    		$('#linkPrefix').show();
+        	
+                $(this).dialog("close"); 
+            },   	
+            "Save": function() { 
+        		
+        		var display = $('#displayBox').val();
+        		var link = $('#linkBox').val();
+        		
+        		var module     = ($('#moduleBox').val() == '' || $('#moduleBox').val() == null) ? 'default' : $('#moduleBox').val();
+        		var controller = ($('#controllerBox').val() == '' || $('#controllerBox').val() == null) ? 'index' : $('#controllerBox').val();
+        		var action     = ($('#actionBox').val() == '' || $('#actionBox').val() == null) ? 'index' : $('#actionBox').val();
+        		
+        		var linkTarget = "_self";
+        		
+        		if ($('#externalLink:checked').val() != null) {
+        			linkTarget = "_blank";
+        		}
+        		
+        		if (display == "") {
+        			alert('You must enter a display name.');
+        			return;
+        		}
+        		
+        		if (currentElementId == "") {
+	        		      			
+        			var newLi = $('<li id="newElement' + newElementIdCounter + '" name="' + display + '"><a title="' + module + ':' + controller + ':' + action + '" href="' + link + '" target="' + linkTarget + '">' + display + '</a></li>');
 
-        // Check if we're trying to go deeper -->>
-        prev = (move == 'before') ? dest.getPrevious() : dest;
-        if (prev) {
-            move = 'after';
-            dest = prev;
-            check = $E(this.options.parentTag.toLowerCase(), dest);
-            while (check && event.page.x > check.getLeft() && check.offsetHeight > 0) {
-                dest = check.getLast();
-                check = $E(this.options.parentTag.toLowerCase(), dest);
-            }
-            if (!check && event.page.x > dest.getLeft()+this.options.childStep) {
-                move = 'inside';
-            }
-        }
+	        		$('ul#masterList').prepend(newLi);
+	        		
+	        		addControlButtons(newLi);     	    
+	        	    newElementIdCounter++;
+	        	    
+	        	    var clone = $('ul#masterList').clone();
+	        	    
+	        	    $('ul#masterList').remove();
+	        	    
+	        	    $('#navEditorContainer').append(clone);
+	        	    
+	        	    initTree('ul#masterList');
+	        	    
+        		} else {
+        			
+        			$('#' + currentElementId).attr('name', display);
+        			$('#' + currentElementId).children('a:not(.controlButton)').attr('title', module + ":" + controller + ":" + action);
+        			$('#' + currentElementId).children('a:not(.controlButton)').attr('target', linkTarget);
+        			$('#' + currentElementId).children('a:not(.controlButton)').attr('href', link);
+        			$('#' + currentElementId).children('a:not(.controlButton)').text(display);
+        		}
+        		
+        		currentElementId = "";
+        	    
+        		$('#moduleBox').val('').change();
+        		$('#controllerBox').val('');
+        		$('#actionBox').val('');
+        		$('#displayBox').val('');
+        		$('#linkBox').val('');
+        		$('#externalLink').attr('checked', false);
+        		$('#linkPrefix').show();
 
-        last = dest.getParent().getLast();
-        while (((move == 'after' && last == dest) || last == el) && dest.getParent() != this.list && event.page.x < dest.getLeft()) {
-            move = 'after';
-            dest = $(dest.parentNode.parentNode);
-            last = dest.getParent().getLast();
-        }
-        
-        abort = false;
-        if (move != '') {
-            abort += ((el.getElements('ul').length > 0) && (this.getDepth(dest, (move == 'inside')) > 0));
-            abort += (this.getDepth(dest, (move == 'inside')) > 1);
-            abort += (dest == el);
-            abort += (move == 'after' && dest.getNext() == el);
-            abort += (move == 'before' && dest.getPrevious() == el);
-            abort += (this.options.lock == 'depth' && el.depth != this.getDepth(dest, (move == 'inside')));
-            abort += (this.options.lock == 'parent' && (move == 'inside' || dest.parentNode != el.parentNode));
-            abort += (dest.offsetHeight == 0);
-            sub = $E(this.options.parentTag.toLowerCase(), over);
-            sub = (sub) ? sub.getTop() : 0;
-            sub = (sub > 0) ? sub-over.getTop() : over.offsetHeight;
-            abort += (event.page.y < (sub-el.offsetHeight)+over.getTop());
-            if (!abort) {
-                if (move == 'inside') dest = new Element(this.options.parentTag.toLowerCase()).injectInside(dest);
-                $(el).inject(dest, move);
-                el.moved = true;
-                if (!prevParent.getFirst()) prevParent.remove();
-            }
-        }
-        event.stop();
-    },
-
-    detach: function() {
-        this.list.removeEvent('mousedown', this.start.bindWithEvent(this));
-        if (this.options.collapse) this.list.removeEvent('click', this.bound.collapse);
-    },
-
-    serialize: function(listEl) {
-        var serial = [];
-        var kids;
-        if (!listEl) listEl = this.list;
-        $$(listEl.getChildren()).each(function(node, i) {
-            kids = $E(this.options.parentTag.toLowerCase(), node);
-            serial[i] = {
-                id: node.id,
-                title: (node.title) ? node.title : "",
-                children: (kids) ? this.serialize(kids) : []
-            };
-        }.bind(this));
-        return serial;
-    },
-
-    end: function(el) {
-        if (this.options.ghost) this.ghost.remove();
-        this.list.removeEvent('mousemove', this.bound.movement);
-        document.removeEvent('mouseup', this.bound.end);
-        this.list.removeEvent('mousedown', this.bound.end);
-        this.list.addEvent('mousedown', this.bound.start);
-        this.fireEvent('onComplete', el);
-        if (window.ie) $(document.body).removeEvent('drag', this.bound.stop).removeEvent('selectstart', this.bound.stop);
-    }
+        		$(this).dialog("close");
+            }      
+        }   	
+    }, "close");
+    
+    $('#addElementButton').click(function(e) {
+    	e.preventDefault();
+    	currentElementId = "";
+    	$("#navElementDialog").dialog("open");
+    });
 });
 
-Nested.implement(new Events);
-Nested.implement(new Options);
+function serialize (items) 
+{
+	var serial = [];
+	var i = 0;
+	items.children('li').each(function() {
+		
+		var linkTarget = ($(this).children('target')) ? $(this).children('a:not(.controlButton)').attr('target') : '_self';
+		linkTarget = linkTarget.toLowerCase();
+		
+	    var link = $(this).children('a:not(.controlButton)').attr('href');
+	    link = (link != undefined) ? link.toLowerCase() : "";
+	    	    
+		serial[i] = {
+			display:     $(this).attr('name'),
+			permissions: ($(this).children('a:not(.controlButton)')) ? $(this).children('a:not(.controlButton)').attr('title') : '',
+			link:        link,
+			target:      linkTarget,
+			children:    ($(this).children('ul')) ? serialize($(this).children('ul')) : []
+		};
+		i++;
+	});
+	
+	return serial;
+}
+
+function addControlButtons(el) {
+	
+	$(el).prepend('<a class="controlButton deleteElement ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick" title="Delete Element"></span></a>');
+	$(el).prepend('<a class="controlButton editElement ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil" title="Edit Element"></span></a>');
+	$(el).prepend('<span class="ui-icon ui-icon-arrow-4 moveHandle"></span>');
+	
+	$('a.ui-state-default').hover(
+		function(){ $(this).addClass('ui-state-hover'); }, 
+		function(){ $(this).removeClass('ui-state-hover'); }
+  	);
+}
+
+function initTree(el)
+{	
+	$('ul#masterList li').children('a').each(function() {
+		$(this).click(function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		});
+    });
+	
+	$('ul#masterList li').find('.deleteElement').click(function() {
+		if (confirm("Are you sure you want to delete this element?  This action cannot be undone.")) {
+			$(this).parent().slideUp('normal', 
+				function() {
+					$(this).remove();
+				});
+		}
+	});
+
+	$('ul#masterList li').find('.editElement').click(function() {
+		var el = $(this).parent();
+		currentElementId = $(el).attr('id');
+
+		$('#displayBox').val($(el).attr('name'));
+		
+		var linkTarget = $(el).children('a:not(.controlButton)').attr('target');
+		if (linkTarget.toLowerCase() == "_self") {
+			$('#externalLink').attr('checked', false);
+			$('#linkPrefix').show();
+		} else {
+			$('#externalLink').attr('checked', true);
+			$('#linkPrefix').hide();
+		}
+		
+		var link = $(el).children('a:not(.controlButton)').attr('href');
+		
+		$('#linkBox').val(link);
+		
+		var permissions = $(el).children('a:not(.controlButton)').attr('title').split(':');
+		
+		$('#moduleBox').val(permissions[0] || 'default').change();
+		$('#controllerBox').val(permissions[1] || 'index').change();
+		$('#actionBox').val(permissions[2] || 'index');
+		
+		$("#navElementDialog").dialog("open");		
+	});
+	
+	$(el).jTree();
+}

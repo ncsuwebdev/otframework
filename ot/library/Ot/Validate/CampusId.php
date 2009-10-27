@@ -72,6 +72,3 @@ class Ot_Validate_CampusId implements Zend_Validate_Interface
         return $this->_messages;
     }
 }
-
-?>
-

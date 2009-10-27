@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configData>
+  <production>
+    <app>
+      <theme>default</theme>
+    </app>
+    <user>
+      <language val="en"/>
+      <appTitle val="Web App"/>
+      <timezone val="America/New_York"/>
+      <appDescription val="App description!gdfgdfsgfdsgfsdgdf"/>
+      <newAccountRole val="6"/>
+      <customTheme val="default"/>
+    </user>
+  </production>
+</configData>

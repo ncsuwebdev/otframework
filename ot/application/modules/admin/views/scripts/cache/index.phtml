@@ -1,0 +1,10 @@
+<?php if ($this->acl['clearCache']) : ?>
+<div>
+    <?php echo $this->translate('admin-cache-index:header'); ?>
+</div>
+<br />
+
+<form action="<?php echo $this->baseUrl(); ?>/admin/cache/clear">
+    <input type="submit" value="<?php echo $this->translate('admin-cache-index:linkClear'); ?>" />
+</form>
+<?php endif; ?>
