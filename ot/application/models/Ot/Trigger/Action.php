@@ -45,14 +45,14 @@ class Ot_Trigger_Action extends Ot_Db_Table
     
     public function getActionsForTrigger($triggerId, $onlyEnabled = true)
     {
-    	$where = $this->getAdapter()->quoteInto('triggerId = ?', $triggerId);
-    	
-    	if ($onlyEnabled) {
-    		$where .= ' AND '
-    		        . $this->getAdapter()->quoteInto('enabled = ?', 1);
-    	}
-    	
-    	return $this->fetchAll($where);
+        $where = $this->getAdapter()->quoteInto('triggerId = ?', $triggerId);
+        
+        if ($onlyEnabled) {
+            $where .= ' AND '
+                    . $this->getAdapter()->quoteInto('enabled = ?', 1);
+        }
+        
+        return $this->fetchAll($where);
     }
     
     /**

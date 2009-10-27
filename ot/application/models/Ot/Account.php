@@ -55,22 +55,22 @@ class Ot_Account extends Ot_Db_Table
     
     public function getAccount($username, $realm)
     {
-    	$where = $this->getAdapter()->quoteInto('username = ?', $username)
-    	       . ' AND '
-    	       . $this->getAdapter()->quoteInto('realm = ?', $realm);
-    	       
-    	$result = $this->fetchAll($where);
-    	
-    	if ($result->count() != 1) {
-    		return null;
-    	}
-    	
-    	return $result->current();
+        $where = $this->getAdapter()->quoteInto('username = ?', $username)
+               . ' AND '
+               . $this->getAdapter()->quoteInto('realm = ?', $realm);
+               
+        $result = $this->fetchAll($where);
+        
+        if ($result->count() != 1) {
+            return null;
+        }
+        
+        return $result->current();
     }
     
     public function generatePassword()
     {
-    	return substr(md5(microtime()), 2, 2 + $this->_minPasswordLength);
+        return substr(md5(microtime()), 2, 2 + $this->_minPasswordLength);
     }
     
     public function generateApiCode()
@@ -80,15 +80,15 @@ class Ot_Account extends Ot_Db_Table
 
     public function verify($accessCode)
     {
-    	$where = $this->getAdapter()->quoteInto('apiCode = ?', $accessCode);
-    	$this->_messages[] = $where;
-    	$result = $this->fetchAll($where, null, 1);
-    	
-    	if ($result->count() != 1) {
-    		throw new Exception('Code not found');
-    	}
-    	
-    	return $result->current();
+        $where = $this->getAdapter()->quoteInto('apiCode = ?', $accessCode);
+        $this->_messages[] = $where;
+        $result = $this->fetchAll($where, null, 1);
+        
+        if ($result->count() != 1) {
+            throw new Exception('Code not found');
+        }
+        
+        return $result->current();
     }    
     
     public function getAccountsForRole($roleId)
@@ -100,17 +100,17 @@ class Ot_Account extends Ot_Db_Table
     
     public function form($default = array(), $signup = false) 
     {
-    	$config = Zend_Registry::get('config');
-    	$acl    = Zend_Registry::get('acl');
-    	
+        $config = Zend_Registry::get('config');
+        $acl    = Zend_Registry::get('acl');
+        
         $form = new Zend_Form();
         $form->setAttrib('id', 'account')
-	         ->setDecorators(array(
-	                 'FormElements',
-	                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-	                 'Form',
-	         ));
-	    
+             ->setDecorators(array(
+                     'FormElements',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     'Form',
+             ));
+        
         $adapters = $config->app->authentication->toArray();
         
         // Realm Select box
@@ -150,7 +150,7 @@ class Ot_Account extends Ot_Db_Table
                  ->setValue((isset($default['lastName'])) ? $default['lastName'] : '');
 
         // Password field
-		$password = $form->createElement('password', 'password', array('label' => 'model-account-password'));
+        $password = $form->createElement('password', 'password', array('label' => 'model-account-password'));
         $password->setRequired(true)
                  ->addValidator('StringLength', false, array($this->_minPasswordLength, $this->_maxPasswordLength))
                  ->addFilter('StringTrim')
@@ -186,32 +186,32 @@ class Ot_Account extends Ot_Db_Table
         $roleSelect->setValue((isset($default['role'])) ? $default['role'] : '');
         
         if ($signup) {
-        	$form->addElements(array($username, $password, $passwordConf, $firstName, $lastName, $email, $timezone));
+            $form->addElements(array($username, $password, $passwordConf, $firstName, $lastName, $email, $timezone));
         } else {
-        	$me = false;
-        	
-        	if (isset($default['accountId']) && $default['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
-        		$me = true;
-        	}
-        	
-        	if (!$me) {
-        		$form->addElements(array($realmSelect, $username));
-        	}
-        	
-        	$form->addElements(array($firstName, $lastName, $email, $timezone));
-        	
-        	if (!$me) {
-        		$form->addElement($roleSelect);
-        	}
+            $me = false;
+            
+            if (isset($default['accountId']) && $default['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
+                $me = true;
+            }
+            
+            if (!$me) {
+                $form->addElements(array($realmSelect, $username));
+            }
+            
+            $form->addElements(array($firstName, $lastName, $email, $timezone));
+            
+            if (!$me) {
+                $form->addElement($roleSelect);
+            }
         }
         
         if (isset($config->app->accountPlugin)) {
             $acctPlugin = new $config->app->accountPlugin;
             
             if (isset($default['accountId'])) {
-            	$subform = $acctPlugin->editSubForm($default['accountId']);
+                $subform = $acctPlugin->editSubForm($default['accountId']);
             } else {
-            	$subform = $acctPlugin->addSubForm();
+                $subform = $acctPlugin->addSubForm();
             }
             
             foreach ($subform->getElements() as $e) {
@@ -222,9 +222,9 @@ class Ot_Account extends Ot_Db_Table
         $custom = new Ot_Custom();
         
         if (isset($default['accountId'])) {
-        	$attributes = $custom->getData('Ot_Profile', $default['accountId'], 'Zend_Form');
+            $attributes = $custom->getData('Ot_Profile', $default['accountId'], 'Zend_Form');
         } else {
-        	$attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
+            $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
         }
         
         foreach ($attributes as $a) {
@@ -249,27 +249,27 @@ class Ot_Account extends Ot_Db_Table
               ))
               ->addElements(array($submit, $cancel));
               
-    	if (isset($default['accountId'])) {
-	    	$accountId = $form->createElement('hidden', 'accountId');
-	    	$accountId->setValue($default['accountId']);
+        if (isset($default['accountId'])) {
+            $accountId = $form->createElement('hidden', 'accountId');
+            $accountId->setValue($default['accountId']);
             $accountId->setDecorators(array(
                 array('ViewHelper', array('helper' => 'formHidden'))
             )); 
             
             $form->addElement($accountId);
-	    }     
+        }     
 
-	    if ($signup) {
-	        // Realm hidden box
-	        $realmHidden = $form->createElement('hidden', 'realm');
-	        $realmHidden->setValue($default['realm']);
-	        $realmHidden->setDecorators(array(
-	            array('ViewHelper', array('helper' => 'formHidden'))
-	        ));  	    	
-	        
-	    	$form->addElement($realmHidden);
-	    }
+        if ($signup) {
+            // Realm hidden box
+            $realmHidden = $form->createElement('hidden', 'realm');
+            $realmHidden->setValue($default['realm']);
+            $realmHidden->setDecorators(array(
+                array('ViewHelper', array('helper' => 'formHidden'))
+            ));             
+            
+            $form->addElement($realmHidden);
+        }
                       
-    	return $form;
+        return $form;
     }
 }

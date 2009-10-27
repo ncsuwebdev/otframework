@@ -1,6 +1,6 @@
 <?php
 class Ot_Backup {
-	
+    
     public function getBackup($db, $tableName, $type)
     {
         $this->_db = $db;
@@ -26,66 +26,66 @@ class Ot_Backup {
         }
     }
     
-	/**
-	 * Generates a CSV from a database table and sends it to the browser
-	 * for download
-	 *
-	 * @param Zend_Db_Adapter $db
-	 * @param string $tableName
-	 */
-	protected function _getCsv()
-	{
-	    $config = Zend_Registry::get('config');
+    /**
+     * Generates a CSV from a database table and sends it to the browser
+     * for download
+     *
+     * @param Zend_Db_Adapter $db
+     * @param string $tableName
+     */
+    protected function _getCsv()
+    {
+        $config = Zend_Registry::get('config');
         
         if (!(isset($config->app->tablePrefix) && !empty($config->app->tablePrefix))) {
-        	throw new Ot_Exception_Access('No table prefix is defined, therefore you cannot make any backups.');
+            throw new Ot_Exception_Access('No table prefix is defined, therefore you cannot make any backups.');
         }
 
         if (!preg_match('/^' . $config->app->tablePrefix . '/i', $this->_tableName)) {
-        	throw new Ot_Exception_Access('You are attempting to access a table outside your application.  This is not allowed.');
+            throw new Ot_Exception_Access('You are attempting to access a table outside your application.  This is not allowed.');
         }
         
-		$data = $this->_db->fetchAssoc("SELECT * FROM $this->_tableName");
-	    $colData = $this->_db->describeTable($this->_tableName);
-	    
-	    $columnNames = array();
-	    
-	    foreach ($colData as $colName => $value) {
-	    	$columnNames[$colName] = '"' . $colName . '"';
-	    }
-	    
-	    $fileName = $this->_tableName . '.backup-' . date('Ymd-B') . '.csv';
-	    
-	    $tmpName = tempnam('/tmp', $fileName);
-	    
-	    $fp = fopen($tmpName, 'w');
-	    
-	    $ret = fputcsv($fp, $columnNames, ',', '"');
-	    
-	    if ($ret === false) {
-	    	throw new Ot_Exception_Data('Error writing backup CSV file');
-	    }
-	    
-	    foreach ($data as $row) {
-		    $ret = fputcsv($fp, $row, ',', '"');
-		    
-		    if ($ret === false) {
-		    	throw new Ot_Exception_Data('Error writing backup CSV file');
-		    }	
-	    }
-	    
-	    fclose($fp);
-	    
-	    file_get_contents($tmpName);
-	    
-		header('Content-Description: File Transfer');
-		header('Content-Type: application/octet-stream');
-		header('Content-Length: ' . filesize($tmpName));
-		header("Content-Disposition: attachment; filename=$fileName");
-		readfile($tmpName);
-		unlink($tmpName);
-	}
-	
+        $data = $this->_db->fetchAssoc("SELECT * FROM $this->_tableName");
+        $colData = $this->_db->describeTable($this->_tableName);
+        
+        $columnNames = array();
+        
+        foreach ($colData as $colName => $value) {
+            $columnNames[$colName] = '"' . $colName . '"';
+        }
+        
+        $fileName = $this->_tableName . '.backup-' . date('Ymd-B') . '.csv';
+        
+        $tmpName = tempnam('/tmp', $fileName);
+        
+        $fp = fopen($tmpName, 'w');
+        
+        $ret = fputcsv($fp, $columnNames, ',', '"');
+        
+        if ($ret === false) {
+            throw new Ot_Exception_Data('Error writing backup CSV file');
+        }
+        
+        foreach ($data as $row) {
+            $ret = fputcsv($fp, $row, ',', '"');
+            
+            if ($ret === false) {
+                throw new Ot_Exception_Data('Error writing backup CSV file');
+            }   
+        }
+        
+        fclose($fp);
+        
+        file_get_contents($tmpName);
+        
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Length: ' . filesize($tmpName));
+        header("Content-Disposition: attachment; filename=$fileName");
+        readfile($tmpName);
+        unlink($tmpName);
+    }
+    
 /**
      * Generates an SQL from a database table using mysqldump and sends it to 
      * the browser for download
@@ -135,7 +135,7 @@ class Ot_Backup {
         header("Content-Disposition: attachment; filename=$fileName");
         readfile($path . '/' . $fileName);
         unlink($path . '/' . $fileName);
-    }	
+    }   
     
     protected function _getTables()
     {
@@ -154,7 +154,7 @@ class Ot_Backup {
         
         return $tableList;
     }
-	
+    
     /**
      * The form for downloading the database tables
      */

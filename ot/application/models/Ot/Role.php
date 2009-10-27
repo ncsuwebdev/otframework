@@ -67,7 +67,6 @@ class Ot_Role extends Ot_Db_Table
     	
     		$roles = $this->fetchAll(null)->toArray();
     		
-    		
     		$where = $rule->getAdapter()->quoteInto('scope = ?', $scope);
     		$rules = $rule->fetchAll($where, 'roleId')->toArray();
     	

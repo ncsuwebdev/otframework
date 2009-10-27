@@ -67,11 +67,11 @@ class Ot_Bug extends Ot_Db_Table
         }
         
         try {
-        	$text['bugId'] = $bugId;
+            $text['bugId'] = $bugId;
             $bt->insert($text);
         } catch (Exception $e) {
-        	$dba->rollback();
-        	throw $e;
+            $dba->rollback();
+            throw $e;
         }
 
         $dba->commit();
@@ -86,16 +86,16 @@ class Ot_Bug extends Ot_Db_Table
         $dba->beginTransaction();
         
         if (isset($data['text'])) {
-	        $bt = new Ot_Bug_Text();
-	        $text = $data['text'];
-	        unset($data['text']);
-	        
-	        try {
-	            $bt->insert($text);
-	        } catch (Exception $e) {
-	            $dba->rollback();
-	            throw $e;
-	        }	        
+            $bt = new Ot_Bug_Text();
+            $text = $data['text'];
+            unset($data['text']);
+            
+            try {
+                $bt->insert($text);
+            } catch (Exception $e) {
+                $dba->rollback();
+                throw $e;
+            }           
         }
         
         try {
@@ -105,7 +105,7 @@ class Ot_Bug extends Ot_Db_Table
             throw $e;
         }
 
-        $dba->commit();    	
+        $dba->commit();     
     }
 
     /**
@@ -127,14 +127,14 @@ class Ot_Bug extends Ot_Db_Table
     
     protected function _getColumnOptions($col)
     {
-    	$info = $this->info();
-    	
-    	$dataType = $info['metadata'][$col]['DATA_TYPE'];
+        $info = $this->info();
+        
+        $dataType = $info['metadata'][$col]['DATA_TYPE'];
 
         $options = array($col);
         
         if (!preg_match('/enum/i', $dataType)) {
-        	return $options;
+            return $options;
         }
         
         $options = array();

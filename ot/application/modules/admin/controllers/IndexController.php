@@ -35,15 +35,7 @@ class Admin_IndexController extends Zend_Controller_Action
     public function indexAction()
     {       
         $this->_helper->pageTitle('admin-index-index:title');
-        $config = Zend_Registry::get('config');
-        
-        if (!empty($config->app->version)) {
-            $this->view->appVersion = $config->app->version;
-        } else {
-        	$this->view->appVersion = "Unknown";
-        };
-        
-        $this->view->appTitle = $config->user->appTitle;
+
         $this->view->otVersion = Ot_Version::VERSION;
         $this->view->zfVersion = Zend_Version::VERSION;        
        

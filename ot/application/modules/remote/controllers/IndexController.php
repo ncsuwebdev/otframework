@@ -12,29 +12,36 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_Authz_Adapter_Interface
- * @category   Library
+ * @package    Remote_IndexController
+ * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
 
 /**
- * Interface to build all Authorizatino Adapters
+ * remote access controller
  *
- * @package    Ot_Authz_Adapter_Interface
- * @category   Library
+ * @package    
+ * @subpackage Remote_IndexController
+ * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-interface Ot_Authz_Adapter_Interface
+class Remote_IndexController extends Internal_Controller_Action  
 {
-
-	/**
-	 * Flag to tell the app where the authorization is managed.  If set to true,
-	 * the application will use its own interface to interact with the adapter.
-	 *
-	 * @return boolean
-	 */
-    public static function manageLocally();
-
+    /**
+     * Allows SOAP access to the application
+     */
+    public function soapAction()
+    {
+    	Zend_Loader::loadClass('Ot_Api');
+    	
+        $server = new SoapServer(null, array('uri' => "soapservice"));
+        $server->setClass('Ot_Api');
+        $server->setPersistence(SOAP_PERSISTENCE_SESSION);
+        $server->handle();
+        
+        $this->_helper->viewRenderer->setNeverRender();
+        $this->_helper->layout->disableLayout();
+    }
 }

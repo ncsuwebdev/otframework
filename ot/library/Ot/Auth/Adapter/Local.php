@@ -29,7 +29,7 @@
  * @category   Authentication Adapter
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapter_Interface, Ot_Auth_Adapter_InterfaceLocal
+class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapter_Interface
 {
 
     /**
@@ -37,7 +37,7 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
      *
      * @var string
      */
-    protected $_userId = '';
+    protected $_username = '';
 
     /**
      * Password of the user to authenticate
@@ -53,9 +53,7 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
      */
     protected $_db = null;
     
-    protected $_name = 'tbl_ot_auth_local';
-    
-    protected $_adapterName = 'local';
+    protected $_name = 'tbl_ot_account';
 
     /**
      * Constructor to create new object
@@ -63,11 +61,16 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
      * @param string $username
      * @param string $password
      */
-    public function __construct($userId = '', $password = '')
+    public function __construct($username = '', $password = '')
     {
-        $this->_userId   = $userId;
+    	$config = Zend_Registry::get('config');
+    	
+    	if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
+			$this->_name = $config->app->tablePrefix . $this->_name;
+		}
+		
+        $this->_username = $username;
         $this->_password = $password;
-        $this->_db       = Zend_Registry::get('dbAdapter');
     }
 
     /**
@@ -77,20 +80,23 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
      */
     public function authenticate()
     {
+		$account = new Ot_Account();
 
-        $select = $this->_db->select();
+		$result = $account->getAccount($this->_username, 'local');
 
-        $select->from($this->_name)
-               ->where ('userId = ?', $this->_userId)
-               ->where ('password = ?', md5($this->_password));
-
-        $result = $this->_db->fetchAll($select);
-
-        if (count($result) == 0) {
-            return new Zend_Auth_Result(false, null, array('User "' . $this->_userId . '" with password not found.'));
+        if (is_null($result)) {
+            return new Zend_Auth_Result(false, null, array('User "' . $this->_username . '" account was not found.'));
+        }
+        
+        if (md5($this->_password) != $result->password) {
+        	return new Zend_Auth_Result(false, null, array('The password you entered was invalid.'));
         }
 
-        return new Zend_Auth_Result(true, $result[0]['userId'], array());
+        $class = new stdClass();
+        $class->username = $this->_username;
+        $class->realm    = 'local';
+        
+        return new Zend_Auth_Result(true, $class, array());
 	}
 
 	/**
@@ -131,133 +137,5 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
     {
         return true;
     }	
-    
-	/**
-	 * Tells the application whenter the user has an account or not
-	 *
-	 * @param int $userId
-	 * @return boolean
-	 */
-	public function hasAccount($userId)
-	{
 
-        $result = $this->getUser($userId);
-
-        if (count($result) == 0) {
-            return false;
-        }
-
-        return true;
-	}
-
-	/**
-	 * Gets a user by ID from the system
-	 *
-	 * @param int $userId
-	 * @return array with userId, password, and email
-	 */
-	public function getUser($userId)
-	{
-        $select = $this->_db->select();
-
-        $select->from($this->_name);
-
-        if ($userId != '') {
-            $select->where('userId = ?', $userId);
-        } else {
-            $select->where('1 = 1');
-        }
-
-        $select->order('userId');
-
-        return $this->_db->fetchAll($select);
-	}
-
-	/**
-	 * Adds an account to the system, emailing the generated password to the user
-	 *
-	 * @param int    $userId
-	 * @param string $password
-	 * @param string $email
-	 */
-	public function addAccount($userId, $password)
-	{
-	    if ($password == '') {
-	        $password = substr(md5(date('r')), 2, 8);
-	    }
-
-        $data = array(
-            'userId'  => $userId,
-            'password' => $this->encryptPassword($password),
-            );
-
-        $this->_db->insert($this->_name, $data);
-        
-        return $password;
-	}
-
-	/**
-	 * Edits an account in the system
-	 *
-	 * @param int    $userId
-	 * @param string $password
-	 * @param string $email
-	 * @return results from Zend_Db::update
-	 */
-	public function editAccount($userId, $password)
-	{
-        $data = array();
-
-        if ($password != '') {
-            $data['password'] = $this->encryptPassword($password);
-        }
-        $where = $this->_db->quoteInto('userId = ?', $userId);
-
-        return $this->_db->update($this->_name, $data, $where);
-	}
-
-	/**
-	 * Deletes an account from the system
-	 *
-	 * @param int $userId
-	 * @return results from Zend_Db::delete
-	 */
-	public function deleteAccount($userId)
-	{
-	    $where = $this->_db->quoteInto('userId = ?', $userId);
-
-	    return $this->_db->delete($this->_name, $where);
-	}
-
-	/**
-	 * Resets a users password and emails them the new pass
-	 *
-	 * @param int $userId
-	 */
-	public function resetPassword($userId)
-	{
-	    $password = substr(md5(date('r')), 2, 8);
-
-        $data = array(
-            'password' => $this->encryptPassword($password)
-            );
-
-        $where = $this->_db->quoteInto('userId = ?', $userId);
-
-        $this->_db->update($this->_name, $data, $where);
-        
-        return $password;
-	}
-
-
-	/**
-	 * Encrypts the password
-	 *
-	 * @param string $password
-	 * @return string
-	 */
-	public function encryptPassword($password)
-	{
-	    return md5($password);
-	}
 }

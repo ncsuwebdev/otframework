@@ -27,15 +27,8 @@
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-class Account_IndexController extends Internal_Controller_Action 
-{
-   /**
-     * Authz adapter
-     *
-     * @var Ot_Authz_Adapter
-     */
-    protected $_authzAdapter = null;
-    
+class Account_IndexController extends Zend_Controller_Action 
+{    
     /**
      * Authetication adapter
      *
@@ -49,13 +42,6 @@ class Account_IndexController extends Internal_Controller_Action
      * @var unknown_type
      */
     protected $_userData = array();
-    
-    /**
-     * Flash Messenger Object
-     *
-     * @var unknown_type
-     */
-    protected $_flashMessenger = null;
 
     /**
      * Runs when the class is initialized.  For the accounts controller, some
@@ -64,57 +50,37 @@ class Account_IndexController extends Internal_Controller_Action
      *
      */
     public function init()
-    {
-        $this->_flashMessenger = $this->getHelper('FlashMessenger');
-        $this->_flashMessenger->setNamespace('account');
-        
+    {        
         parent::init();
         
-        $config = Zend_Registry::get('appConfig');
-
-        $this->_authzAdapter = new $config->authorization(Zend_Auth::getInstance()->getIdentity());
-        
-        $filter = new Zend_Filter_Input(array('*' => 'StringTrim'), array(), $_GET);
+        $config = Zend_Registry::get('config');
+        $get = Zend_Registry::get('getFilter');
         
         $userData = array();
         
-        $userData['userId'] = Zend_Auth::getInstance()->getIdentity();
-        if ($filter->userId && $this->_acl->isAllowed($this->_role, $this->_resource, 'editAllAccounts')) {
-            $userData['userId'] = $filter->userId;
+        $userData['accountId'] = Zend_Auth::getInstance()->getIdentity()->accountId;
+        if ($get->accountId && $this->_helper->hasAccess('editAllAccounts')) {
+            $userData['accountId'] = $get->accountId;
         }
+                        
+        $account = new Ot_Account();        
+        $thisAccount = $account->find($userData['accountId']);
         
-        $userData['displayUserId'] = preg_replace('/@.*$/', '', $userData['userId']);
-        $userData['realm']         = preg_replace('/^[^@]*@/', '', $userData['userId']);     
-                
-        $a = $config->authentication->{$userData['realm']};
+        if (is_null($thisAccount)) {
+        	throw new Ot_Exception_Data('msg-error-noAccount');
+        }               
+        
+        $userData = array_merge($userData, $thisAccount->toArray());
+        
+        $a = $config->app->authentication->{$userData['realm']};
         $this->_authAdapter = new $a->class;
         $userData['authAdapter'] = array(
            'realm'       => $userData['realm'],
            'name'        => $a->name,
            'description' => $a->description,
         );
-        
-        try {
-            $user = $this->_authzAdapter->getUser($userData['userId']);
-        } catch (Exception $e) {
-            if ((bool)$config->loginOptions->generateAccountOnFirstLogin) {
-                throw $e;
-            }
-            
-            throw new Ot_Exception_Data('User account creation reqiured on login, but no authorization data was found.');
-        }
-        
-        $userData['role'] = $user['role'];
-        
-        $account = new Ot_Account();        
-        $thisAccount = $account->find($userData['userId']);
-        
-        if (!is_null($thisAccount)) {
-            $userData = array_merge($userData, $thisAccount->toArray());
-        }               
-        
+                
         $this->_userData = $userData;
-        
     }   
     
     /**
@@ -123,50 +89,98 @@ class Account_IndexController extends Internal_Controller_Action
      */
     public function indexAction()
     {
-        $config = Zend_Registry::get('appConfig');
+        $config = Zend_Registry::get('config');
 
         $this->view->acl = array(
-            'edit'            => $this->_acl->isAllowed($this->_role, $this->_resource, 'edit'),
-            'delete'          => ($this->_acl->isAllowed($this->_role, $this->_resource, 'delete') && $this->_userData['userId'] != Zend_Auth::getInstance()->getIdentity()),
-            'generateApiCode' => $this->_acl->isAllowed($this->_role, $this->_resource, 'generate-api-code'),
-            'deleteApiCode'   => $this->_acl->isAllowed($this->_role, $this->_resource, 'delete-api-code'),
+            'edit'            => $this->_helper->hasAccess('edit'),
+            'delete'          => ($this->_helper->hasAccess('delete') && $this->_userData['accountId'] != Zend_Auth::getInstance()->getIdentity()->accountId),
             'changePassword'  => $this->_authAdapter->manageLocally() && 
-                $this->_userData['userId'] == Zend_Auth::getInstance()->getIdentity() &&
-                $this->_acl->isAllowed($this->_role, $this->_resource, 'change-password'),
+                $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId &&
+                $this->_helper->hasAccess('change-password'),
+            'grantAccess'     => ($this->_helper->hasAccess('index', 'oauth_client') && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
+            'revokeAccess'    => ($this->_helper->hasAccess('revoke', 'oauth_server') && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
+            'oauth'           => $this->_helper->hasAccess('index', 'oauth_index'),
+            'apiDocs'         => $this->_helper->hasAccess('index', 'api_documentation')
         );
 
-        $remote = (boolean)$config->remoteAccess->allow;
-        
-        if ($remote) {
-            $apiCode = new Ot_Api_Code();
-            
-            $code = $apiCode->find($this->_userData['userId']);
-        
-            if (!is_null($code)) {
-                $this->view->apiCode = $code->code;
-            }
-        }
-        
-        $this->view->messages = $this->_flashMessenger->getMessages();
-        $this->view->remote   = $remote;
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->view->userData = $this->_userData;
-        $this->view->title    = "Account for " . $this->_userData['firstName'] . ' ' . $this->_userData['lastName'];
-                
-        if (isset($config->accountPlugin)) {
-            $acctPlugin = new $config->accountPlugin;
-            $attributes = $acctPlugin->get($this->_userData['userId']);
-            
-            unset($attributes['userId']);
+        
+        $this->_helper->pageTitle('account-index-index:title', array($this->_userData['firstName'], $this->_userData['lastName'], $this->_userData['username']));
+
+        if (isset($config->app->accountPlugin)) {
+            $acctPlugin = new $config->app->accountPlugin;
+            $attributes = $acctPlugin->get($this->_userData['accountId']);
         }      
 
+        $role = new Ot_Role();
+        $thisRole = $role->find($this->_userData['role']);
+        
+        if (is_null($thisRole)) {
+        	throw new Ot_Exception_Data('Role id not found');
+        }
+        
+        $this->view->role = $thisRole->toArray();
         $custom = new Ot_Custom();
         
-        $data = $custom->getData('Ot_Profile', $this->_userData['userId']);
+        $data = $custom->getData('Ot_Profile', $this->_userData['accountId']);
         foreach ($data as $d) {
             $attributes[$d['attribute']['label']] = $d['value'];
         }
                 
         $this->view->attributes = $attributes;
+        
+        $st = new Ot_Oauth_Server_Token();
+        $consumer = new Ot_Oauth_Server_Consumer();
+        
+        $tokens = $st->getTokensForAccount($this->_userData['accountId'], 'access')->toArray();
+        
+        $consumerIds = array();
+        foreach ($tokens as $t) {
+        	$consumerIds[] = $t['consumerId'];
+        }
+        
+        if (count($consumerIds) != 0) {
+        	$where = $consumer->getAdapter()->quoteInto('consumerId IN (?)', $consumerIds);
+        	$consumers = $consumer->fetchAll($where)->toArray();
+        	
+        	$consumerMap = array();
+        	foreach ($consumers as $c) {
+        		$consumerMap[$c['consumerId']] = $c;
+        	}
+        	
+        	foreach ($tokens as &$t) {
+        		$t['consumer'] = $consumerMap[$t['consumerId']];
+        	}
+        	unset($t);
+        }
+        
+        $this->view->accessTokens = $tokens;
+                
+        $config = Zend_Registry::get('config');
+        
+        $consumers = array();
+        if ($config->app->oauth->consumers instanceof Zend_Config) {
+        	
+        	$clientToken = new Ot_Oauth_Client_Token();
+        	
+        	$accessTokens = $clientToken->getTokensForAccount($this->_userData['accountId'], 'access');
+        	
+        	$authorized = array();
+        	foreach ($accessTokens as $a) {
+        		$authorized[] = $a->consumerId;
+        	}
+        	
+	        foreach ($config->app->oauth->consumers as $key => $value) {
+	        	$data = $value->toArray();
+	        	$data['consumerId'] = $key;
+	        	$data['authorized'] = (in_array($key, $authorized));
+	        	$consumers[] = $data;
+	        }
+        }
+        
+        $this->view->consumers = $consumers;
+        
     }
     
     /**
@@ -175,24 +189,86 @@ class Account_IndexController extends Internal_Controller_Action
      */
     public function allAction()
     {
-        $users = $this->_authzAdapter->getUsers();
-
         $this->view->acl = array(
-            'add'    => $this->_acl->isAllowed($this->_role, $this->_resource, 'add'),
-            'edit'   => $this->_acl->isAllowed($this->_role, $this->_resource, 'edit'),
-            'delete' => $this->_acl->isAllowed($this->_role, $this->_resource, 'delete'),
+            'add'    => $this->_helper->hasAccess('add'),
+            'edit'   => $this->_helper->hasAccess('edit'),
+            'delete' => $this->_helper->hasAccess('delete'),
         );
-
-        if (count($users) != 0) {
-            $this->view->javascript = 'sortable.js';
-        }
-
-        $config = Zend_Registry::get('appConfig');
-        $this->view->realms = $config->authentication->toArray();
         
-        $this->view->title = "Manage Users";
-        $this->view->users = $users;
-        $this->view->messages = $this->_flashMessenger->getMessages();      
+        $this->_helper->pageTitle('account-index-all:title');
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();     
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.flexigrid.pack.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/ot/css/jquery.plugin.flexigrid.css'); 
+        
+        if ($this->_request->isXmlHttpRequest()) {
+        	
+        	$filter = Zend_Registry::get('postFilter');
+        	
+        	$this->_helper->layout->disableLayout();
+        	$this->_helper->viewRenderer->setNeverRender();
+        	
+        	$account = new Ot_Account();
+        	
+        	$sortname  = (isset($filter->sortname)) ? $filter->sortname : 'username';
+        	$sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'asc';
+        	$rp        = (isset($filter->rp)) ? $filter->rp : 15;
+        	$page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
+        	$qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
+        	$query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
+        	
+        	$acl = Zend_Registry::get('acl');
+        	$roles = $acl->getAvailableRoles();
+        	
+        	$where = null;
+        	
+        	if (!is_null($query)) {
+        		if ($qtype == 'role') {
+        			foreach ($roles as $r) {
+        				if ($query == $r['name']) {
+        					$query = $r['roleId'];
+        					break;
+        				}
+        			}
+        		}
+        		
+        		$where = $account->getAdapter()->quoteInto($qtype . ' = ?', $query);
+        	}
+
+        	
+        	
+        	$accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+        	        	
+        	$response = array(
+        		'page' => $page + 1,
+        		'total' => $account->fetchAll($where)->count(),
+        		'rows'  => array()
+        	);
+        	
+			$config = Zend_Registry::get('config');
+        	$realms = $config->app->authentication->toArray();
+        	
+        	$realmMap = array();
+        	foreach ($realms as $key => $r) {
+        		$realmMap[$key] = $r['name'];
+        	}
+                	
+        	foreach ($accounts as $a) {
+        		$row = array(
+        			'id'   => $a->accountId,
+        			'cell' => array(
+        				$a->username,
+        				$a->firstName, 
+        				$a->lastName,
+        				$realmMap[$a->realm], 
+        				$roles[$a->role]['name'],       				
+        			),
+        		);
+        		
+        		$response['rows'][] = $row;
+        	}
+        	echo Zend_Json::encode($response);
+	        return;
+        }
     }
     
     /**
@@ -201,230 +277,55 @@ class Account_IndexController extends Internal_Controller_Action
      */
     public function addAction()
     {
-        $config = Zend_Registry::get('appConfig');
-
-        $form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'addUser')
-             ;
+        $account = new Ot_Account();
+        $config  = Zend_Registry::get('config');
         
-        $adapters = $config->authentication->toArray();
+        $form = $account->form();
         
-        $realmSelect = new Zend_Form_Element_Select('realm');
-        $realmSelect->setLabel('Login Method:');
-        
-        foreach ($adapters as $key => $value) {
-            $a = new $value['class'];
-            
-            $class = array();
-            
-            if ($a->autoLogin()) {
-                $class[] = 'autoLogin';
-            } else {
-                $class[] = 'manualLogin';
-            }
-            
-            if ($a->allowUserSignUp()) {
-                $class[] = 'signup';
-            } else {
-                $class[] = 'noSignup';
-            }
-            
-            $realmSelect->addMultiOption($key, $value['name']);
-            
-            $hidden = new Zend_Form_Element_Hidden($key);
-            $hidden->setAttrib('class', implode(' ', $class));
-            $hidden->setValue($value['description']);
-            $hidden->clearDecorators();
-            $hidden->addDecorators(array(
-                array('ViewHelper'),    // element's view helper
-            ));
-            
-            $form->addElement($hidden, $key);
-        }
-        
-        // Create and configure username element:
-        // Create and configure username element:
-        $username = $form->createElement('text', 'username', array('label' => 'Username:'));
-        $username->setRequired(true)
-                 ->addFilter('StringTrim')
-                 ->addFilter('Alnum')
-                 ->addFilter('StripTags')
-                 ->setAttrib('maxlength', '64')
-                 ;
-                 
-        $password = $form->createElement('password', 'password', array('label' => 'Password:'));
-        $password->setRequired(true)
-                 ->addValidator('StringLength', false, array(6, 20))
-                 ->addFilter('StringTrim')
-                 ->addFilter('StripTags')
-                 ;   
-
-        $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'Confirm Password:'));
-        $passwordConf->setRequired(true)
-                     ->addValidator('StringLength', false, array(6, 20))
-                     ->addFilter('StringTrim')
-                     ->addFilter('StripTags')
-                     ;    
-
-        $firstName = $form->createElement('text', 'firstName', array('label' => 'First Name:'));
-        $firstName->setRequired(true)
-                  ->addFilter('StringToLower')
-                  ->addFilter('StringTrim')
-                  ->addFilter('StripTags')
-                  ->setAttrib('maxlength', '64')
-                  ;
-
-        $lastName = $form->createElement('text', 'lastName', array('label' => 'Last Name:'));
-        $lastName->setRequired(true)
-                 ->addFilter('StringTrim')
-                 ->addFilter('StringToLower')
-                 ->addFilter('StripTags')
-                 ->setAttrib('maxlength', '64')
-                 ;
-        
-        $email = $form->createElement('text', 'emailAddress', array('label' => 'Email Address:'));
-        $email->setRequired(true)
-              ->addFilter('StringTrim')
-              ->addValidator('EmailAddress')
-              ;
-        
-        if ($this->_authzAdapter->manageLocally()) {
-            $roleSelect = new Zend_Form_Element_Select('role');
-            $roleSelect->setLabel('Access Role:');
-    
-            $roles = $this->_acl->getAvailableRoles();     
-               
-            foreach ($roles as $r) {
-                $roleSelect->addMultiOption($r['name'], $r['name']);
-            }
-            
-            $form->addElement($roleSelect);
-        }
-
-        $form->addElements(array($username, $realmSelect, $firstName, $lastName, $email));
-        
-        $group = array('username', 'realm', 'role', 'firstName', 'lastName', 'emailAddress');
-        $config = Zend_Registry::get('appConfig');
-        
-        if (isset($config->accountPlugin)) {
-            $acctPlugin = new $config->accountPlugin;
-            
-            $subform = $acctPlugin->addSubForm();
-            
-            foreach ($subform->getElements() as $e) {
-                $form->addElement($e);
-                $group[] = $e->getName();
-            }
-        }   
-        
-        $custom = new Ot_Custom();
-        
-        $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
-        
-        foreach ($attributes as $a) {
-            $form->addElement($a['formRender']);
-            $group[] = $a['formRender']->getName();
-        }
-                
-        $submit = $form->createElement('submit', 'addButton', array('label' => 'Add Account'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
-                        
-        $form->addDisplayGroup($group, 'fields')
-             ->addElements(array($submit, $cancel))
-             ;        
-
         $messages = array();
         
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
-    
-                $username = $form->getValue('username');
-                $role     = $form->getValue('role');
-                $realm    = $form->getValue('realm');
-                
-                $userId = $username . '@' . $realm;  
 
+            	$password = $account->generatePassword();
+            	
                 $accountData = array(
-                   'userId'       => $userId,
-                   'firstName'    => ucwords($form->getValue('firstName')),
-                   'lastName'     => ucwords($form->getValue('lastName')),
-                   'emailAddress' => $form->getValue('emailAddress'),
-                );
-                
-                $authAdapter  = new $config->authentication->$realm->class();
-                $authzAdapter = new $config->authorization($userId);
-                
+                    'username'     => $form->getValue('username'),
+                	'password'     => md5($password),
+                	'realm'        => $form->getValue('realm'),
+                    'firstName'    => $form->getValue('firstName'),
+                    'lastName'     => $form->getValue('lastName'),
+                    'emailAddress' => $form->getValue('emailAddress'),
+                	'timezone'     => $form->getValue('timezone'),
+                    'role'         => $form->getValue('role'),
+                );    
+
                 $dba = Zend_Registry::get('dbAdapter');
-                
                 $dba->beginTransaction();
                 
-                if ($authAdapter->manageLocally()) {
-
-                    $user = $authAdapter->getUser($userId);
-                
-                    if (count($user) == 0) { 
-                        
-                        try {           
-                           $password = $authAdapter->addAccount($userId, '');
-                        } catch (Exception $e) {
-                            $dba->rollback();
-                            throw $e;      
-                        }
-                    } else {
-                        $messages[] = 'Username is taken.  Please select a different username';                
-                    }
-                }        
-                                
-                if (count($messages) == 0 && $authzAdapter->manageLocally()) {
-                       
+                // Account table                    
+                $thisAccount = $account->getAccount($accountData['username'], $accountData['realm']);
+                    
+                if (is_null($thisAccount)) {
                     try {
-                        $user = $authzAdapter->getUser($userId);
-                        
-                        $messages[] = 'Username is taken.  Please select a different username';
+                        $accountData['accountId'] = $account->insert($accountData);
                     } catch (Exception $e) {
-                        try {
-                            $authzAdapter->addUser($userId, $role);
-                        } catch (Exception $e) {
-                            $dba->rollback();
-                            throw $e;
-                        }
+                        $dba->rollback();
+                        throw $e;
                     }
-                }
-
-                if (count($messages) == 0) {
-                    $account = new Ot_Account();
-                    
-                    $thisAccount = $account->find($userId);
-                    
-                    if (is_null($thisAccount)) {
-                        try {
-                            $account->insert($accountData);
-                        } catch (Exception $e) {
-                            $dba->rollback();
-                            throw $e;
-                        }
-                    } else {
-                        $messages[] = 'Username is taken.  Please select a different username';
-                    }
-                    
+                } else {
+                    $messages[] = 'msg-error-accountTaken';
                 }
                 
+                $accountData['password'] = $password;
+                
+                // Account plugin
                 if (count($messages) == 0 && isset($config->accountPlugin)) {
-                    $acctPlugin = new $config->accountPlugin;
+                    $acctPlugin = new $config->app->accountPlugin;
                     
                     $subform = $acctPlugin->addSubForm();
                     
-                    $data = array('userId' => $userId);
+                    $data = array('accountId' => $accountData['accountId']);
                     
                     foreach ($subform->getElements() as $e) {
                         $data[$e->getName()] = $form->getValue($e->getName());
@@ -438,7 +339,10 @@ class Account_IndexController extends Internal_Controller_Action
                     }                   
                 }
                 
+                // Custom attributes
                 if (count($messages) == 0) {
+                	$custom = new Ot_Custom();
+                	
                     $attributes = $custom->getAttributesForObject('Ot_Profile');
         
                     $data = array();
@@ -447,7 +351,7 @@ class Account_IndexController extends Internal_Controller_Action
                     }                   
                     
                     try {
-                        $custom->saveData('Ot_Profile', $userId, $data);
+                        $custom->saveData('Ot_Profile', $accountData['accountId'], $data);
                     } catch (Exception $e) {
                         $dba->rollback();
                         throw $e;
@@ -457,37 +361,43 @@ class Account_IndexController extends Internal_Controller_Action
                 if (count($messages) == 0) {
                     $dba->commit();
                     
-                    $this->_flashMessenger->addMessage('The account has been created.');
+                    $this->_helper->flashMessenger->addMessage('msg-info-accountCreated');
                     
                     $trigger = new Ot_Trigger();
                     $trigger->setVariables($accountData);
-                    $trigger->username    = $username;
-                    $trigger->loginMethod = $config->authentication->$realm->name;
-                    $trigger->role        = $role;
+                    
+                    $role = new Ot_Role();
+                    $thisRole = $role->find($accountData['role']);
+                    
+                    $trigger->role = $thisRole->name;
+                    $trigger->loginMethod = $config->app->authentication->{$accountData['realm']}->name;
+                    
+                    $authAdapter = new $config->app->authentication->{$accountData['realm']}->class;
                     
                     if ($authAdapter->manageLocally()) {
-                        $trigger->password = $password;
-                        
-                        $this->_flashMessenger->addMessage('A password has been created to the account and emailed to the user.');
+                        $this->_helper->flashMessenger->addMessage('msg-info-accountPasswordCreated');
                         
                         $trigger->dispatch('Admin_Account_Create_Password');
                     } else {
                         $trigger->dispatch('Admin_Account_Create_NoPassword');
                     }
                     
-                    $this->_logger->setEventItem('attributeName', 'userId');
-                    $this->_logger->setEventItem('attributeId', $userId);
-                    $this->_logger->info('Account was added for ' . $userId . '.');
+                    $logOptions = array(
+                    	'attributeName' => 'accountId',
+                    	'attributeId'   => $accountData['accountId'],
+                    );
+                    
+                    $this->_helper->log(Zend_Log::INFO, 'Account was added', $logOptions);
         
                     $this->_helper->redirector->gotoUrl('/account/index/all/'); 
                 }
             } else {
-                $messages[] = 'You did not fill in valid information into the form.';
+                $messages[] = 'msg-error-invalidForm';
             }
         }
         
         $this->view->messages = $messages;
-        $this->view->title = 'Add Account';
+        $this->_helper->pageTitle('account-index-add:title');
         $this->view->form = $form;
 
     }   
@@ -498,221 +408,120 @@ class Account_IndexController extends Internal_Controller_Action
      */
     public function editAction()
     {
-        $form = new Zend_Form();
-        $form->setAction('?userId=' . $this->_userData['userId'])
-             ->setMethod('post')
-             ->setAttrib('id', 'editUser')
-             ;
-        
-        $hidden = new Zend_Form_Element_Hidden('realm');
-        $hidden->setValue($this->_userData['realm']);
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
-        ));
-            
-        $form->addElement($hidden, 'realm');
-        
-        $realmStatic = $form->createElement('text', 'realmStatic', array('label' => 'Login Method:'));
-        $realmStatic->setValue($this->_userData['authAdapter']['name'])
-                    ->setAttrib('readonly', true)
-                    ;
-        
-        $hidden = new Zend_Form_Element_Hidden('username');
-        $hidden->setValue($this->_userData['displayUserId']);
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper'),    // element's view helper
-        ));
-            
-        $form->addElement($hidden, 'username');
-                         
-        // Create and configure username element:
-        $usernameStatic = $form->createElement('text', 'usernameStatic', array('label' => 'Username:'));
-        $usernameStatic->setValue($this->_userData['displayUserId'])
-                       ->setAttrib('readonly', true)
-                       ->addFilter('StringTrim');
-        
-        if ($this->_authzAdapter->manageLocally()) {
-            if ($this->_acl->isAllowed($this->_role, 'account_index', 'changeUserRole')) {
-                $roleSelect = new Zend_Form_Element_Select('role');
-                $roleSelect->setLabel('Access Role:');
-        
-                $roles = $this->_acl->getAvailableRoles();     
-                   
-                foreach ($roles as $r) {
-                    $roleSelect->addMultiOption($r['name'], $r['name']);
-                }
-                
-                $roleSelect->setValue($this->_userData['role']);
-                
-                $form->addElement($roleSelect);
-            } else {
-                $roleStatic = $form->createElement('text', 'role', array('label' => 'Access Role:'));
-                $roleStatic->setRequired(true)
-                               ->setValue($this->_userData['role'])
-                               ->setAttrib('readonly', true)
-                               ->addFilter('StringTrim');        
-    
-                $form->addElement($roleStatic);                           
-            }
-        }
-              
-        $firstName = $form->createElement('text', 'firstName', array('label' => 'First Name:'));
-        $firstName->setRequired(true)
-                  ->addFilter('StringToLower')
-                  ->addFilter('StringTrim')
-                  ->addFilter('StripTags')
-                  ->setAttrib('maxlength', '64')
-                  ->setValue((isset($this->_userData['firstName'])) ? $this->_userData['firstName'] : '')
-                  ;
+    	$account = new Ot_Account();
+    	
+    	$req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
+    	
+    	$config = Zend_Registry::get('config');
 
-        $lastName = $form->createElement('text', 'lastName', array('label' => 'Last Name:'));
-        $lastName->setRequired(true)
-                 ->addFilter('StringTrim')
-                 ->addFilter('StringToLower')
-                 ->addFilter('StripTags')
-                 ->setAttrib('maxlength', '64')
-                 ->setValue((isset($this->_userData['lastName'])) ? $this->_userData['lastName'] : '')
-                 ;
-        
-        $email = $form->createElement('text', 'emailAddress', array('label' => 'Email Address:'));
-        $email->setRequired(true)
-              ->addFilter('StringTrim')
-              ->addValidator('EmailAddress')
-              ->setValue((isset($this->_userData['emailAddress'])) ? $this->_userData['emailAddress'] : '')
-              ;              
-
-        $form->addElements(array($realmStatic, $usernameStatic, $firstName, $lastName, $email));
-             
-        $group = array('usernameStatic', 'realmStatic', 'role', 'firstName', 'lastName', 'emailAddress');
-        
-        $config = Zend_Registry::get('appConfig');
-        
-        if (isset($config->accountPlugin)) {
-            $acctPlugin = new $config->accountPlugin;
-            
-            $subform = $acctPlugin->editSubForm($this->_userData['userId']);
-            
-            foreach ($subform->getElements() as $e) {
-                $form->addElement($e);
-                $group[] = $e->getName();
-            }
-        }       
-        
-        $custom = new Ot_Custom();
-        
-        $attributes = $custom->getData('Ot_Profile', $this->_userData['userId'], 'Zend_Form');
-        
-        foreach ($attributes as $a) {
-            $form->addElement($a['formRender']);
-            $group[] = $a['formRender']->getName();
-        }
-                
-        $form->addDisplayGroup($group, 'fields');
-        
-        $submit = $form->createElement('submit', 'editButton', array('label' => 'Save Account'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
-                        
-        $form->addElements(array($submit, $cancel));           
-
-
+    	$form = $account->form($this->_userData);
+    	
         $messages = array();
 
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
 
                 $dba = Zend_Registry::get('dbAdapter');
-                
-                $dba->beginTransaction();
-                
-                if ($this->_authzAdapter->manageLocally()) {
-                    try {
-                       $this->_authzAdapter->editUser($this->_userData['userId'], $form->getValue('role'));
-                    } catch (Exception $e) {
-                        $dba->rollback();
-                        throw $e;
-                    }
-                }
 
                 $data = array(
-                    'userId'       => $this->_userData['userId'],
-                    'firstName'    => ucwords($form->getValue('firstName')),
-                    'lastName'     => ucwords($form->getValue('lastName')),
+                	'accountId'    => $this->_userData['accountId'],
+                    'firstName'    => $form->getValue('firstName'),
+                    'lastName'     => $form->getValue('lastName'),
                     'emailAddress' => $form->getValue('emailAddress'),
-                );
+                	'timezone'     => $form->getValue('timezone'),
+                );                
+                
+                if ($this->_userData['accountId'] != Zend_Auth::getInstance()->getIdentity()->accountId) {
+                	$data['realm']    = $form->getValue('realm');
+                	$data['role']     = $form->getValue('role');
+                    $data['username'] = $form->getValue('username');
+                }
                 
                 $account = new Ot_Account();
                 
-                try {
-                    if ($this->_userData['firstName'] != '') {
-                        $account->update($data, null);
-                    } else {
-                        $account->insert($data);
-                    }
-                } catch (Exception $e) {
-                    $dba->rollback();
-                    throw $e;
+                $thisAccount = $account->getAccount($data['username'], $data['realm']);
+                
+                if (!is_null($thisAccount) && $thisAccount->accountId != $data['accountId']) {
+                	$messages[] = 'msg-error-accountTaken';
+                } else {
+                
+	                $dba->beginTransaction();
+	                
+	                try {
+	                    $account->update($data, null);
+	                } catch (Exception $e) {
+	                    $dba->rollback();
+	                    throw $e;
+	                }
+	                
+	                if (isset($config->app->accountPlugin)) {
+	                    $acctPlugin = new $config->app->accountPlugin();
+	                    
+	                    $subform = $acctPlugin->editSubForm($this->_userData['accountId']);
+	                    
+	                    $data = array('accountId' => $this->_userData['accountId']);
+	                    
+	                    foreach ($subform->getElements() as $e) {
+	                        $data[$e->getName()] = $form->getValue($e->getName());
+	                    }
+	                    
+	                    try {
+	                        $acctPlugin->editProcess($data);
+	                    } catch (Exception $e) {
+	                        $dba->rollback();
+	                        throw $e;
+	                    }
+	                }          
+	
+	                $custom = new Ot_Custom();
+	                
+	                $attributes = $custom->getAttributesForObject('Ot_Profile');
+	        
+	                $data = array();
+	                foreach ($attributes as $a) {
+	                    $data[$a['attributeId']] = $form->getValue('custom_' . $a['attributeId']);
+	                }                   
+	                    
+	                try {
+	                    $custom->saveData('Ot_Profile', $this->_userData['accountId'], $data);
+	                } catch (Exception $e) {
+	                    $dba->rollback();
+	                    throw $e;
+	                }           
+	                      
+	                $dba->commit();
+	                
+	                $loggerOptions = array(
+	                	'attributeName' => 'accountId',
+	                	'attributeId'   => $this->_userData['accountId'],
+	                );
+	                
+	                $this->_helper->log(Zend_Log::INFO, 'Account was modified.', $loggerOptions);
+	                
+	                if (isset($req->uri) && $req->uri != '') {
+			        	$uri = $req->uri;
+			        	
+			        	$req->unsetAll();
+			        	
+			         	$this->_helper->redirector->gotoUrl($uri);
+			        } else {
+			        	$this->_helper->flashMessenger->addMessage('msg-info-accountUpdated');
+			        	
+			            $this->_helper->redirector->gotoUrl('/account/?accountId=' . $this->_userData['accountId']);
+			        }	                
                 }
-                
-                if (isset($config->accountPlugin)) {
-                    $acctPlugin = new $config->accountPlugin;
-                    
-                    $subform = $acctPlugin->editSubForm($this->_userData['userId']);
-                    
-                    $data = array('userId' => $this->_userData['userId']);
-                    
-                    foreach ($subform->getElements() as $e) {
-                        $data[$e->getName()] = $form->getValue($e->getName());
-                    }
-                    
-                    try {
-                        $acctPlugin->editProcess($data);
-                    } catch (Exception $e) {
-                        $dba->rollback();
-                        throw $e;
-                    }
-                }          
-
-                            
-                $attributes = $custom->getAttributesForObject('Ot_Profile');
-        
-                $data = array();
-                foreach ($attributes as $a) {
-                    $data[$a['attributeId']] = $form->getValue('custom_' . $a['attributeId']);
-                }                   
-                    
-                try {
-                    $custom->saveData('Ot_Profile', $this->_userData['userId'], $data);
-                } catch (Exception $e) {
-                    $dba->rollback();
-                    throw $e;
-                }           
-                      
-                $dba->commit();
-                
-                $this->_logger->setEventItem('attributeName', 'userId');
-                $this->_logger->setEventItem('attributeId', $this->_userData['userId']);
-                $this->_logger->info('Account was modified for ' . $this->_userData['userId'] . '.');
-    
-                $this->_flashMessenger->addMessage('The account was successfully updated');
-                $this->_helper->redirector->gotoUrl('/account/?userId=' . $this->_userData['userId']);
             } else {
-                $messages[] = 'The form you submitted was not vaild';
+                $messages[] = 'msg-error-invalidForm';
             }
         }
 
+        if (isset($req->uri) && $req->uri != '') {
+        	$messages[] = 'msg-info-requiredDataBeforeContinuing';
+        }
+        
         $this->view->messages = $messages;
         $this->view->form = $form;
-        $this->view->title  = 'Edit User';
+        $this->_helper->pageTitle('account-index-edit:title');
     }
 
     /**
@@ -721,56 +530,20 @@ class Account_IndexController extends Internal_Controller_Action
      */
     public function deleteAction()
     {   
-        if ($this->_userData['userId'] == Zend_Auth::getInstance()->getIdentity()) {
-            throw new Ot_Exception_Access('You are not allowed to delete yourself.');
+        if ($this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
+            throw new Ot_Exception_Access('msg-error-accountAccessDelete');
         }
         
-        $form = new Zend_Form();
-        $form->setAction('?userId=' . $this->_userData['userId'])
-             ->setMethod('post')
-             ->setAttrib('id', 'deleteUser')
-             ;
-        
-        $submit = $form->createElement('submit', 'deleteButton', array('label' => 'Delete Account'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
-                             
-        $form->addElements(array($submit, $cancel));                   
-       
+        $form = Ot_Form_Template::delete('deleteUser');                  
 
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             
             $dba = Zend_Registry::get('dbAdapter');
             $dba->beginTransaction();
             
-            if ($this->_authAdapter->manageLocally()) {
-                try {
-                    $this->_authAdapter->deleteAccount($this->_userData['userId']);
-                } catch (Exception $e) {
-                    $dba->rollback();
-                    throw $e;
-                }
-            }
-            
-            if ($this->_authzAdapter->manageLocally()) {
-                try {
-                    $this->_authzAdapter->deleteUser($this->_userData['userId']);
-                } catch (Exception $e) {
-                    $dba->rollback();
-                    throw $e;
-                }
-            }
-            
             $account = new Ot_Account();
             
-            $where = $account->getAdapter()->quoteInto('userId = ?', $this->_userData['userId']);
+            $where = $account->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
             
             try {
                 $account->delete($where);
@@ -779,13 +552,13 @@ class Account_IndexController extends Internal_Controller_Action
                 throw $e;
             }
 
-            $config = Zend_Registry::get('appConfig');
+            $config = Zend_Registry::get('config');
             
-            if (isset($config->accountPlugin)) {
-                $acctPlugin = new $config->accountPlugin;
+            if (isset($config->app->accountPlugin)) {
+                $acctPlugin = new $config->app->accountPlugin();
                     
                 try {
-                    $acctPlugin->deleteProcess($this->_userData['userId']);
+                    $acctPlugin->deleteProcess($this->_userData['accountId']);
                 } catch (Exception $e) {
                     $dba->rollback();
                     throw $e;
@@ -795,28 +568,72 @@ class Account_IndexController extends Internal_Controller_Action
             $custom = new Ot_Custom();
             
             try {
-                $custom->deleteData('Ot_Profile', $this->_userData['userId']);
+                $custom->deleteData('Ot_Profile', $this->_userData['accountId']);
             } catch (Exception $e) {
                 $dba->rollback();
                 throw $e;
             }
-
                          
             $dba->commit();
-            $this->_logger->setEventItem('attributeName', 'userId');
-            $this->_logger->setEventItem('attributeId', $this->_userData['userId']);
-            $this->_logger->info('Account was deleted for ' . $this->_userData['userId'] . '.');
+            
+            $loggerOptions = array(
+	           	'attributeName' => 'accountId',
+	           	'attributeId'   => $this->_userData['accountId'],
+	        );
+	                
+	        $this->_helper->log(Zend_Log::INFO, 'Account was deleted', $loggerOptions);
 
-            $this->_flashMessenger->addMessage('The account was successfully updated');
+            $this->_helper->flashMessenger->addMessage('msg-info-accountUpdated');
             
             $this->_helper->redirector->gotoUrl('/account/index/all/');
-
         }
         
         $this->view->userData = $this->_userData;
-        $this->view->title  = 'Delete User';
+        $this->_helper->pageTitle('account-index-delete:title');
         $this->view->form = $form;
     }
+    
+    /**
+     * Allows a user to revoke their connection to a remote application
+     *
+     */
+	public function revokeConnectionAction()
+	{
+		$this->_helper->pageTitle('Revoke Application Access');
+		
+		$get = Zend_Registry::get('getFilter');
+		
+		if (!isset($get->consumerId)) {
+			throw new Ot_Exception_Input('The consumerId is not set in the query string.');
+		}
+
+		$consumer = new Ot_Oauth_Server_Consumer();
+		
+		$thisConsumer = $consumer->find($get->consumerId);
+		if (is_null($thisConsumer)) {
+			throw new Ot_Exception_Data('The consumer associated with your request token no longer exists');
+		}
+		
+		$st = new Ot_Oauth_Server_Token();
+		
+		$existingAccessToken = $st->getTokenByAccountAndConsumer($this->_userData['accountId'], $thisConsumer->consumerId, 'access');
+		if (is_null($existingAccessToken)) {
+			throw new Ot_Exception_Data('You do not have an existing access token for this consumer');
+		}
+
+		$form = Ot_Form_Template::delete('revokeAccess', 'Revoke Access', 'Cancel');
+		
+		if ($this->_request->isPost() && $form->isValid($_POST)) {
+			$st->removeToken($existingAccessToken->token);
+			
+			$this->_helper->flashMessenger->addMessage('Token has been removed.  ' . $thisConsumer->name . ' no longer has access to your account.');
+			
+			$this->_helper->redirector->gotoUrl('/account');
+		}
+		
+		$this->view->form = $form;
+		$this->view->consumer = $thisConsumer;
+	}    
     
     /**
      * allows a user to change their password
@@ -824,50 +641,58 @@ class Account_IndexController extends Internal_Controller_Action
      */
     public function changePasswordAction()
     {
-        $userId = Zend_Auth::getInstance()->getIdentity();
-            
-        $realm = preg_replace('/^[^@]*@/', '', $userId);
-            
-        $config   = Zend_Registry::get('appConfig');
-        $auth = new $config->authentication->$realm->class();
+        $identity = Zend_Auth::getInstance()->getIdentity();
+
+        $account = new Ot_Account();
+        
+        $thisAccount = $account->getAccount($identity->username, $identity->realm);
+        if (is_null($thisAccount)) {
+        	throw new Ot_Exception_Data('msg-error-noAccount');
+        }
+        
+        $config   = Zend_Registry::get('config');
+        $auth = new $config->app->authentication->{$thisAccount->realm}->class();
         
         if (!$auth->manageLocally()) {
-            throw new Ot_Exception_Access('The authentication adapter for your account does not support this feature');
+            throw new Ot_Exception_Access('msg-error-authAdapterSupport');
         }
         
         $form = new Zend_Form();
-        $form->setAction('')
-             ->setMethod('post')
-             ->setAttrib('id', 'changePassword')
+        $form->setAttrib('id', 'changePassword')
+	         ->setDecorators(array(
+	             'FormElements',
+	             array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+	             'Form',
+	         ))
              ;
                          
-        $oldPassword = $form->createElement('password', 'oldPassword', array('label' => 'Old Password:'));
+        $oldPassword = $form->createElement('password', 'oldPassword', array('label' => 'account-index-changePassword:form:oldPassword'));
         $oldPassword->setRequired(true)
                     ->addValidator('StringLength', false, array(6, 20))
                     ->addFilter('StringTrim')
                     ->addFilter('StripTags')
                     ;   
                     
-        $newPassword = $form->createElement('password', 'newPassword', array('label' => 'New Password:'));
+        $newPassword = $form->createElement('password', 'newPassword', array('label' => 'account-index-changePassword:form:newPassword'));
         $newPassword->setRequired(true)
                     ->addValidator('StringLength', false, array(6, 20))
                     ->addFilter('StringTrim')
                     ->addFilter('StripTags')
                     ; 
                      
-        $newPasswordConf = $form->createElement('password', 'newPasswordConf', array('label' => 'New Password Confirm:'));
+        $newPasswordConf = $form->createElement('password', 'newPasswordConf', array('label' => 'account-index-changePassword:form:newPasswordConf'));
         $newPasswordConf->setRequired(true)
                         ->addValidator('StringLength', false, array(6, 20))
                         ->addFilter('StringTrim')
                         ->addFilter('StripTags')
                         ;    
                         
-        $submit = $form->createElement('submit', 'changeButton', array('label' => 'Change My Password'));
+        $submit = $form->createElement('submit', 'changeButton', array('label' => 'account-index-changePassword:form:submit'));
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit'))
                  ));
         
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
         $cancel->setAttrib('id', 'cancel');
         $cancel->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formButton'))
@@ -875,7 +700,12 @@ class Account_IndexController extends Internal_Controller_Action
                                         
 
         $form->addElements(array($oldPassword, $newPassword, $newPasswordConf))
-             ->addDisplayGroup(array('oldPassword', 'newPassword', 'newPasswordConf'), 'fields')
+             ->setElementDecorators(array(
+               	  'ViewHelper',
+                  'Errors',      
+                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+        	      array('Label', array('tag' => 'span')),      
+             ))
              ->addElements(array($submit, $cancel))
              ;         
 
@@ -883,116 +713,43 @@ class Account_IndexController extends Internal_Controller_Action
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
                 
-                $user = $auth->getUser($userId);
-                if (count($user) != 1) {
-                    throw new Ot_Exception_Data('User account not found');
-                }
-            
-                $user = $user[0];
-    
                 if ($form->getValue('newPassword') != $form->getValue('newPasswordConf')) {
-                    $messages[] = 'New passwords do not match';
+                    $messages[] = 'msg-error-passwordMismatch';
                 }
     
-                if ($auth->encryptPassword($form->getValue('oldPassword')) != $user['password']) {
-                    $messages[] = 'Original Password was incorrect';
+                if (md5($form->getValue('oldPassword')) != $thisAccount->password) {
+                    $messages[] = 'msg-error-passwordInvalidOriginal';
                 }
     
                 if (count($messages) == 0) {
-                    $auth->editAccount($userId, $form->getValue('newPassword'));
-                
-                    $this->_flashMessenger->addMessage('Your password has been changed.  You can now log in with your new credentials');
+                	$data = array(
+                		'accountId' => $thisAccount->accountId,
+                		'password'  => md5($form->getValue('newPassword'))
+                	);
+                	
+                	$account->update($data, null);
+                	
+                    $this->_helper->flashMessenger->addMessage('msg-info-passwordChanged');
                     
-                    $this->_logger->setEventItem('attributeName', 'userId');
-                    $this->_logger->setEventItem('attributeId', $userId);
-                    $this->_logger->info('User changed Password'); 
-                    
+					$loggerOptions = array(
+	                	'attributeName' => 'accountId',
+	                	'attributeId'   => $thisAccount->accountId,
+	                );
+	                
+	                $this->_helper->log(Zend_Log::INFO, 'User changed Password', $loggerOptions);  
+	                
                     $this->_helper->redirector->gotoUrl('/account/');
                 }
             } else {
-                $messages[] = 'There were errors with part of the form.';
+                $messages[] = 'msg-error-invalidForm';
             }
         } 
         
-        $this->view->javascript = array('mooStrength.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.passStrength.js');
         $this->view->messages = $messages;
-        $this->view->title = 'Change your password';
+        $this->_helper->pageTitle('account-index-changePassword:title');
         $this->view->form  = $form;
-    }      
-    
-    /**
-     * Add an API code so the user can access the application through the SOAP API
-     *
-     */
-    public function generateApiCodeAction()
-    {
-        $config = Zend_Registry::get('appConfig');
-
-        if (!(boolean)$config->remoteAccess->allow) {
-            throw new Ot_Exception_Access('This application is not configured for remote access');      
-        }
-        
-        $apiCode = new Ot_Api_Code();
-
-        $apiCode->generateCodeForUser($this->_userData['userId']);
-        
-        $this->_logger->setEventItem('attributeName', 'apiCode');
-        $this->_logger->setEventItem('attributeId', $this->_userData['userId']);
-        $this->_logger->info('API Code generated');
-                
-        $this->_flashMessenger->addMessage('The API Code was successfully created.  This user has remote access now.');
-        
-        $this->_helper->redirector->gotoUrl('/account/?userId=' . $this->_userData['userId']);       
-    }
-
-    /**
-     * Deletes an API code to remove the users remote access
-     *
-     */
-    public function deleteApiCodeAction()
-    {
-        $form = new Zend_Form();
-        $form->setAction('?userId=' . $this->_userData['userId'])
-             ->setMethod('post')
-             ->setAttrib('id', 'deleteApiCode')
-             ;
-        
-        $submit = $form->createElement('submit', 'deleteButton', array('label' => 'Delete API Code'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
-                             
-        $form->addElements(array($submit, $cancel));                   
-       
-
-        if ($this->_request->isPost() && $form->isValid($_POST)) {
-
-            $apiCode = new Ot_Api_Code();
-            
-            $where = $apiCode->getAdapter()->quoteInto('userId = ?', $this->_userData['userId']);
-            
-            $apiCode->delete($where);
-
-            $this->_logger->setEventItem('attributeName', 'userId');
-            $this->_logger->setEventItem('attributeId', $this->_userData['userId']);
-            $this->_logger->info('Account was deleted for ' . $this->_userData['userId'] . '.');
-
-            $this->_flashMessenger->addMessage('The API Code was successfully deleted.  This user has no more remote access.');
-            
-            $this->_helper->redirector->gotoUrl('/account/?userId=' . $this->_userData['userId']);
-
-        }
-        
-        $this->view->userData = $this->_userData;
-        $this->view->title  = 'Delete API Code';
-        $this->view->form = $form;
-    }       
+    }        
 
     /**
      * Allows a user to change their role and others

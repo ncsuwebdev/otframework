@@ -31,37 +31,37 @@
  */
 class Cron_IndexController extends Zend_Controller_Action 
 {    
-	/**
-	 * Unix timestamp of the date the cron job was last run.
-	 *
-	 * @var int
-	 */
-	protected $_lastRunDt = 0;
-	
+    /**
+     * Unix timestamp of the date the cron job was last run.
+     *
+     * @var int
+     */
+    protected $_lastRunDt = 0;
+    
     /**
      * Initialization function
      *
      */
     public function init()
     {
-    	set_time_limit(0);
-    	
-		$this->_helper->layout->disableLayout();
-		$this->_helper->viewRenderer->setNeverRender();
-    	
-		$action = $this->_request->getActionName();
-		
-		$cs = new Ot_Cron_Status();
-		
-		if (!$cs->isEnabled($action)) {
-			die();
-		}
-		
-		$this->_lastRunDt = $cs->getLastRunDt($action);
-		
-		$cs->executed($action, time());
-		
-    	parent::init();
+        set_time_limit(0);
+        
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNeverRender();
+        
+        $action = $this->_request->getActionName();
+        
+        $cs = new Ot_Cron_Status();
+        
+        if (!$cs->isEnabled($action)) {
+            die();
+        }
+        
+        $this->_lastRunDt = $cs->getLastRunDt($action);
+        
+        $cs->executed($action, time());
+        
+        parent::init();
     }
 
     
@@ -70,33 +70,33 @@ class Cron_IndexController extends Zend_Controller_Action
      *
      */
     public function emailQueueAction()
-    {       	
-		$eq = new Ot_Email_Queue();
-		
-		$messages = $eq->getWaitingEmails(20);
-		
-		foreach ($messages as $m) {
-		    try {
-		        $m['zendMailObject']->send();
-		
-		        $m['status'] = 'sent';
-		        $m['sentDt'] = time();
-		
-		    } catch (Exception $e) {
-		        $m['status'] = 'error';
-		    }
-		
-		    $where = $eq->getAdapter()->quoteInto('queueId = ?', $m['queueId']);
-		
-		    $eq->update($m, $where);
-		    
-		    $logOptions = array(
+    {           
+        $eq = new Ot_Email_Queue();
+        
+        $messages = $eq->getWaitingEmails(20);
+        
+        foreach ($messages as $m) {
+            try {
+                $m['zendMailObject']->send();
+        
+                $m['status'] = 'sent';
+                $m['sentDt'] = time();
+        
+            } catch (Exception $e) {
+                $m['status'] = 'error';
+            }
+        
+            $where = $eq->getAdapter()->quoteInto('queueId = ?', $m['queueId']);
+        
+            $eq->update($m, $where);
+            
+            $logOptions = array(
                     'attributeName' => 'queueId',
                     'attributeId'   => $m['queueId'],
             );
                 
             $this->_helper->log(Zend_Log::INFO, 'Mail Sent', $logOptions);
-		}    	
+        }       
     }
 
 }

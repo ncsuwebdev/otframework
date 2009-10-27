@@ -28,6 +28,21 @@
  */
 class Ot_Db_Table extends Zend_Db_Table
 {
+	public function __construct()
+	{
+		$config = Zend_Registry::get('config');
+		
+		if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
+			$this->_name = $config->app->tablePrefix . $this->_name;
+		}
+		
+		// cache the meta data for tables so it doesn't have to get it ever time a table is instantiated
+		$cache = Zend_Registry::get('cache');
+		Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
+		
+		parent::__construct();
+	}
+	
     /**
      * Overwrites the update method to allow the second param ($where clause)
      * to be null, which would then generate the where clause with the values 
@@ -39,8 +54,10 @@ class Ot_Db_Table extends Zend_Db_Table
      */
     public function update(array $data, $where)
     {
-        if (is_null($where)) {        
-            foreach ($this->_primary as $key) {
+        if (is_null($where)) {    
+        	$primary = (is_array($this->_primary)) ? $this->_primary : array($this->_primary);
+        	  
+            foreach ($primary as $key) {
                 if (!is_null($where)) {
                     $where .= ' AND ';
                 }

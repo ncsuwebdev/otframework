@@ -42,7 +42,7 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
     {
         $baseUrl = Zend_Layout::getMvcInstance()->getView()->baseUrl();  
         $acl     = Zend_Registry::get('acl');
-
+         
         $viewTabs = array();
          
         $config   = Zend_Registry::get('config');

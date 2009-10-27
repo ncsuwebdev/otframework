@@ -298,14 +298,8 @@ class Admin_TriggerController extends Zend_Controller_Action
         }
         
         $vars = array();
-        //echo count($thisTrigger->var);
-        //print_r($thisTrigger->var);
-	    if (!isset($thisTrigger->var->name)) {
-	        foreach ($thisTrigger->var as $var) {
-	            $vars[$var->name] = $var->description;
-	        }
-        } else {
-            $vars[$thisTrigger->var->name] = $thisTrigger->var->description;
+        foreach ($thisTrigger->var as $var) {
+            $vars[$var->name] = $var->description;
         }
         
         $this->view->messages = $messages;

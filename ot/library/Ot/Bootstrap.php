@@ -116,13 +116,6 @@ class Ot_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         }
                     }
                 }
-                if ($configOverride->app instanceof Zend_Config) {
-                    foreach ($configOverride->app as $key => $value) {
-                        if (isset($config->app->{$key})) {
-                            $config->app->{$key} = $value;
-                        }
-                    }
-                }
             }
            
             $cache->save($config, 'configObject');
@@ -202,7 +195,7 @@ class Ot_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $config = Zend_Registry::get('config');
         $view->config = $config;
                             
-        $theme = ($config->app->theme != '') ? $config->app->theme : 'default';
+        $theme = ($config->user->customTheme->val != '') ? $config->user->customTheme->val : 'default';
         
         $appBasePath = APPLICATION_PATH . "/../public/themes";
         $otBasePath = APPLICATION_PATH . "/../public/ot/themes";

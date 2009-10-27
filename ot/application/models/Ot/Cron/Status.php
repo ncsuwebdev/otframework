@@ -125,25 +125,25 @@ class Ot_Cron_Status extends Ot_Db_Table {
 
     public function getAvailableCronJobs()
     {
-    	$filter = new Zend_Filter();
+        $filter = new Zend_Filter();
         $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
         $filter->addFilter(new Zend_Filter_StringToLower());
-    	
-    	require_once APPLICATION_PATH . '/modules/cron/controllers/IndexController.php';
         
-    	$class = new ReflectionClass('Cron_IndexController');
+        require_once APPLICATION_PATH . '/modules/cron/controllers/IndexController.php';
+        
+        $class = new ReflectionClass('Cron_IndexController');
         $methods = $class->getMethods();
         
         $jobs = array(); 
         
         foreach ($methods as $m) {
-        	        	
-        	if (preg_match('/action/i', $m->name)) {
-        		
-        		$temp = array(); 
-            	$temp['name'] = $filter->filter(preg_replace('/action/i', '', $m->name));
-        		
-        		$data = $this->find($temp['name']);
+                        
+            if (preg_match('/action/i', $m->name)) {
+                
+                $temp = array(); 
+                $temp['name'] = $filter->filter(preg_replace('/action/i', '', $m->name));
+                
+                $data = $this->find($temp['name']);
 
                 if (!is_null($data)) {
                     $temp = $data->toArray();
@@ -151,9 +151,9 @@ class Ot_Cron_Status extends Ot_Db_Table {
                     $temp['status']    = 'disabled';
                     $temp['lastRunDt'] = 0;
                 }
-             	   
+                   
                 $jobs[] = $temp;
-        	}
+            }
         }
         
         return $jobs;

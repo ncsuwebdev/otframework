@@ -34,5 +34,13 @@ class Ot_Version
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.2.10';
+	const VERSION = '2.2.2';
+	
+	public function getVersions()
+	{
+		return array(
+			'OTFramework' => self::VERSION,
+			'ZendFramework' => Zend_Version::VERSION,
+		);
+	}
 }

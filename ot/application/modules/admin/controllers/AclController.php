@@ -63,13 +63,6 @@ class Admin_AclController extends Zend_Controller_Action
             'delete'             => $this->_helper->hasAccess('delete'),
             );
 
-        $config = Zend_Registry::get('config');
-            
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'api_index', $config->user->defaultRole->val);
-        
-        $role = new Ot_Role();
-        $this->view->defaultRole =  $role->find($config->user->defaultRole->val);     
-            
         $roles = $this->_acl->getAvailableRoles();
       
         foreach ($roles as &$r) {
@@ -102,13 +95,6 @@ class Admin_AclController extends Zend_Controller_Action
             );
 
         $get = Zend_Registry::get('getFilter');
-        
-        $config = Zend_Registry::get('config');
-            
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'api_index', $config->user->defaultRole->val);
-        
-        $role = new Ot_Role();
-        $this->view->defaultRole =  $role->find($config->user->defaultRole->val);   
 
         if (!isset($get->roleId)) {
             throw new Ot_Exception_Input('msg-error-roleIdNotSet');

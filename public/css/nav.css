@@ -1,0 +1,33 @@
+/** Nav Style **/
+#menu {
+    float: left;
+    width: 159px;
+    margin: 0 0 0 0;
+}
+
+#linksmenu a, #linksmenu div.sub_menu a {
+    float: right;
+    width: 159px;
+    height: 20px;
+    background-color: #999999;
+    font-size: 11px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding-top: 5px;
+}
+
+#linksmenu div.sub_menu a {
+    background-color: #4F4F4F;  
+}
+
+#linksmenu div.sub_menu {
+    margin: 0;
+    padding: 0;
+    width: 159px;
+    background-color: #666666;
+}
+
+#linksmenu a:hover, #linksmenu div.sub_menu a:hover {
+    background-color: #888888;
+}

@@ -33,11 +33,11 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
     
     public function __construct()
     {
-    	$config = Zend_Registry::get('config');
-    	
-    	if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
-			$this->_name = $config->app->tablePrefix . $this->_name;
-		}
+        $config = Zend_Registry::get('config');
+        
+        if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
+            $this->_name = $config->app->tablePrefix . $this->_name;
+        }
     }
     
     public function addSubForm()

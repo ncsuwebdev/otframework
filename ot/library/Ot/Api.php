@@ -36,19 +36,9 @@ class Ot_Api
 	 */
 	public static function getVersions()
 	{
-
-		$config = Zend_Registry::get('config');
-        
-        if (!empty($config->app->version)) {
-            $appVersion = $config->app->version;
-        } else {
-        	$appVersion = "Unknown";
-        }
-		
 		return array(
-			'OTFramework'   => Ot_Version::VERSION,
+			'OTFramework' => Ot_Version::VERSION,
 			'ZendFramework' => Zend_Version::VERSION,
-			'App'           => $appVersion,
 		);
 	}
 	
