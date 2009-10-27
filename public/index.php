@@ -20,50 +20,16 @@
  */
 
 
-/**
- * If you are using the OT Framework manager to manage the verison of OTF this application is using,
- * you will need to include the following lines to create the local symlinks to the correct OTF version.
- */
-
-require_once $_SERVER['FRAMEWORK_MANAGER_PATH'];
-$fm = new FrameworkManager();
-
-$fmKey = $fm->getKey('ot_tools');
-
-/*
-foreach ($fmKey->ot as $key => $value) {
-    $path = realpath(dirname(__FILE__) . '/..') . '/' . $key;
-
-    if (is_link($path)) {
-        if (readlink($path) != $value) {
-            unlink($path);
-            exec('ln -s ' . $value . ' ' . $path);
-        }           
-    } else {
-        exec('ln -s ' . $value . ' ' . $path);
-    }
-}
-*/
-/**
- * End symlink setup code
- */
-
 // Define path to application directory
 defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
-    
-// Define path to application directory
-defined('OT_APPLICATION_PATH')
-    || define('OT_APPLICATION_PATH', realpath(dirname(__FILE__) . '/../ot/application'));    
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));   
 
 // Define application environment
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
 $paths = array(
-    $fmKey->zf,
     realpath(APPLICATION_PATH . '/../library'),
-    realpath(OT_APPLICATION_PATH . '/../library'),
     get_include_path()
 );
 
