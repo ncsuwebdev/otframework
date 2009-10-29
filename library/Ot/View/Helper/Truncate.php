@@ -4,7 +4,7 @@
  * This helper truncates a string to a certain length if necessary and appending the $etc string
  *
  */
-class Zend_View_Helper_Truncate extends Zend_View_Helper_Abstract
+class Ot_View_Helper_Truncate extends Zend_View_Helper_Abstract
 {
 
 	/**

@@ -5,7 +5,7 @@
  * like 4 days ago, 2 minutes ago, 37 seconds ago, etc.
  *
  */
-class Zend_View_Helper_ElapsedTime extends Zend_View_Helper_Abstract
+class Ot_View_Helper_ElapsedTime extends Zend_View_Helper_Abstract
 {
 	
 	/**

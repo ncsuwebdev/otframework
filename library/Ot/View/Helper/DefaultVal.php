@@ -4,7 +4,7 @@
  * This view helper returns a value, or a default value if the value is empty
  *
  */
-class Zend_View_Helper_DefaultVal extends Zend_View_Helper_Abstract
+class Ot_View_Helper_DefaultVal extends Zend_View_Helper_Abstract
 {   
     /**
      * Checks if the passed $val is empty or not.  If it is not,

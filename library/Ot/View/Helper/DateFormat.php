@@ -5,7 +5,7 @@
  * using the strftime formatting guidelines
  *
  */
-class Zend_View_Helper_DateFormat extends Zend_View_Helper_Abstract
+class Ot_View_Helper_DateFormat extends Zend_View_Helper_Abstract
 {
 	
 	/**

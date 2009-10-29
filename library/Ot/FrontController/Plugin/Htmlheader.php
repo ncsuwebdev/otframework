@@ -102,7 +102,7 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         
         foreach ($javascript as $j) {
             $view->headScript()->appendFile($j);
-        }       
+        }    
     }
     
     protected function _autoload($baseUrl, $directory, $extension, $request, $existing)

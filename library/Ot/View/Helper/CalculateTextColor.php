@@ -5,7 +5,7 @@
  *
  * @param string $color The hex value to get the text display color for
  */
-class Zend_View_Helper_CalculateTextColor extends Zend_View_Helper_Abstract
+class Ot_View_Helper_CalculateTextColor extends Zend_View_Helper_Abstract
 {
     public function calculateTextColor($color) {
         

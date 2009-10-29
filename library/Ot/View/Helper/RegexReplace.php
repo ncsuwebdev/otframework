@@ -4,7 +4,7 @@
  * This view helper search and replace on strings given a regular expression
  *
  */
-class Zend_View_Helper_RegexReplace extends Zend_View_Helper_Abstract
+class Ot_View_Helper_RegexReplace extends Zend_View_Helper_Abstract
 {
 
 	/**

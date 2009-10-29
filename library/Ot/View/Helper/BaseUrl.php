@@ -4,7 +4,7 @@
  * This view helper returns the baseUrl of the application
  *
  */
-class Zend_View_Helper_BaseUrl extends Zend_View_Helper_Abstract
+class Ot_View_Helper_BaseUrl extends Zend_View_Helper_Abstract
 {   
     /**
      * Takes any number of arguments and echoes the value in the array of values

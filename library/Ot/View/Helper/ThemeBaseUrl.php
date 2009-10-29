@@ -4,7 +4,7 @@
  * This view helper returns the baseUrl of the application
  *
  */
-class Zend_View_Helper_ThemeBaseUrl extends Zend_View_Helper_Abstract
+class Ot_View_Helper_ThemeBaseUrl extends Zend_View_Helper_Abstract
 {   
     /**
      * Returns the base URL to the theme

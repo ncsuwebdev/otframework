@@ -1,5 +1,5 @@
 <?php
-class Zend_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
+class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
 {
     /**
      * The baseUrl of the application

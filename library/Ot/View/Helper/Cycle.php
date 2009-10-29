@@ -5,7 +5,7 @@
  * they are given each time the function is called.
  *
  */
-class Zend_View_Helper_Cycle extends Zend_View_Helper_Abstract
+class Ot_View_Helper_Cycle extends Zend_View_Helper_Abstract
 {
 
 	/**

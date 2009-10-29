@@ -4,7 +4,7 @@
  * This formats a phone number appropriately for display
  *
  */
-class Zend_View_Helper_FormatPhone extends Zend_View_Helper_Abstract
+class Ot_View_Helper_FormatPhone extends Zend_View_Helper_Abstract
 {
     
     /**

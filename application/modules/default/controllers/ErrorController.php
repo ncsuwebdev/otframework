@@ -26,7 +26,7 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Error_ErrorController extends Zend_Controller_Action
+class ErrorController extends Zend_Controller_Action
 {
     /**
      * Error action to process any errors coming from the application
@@ -64,7 +64,7 @@ class Error_ErrorController extends Zend_Controller_Action
 	            $message = $exception->getMessage();
 	            break;
         }
-        
+
         $this->_helper->pageTitle($title);
         
         $this->view->title = $this->view->translate('error-error-error:title') . ' ' . $this->view->title;

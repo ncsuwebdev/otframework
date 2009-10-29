@@ -6,7 +6,7 @@
  * suffix appended.
  *
  */
-class Zend_View_Helper_Ordinal extends Zend_View_Helper_Abstract
+class Ot_View_Helper_Ordinal extends Zend_View_Helper_Abstract
 {
 
 	/**

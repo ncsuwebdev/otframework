@@ -5,7 +5,7 @@
  * minify (http://code.google.com/p/minify/)
  *
  */
-class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
+class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
 {
     public function minifyHeadLink()
     {
@@ -35,6 +35,6 @@ class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
     }
     
     public function getBaseUrl(){
-        return Zend_View_Helper_BaseUrl::baseUrl();
+        return Zend_Controller_Front::getBaseUrl();
     }
 }
