@@ -118,7 +118,7 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         
 	        if (is_file(APPLICATION_PATH . '/../' . $directory . '/' . $autoload)) {
 	            
-	        	$file = $baseUrl . str_replace('./', $baseUrl . '/', $directory . '/' . $autoload);
+	             $file = $baseUrl . str_replace('./', $baseUrl . '/', $directory . '/' . $autoload);	             
 	        	
 	             if (is_array($existing)) {
 	                array_push($existing, $file);        
