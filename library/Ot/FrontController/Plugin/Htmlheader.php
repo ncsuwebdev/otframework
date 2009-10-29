@@ -90,11 +90,11 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         
         // check application directories and append to existing array
         $javascript = $this->_autoload($baseUrl, '/public/scripts', 'js', $request, $javascript);   
-        $css        = $this->_autoload($baseUrl, 'public/css', 'css', $request, $css);
+        $css        = $this->_autoload($baseUrl, '/public/css', 'css', $request, $css);
         
         // check OT directories and append to existing array
-        $javascript = $this->_autoload($baseUrl, '/public/ot/scripts', 'js', $request, $javascript);
-        $css        = $this->_autoload($baseUrl, '/public/ot/css', 'css', $request, $css);
+        //$javascript = $this->_autoload($baseUrl, '/public/ot/scripts', 'js', $request, $javascript);
+        //$css        = $this->_autoload($baseUrl, '/public/ot/css', 'css', $request, $css);
         
         foreach ($css as $c) {
             $view->headLink()->appendStylesheet($c);

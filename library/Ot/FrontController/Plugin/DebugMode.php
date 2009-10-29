@@ -40,8 +40,8 @@ class Ot_FrontController_Plugin_DebugMode extends Zend_Controller_Plugin_Abstrac
         $viewRenderer = Zend_Controller_Action_HelperBroker::getExistingHelper('ViewRenderer');
         
         if (isset($_COOKIE[$debugModeCookieName]) && (!$request->isXmlHttpRequest() && !$viewRenderer->getNeverRender())) {
-            $view->headScript()->appendFile($view->baseUrl() . '/ot/scripts/jquery.cookie.js');
-            $view->headScript()->appendFile($view->baseUrl() . '/ot/scripts/debug.js');
+            $view->headScript()->appendFile($view->baseUrl() . '/public/ot/scripts/jquery.cookie.js');
+            $view->headScript()->appendFile($view->baseUrl() . '/public/ot/scripts/debug.js');
             
             $db = Zend_Registry::get('dbAdapter')->getConfig();
             

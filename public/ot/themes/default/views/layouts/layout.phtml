@@ -15,13 +15,13 @@ $this->headTitle($this->config->user->appTitle->val)
 echo "\n";
      
 echo $this->headTitle() . "\n\n";
-echo $this->headLink() . "\n\n";
-//echo $this->minifyHeadScript() . "\n";
+echo $this->headLink();
 echo $this->headScript() . "\n";
 
 $this->overrideTranslation()->js(); 
 echo "\n";
 ?>
+
 </head>
 <body>
     <input type="hidden" name="baseUrl" id="baseUrl" value="<?php echo $this->baseUrl(); ?>" />
