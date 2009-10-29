@@ -40,7 +40,7 @@ $min_enableBuilder = true;
  * will have to load extra code to guess. Some examples below:
  */
 //$min_cachePath = 'c:\\WINDOWS\\Temp';
-$min_cachePath = APPLICATION_PATH . '/cache';
+$min_cachePath = '../../cache';
 //$min_cachePath = preg_replace('/^\\d+;/', '', session_save_path());
 
 
@@ -74,7 +74,7 @@ $min_cacheFileLocking = true;
  * move all @imports to the top of the output. Note that moving @imports could 
  * affect CSS values (which is why this option is disabled by default).
  */
-$min_serveOptions['bubbleCssImports'] = true;
+$min_serveOptions['bubbleCssImports'] = false;
 
 
 /**

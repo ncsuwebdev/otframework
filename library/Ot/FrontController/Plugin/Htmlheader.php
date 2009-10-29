@@ -58,9 +58,9 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
             }
         }
         
-        $view->headScript()->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js');
-        $view->headScript()->appendFile('http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js');
-        $view->headScript()->appendFile($baseUrl . '/ot/scripts/global.js');
+        $view->headScript()->appendFile($baseUrl . '/public/ot/scripts/jquery.min.js');
+        $view->headScript()->appendFile($baseUrl . '/public/ot/scripts/jquery-ui.min.js');
+        $view->headScript()->appendFile($baseUrl . '/public/ot/scripts/global.js');
                 
         if (isset($themeConfig->scripts->file)) {
             foreach ($themeConfig->scripts->file as $s) {
