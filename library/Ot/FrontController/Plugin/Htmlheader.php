@@ -92,10 +92,6 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         $javascript = $this->_autoload($baseUrl, '/public/scripts', 'js', $request, $javascript);   
         $css        = $this->_autoload($baseUrl, '/public/css', 'css', $request, $css);
         
-        // check OT directories and append to existing array
-        //$javascript = $this->_autoload($baseUrl, '/public/ot/scripts', 'js', $request, $javascript);
-        //$css        = $this->_autoload($baseUrl, '/public/ot/css', 'css', $request, $css);
-        
         foreach ($css as $c) {
             $view->headLink()->appendStylesheet($c);
         }
@@ -120,9 +116,9 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
             
             $autoload = $path . '.' . $extension;
         
-	        if (is_file($directory . '/' . $autoload)) {
-	        	
-	        	$file = str_replace('./', $baseUrl . '/', $directory . '/' . $autoload);
+	        if (is_file(APPLICATION_PATH . '/../' . $directory . '/' . $autoload)) {
+	            
+	        	$file = $baseUrl . str_replace('./', $baseUrl . '/', $directory . '/' . $autoload);
 	        	
 	             if (is_array($existing)) {
 	                array_push($existing, $file);        
