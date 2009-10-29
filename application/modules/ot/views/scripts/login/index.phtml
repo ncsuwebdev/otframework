@@ -20,7 +20,7 @@
         <?php echo $f['form']; ?>
         <?php if (!$f['autoLogin']): ?>
         <div class="forgot">
-        	<a href="<?php echo $this->baseUrl(); ?>/login/index/forgot/?realm=<?php echo $f['realm']; ?>"><?php echo $this->translate("login-index-index:linkForgot"); ?></a>
+        	<a href="<?php echo $this->url(array('action' => 'forgot', 'realm' => $f['realm']), 'login'); ?>"><?php echo $this->translate("login-index-index:linkForgot"); ?></a>
         </div>
         <?php endif; ?>
     </div> 

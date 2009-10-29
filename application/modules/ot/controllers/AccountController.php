@@ -97,10 +97,10 @@ class Ot_AccountController extends Zend_Controller_Action
             'changePassword'  => $this->_authAdapter->manageLocally() && 
                 $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId &&
                 $this->_helper->hasAccess('change-password'),
-            'grantAccess'     => ($this->_helper->hasAccess('index', 'oauth_client') && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
-            'revokeAccess'    => ($this->_helper->hasAccess('revoke', 'oauth_server') && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
-            'oauth'           => $this->_helper->hasAccess('index', 'oauth_index'),
-            'apiDocs'         => $this->_helper->hasAccess('index', 'api_documentation')
+            'grantAccess'     => ($this->_helper->hasAccess('index', 'ot_oauthclient') && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
+            'revokeAccess'    => ($this->_helper->hasAccess('revoke', 'ot_oauthserver') && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
+            'oauth'           => $this->_helper->hasAccess('index', 'ot_oauth'),
+            'apiDocs'         => $this->_helper->hasAccess('index', 'ot_api')
         );
 
         $this->view->messages = $this->_helper->flashMessenger->getMessages();

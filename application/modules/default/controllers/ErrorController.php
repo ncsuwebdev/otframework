@@ -64,7 +64,7 @@ class ErrorController extends Zend_Controller_Action
 	            $message = $exception->getMessage();
 	            break;
         }
-
+        
         $this->_helper->pageTitle($title);
         
         $this->view->title = $this->view->translate('error-error-error:title') . ' ' . $this->view->title;

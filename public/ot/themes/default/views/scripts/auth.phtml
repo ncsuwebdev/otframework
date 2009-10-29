@@ -2,7 +2,7 @@
 $auth = Zend_Auth::getInstance();
 
 if (!$auth->hasIdentity()) {
-    echo '<b>You are not Logged in!</b> <a href="' . $this->baseUrl() . '/login/" id="authLogin" class="authModal">Log in</a> here.';
+    echo '<b>You are not Logged in!</b> <a href="' . $this->url(array(), 'login') . '" id="authLogin" class="authModal">Log in</a> here.';
 } else {
 	
 	$identity = $auth->getIdentity();
@@ -17,9 +17,9 @@ if (!$auth->hasIdentity()) {
 	
 	echo '&nbsp; | &nbsp;';
 
-	echo '<a href="' . $this->baseUrl() . '/account/" id="authMyAccount">My Account</a>'
+	echo '<a href="' . $this->url(array(), 'account') . '" id="authMyAccount">My Account</a>'
     	. '&nbsp; | &nbsp;'
-    	. '<a href="' . $this->baseUrl() . '/login/index/logout/" id="authLogout" class="authModal">Sign Out</a>';   	
+    	. '<a href="' . $this->url(array('action' => 'logout'), 'login') . '" id="authLogout" class="authModal">Sign Out</a>';   	
 }
     
 

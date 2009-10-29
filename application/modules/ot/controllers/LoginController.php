@@ -367,7 +367,7 @@ class Ot_LoginController extends Zend_Controller_Action
 			        $et = new Ot_Trigger();
 			        $et->setVariables($userAccount->toArray());
 			        
-			        $et->resetUrl    = Zend_Registry::get('siteUrl') . '/login/index/password-reset/?key=' . $code;
+			        $et->resetUrl    = Zend_Registry::get('siteUrl') . '/login/password-reset/?key=' . $code;
                     $et->loginMethod = $config->app->authentication->$realm->name;
                     
                     $et->dispatch('Login_Index_Forgot');

@@ -34,19 +34,21 @@ class Ot_ApiController extends Zend_Controller_Action
 	
 	protected $_parameters = array();
 	
-	public function init()
-	{
-        $this->_helper->viewRenderer->setNeverRender();
-        $this->_helper->layout->disableLayout();
-	}
-	
-	public function indexAction()
-	{
-	    $this->_helper->redirector->gotoUrl('/api/documentation');
-	}
+    public function indexAction()
+    {
+        $api = new Ot_Api();
+        $allMethods = $api->describe();
+
+        $this->view->api = $allMethods;
+        
+        $this->_helper->pageTitle('api-documentation-index:title');
+    }
 	
     public function soapAction()
     {
+        $this->_helper->viewRenderer->setNeverRender();
+        $this->_helper->layout->disableLayout();
+        
         $server = new SoapServer(null, array('uri' => "soapservice"));
         $server->setClass('Ot_Api_Soap');
         $server->handle();
@@ -54,6 +56,9 @@ class Ot_ApiController extends Zend_Controller_Action
     
     public function xmlAction()
     {
+        $this->_helper->viewRenderer->setNeverRender();
+        $this->_helper->layout->disableLayout();
+        
         $access = new Ot_Api_Access();
         
         $request = Oauth_Request::fromRequest();
@@ -69,6 +74,9 @@ class Ot_ApiController extends Zend_Controller_Action
     
     public function jsonAction()
     {
+        $this->_helper->viewRenderer->setNeverRender();
+        $this->_helper->layout->disableLayout();
+        
         $access = new Ot_Api_Access();
  
         $request = Oauth_Request::fromRequest();

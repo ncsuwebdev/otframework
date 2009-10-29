@@ -1,7 +1,7 @@
 <?php echo $this->translate('account-index-index:header'); ?>
 <br /><br />
 <?php if ($this->acl['delete']): ?>
-    <a href="<?php echo $this->baseUrl(); ?>/account/index/delete/?accountId=<?php echo $this->userData['accountId']; ?>" class="ui-state-default ui-corner-all linkButton">
+    <a href="<?php echo $this->url(array('action' => 'delete', 'accountId' => $this->userData['accountId']), 'account'); ?>" class="ui-state-default ui-corner-all linkButton">
     <?php echo $this->translate('account-index-index:linkDeleteUser'); ?>
     <span class="ui-icon ui-icon-minusthick"></span></a>
     <br /><br />
@@ -20,12 +20,13 @@
 	<br /><br />
     <?php if ($this->acl['edit'] || $this->acl['changePassword']) : ?>
         <?php if ($this->acl['edit']): ?>   
-    	    <a href="<?php echo $this->baseUrl(); ?>/account/index/edit/?accountId=<?php echo $this->userData['accountId']; ?>" class="ui-state-default ui-corner-all linkButton">
+            
+    	    <a href="<?php echo $this->url(array('action' => 'edit', 'accountId' => $this->userData['accountId']), 'account'); ?>" class="ui-state-default ui-corner-all linkButton">
     	    <?php echo $this->translate('account-index-index:linkEditUserData'); ?>
     	    <span class="ui-icon ui-icon-pencil"></span></a>
         <?php endif; ?>
         <?php if ($this->acl['changePassword']) : ?>
-            <a href="<?php echo $this->baseUrl(); ?>/account/index/change-password/" class="ui-state-default ui-corner-all linkButton">
+            <a href="<?php echo $this->url(array('action' => 'changePassword'), 'account'); ?>" class="ui-state-default ui-corner-all linkButton">
             <?php echo $this->translate('account-index-index:linkChangePassword'); ?>
             <span class="ui-icon ui-icon-locked"></span></a>
         <?php endif; ?>
@@ -92,7 +93,7 @@
 			<div class="access notAuthorized">
 				<span>You are not authorized on <?php echo $c['name']; ?>.</span>
 				<?php if ($this->acl['grantAccess']): ?>
-				<a href="<?php echo $this->baseUrl(); ?>/oauth/client/?consumerId=<?php echo $c['consumerId']; ?>" class="ui-state-default ui-corner-all linkButton">
+				<a href="<?php echo $this->url(array('module' => 'ot', 'controller' => 'oauthclient', 'action' => 'edit', 'consumerId' => $c['consumerId']), 'default'); ?>" class="ui-state-default ui-corner-all linkButton">
 				    Authorize Access
 				<span class="ui-icon ui-icon-key"></span></a>
 				<?php endif; ?>
@@ -110,13 +111,13 @@
     			<span>Developers!</span>
                 <?php if ($this->acl['oauth']) : ?>
     			     You can setup your application to interact with <b><?php echo $this->config->user->appTitle->val; ?></b>
-    			     <a href="<?php echo $this->baseUrl(); ?>/oauth/">here</a>.
+    			     <a href="<?php echo $this->url(array(), 'oauth'); ?>">here</a>.
                      <br />
                 <?php endif; ?>
                 <?php if ($this->acl['apiDocs']) : ?>
                     <br />
                     <div style="text-align: center">
-                        <a href="<?php echo $this->baseUrl(); ?>/api/documentation" class="ui-state-default ui-corner-all linkButton">View API Documentation<span class="ui-icon ui-icon-gear"></span></a>
+                        <a href="<?php echo $this->url(array(), 'api'); ?>" class="ui-state-default ui-corner-all linkButton">View API Documentation<span class="ui-icon ui-icon-gear"></span></a>
                     </div>
                 <?php endif; ?>
     		</div>
@@ -128,14 +129,14 @@
 		<div class="token">
 			<div class="consumerIcon">
 				<?php if ($t['consumer']['imageId'] != 0): ?>
-				<img src="<?php echo $this->baseUrl(); ?>/image/?imageId=<?php echo $t['consumer']['imageId']; ?>" />
+				<img src="<?php echo $this->url(array('imageId' => $t['consumer']['imageId']), 'image'); ?>" />
 				<?php else: ?>
 				<img src="<?php echo $this->baseUrl(); ?>/ot/images/consumer.png" alt="consumer" />
 				<?php endif; ?>
 			</div>
 			<?php if ($this->acl['revokeAccess']): ?>
 			<div class="revoke">
-				<a href="<?php echo $this->baseUrl(); ?>/oauth/server/revoke/?consumerId=<?php echo $t['consumerId']; ?>" class="ui-state-default ui-corner-all linkButton">
+				<a href="<?php echo $this->url(array('module' => 'ot', 'controller' => 'oauthserver', 'action' => 'revoke', 'consumerId' => $t['consumerId']), 'default'); ?>" class="ui-state-default ui-corner-all linkButton">
 				    <?php echo $this->translate('account-index-index:consumerHasAccessButton'); ?>
 				<span class="ui-icon ui-icon-minusthick"></span></a>			
 			</div>

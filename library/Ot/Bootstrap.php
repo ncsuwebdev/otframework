@@ -63,9 +63,4 @@ class Ot_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $auth = Zend_Auth::getInstance();
         $auth->setStorage(new Ot_Auth_Storage_Session(Zend_Registry::get('siteUrl') . 'auth')); 
     }    
-    
-    protected function _initRoutes()
-    {
-        
-    }
 }
