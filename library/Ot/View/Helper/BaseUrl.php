@@ -13,7 +13,7 @@ class Zend_View_Helper_BaseUrl extends Zend_View_Helper_Abstract
      *
      * @param mixed Any number of arguments to use as cycle values
      */
-    public function baseUrl()
+    public static function baseUrl()
     {
         return Zend_Controller_Front::getInstance()->getBaseUrl();
     }

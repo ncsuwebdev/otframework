@@ -39,15 +39,15 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 
         $themeConfig = new Zend_Config_Xml($themePath . '/config.xml', 'production', true);
         
-        $view->headLink()->appendStylesheet($baseUrl . '/ot/css/Ot/common.css');
-        $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
+        $view->headLink()->appendStylesheet($baseUrl . '/public/ot/css/Ot/common.css');
+        $view->headLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
         
         if (isset($themeConfig->css->file)) {
             foreach ($themeConfig->css->file as $c) {
                 $path = $c->path;
                 
                 if (!preg_match('/^http/i', $path)) {
-                    $path = $baseUrl . '/' . $themePath . '/public/css/' . $path;
+                    $path = $baseUrl . '/public/' . $themePath . '/public/css/' . $path;
                 }
                 
                 if ($c->order == 'append') {
@@ -89,12 +89,12 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         $javascript = array();
         
         // check application directories and append to existing array
-        $javascript = $this->_autoload($baseUrl, './scripts', 'js', $request, $javascript);   
-        $css        = $this->_autoload($baseUrl, './css', 'css', $request, $css);
+        $javascript = $this->_autoload($baseUrl, '/public/scripts', 'js', $request, $javascript);   
+        $css        = $this->_autoload($baseUrl, 'public/css', 'css', $request, $css);
         
         // check OT directories and append to existing array
-        $javascript = $this->_autoload($baseUrl, './ot/scripts', 'js', $request, $javascript);
-        $css        = $this->_autoload($baseUrl, './ot/css', 'css', $request, $css);
+        $javascript = $this->_autoload($baseUrl, '/public/ot/scripts', 'js', $request, $javascript);
+        $css        = $this->_autoload($baseUrl, '/public/ot/css', 'css', $request, $css);
         
         foreach ($css as $c) {
             $view->headLink()->appendStylesheet($c);
