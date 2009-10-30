@@ -148,7 +148,7 @@ class Ot_OauthController extends Zend_Controller_Action
 				
 				$this->_helper->flashMessenger->addMessage('Your application was successfully registered.');
 				
-				$this->_helper->redirector->gotoUrl('/oauth/index/details/?consumerId=' . $consumerId);
+				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $consumerId), 'oauth');
 			} else {
 				$messages[] = 'There was a problem submitting your form.';
 			}
@@ -217,7 +217,7 @@ class Ot_OauthController extends Zend_Controller_Action
 				
 				$this->_helper->flashMessenger->addMessage('Your application was successfully modified.');
 				
-				$this->_helper->redirector->gotoUrl('/oauth/index/details/?consumerId=' . $data['consumerId']);
+				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $data['consumerId']), 'oauth');
 			} else {
 				$messages[] = 'There was a problem submitting your form.';
 			}
@@ -255,7 +255,7 @@ class Ot_OauthController extends Zend_Controller_Action
 						
 			$this->_helper->flashMessenger->addMessage('Your application was successfully removed.');
 			
-			$this->_helper->redirector->gotoUrl('/oauth');
+			$this->_helper->redirector->gotoRoute(array(), 'oauth');
 		}
 		
 		$this->view->form = $form;
@@ -350,7 +350,7 @@ class Ot_OauthController extends Zend_Controller_Action
 			
 			$this->_helper->flashMessenger->addMessage('The consumer key and secret was reset for your application.  Please update your application to allow access.');
 			
-			$this->_helper->redirector->gotoUrl('/oauth/index/details/?consumerId=' . $thisConsumer->consumerId);
+			$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $thisConsumer->consumerId), 'oauth');
 		}
 		
 		$this->view->form = $form;
@@ -363,6 +363,6 @@ class Ot_OauthController extends Zend_Controller_Action
 			return $this->view->baseUrl() . '/ot/images/consumer.png';
 		}
 		
-		return $this->view->baseUrl() . '/image/?imageId=' . $imageId;
+		return $this->view->url(array('imageId' => $imageId), 'image');
 	}
 }

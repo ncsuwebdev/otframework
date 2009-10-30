@@ -102,7 +102,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
 		$existingAccessToken = $st->getTokenByAccountAndConsumer(Zend_Auth::getInstance()->getIdentity()->accountId, $thisConsumer->consumerId, 'access');
 		if (!is_null($existingAccessToken)) {
 			$st->removeToken($get->oauth_token);
-			$this->_helper->redirector->gotoUrl('/account/oauth/already-authorized?consumerId=' . $thisConsumer->consumerId);
+			$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'already-authorized', 'consumerId' => $thisConsumer->consumerId), 'ot');
 		}
 				
 		$this->view->token = $token;
@@ -133,11 +133,11 @@ class Ot_OauthserverController extends Zend_Controller_Action
 					throw new Ot_Exception_Data('Token was not authorized because it was not found.');
 				}
 				
-				$this->_helper->redirector->gotoUrl('/oauth/server/grant?oauth_token=' . $get->oauth_token);
+				$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'grant', 'oauth_token' => $get->oauth_token), 'ot');
 			} else {
 				$st->removeToken($get->oauth_token);
 				
-				$this->_helper->redirector->gotoUrl('/oauth/server/deny?consumerId=' . $thisConsumer->consumerId);
+				$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'deny', 'consumerId' => $thisConsumer->consumerId), 'ot');
 			}
 		}
 		
@@ -333,7 +333,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
         	
         	$this->_helper->flashMessenger->addMessage('Access to the application has been revoked.');
         	
-        	$this->_helper->redirector->gotoUrl('/account');
+        	$this->_helper->redirector->gotoRoute(array(), 'account');
         }
         
         $this->view->form = $form;
@@ -348,6 +348,6 @@ class Ot_OauthserverController extends Zend_Controller_Action
 			return $this->view->baseUrl() . '/ot/images/consumer.png';
 		}
 		
-		return $this->view->baseUrl() . '/image/?imageId=' . $imageId;
+		return $this->view->url(array('imageId' => $imageId), 'image');
 	}
 }

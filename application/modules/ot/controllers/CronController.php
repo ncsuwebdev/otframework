@@ -134,7 +134,7 @@ class Ot_CronController extends Zend_Controller_Action
                     
             $this->_helper->log(Zend_Log::INFO, 'cron was set to ' . $status, $logOptions);
                         
-            $this->_helper->redirector->gotoUrl('/admin/cron/');
+            $this->_helper->redirector->gotoRoute(array('controller' => 'cron'), 'ot');
         }
         
         if ($get->name == 'all') {

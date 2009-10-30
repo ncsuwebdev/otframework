@@ -171,7 +171,7 @@ class Ot_ConfigController extends Zend_Controller_Action
 	            
 	            $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-configUpdated', $get->key));
 	            
-	            $this->_helper->redirector->gotoUrl('/admin/config/');
+	            $this->_helper->redirector->gotoRoute(array('controller' => 'config'), 'ot');
         	} else {
         		$messages[] = 'msg-error-formError';
         	}

@@ -171,7 +171,7 @@ class Ot_AclController extends Zend_Controller_Action
 	                
 	            $this->_helper->log(Zend_Log::INFO, 'Role ' . $data['name'] . ' was added', $logOptions);
 	
-	            $this->_helper->redirector->gotoUrl('/admin/acl/details?roleId=' . $roleId);
+	            $this->_helper->redirector->gotoRoute(array('controller' => 'acl', 'action' => 'details', 'roleId' => $roleId), 'ot');
             } else {
             	$messages[] = 'msg-error-invalidForm';
             }
@@ -228,7 +228,7 @@ class Ot_AclController extends Zend_Controller_Action
 	                
 	            $this->_helper->log(Zend_Log::INFO, 'Role ' . $data['name'] . ' was modified', $logOptions);
 	
-	            $this->_helper->redirector->gotoUrl('/admin/acl/details/?roleId=' . $data['roleId']);
+	            $this->_helper->redirector->gotoRoute(array('controller' => 'acl', 'action' => 'details', 'roleId' => $data['roleId']), 'ot');
         	} else {
         		$messages[] = 'msg-error-invalidForm';
         	}
@@ -282,7 +282,7 @@ class Ot_AclController extends Zend_Controller_Action
                 
             $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
 
-            $this->_helper->redirector->gotoUrl('/admin/acl/details/?roleId=' . $thisRole->roleId);
+            $this->_helper->redirector->gotoRoute(array('controller' => 'acl', 'action' => 'details', 'roleId' => $thisRole->roleId), 'ot');
 
         }
 
@@ -363,7 +363,7 @@ class Ot_AclController extends Zend_Controller_Action
                 
             $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
 
-            $this->_helper->redirector->gotoUrl('/admin/acl/details/?roleId=' . $thisRole->roleId);
+            $this->_helper->redirector->gotoRoute(array('controller' => 'acl', 'action' => 'details', 'roleId' => $thisRole->roleId), 'ot');
 
         }
 
@@ -473,7 +473,7 @@ class Ot_AclController extends Zend_Controller_Action
                 
             $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole['name'] . ' was deleted', $logOptions);
 
-            $this->_helper->redirector->gotoUrl('/admin/acl/');
+            $this->_helper->redirector->gotoRoute(array('controller' => 'acl'), 'ot');
         }      
         
         $this->view->role = $thisRole;

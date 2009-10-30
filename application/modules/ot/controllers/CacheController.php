@@ -63,6 +63,6 @@ class Ot_CacheController extends Zend_Controller_Action
         
         $this->_helper->flashMessenger->addMessage('msg-info-cacheCleared');
         
-        $this->_helper->redirector->gotoUrl('/admin/cache/');
+        $this->_helper->redirector->gotoRoute(array('controller' => 'cache'), 'ot');
     }
 }

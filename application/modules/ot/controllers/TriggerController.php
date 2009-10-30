@@ -188,7 +188,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         		
         		$this->_helper->flashMessenger->addMessage('msg-info-triggerAdded');
         		
-        		$this->_helper->redirector->gotoUrl('/admin/trigger/details/?triggerId=' . $get->triggerId);
+        		$this->_helper->redirector->gotoRoute(array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $get->triggerId), 'ot');
         		
         	} else {
         		$messages[] = 'msg-error-formError';
@@ -290,7 +290,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             
                 $this->_helper->flashMessenger->addMessage('msg-info-triggerUpdated');
                 
-                $this->_helper->redirector->gotoUrl('/admin/trigger/details/?triggerId=' . $triggerId);
+                $this->_helper->redirector->gotoRoute(array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $triggerId), 'ot');
                 
             } else {
                 $messages[] = 'msg-error-formError';
@@ -352,7 +352,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         
             $this->_helper->flashMessenger->addMessage('msg-info-triggerDeleted');
             
-            $this->_helper->redirector->gotoUrl('/admin/trigger/details/?triggerId=' . $triggerId);
+            $this->_helper->redirector->gotoRoute(array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $triggerId), 'ot');
         }
         
         $this->view->form = $form;
@@ -414,7 +414,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         
             $this->_helper->flashMessenger->addMessage('msg-info-triggerActionStatus');
             
-            $this->_helper->redirector->gotoUrl('/admin/trigger/details/?triggerId=' . $triggerId);
+            $this->_helper->redirector->gotoRoute(array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $triggerId), 'ot');
         }
         
         $this->view->form = $form;
