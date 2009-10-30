@@ -1,5 +1,5 @@
 <div id="aclIndexAdd">
-<a href="<?php echo $this->baseUrl(); ?>/admin/acl/details/?roleId=<?php echo $this->role->roleId; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-applicationAccess:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $this->role->roleId), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-applicationAccess:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
 <br /><br />
     <?php echo $this->translate('admin-acl-remoteAccess:header'); ?>
     <br /><br />
@@ -24,8 +24,8 @@
 	        <ul>
 	        <?php foreach ($this->children as $c) : ?>
 	        	<li>
-	            <a href="<?php echo $this->baseUrl(); ?>/admin/acl/details/?roleId=<?php echo $c['roleId']; ?>"><?php echo $c['name']; ?></a> <?php echo $this->translate('admin-acl-applicationAccess:via'); ?>
-	            <a href="<?php echo $this->baseUrl(); ?>/admin/acl/details/?roleId=<?php echo $c['parent']['roleId']; ?>"><?php echo $c['parent']['name']; ?></a>
+	            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $c['roleId']), 'ot'); ?>"><?php echo $c['name']; ?></a> <?php echo $this->translate('admin-acl-applicationAccess:via'); ?>
+	            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $c['parent']['roleId']), 'ot'); ?>"><?php echo $c['parent']['name']; ?></a>
 	            
 	            </li>
 	        <?php endforeach; ?>

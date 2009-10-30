@@ -26,7 +26,7 @@
     	    <span class="ui-icon ui-icon-pencil"></span></a>
         <?php endif; ?>
         <?php if ($this->acl['changePassword']) : ?>
-            <a href="<?php echo $this->url(array('action' => 'changePassword'), 'account'); ?>" class="ui-state-default ui-corner-all linkButton">
+            <a href="<?php echo $this->url(array('action' => 'change-password'), 'account'); ?>" class="ui-state-default ui-corner-all linkButton">
             <?php echo $this->translate('account-index-index:linkChangePassword'); ?>
             <span class="ui-icon ui-icon-locked"></span></a>
         <?php endif; ?>
@@ -93,7 +93,7 @@
 			<div class="access notAuthorized">
 				<span>You are not authorized on <?php echo $c['name']; ?>.</span>
 				<?php if ($this->acl['grantAccess']): ?>
-				<a href="<?php echo $this->url(array('module' => 'ot', 'controller' => 'oauthclient', 'action' => 'edit', 'consumerId' => $c['consumerId']), 'default'); ?>" class="ui-state-default ui-corner-all linkButton">
+				<a href="<?php echo $this->url(array('controller' => 'oauthclient', 'action' => 'edit', 'consumerId' => $c['consumerId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton">
 				    Authorize Access
 				<span class="ui-icon ui-icon-key"></span></a>
 				<?php endif; ?>
@@ -136,7 +136,7 @@
 			</div>
 			<?php if ($this->acl['revokeAccess']): ?>
 			<div class="revoke">
-				<a href="<?php echo $this->url(array('module' => 'ot', 'controller' => 'oauthserver', 'action' => 'revoke', 'consumerId' => $t['consumerId']), 'default'); ?>" class="ui-state-default ui-corner-all linkButton">
+				<a href="<?php echo $this->url(array('controller' => 'oauthserver', 'action' => 'revoke', 'consumerId' => $t['consumerId']), 'oauth'); ?>" class="ui-state-default ui-corner-all linkButton">
 				    <?php echo $this->translate('account-index-index:consumerHasAccessButton'); ?>
 				<span class="ui-icon ui-icon-minusthick"></span></a>			
 			</div>

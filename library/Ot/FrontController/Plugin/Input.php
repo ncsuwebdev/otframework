@@ -43,7 +43,7 @@ class Ot_FrontController_Plugin_Input extends Zend_Controller_Plugin_Abstract
             ),
         );
         
-        $getFilter = new Zend_Filter_Input($filterOptions, array(), $_GET);
+        $getFilter = new Zend_Filter_Input($filterOptions, array(), array_merge($_GET, $request->getParams()));
         $postFilter = new Zend_Filter_Input($filterOptions, array(), $_POST);
         
         Zend_Registry::set('getFilter', $getFilter);

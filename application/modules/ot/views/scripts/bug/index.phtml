@@ -3,7 +3,7 @@
     <br /><br />
 
     <?php if ($this->acl['add']) : ?>
-    <a href="<?php echo $this->baseUrl(); ?>/admin/bug/add/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-bug-index:linkNew'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'add'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-bug-index:linkNew'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
     <br /><br />
     <?php endif; ?>
     <table class="list">
@@ -18,7 +18,7 @@
 	        <tr class="<?php $this->cycle('row1', 'row2'); ?>">
 	            <td>
 	            <?php if ($this->acl['details']) : ?>
-	                <a href="<?php echo $this->baseUrl(); ?>/admin/bug/details/?bugId=<?php echo $b['bugId']; ?>"><?php echo $b['title']; ?></a>
+	                <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'details', 'bugId' => $b['bugId']), 'ot'); ?>"><?php echo $b['title']; ?></a>
 	            <?php else: ?>
 	                <?php echo $b['title']; ?>
 	            <?php endif; ?>

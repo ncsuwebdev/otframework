@@ -10,7 +10,7 @@
     <br /><br />
 
     <?php if ($this->acl['add']): ?>
-    <a href="<?php echo $this->baseUrl(); ?>/admin/acl/add/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'add'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
     <br /><br />
     <?php endif; ?>
     <table class="list">
@@ -34,12 +34,12 @@
         <?php if (count($this->roles) > 0): ?>
         <?php foreach ($this->roles as $r) : ?>
         <tr class="<?php $this->cycle('row1', 'row2'); ?>">
-            <td><a href="<?php echo $this->baseUrl(); ?>/admin/acl/details/?roleId=<?php echo $r['roleId']; ?>"><?php echo $r['name']; ?></a></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $r['roleId']), 'ot'); ?>"><?php echo $r['name']; ?></a></td>
             <td align="center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("admin-acl-form:noInheritance"); } ?></td>         
             <?php if ($this->acl['application-access']): ?>
             <td align="center">
                 <?php if ($r['editable']): ?>
-                <a href="<?php echo $this->baseUrl(); ?>/admin/acl/application-access/?roleId=<?php echo $r['roleId']; ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-newwin"></span></a>
+                <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $r['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-newwin"></span></a>
                 <?php else: ?>
                 <span class="ui-icon ui-icon-locked"></span>
                 <?php endif; ?>
@@ -48,7 +48,7 @@
             <?php if ($this->acl['remote-access']): ?>
             <td align="center">
                 <?php if ($r['editable']): ?>
-                <a href="<?php echo $this->baseUrl(); ?>/admin/acl/remote-access/?roleId=<?php echo $r['roleId']; ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-transferthick-e-w"></span></a>
+                <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $r['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-transferthick-e-w"></span></a>
                 <?php else: ?>
                 <span class="ui-icon ui-icon-locked"></span>
                 <?php endif; ?>
@@ -57,7 +57,7 @@
             <?php if ($this->acl['edit']): ?>
             <td align="center">
                 <?php if ($r['editable']): ?>
-                <a href="<?php echo $this->baseUrl(); ?>/admin/acl/edit/?roleId=<?php echo $r['roleId']; ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
+                <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'edit', 'roleId' => $r['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
                 <?php else: ?>
                 <span class="ui-icon ui-icon-locked"></span>
                 <?php endif; ?>
@@ -69,7 +69,7 @@
                 	<?php if ($r['inheritedFrom']): ?>
                 		<span class="ui-icon ui-icon-locked"></span>
                 	<?php else: ?>
-                		<a href="<?php echo $this->baseUrl(); ?>/admin/acl/delete/?roleId=<?php echo $r['roleId']; ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>
+                		<a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'delete', 'roleId' => $r['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>
                 	<?php endif; ?>
                 <?php else: ?>
                     <span class="ui-icon ui-icon-locked"></span>

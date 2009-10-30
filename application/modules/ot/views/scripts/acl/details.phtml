@@ -8,13 +8,13 @@
     <?php echo $this->translate('admin-acl-details:header', $this->role['name']); ?>
     <br /><br />
     <?php if ($this->acl['index']): ?>
-        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'acl'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
     <?php endif; ?>
     <?php if ($this->acl['edit'] && $this->role['editable']): ?>
-        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/edit/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:edit'); ?><span class="ui-icon ui-icon-pencil"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'edit', 'roleId' => $this->role['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:edit'); ?><span class="ui-icon ui-icon-pencil"></span></a>
     <?php endif; ?>
     <?php if ($this->acl['delete'] && $this->role['editable']): ?>
-        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/delete/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:delete'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'delete', 'roleId' => $this->role['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:delete'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
     <?php endif; ?>
     <br /><br />
     <table class="form">
@@ -40,7 +40,7 @@
 	</ul>
     <div id="tabs-application" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 	    <?php if ($this->acl['application-access'] && $this->role['editable']): ?>
-	        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/application-access/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:applicationAccess:edit'); ?><span class="ui-icon ui-icon-newwin"></span></a>
+	        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $this->role['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:applicationAccess:edit'); ?><span class="ui-icon ui-icon-newwin"></span></a>
 	        <br /><br />
 	    <?php endif; ?>     
     	<?php echo $this->translate('admin-acl-details:applicationAccess:header'); ?>
@@ -91,7 +91,7 @@
     </div>  
     <div id="tabs-remote" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 	    <?php if ($this->acl['remote-access'] && $this->role['editable']): ?>
-	        <a href="<?php echo $this->baseUrl(); ?>/admin/acl/remote-access/?roleId=<?php echo $this->role['roleId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:remoteAccess:edit'); ?><span class="ui-icon ui-icon-transferthick-e-w"></span></a>
+	        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $this->role['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:remoteAccess:edit'); ?><span class="ui-icon ui-icon-transferthick-e-w"></span></a>
 	        <br /><br />
 	    <?php endif; ?>     	
     	<?php echo $this->translate('admin-acl-details:remoteAccess:header'); ?>

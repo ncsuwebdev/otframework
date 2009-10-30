@@ -19,7 +19,7 @@
 	            
                 <?php if ($this->acl['edit']) : ?>
                 <td style="text-align: center">
-                    <a href="<?php echo $this->baseUrl(); ?>/admin/config/edit/?key=<?php echo $key; ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
+                    <a href="<?php echo $this->url(array('controller' => 'config', 'action' => 'edit', 'key' => $key), 'ot'); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
                 </td>
                 <?php endif; ?>
             </tr>

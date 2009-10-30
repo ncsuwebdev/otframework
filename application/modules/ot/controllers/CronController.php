@@ -38,7 +38,7 @@ class Ot_CronController extends Zend_Controller_Action
             'add'    => false,
             'edit'   => false,
             'toggle' => $this->_helper->hasAccess('toggle'),
-            'acl'    => $this->_helper->hasAccess('index', 'admin_acl')
+            'acl'    => $this->_helper->hasAccess('index', 'ot_acl')
             );
             
         $config = Zend_Registry::get('config');
@@ -147,4 +147,28 @@ class Ot_CronController extends Zend_Controller_Action
         $this->_helper->pageTitle('admin-cron-toggle:title');
         $this->view->form   = $form;
     }
+    
+    /*
+    public function jobAction()
+    {
+        set_time_limit(0);
+        
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNeverRender();
+        
+        $action = $this->_request->getActionName();
+        
+        $cs = new Ot_Cron_Status();
+        
+        if (!$cs->isEnabled($action)) {
+            die();
+        }
+        
+        $this->_lastRunDt = $cs->getLastRunDt($action);
+        
+        $cs->executed($action, time());
+        
+               
+    }
+    */
 }

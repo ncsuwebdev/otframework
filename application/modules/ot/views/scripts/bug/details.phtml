@@ -1,10 +1,10 @@
 <?php echo $this->translate('admin-bug-details:header'); ?>
 <br /><br />
 <?php if ($this->acl['index']): ?>
-<a href="<?php echo $this->baseUrl(); ?>/admin/bug/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-bug-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<a href="<?php echo $this->url(array('controller' => 'bug'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-bug-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
 <?php endif; ?> 
 <?php if ($this->acl['edit']) : ?>
-    <a href="<?php echo $this->baseUrl(); ?>/admin/bug/edit/?bugId=<?php echo $this->bug['bugId']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-bug-details:edit'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
+    <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'edit', 'bugId' => $this->bug['bugId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-bug-details:edit'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
     <br /><br />
 <?php endif; ?>
     <table class="form">

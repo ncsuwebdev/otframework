@@ -1,5 +1,5 @@
 <?php if ($this->acl['index']): ?>
-<a href="<?php echo $this->baseUrl(); ?>/admin/trigger/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("admin-trigger-details:linkBack"); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a><br /><br />
+<a href="<?php echo $this->url(array('controller' => 'trigger'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("admin-trigger-details:linkBack"); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a><br /><br />
 <?php endif; ?>
 
 <?php echo $this->translate("admin-trigger-details:header"); ?>
@@ -18,7 +18,7 @@
     </tbody>
 </table><br />
     <?php if ($this->acl['add']) : ?>
-    <a href="<?php echo $this->baseUrl(); ?>/admin/trigger/add/?triggerId=<?php echo $this->triggerId; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("admin-trigger-details:linkAdd"); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->triggerId), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("admin-trigger-details:linkAdd"); ?><span class="ui-icon ui-icon-plusthick"></span></a>
     <br /><br />
     <?php endif; ?>
     
@@ -44,17 +44,17 @@
                     <td><?php echo $a['helper']; ?></td>
                     <?php if ($this->acl['edit']) : ?>
                     <td align="center">
-                        <a href="<?php echo $this->baseUrl(); ?>/admin/trigger/edit/?triggerActionId=<?php echo $a['triggerActionId']; ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'edit', 'triggerActionId' => $a['triggerActionId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
                     </td>
                     <?php endif; ?>
                     <?php if ($this->acl['delete']) : ?>
                     <td align="center">
-                        <a href="<?php echo $this->baseUrl(); ?>/admin/trigger/delete/?triggerActionId=<?php echo $a['triggerActionId']; ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'delete', 'triggerActionId' => $a['triggerActionId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>
                     </td>
                     <?php endif; ?>
                     <?php if ($this->acl['changeStatus']) : ?>
                     <td align="center">
-                        <a href="<?php echo $this->baseUrl(); ?>/admin/trigger/change-status/?triggerActionId=<?php echo $a['triggerActionId']; ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo ($a['enabled']) ? $this->translate('admin-trigger-details:disableAction') : $this->translate('admin-trigger-details:enableAction'); ?></a>
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'change-status', 'triggerActionId' => $a['triggerActionId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo ($a['enabled']) ? $this->translate('admin-trigger-details:disableAction') : $this->translate('admin-trigger-details:enableAction'); ?></a>
                     </td>
                     <?php endif; ?>
                 </tr>

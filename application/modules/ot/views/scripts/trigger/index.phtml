@@ -11,7 +11,7 @@
             <tr>
                 <td>
                     <?php if ($this->acl['details']):?>
-                    <a href="<?php echo $this->baseUrl(); ?>/admin/trigger/details/?triggerId=<?php echo $t->name; ?>">
+                    <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $t->name), 'ot'); ?>">
                     <?php endif; ?>
                     <?php echo $t->name; ?>
                     <?php if ($this->acl['details']):?>

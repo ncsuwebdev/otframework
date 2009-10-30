@@ -5,5 +5,5 @@
 <br /><br />
 
 <?php if ($this->downloadAllSql) : ?>
-<a class="ui-state-default ui-corner-all linkButtonNoIcon" href="<?php echo $this->baseUrl(); ?>/admin/backup/download-all-sql"><?php echo $this->translate('admin-backup-index:downloadAllSql'); ?></a>
+<a class="ui-state-default ui-corner-all linkButtonNoIcon" href="<?php echo $this->url(array('controller' => 'backup', 'action' => 'download-all-sql'), 'ot'); ?>"><?php echo $this->translate('admin-backup-index:downloadAllSql'); ?></a>
 <?php endif; ?>

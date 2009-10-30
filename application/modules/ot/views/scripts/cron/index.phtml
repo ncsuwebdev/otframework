@@ -22,8 +22,8 @@
     </div>
 
     <?php if ($this->acl['toggle']): ?>
-    <a href="<?php echo $this->baseUrl(); ?>/admin/cron/toggle/?name=all&status=disabled" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-cron-index:linkEnableAll'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
-    <a href="<?php echo $this->baseUrl(); ?>/admin/cron/toggle/?name=all&status=enabled" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-cron-index:linkDisableAll'); ?><span class="ui-icon ui-icon-minusthick"></span></a>  
+    <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle', 'name' => 'all', 'status' => 'diabled'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-cron-index:linkEnableAll'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle', 'name' => 'all', 'status' => 'enabled'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-cron-index:linkDisableAll'); ?><span class="ui-icon ui-icon-minusthick"></span></a>  
     <br /><br />
     <?php endif; ?>
     
@@ -44,7 +44,7 @@
             <td><?php echo $c['name']; ?></td>
             <td style="text-align:center;" class="<?php echo $c['status']; ?>">
             <?php if ($this->acl['toggle']): ?>
-            <a href="<?php echo $this->baseUrl(); ?>/admin/cron/toggle/?name=<?php echo $c['name']; ?>">
+            <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle', 'name' => $c['name']), 'ot'); ?>">
             <?php endif; ?>
             <?php if ($c['status'] == 'enabled'): ?>
             <?php echo $this->translate('admin-cron-index:enabled'); ?>
@@ -57,7 +57,7 @@
             </td>
             <td style="text-align: center;">
             	<?php if ($c['status'] == 'enabled'): ?>
-            		<a class="runLink" href="<?php echo $this->baseUrl(); ?>/cron/index/<?php echo $c['name']; ?>"><?php echo $this->translate('admin-cron-index:runNow'); ?></a>
+            		<a class="runLink" href="<?php echo $this->url(array('module' => 'cron', 'controller' => 'index', 'action' => $c['name']), 'default'); ?>"><?php echo $this->translate('admin-cron-index:runNow'); ?></a>
                 <?php else: ?>
                 	<?php echo $this->translate('admin-cron-index:cannotRun'); ?>
             	<?php endif; ?>
@@ -71,7 +71,7 @@
             </td>
             <?php if ($this->acl['edit']): ?>
             <td style="text-align:center">
-                <a href="<?php echo $this->baseUrl(); ?>/admin/cron/edit/?name=<?php echo $c['name']; ?>"><img src="<?php echo $this->baseUrl(); ?>/images/edit.png" alt="<?php echo $this->translate('table-header-edit'); ?>" /></a>
+                <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'edit', 'name' => $c['name']), 'ot'); ?>"><img src="<?php echo $this->baseUrl(); ?>/images/edit.png" alt="<?php echo $this->translate('table-header-edit'); ?>" /></a>
             </td>
             <?php endif; ?>
         </tr>
