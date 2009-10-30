@@ -31,7 +31,7 @@ div#accessList table.list tr.controller {
 
 div#accessList table.list tr.controller td.td1 {
     padding-left: 20px;
-    background-image: url(../../../images/indent.gif);
+    background-image: url(../../../../images/ot/indent.gif);
     background-position: 3px 2px;
     background-repeat: no-repeat;
 }
@@ -43,14 +43,14 @@ div#accessList table.list tr.action td.td3 {
 
 div#accessList table.list tr.action td.td1 {
     padding-left: 35px;
-    background-image: url(../../../images/indent.gif);
+    background-image: url(../../../../images/ot/indent.gif);
     background-position: 18px 2px;
     background-repeat: no-repeat;
     background-color: #FAFAFA;
 }
 
 div#accessList table.list td.access {
-    background-image: url(../../../images/aclAccess.gif);
+    background-image: url(../../../../images/ot/aclAccess.gif);
     background-repeat: repeat-x;
     color: #FFF;
     font-weight: normal;
@@ -59,7 +59,7 @@ div#accessList table.list td.access {
 }
 
 div#accessList table.list td.noAccess {
-    background-image: url(../../../images/aclNoAccess.gif);
+    background-image: url(../../../../images/ot/aclNoAccess.gif);
     background-repeat: repeat-x;
     color: #FFF;
     font-weight: normal;
@@ -68,7 +68,7 @@ div#accessList table.list td.noAccess {
 }
 
 div#accessList table.list td.someAccess {
-    background-image: url(../../../images/aclSomeAccess.gif);
+    background-image: url(../../../../images/ot/aclSomeAccess.gif);
     background-repeat: repeat-x;
     background-color: #FAFAFA;
     color: #000;

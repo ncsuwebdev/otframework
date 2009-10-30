@@ -1,15 +1,15 @@
 @CHARSET "UTF-8";
 
-div#grant {
-	background-image: url(../../../images/grant.png);
+div#deny {
+	background-image: url(../../../../images/ot/deny.png);
 	background-repeat: no-repeat;
 	background-position: 10px 8px;
 	height: 60px;
 	width: 600px;
 	margin: 40px auto;
 	padding: 10px 10px 10px 90px;
-	font-size: 2.0em;
-	border: 1px solid #00CC00;
-	background-color: #EFFFEF;
+	font-size: 2.4em;
+	border: 1px solid #CC0000;
+	background-color: #FFEFEF;
 	line-height: 60px;
 }

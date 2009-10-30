@@ -27,7 +27,7 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Oauth_ClientController extends Zend_Controller_Action  
+class Ot_OauthclientController extends Zend_Controller_Action  
 {  
 
     public function indexAction()

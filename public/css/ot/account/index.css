@@ -9,7 +9,7 @@ h3 {
 
 .passwordButton {
     padding: 2px 15px 2px 20px;
-    background-image: url(../../../images/key.png);
+    background-image: url(../../../../images/ot/key.png);
     background-repeat: no-repeat;
 }
 
@@ -17,7 +17,7 @@ h3 {
 	border: 1px solid #C00;
 	background-color: #FFEFEF;
 	padding: 15px 15px 15px 35px;
-	background-image: url(../../../../ot/images/delete.png);
+	background-image: url(../../../../images/ot/delete.png);
 	background-repeat: no-repeat;
 	background-position:  10px 14px;
 	width: 400px;
@@ -27,7 +27,7 @@ h3 {
 	border: 1px solid #0C0;
 	background-color: #EFFFEF;
 	padding: 15px 15px 15px 35px;
-	background-image: url(../../../../ot/images/success.png);
+	background-image: url(../../../../images/ot/success.png);
 	background-repeat: no-repeat;
 	background-position:  10px 14px;
 	width: 400px;
@@ -101,7 +101,7 @@ h3 {
 .notAuthorized {
 	border: 1px solid #C00;
 	background-color: #FFEFEF;
-	background-image: url(../../../images/deny.png);
+	background-image: url(../../../../images/ot/deny.png);
 }
 
 .notAuthorized span {
@@ -111,7 +111,7 @@ h3 {
 .authorized {
 	border: 1px solid #0A0;
 	background-color: #EFFFEF;
-	background-image: url(../../../images/grant.png);
+	background-image: url(../../../../images/ot/grant.png);
 }
 
 .authorized span {

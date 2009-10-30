@@ -27,7 +27,7 @@
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-class Oauth_IndexController extends Zend_Controller_Action 
+class Ot_OauthController extends Zend_Controller_Action 
 {    
 	
 	/**

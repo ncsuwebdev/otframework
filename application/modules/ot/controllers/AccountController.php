@@ -197,8 +197,8 @@ class Ot_AccountController extends Zend_Controller_Action
         
         $this->_helper->pageTitle('account-index-all:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();     
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.flexigrid.pack.js');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/ot/css/jquery.plugin.flexigrid.css'); 
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.flexigrid.pack.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.flexigrid.css'); 
         
         if ($this->_request->isXmlHttpRequest()) {
         	
@@ -745,7 +745,7 @@ class Ot_AccountController extends Zend_Controller_Action
             }
         } 
         
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.passStrength.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.passStrength.js');
         $this->view->messages = $messages;
         $this->_helper->pageTitle('account-index-changePassword:title');
         $this->view->form  = $form;

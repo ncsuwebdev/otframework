@@ -6,8 +6,7 @@
 	        <description>This is the most OITish looking theme.</description>
 	    </theme>
 	    <css>
-	        <file path="base-min.css" order="prepend"/>
-	        <file path="reset-fonts-grids.css" order="prepend"/>
+	        <file path="reset-fonts-grids-base.css" order="prepend"/>
 		    <file path="layout.css" order="append"/>
 	        <file path="superfish.css" order="append"/>	    
 		    <file path="nav.css" order="append"/>

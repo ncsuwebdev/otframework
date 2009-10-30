@@ -91,7 +91,7 @@ div.zend_form label.optional, div.zend_form label.required {
 }
 
 ul.errors {
-	background-image: url(../../../ot/images/error_arrow.png);
+	background-image: url(../../../images/ot/error_arrow.png);
 	background-repeat: no-repeat;
 	background-position: 10px 0px;
     font-size: .78em;
@@ -245,7 +245,7 @@ input[type=submit], input[type=button], input[type=reset], button {
 /** End jQueryUi styles **/
 
 div#loading {
-	background-image: url(../../../ot/images/ajax-loader.gif);
+	background-image: url(../../../images/ot/ajax-loader.gif);
 	background-repeat: no-repeat;
 	width: 50px;
 	height: 50px;

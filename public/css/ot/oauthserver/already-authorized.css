@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 
 div#grant {
-	background-image: url(../../../images/grant.png);
+	background-image: url(../../../../images/ot/grant.png);
 	background-repeat: no-repeat;
 	background-position: 10px 8px;
 	height: 60px;

@@ -27,7 +27,7 @@
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-class Oauth_ServerController extends Zend_Controller_Action 
+class Ot_OauthserverController extends Zend_Controller_Action 
 {    
     
     public function requestTokenAction()

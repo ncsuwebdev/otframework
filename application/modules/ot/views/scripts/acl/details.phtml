@@ -75,7 +75,7 @@
                     <?php foreach ($actions['part'] as $action => $access) : ?>
                 <tr class="action <?php echo $module . '_' . $controller; ?>" style="display: <?php echo (empty($actions['someaccess']) || !empty($actions['all']['access'])) ? 'none' : ''; ?>;">
                     <td class="td1 description" title="<?php echo $access['description']; ?>">
-                    <img src="<?php echo $this->baseUrl(); ?>/images/help.png" width="16" height="16" class="info" />
+                    <img src="<?php echo $this->baseUrl(); ?>/images/ot/help.png" width="16" height="16" class="info" />
                     <?php echo ucwords($action); ?>
                     </td>
                     <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('admin-acl-form:hasAccess') : $this->translate('admin-acl-form:noAccess'); ?></td>

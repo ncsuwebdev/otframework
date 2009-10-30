@@ -12,15 +12,17 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
         $indent = "    ";
         $items = array();
         $stylesheets = array();
+        $baseUrl = $this->getBaseUrl();
+         
         foreach ($this as $item) {
             if ($item->type == 'text/css' && $item->conditionalStylesheet === false) {
-                $stylesheets[$item->media][] = str_replace($this->getBaseUrl(), '', $item->href);
+                $stylesheets[$item->media][] = str_replace($baseUrl, '', $item->href);
             } else {
                 $items[] = $this->itemToString($item);
             }
         }
         
-        $baseUrl = $this->getBaseUrl();
+        //remove the slash at the beginning if there is one
         if (substr($baseUrl, 0, 1) == '/') {
             $baseUrl = substr($baseUrl, 1);
         }
@@ -30,7 +32,6 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
             $item->rel = 'stylesheet';
             $item->type = 'text/css';
             $item->href = $this->getMinUrl() . '?b=' . $baseUrl . '&f=' . implode(',', $styles);
-            //$item->href = $this->getMinUrl() . '?f=' . implode(',', $styles);
             $item->media = $media;
             $item->conditionalStylesheet = false;
             $items[] = $this->itemToString($item);
@@ -38,8 +39,7 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
         
         
         $link = $indent . implode($this->_escape($this->getSeparator()) . $indent, $items);
-        var_dump($link);
-        echo strlen($link);
+        
         return $link;
     }
     public function getMinUrl() {

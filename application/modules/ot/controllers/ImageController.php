@@ -26,7 +26,7 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
-class Image_IndexController extends Zend_Controller_Action 
+class Ot_ImageController extends Zend_Controller_Action 
 {
     /**
      * shows the image
