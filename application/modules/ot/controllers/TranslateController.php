@@ -35,11 +35,11 @@ class Ot_TranslateController extends Zend_Controller_Action
     {    	    	         
     	$getFilter = Zend_Registry::get('getFilter');
 
-    	$req = $getFilter->module
+    	$req = $getFilter->m
     	     . '-'
-    	     . $getFilter->controller
+    	     . $getFilter->c
     	     . '-'
-    	     . $getFilter->action;
+    	     . $getFilter->a;
     	
     	$translate = Zend_Registry::get('Zend_Translate');
     	
@@ -143,9 +143,9 @@ class Ot_TranslateController extends Zend_Controller_Action
     		
     	} else {
     	
-	    	$this->view->module     = $getFilter->module;
-	    	$this->view->controller = $getFilter->controller;
-	    	$this->view->action     = $getFilter->action;
+	    	$this->view->module     = $getFilter->m;
+	    	$this->view->controller = $getFilter->c;
+	    	$this->view->action     = $getFilter->a;
 	    	$this->view->showSubmit = !$this->getRequest()->isXmlHttpRequest();
 	    	$this->view->language   = Ot_Language::getLanguageName($translate->getLocale());
 	    	
