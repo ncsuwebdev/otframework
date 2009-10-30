@@ -59,7 +59,7 @@ div#accessList table.list td.access {
 }
 
 div#accessList table.list td.noAccess {
-    background-image: url(../../../images/aclNoAccess.gif);
+    background-image: url(../../../../images/ot/aclNoAccess.gif);
     background-repeat: repeat-x;
     color: #FFF;
     font-weight: normal;
