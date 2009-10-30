@@ -45,4 +45,4 @@ $application = new Zend_Application(
     APPLICATION_PATH . '/configs/application.ini'
 );
 $application->bootstrap()
-            ->run();    
+            ->run();
