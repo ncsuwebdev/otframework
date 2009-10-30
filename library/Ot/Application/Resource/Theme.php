@@ -13,7 +13,7 @@ class Ot_Application_Resource_Theme extends Zend_Application_Resource_ResourceAb
         $theme = ($config->user->customTheme->val != '') ? $config->user->customTheme->val : 'default';
         
         $appBasePath = APPLICATION_PATH . "/../public/themes";
-        $otBasePath = APPLICATION_PATH . "/../public/ot/themes";
+        $otBasePath = APPLICATION_PATH . "/../public/themes/ot";
         
         if (!is_dir($appBasePath . "/" . $theme)) {
             if (!is_dir($otBasePath . '/' . $theme)) {

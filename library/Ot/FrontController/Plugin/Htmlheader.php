@@ -39,7 +39,7 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 
         $themeConfig = new Zend_Config_Xml($themePath . '/config.xml', 'production', true);
         
-        $view->headLink()->appendStylesheet($baseUrl . '/public/ot/css/Ot/common.css');
+        $view->headLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
         $view->headLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
         
         if (isset($themeConfig->css->file)) {
@@ -58,9 +58,9 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
             }
         }
         
-        $view->headScript()->appendFile($baseUrl . '/public/ot/scripts/jquery.min.js');
-        $view->headScript()->appendFile($baseUrl . '/public/ot/scripts/jquery-ui.min.js');
-        $view->headScript()->appendFile($baseUrl . '/public/ot/scripts/global.js');
+        $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
+        $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
+        $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
                 
         if (isset($themeConfig->scripts->file)) {
             foreach ($themeConfig->scripts->file as $s) {
@@ -108,7 +108,7 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
             'controller' => $request->getControllerName(),
             'action'     => strtolower($request->getActionName()),
         );
-
+        
         $path = '';
         
         foreach ($req as $r) {
