@@ -1,15 +1,22 @@
 <?php
 
 /**
- * Minifies the stylesheets added via the Headlink helper using 
+ * Minifies the stylesheets added via the minifyHeadLink helper using 
  * minify (http://code.google.com/p/minify/)
  *
  */
 class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
 {
-    public function minifyHeadLink()
+    
+    protected $_regKey = 'Ot_View_Helper_MinifyHeadLink';
+    
+    public function minifyHeadLink(array $attributes = null, $placement = Zend_View_Helper_Placeholder_Container_Abstract::APPEND)
     {
-        $indent = "    ";
+        return parent::headlink($attributes, $placement);
+    }
+    
+    public function toString()
+    {
         $items = array();
         $stylesheets = array();
         $baseUrl = $this->getBaseUrl();
@@ -37,11 +44,11 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
             $items[] = $this->itemToString($item);
         }
         
-        
-        $link = $indent . implode($this->_escape($this->getSeparator()) . $indent, $items);
+        $link = implode($this->_escape($this->getSeparator()), $items);
         
         return $link;
     }
+    
     public function getMinUrl() {
         return $this->getBaseUrl() . '/min/';
     }

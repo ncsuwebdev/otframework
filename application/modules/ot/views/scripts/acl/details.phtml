@@ -8,7 +8,7 @@
     <?php echo $this->translate('admin-acl-details:header', $this->role['name']); ?>
     <br /><br />
     <?php if ($this->acl['index']): ?>
-        <a href="<?php echo $this->url(array('controller' => 'acl'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'acl'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
     <?php endif; ?>
     <?php if ($this->acl['edit'] && $this->role['editable']): ?>
         <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'edit', 'roleId' => $this->role['roleId']), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:edit'); ?><span class="ui-icon ui-icon-pencil"></span></a>

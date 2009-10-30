@@ -39,8 +39,8 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 
         $themeConfig = new Zend_Config_Xml($themePath . '/config.xml', 'production', true);
         
-        $view->headLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
-        $view->headLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
+        $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
+        $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
         
         if (isset($themeConfig->css->file)) {
             foreach ($themeConfig->css->file as $c) {
@@ -51,29 +51,29 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 }
                 
                 if ($c->order == 'append') {
-                    $view->headLink()->appendStylesheet($path);
+                    $view->minifyHeadLink()->appendStylesheet($path);
                 } elseif ($c->order == 'prepend') {
-                    $view->headLink()->prependStylesheet($path);
+                    $view->minifyHeadLink()->prependStylesheet($path);
                 }
             }
         }
         
-        $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
-        $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
-        $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
+        $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
+        $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
+        $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
                 
         if (isset($themeConfig->scripts->file)) {
             foreach ($themeConfig->scripts->file as $s) {
                 $path = $s->path;
                 
                 if (!preg_match('/^http/i', $path)) {
-                    $path = $baseUrl . '/' . $themePath . '/public/scripts/' . $path;
+                    $path = $baseUrl . '/public/' . $themePath . '/public/scripts/' . $path;
                 }
                 
                 if ($s->order == 'append') {
-                    $view->headScript()->appendFile($path);
+                    $view->minifyHeadScript()->appendFile($path);
                 } elseif ($s->order == 'prepend') {
-                    $view->headScript()->prependFile($path);
+                    $view->minifyHeadScript()->prependFile($path);
                 }
             }
         }

@@ -39,8 +39,8 @@ class Ot_ConfigController extends Zend_Controller_Action
         
         $this->view->configList = Zend_Registry::get('config')->user;
         
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.tipsy.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.tipsy.js');
         
         $this->view->messages   = $this->_helper->flashMessenger->getMessages();
         $this->_helper->pageTitle('admin-config-index:title');

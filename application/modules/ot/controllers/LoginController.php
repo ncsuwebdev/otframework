@@ -535,7 +535,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $this->view->messages = $messages;
         $this->_helper->pageTitle('login-index-passwordReset:title');             
         $this->view->form = $form;
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.passStrength.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.passStrength.js');
     }    
     /**
      * Logs a user out
@@ -688,7 +688,7 @@ class Ot_LoginController extends Zend_Controller_Action
     	$this->view->messages = $messages;
         $this->view->form = $form;
     	$this->_helper->pageTitle('login-index-signup:title');
-    	$this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.passStrength.js');
+    	$this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.passStrength.js');
     	   	
     }
 }

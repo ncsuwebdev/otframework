@@ -15,8 +15,13 @@ $this->headTitle($this->config->user->appTitle->val)
 echo "\n";
      
 echo $this->headTitle() . "\n\n";
-//echo $this->minifyHeadLink() . "\n\n";
+
+//print the minified (common) css first, then the autoloaded css
+echo $this->minifyHeadLink() . "\n";
 echo $this->headLink() . "\n\n";
+
+// print the minified (common) scripts first, then the autoloaded scripts
+echo $this->minifyHeadScript() . "\n";
 echo $this->headScript() . "\n";
 
 $this->overrideTranslation()->js(); 
