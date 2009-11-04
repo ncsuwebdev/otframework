@@ -10,7 +10,7 @@ class Ot_Application_Resource_Theme extends Zend_Application_Resource_ResourceAb
         $config = Zend_Registry::get('config');
         $view->config = $config;
                             
-        $theme = ($config->user->customTheme->val != '') ? $config->user->customTheme->val : 'default';
+        $theme = ($config->app->theme != '') ? $config->app->theme : 'default';
         
         $appBasePath = APPLICATION_PATH . "/../public/themes";
         $otBasePath = APPLICATION_PATH . "/../public/themes/ot";

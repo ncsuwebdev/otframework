@@ -13,7 +13,7 @@ class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceA
         }
         
         // Setup logger
-        $adapter = Zend_Registry::get('dbAdapter');
+        $adapter = Zend_Db_Table::getDefaultAdapter();
         
         $writer = new Zend_Log_Writer_Db($adapter, $tbl);
 
