@@ -35,15 +35,15 @@ class Ot_ThemeController extends Zend_Controller_Action
     {
         $this->_helper->pageTitle('admin-theme-index:title');
         
-        // Note: Must load themes from /public/ot/themes and /public/themes seperately because scandir does not include paths in array
+        // Note: Must load themes from /public/themes/ot and /public/themes seperately because scandir does not include paths in array
         $themes = array();
         
         // Obtain all directories in the OT Framework's theme folder, add them to the theme array
-        $themesOT = scandir(APPLICATION_PATH . '/../public/ot/themes/');
+        $themesOT = scandir(APPLICATION_PATH . '/../public/themes/ot/');
         foreach ($themesOT as $theme) {
             if (!isset($themes[$theme])) {
-                $themes[$theme]["path"] = APPLICATION_PATH . '/../public/ot/themes/' . $theme;
-                $themes[$theme]["url"] = 'ot/themes/' . $theme;
+                $themes[$theme]["path"] = APPLICATION_PATH . '/../public/themes/ot' . $theme;
+                $themes[$theme]["url"] = 'themes/ot/' . $theme;
                 
             }
         }
@@ -83,15 +83,15 @@ class Ot_ThemeController extends Zend_Controller_Action
     		$newTheme = strtolower($get->theme);
     	}
     	
-        // Note: Must load themes from /public/ot/themes and /public/themes seperately because scandir does not include paths in array
+        // Note: Must load themes from /public/themes/ot and /public/themes seperately because scandir does not include paths in array
         $themes = array();
         
         // Obtain all directories in the OT Framework's theme folder, add them to the theme array
-        $themesOT = scandir(APPLICATION_PATH . '/../public/ot/themes/');
+        $themesOT = scandir(APPLICATION_PATH . '/../public/themes/ot/');
         foreach ($themesOT as $theme) {
             if (!isset($themes[$theme])) {
-                $themes[$theme]['path'] = APPLICATION_PATH . '/../public/ot/themes/' . $theme;
-                $themes[$theme]['url'] = 'ot/themes/' . $theme;
+                $themes[$theme]['path'] = APPLICATION_PATH . '/../public/themes/ot/' . $theme;
+                $themes[$theme]['url'] = 'themes/ot' . $theme;
                 
             }
         }
