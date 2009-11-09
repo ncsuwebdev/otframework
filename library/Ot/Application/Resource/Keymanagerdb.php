@@ -10,10 +10,10 @@ class Ot_Application_Resource_Keymanagerdb extends Zend_Application_Resource_Res
     
     public function init()
     {
-        if (!is_null($this->_key)) {
+    	if (!is_null($this->_key)) {
             require_once $_SERVER['KEY_MANAGER2_PATH'];
             
-            $km = new KeyManager;
+            $km = new KeyManager();
                 
             if ($km->isKey($this->_key)) {
                 $key = $km->getKey($this->_key);
@@ -33,6 +33,10 @@ class Ot_Application_Resource_Keymanagerdb extends Zend_Application_Resource_Res
             } else {
                 throw new Ot_Exception('KeyManager could not find the key: ' . $this->_key);
             }
+        } else {
+        	$resource = $this->getPluginResource('db');
+        	$adapter = $resource->getDbAdapter();
+	        Zend_Registry::set('dbAdapter', $adapter);
         }
     }
 }
