@@ -38,23 +38,13 @@ class Ot_ThemeController extends Zend_Controller_Action
         // Note: Must load themes from /public/themes/ot and /public/themes seperately because scandir does not include paths in array
         $themes = array();
         
-        // Obtain all directories in the OT Framework's theme folder, add them to the theme array
-        $themesOT = scandir(APPLICATION_PATH . '/../public/themes/ot/');
-        foreach ($themesOT as $theme) {
-            if (!isset($themes[$theme])) {
-                $themes[$theme]["path"] = APPLICATION_PATH . '/../public/themes/ot' . $theme;
-                $themes[$theme]["url"] = 'themes/ot/' . $theme;
-                
-            }
+        // Obtain all directories in the theme folder, add them to the theme array
+        $themes = scandir(APPLICATION_PATH . '/../public/themes/ot/');
+        foreach ($themes as $theme) {
+            $themes[$theme]["path"] = APPLICATION_PATH . '/../public/themes/ot/' . $theme;
+            $themes[$theme]["url"] = 'public/themes/ot/' . $theme;
         }
         
-        // Obtain all directories in the application's theme folder, add them to the theme array
-        $themesApp = scandir(APPLICATION_PATH . '/../public/themes/');
-        foreach ($themesApp as $theme) {
-            $themes[$theme]["path"] = APPLICATION_PATH . '/../public/themes/' . $theme;
-            $themes[$theme]["url"] = 'themes/' . $theme;
-        }
-
         // Keep only the directories that are themes (criteria being that they contain a config.xml); load name and description into the array
         foreach ($themes as $theme => $data) {
            if (!file_exists($data["path"] . '/config.xml')) {
@@ -83,24 +73,14 @@ class Ot_ThemeController extends Zend_Controller_Action
     		$newTheme = strtolower($get->theme);
     	}
     	
-        // Note: Must load themes from /public/themes/ot and /public/themes seperately because scandir does not include paths in array
+        // Note: Must load themes from /public/ot/themes and /public/themes seperately because scandir does not include paths in array
         $themes = array();
         
-        // Obtain all directories in the OT Framework's theme folder, add them to the theme array
-        $themesOT = scandir(APPLICATION_PATH . '/../public/themes/ot/');
-        foreach ($themesOT as $theme) {
-            if (!isset($themes[$theme])) {
-                $themes[$theme]['path'] = APPLICATION_PATH . '/../public/themes/ot/' . $theme;
-                $themes[$theme]['url'] = 'themes/ot' . $theme;
-                
-            }
-        }
-        
-        // Obtain all directories in the application's theme folder, add them to the theme array
-        $themesApp = scandir(APPLICATION_PATH . '/../public/themes/');
-        foreach ($themesApp as $theme) {
-            $themes[$theme]['path'] = APPLICATION_PATH . '/../public/themes/' . $theme;
-            $themes[$theme]['url'] = 'themes/' . $theme;
+        // Obtain all directories in the theme folder, add them to the theme array
+        $themes = scandir(APPLICATION_PATH . '/../public/themes/ot/');
+        foreach ($themes as $theme) {
+            $themes[$theme]["path"] = APPLICATION_PATH . '/../public/themes/ot/' . $theme;
+            $themes[$theme]["url"] = 'public/themes/ot/' . $theme;
         }
 
         // Keep only the directories that are themes (criteria being that they contain a config.xml); load name and description into the array
@@ -119,9 +99,9 @@ class Ot_ThemeController extends Zend_Controller_Action
         	$newTheme = 'default';
         }
         
-        $overrideFile = APPLICATION_PATH . '/../overrides/config/config.xml';
-        
-//echo $xml; die();
+        $overrideFile = APPLICATION_PATH . '/overrides/config/config.xml';
+        //echo $overrideFile; die();
+
         if (!file_exists($overrideFile)) {
             throw new Ot_Exception_Data("msg-error-configFileNotFound");
         }

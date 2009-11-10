@@ -36,6 +36,9 @@ class Ot_IndexController extends Zend_Controller_Action
     {       
         $this->_helper->pageTitle('admin-index-index:title');
 
+        $xml = simplexml_load_file(APPLICATION_PATH . '/../application/configs/' . '/config.xml');
+        $this->view->appVersion = trim((string)$xml->production->app->version);
+        $this->view->appTitle = trim((string)$xml->production->user->appTitle->attributes()->val);
         $this->view->otVersion = Ot_Version::VERSION;
         $this->view->zfVersion = Zend_Version::VERSION;        
        
