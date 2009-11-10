@@ -12,7 +12,7 @@ var currentElementId = "";
 $('document').ready(function() {
 
     baseUrl = $('#baseUrl').val();
-    saveUrl = baseUrl + "/admin/nav/save";
+    saveUrl = baseUrl + "/ot/nav/save";
     
     $('ul#masterList li').each(function() {
         var newId = "navEditor_" + $(this).attr('id');
@@ -90,7 +90,7 @@ $('document').ready(function() {
 			  }, "json");
 	});
 	
-	$.getJSON(baseUrl + "/admin/nav/get-resources", 
+	$.getJSON(baseUrl + "/ot/nav/get-resources", 
 	    function(data) {
     		resources = data;
     		$('<option>').attr('value', '').text('Choose A Module').appendTo('#moduleBox');

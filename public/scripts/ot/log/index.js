@@ -1,7 +1,7 @@
 $('document').ready(function() {
 	
 	$("#logResults").flexigrid({
-		url: baseUrl + '/admin/log/index/',
+		url: baseUrl + '/ot/log/index/',
 		dataType: 'json',
 		colModel : [
 		    {display: 'AccountId',  name: 'accountId',     width: 75, sortable: true, align:'left'},

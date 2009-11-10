@@ -7,7 +7,7 @@ $('document').ready(function() {
 	});
 	
 	$('#saveButton').click(function() {
-		$.post($('#baseUrl').val() + '/admin/custom/save-attribute-order/', {
+		$.post($('#baseUrl').val() + '/ot/custom/save-attribute-order/', {
 				objectId: $('#objectId').val(),
 				'attributeIds[]': $('#attributeList').sortable('toArray')
 			},

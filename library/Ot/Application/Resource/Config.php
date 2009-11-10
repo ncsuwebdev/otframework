@@ -17,15 +17,21 @@ class Ot_Application_Resource_Config extends Zend_Application_Resource_ResourceA
                 
                 $configOverride = new Zend_Config_Xml(APPLICATION_PATH . '/../overrides/config/config.xml', 'production');
                 
-                if ($configOverride->user instanceof Zend_Config) {
+                if ($configOverride instanceof Zend_Config) {
                     foreach ($configOverride->user as $key => $value) {
                         if (isset($config->user->{$key})) {
                             $config->user->{$key}->val = $value->val;
                         }
                     }
+                    foreach ($configOverride->app as $key => $value) {
+                        if (isset($config->app->{$key})) {
+                            $config->app->{$key} = $value;
+                        }
+                    }
                 }
+
             }
-           
+
             if (!is_null($cache)) {
                 $cache->save($config, 'configObject');
             }

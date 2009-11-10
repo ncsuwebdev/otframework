@@ -546,9 +546,9 @@ class Ot_LoginController extends Zend_Controller_Action
         $config = Zend_Registry::get('config');
 
         $userId = Zend_Auth::getInstance()->getIdentity();
-        foreach ($config->app->authentication as $a) { 
+        foreach ($config->app->authentication as $a) {
             $auth = new $a->class;
-            $auth->autoLogout();  
+            $auth->autoLogout();
         }
         
         Zend_Auth::getInstance()->clearIdentity();

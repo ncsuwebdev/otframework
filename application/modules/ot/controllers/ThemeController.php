@@ -99,8 +99,7 @@ class Ot_ThemeController extends Zend_Controller_Action
         	$newTheme = 'default';
         }
         
-        $overrideFile = APPLICATION_PATH . '/overrides/config/config.xml';
-        //echo $overrideFile; die();
+        $overrideFile = APPLICATION_PATH . '/../overrides/config/config.xml';
 
         if (!file_exists($overrideFile)) {
             throw new Ot_Exception_Data("msg-error-configFileNotFound");
@@ -111,7 +110,7 @@ class Ot_ThemeController extends Zend_Controller_Action
         }
         
         $xml = simplexml_load_file($overrideFile);
-                
+
     	if (!isset($xml->production->app->theme)) {
     		$xml->production->app->addChild("theme");
     		$xml->production->app->theme = $newTheme;
@@ -122,13 +121,12 @@ class Ot_ThemeController extends Zend_Controller_Action
     	if (!file_put_contents($overrideFile, $xml->asXml(), LOCK_EX)) {
             throw new Ot_Exception_Data("msg-error-savingConfig");
         }
-                
+
         $this->_helper->viewRenderer->setNeverRender(true);
         $this->_helper->layout->disableLayout();
-                
+
         $this->_helper->flashMessenger->addMessage('Theme changed successfully!');
         $this->_helper->redirector->gotoRoute(array('controller' => 'theme'), 'ot');
-        
     }
 
 }
