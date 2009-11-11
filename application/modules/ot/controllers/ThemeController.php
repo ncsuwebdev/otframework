@@ -126,7 +126,7 @@ class Ot_ThemeController extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
 
         $this->_helper->flashMessenger->addMessage('Theme changed successfully!');
-        $this->_helper->redirector->gotoRoute(array('controller' => 'theme'), 'ot');
+        $this->_helper->redirector->gotoRoute(array('controller' => 'theme'), 'ot', true);
     }
 
 }

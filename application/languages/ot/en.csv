@@ -187,6 +187,7 @@ admin-acl-form:noInheritance;No Inheritance
 admin-acl-form:method;Method
 
 admin-acl-index:title;Manage Access Roles
+admin-acl-index:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_acl. The API will not work correctly until access is granted to the default role (%1$s).
 admin-acl-index:header;Access Roles provide a simple approach to managing user access within the application. Roles are created by any user with access, allowing them to grand and revoke access to certain resources within the application.  Resources are defined as accessible functions within the application.<br /><br />Below are all active roles that are available to be assigned to users:
 admin-acl-index:linkAdd;Add New Access Role
 admin-acl-index:table:roleName;Role Name
@@ -196,6 +197,7 @@ admin-acl-index:table:remoteAccess;Remote Access
 admin-acl-index:noRoles;No Roles found
 
 admin-acl-details:title;Access Role Details
+admin-acl-details:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_acl. The API will not work correctly until access is granted to the default role (%1$s).
 admin-acl-details:accessTitle;Application Access
 admin-acl-details:header;These are the individual details for the %1$s access role as they appear in the actual ACL configuration file.
 admin-acl-details:back;Back to ACL List

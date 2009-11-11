@@ -1,7 +1,7 @@
 <?php if (!$this->guestHasAccess && $this->role['roleId'] == $this->defaultRole->roleId) : ?>
     <div class="ui-widget ui-state-highlight ui-corner-all">
         <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-        The deafult role (<?php echo $this->defaultRole->name; ?>) does not have access to api_index. The API will not work correctly until access is granted to the default role (<?php echo $this->defaultRole->name; ?>).
+        <?php echo $this->translate('admin-acl-details:defaultRoleNeedsAccess', $this->defaultRole->name); ?>
     </div>
     <br />
 <?php endif; ?>

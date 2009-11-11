@@ -18,6 +18,7 @@ class Ot_Backup {
                 
             case 'sqlAll':
                 $this->_getSql(true);
+                       echo 'test'; die();
                 break;
                 
             default: 
@@ -95,6 +96,7 @@ class Ot_Backup {
      */
     protected function _getSql($allTables = false)
     {
+
         $config = Zend_Registry::get('config');
         
         if (!(isset($config->app->tablePrefix) && !empty($config->app->tablePrefix))) {
