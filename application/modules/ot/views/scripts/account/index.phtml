@@ -93,7 +93,7 @@
 			<div class="access notAuthorized">
 				<span>You are not authorized on <?php echo $c['name']; ?>.</span>
 				<?php if ($this->acl['grantAccess']): ?>
-				<a href="<?php echo $this->url(array('controller' => 'oauthclient', 'action' => 'edit', 'consumerId' => $c['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
+				<a href="<?php echo $this->url(array('controller' => 'oauthclient', 'consumerId' => $c['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
 				    Authorize Access
 				<span class="ui-icon ui-icon-key"></span></a>
 				<?php endif; ?>
