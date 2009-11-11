@@ -34,7 +34,7 @@ class Ot_IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {       
-        $this->_helper->pageTitle('admin-index-index:title');
+        $this->_helper->pageTitle('ot-index-index:title');
         
         $config = Zend_Registry::get('config');
         $this->view->appVersion = $config->app->version;

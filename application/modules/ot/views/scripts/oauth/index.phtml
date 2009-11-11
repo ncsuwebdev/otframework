@@ -1,22 +1,22 @@
-<?php echo $this->translate('oauth-index-index:header'); ?>
+<?php echo $this->translate('ot-oauth-index:header'); ?>
 <br /><br />
-<a href="<?php echo $this->url(array('action' => 'add'), 'oauth'); ?>" class="ui-state-default ui-corner-all linkButton">
-	<?php echo $this->translate('oauth-index-index:addButton'); ?>
+<a href="<?php echo $this->url(array('action' => 'add'), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton">
+	<?php echo $this->translate('ot-oauth-index:addButton'); ?>
 <span class="ui-icon ui-icon-plusthick"></span></a>	
 <br /><br />
 <?php if (count($this->ownedConsumers) != 0): ?>
-    <?php echo $this->translate('oauth-index-index:applicationListText'); ?>
+    <?php echo $this->translate('ot-oauth-index:applicationListText'); ?>
     <br />
 	<?php foreach ($this->ownedConsumers as $c): ?>
 	<div class="consumer">
 		<div class="options">
-			<a href="<?php echo $this->url(array('action' => 'details', 'consumerId' => $c['consumerId']), 'oauth'); ?>" class="ui-state-default ui-corner-all linkButton">
-			    <?php echo $this->translate('oauth-index-index:detailsButton'); ?>
+			<a href="<?php echo $this->url(array('action' => 'details', 'consumerId' => $c['consumerId']), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton">
+			    <?php echo $this->translate('ot-oauth-index:detailsButton'); ?>
 			<span class="ui-icon ui-icon-triangle-1-e"></span></a>			
 		</div>		
 		<div class="consumerIcon">
 			<?php if ($c['imageId'] != 0): ?>
-			<img src="<?php echo $this->url(array('imageId' => $c['imageId']), 'image'); ?>" />
+			<img src="<?php echo $this->url(array('imageId' => $c['imageId']), 'image', true); ?>" />
 			<?php else: ?>
 			<img src="<?php echo $this->baseUrl(); ?>/public/images/ot/consumer.png" alt="consumer" />
 			<?php endif; ?>
@@ -31,5 +31,5 @@
 	</div>
 	<?php endforeach; ?>
 <?php else: ?>
-<?php echo $this->translate('oauth-index-index:noApplications'); ?>
+<?php echo $this->translate('ot-oauth-index:noApplications'); ?>
 <?php endif; ?>

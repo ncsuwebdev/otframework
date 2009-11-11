@@ -76,7 +76,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
     	
 	public function authorizeAction()
 	{
-		$this->_helper->pageTitle('oauth-server-authorize:title');
+		$this->_helper->pageTitle('ot-oauthserver-authorize:title');
 		
 		$get = Zend_Registry::get('getFilter');
 		
@@ -102,7 +102,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
 		$existingAccessToken = $st->getTokenByAccountAndConsumer(Zend_Auth::getInstance()->getIdentity()->accountId, $thisConsumer->consumerId, 'access');
 		if (!is_null($existingAccessToken)) {
 			$st->removeToken($get->oauth_token);
-			$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'already-authorized', 'consumerId' => $thisConsumer->consumerId), 'ot');
+			$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'already-authorized', 'consumerId' => $thisConsumer->consumerId), 'ot', true);
 		}
 				
 		$this->view->token = $token;
@@ -133,11 +133,11 @@ class Ot_OauthserverController extends Zend_Controller_Action
 					throw new Ot_Exception_Data('Token was not authorized because it was not found.');
 				}
 				
-				$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'grant', 'oauth_token' => $get->oauth_token), 'ot');
+				$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'grant', 'oauth_token' => $get->oauth_token), 'ot', true);
 			} else {
 				$st->removeToken($get->oauth_token);
 				
-				$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'deny', 'consumerId' => $thisConsumer->consumerId), 'ot');
+				$this->_helper->redirector->gotoRoute(array('controller' => 'oauthserver', 'action' => 'deny', 'consumerId' => $thisConsumer->consumerId), 'ot', true);
 			}
 		}
 		
@@ -146,7 +146,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
 	
 	public function grantAction()
 	{
-		$this->_helper->pageTitle('oauth-server-grant:title');
+		$this->_helper->pageTitle('ot-oauthserver-grant:title');
 		
 		$get = Zend_Registry::get('getFilter');
 		
@@ -198,7 +198,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
 	
 	public function denyAction()
 	{
-		$this->_helper->pageTitle('oauth-server-deny:title');		
+		$this->_helper->pageTitle('ot-oauthserver-deny:title');		
 		
 		$get = Zend_Registry::get('getFilter');
 		
@@ -218,7 +218,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
 	
 	public function alreadyAuthorizedAction()
 	{
-		$this->_helper->pageTitle('oauth-server-alreadyAuthorized:title');
+		$this->_helper->pageTitle('ot-oauthserver-alreadyAuthorized:title');
 		
 		$get = Zend_Registry::get('getFilter');
 		
@@ -271,7 +271,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
 			throw new Ot_Exception_Data('You already have an existing access token for this consumer.  Remove that token to create a new one.');
 		}	
 				
-		$this->_helper->pageTitle('oauth-server-generateToken:title');
+		$this->_helper->pageTitle('ot-oauthserver-generateToken:title');
 		
 		$form = Ot_Form_Template::delete('genereateToken', 'Generate Access Token/Secret');
 		
@@ -333,11 +333,11 @@ class Ot_OauthserverController extends Zend_Controller_Action
         	
         	$this->_helper->flashMessenger->addMessage('Access to the application has been revoked.');
         	
-        	$this->_helper->redirector->gotoRoute(array(), 'account');
+        	$this->_helper->redirector->gotoRoute(array(), 'account', true);
         }
         
         $this->view->form = $form;
-        $this->_helper->pageTitle('oauth-server-revoke:title', $thisConsumer->name);
+        $this->_helper->pageTitle('ot-oauthserver-revoke:title', $thisConsumer->name);
         
     }
 

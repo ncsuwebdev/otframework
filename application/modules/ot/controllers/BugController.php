@@ -44,7 +44,7 @@ class Ot_BugController extends Zend_Controller_Action
             );
 
         $this->view->bugs = $bugs->toArray();
-        $this->_helper->pageTitle('admin-bug-index:title');
+        $this->_helper->pageTitle('ot-bug-index:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
 
@@ -84,7 +84,7 @@ class Ot_BugController extends Zend_Controller_Action
         $this->view->text = $text;
 
         $this->view->bug = $thisBug->toArray();
-        $this->_helper->pageTitle('admin-bug-details:title');
+        $this->_helper->pageTitle('ot-bug-details:title');
     }
 
     /**
@@ -129,14 +129,14 @@ class Ot_BugController extends Zend_Controller_Action
                 $this->_helper->log(Zend_Log::INFO, 'Bug was added', $logOptions);
                 $this->_helper->flashMessenger->addMessage('msg-info-bugSubmitted');
 	
-	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $bugId), 'ot');
+	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $bugId), 'ot', true);
         	} else {
         		$messages[] = 'msg-error-formError';
         	}
         }
         
         $this->view->messages = $messages;
-        $this->_helper->pageTitle('admin-bug-add:title');
+        $this->_helper->pageTitle('ot-bug-add:title');
         $this->view->form = $form;
 
     }
@@ -213,14 +213,14 @@ class Ot_BugController extends Zend_Controller_Action
                 $this->_helper->log(Zend_Log::INFO, 'Bug was modified', $logOptions);
                 $this->_helper->flashMessenger->addMessage('msg-info-bugUpdated');
 	            
-	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $get->bugId), 'ot');
+	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $get->bugId), 'ot', true);
         	} else {
         		$messages[] = 'msg-error-formError';
         	}
 
         }
         
-        $this->_helper->pageTitle('admin-bug-edit:title');
+        $this->_helper->pageTitle('ot-bug-edit:title');
         $this->view->messages = $messages;
         $this->view->form     = $form;
     }    

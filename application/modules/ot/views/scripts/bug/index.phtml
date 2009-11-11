@@ -1,24 +1,24 @@
 <div id="adminSemesterIndex">
-    <?php echo $this->translate('admin-bug-index:header'); ?>
+    <?php echo $this->translate('ot-bug-index:header'); ?>
     <br /><br />
 
     <?php if ($this->acl['add']) : ?>
-    <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'add'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-bug-index:linkNew'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'add'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-bug-index:linkNew'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
     <br /><br />
     <?php endif; ?>
     <table class="list">
         <tbody>
 	        <tr class="ui-widget-header">
-	            <th width="250"><?php echo $this->translate('admin-bug-index:table:title'); ?></th>
-	            <th width="300"><?php echo $this->translate('admin-bug-index:table:dateTime'); ?></th>
-	            <th width="100"><?php echo $this->translate('admin-bug-index:table:status'); ?></th>
+	            <th width="250"><?php echo $this->translate('ot-bug-index:table:title'); ?></th>
+	            <th width="300"><?php echo $this->translate('ot-bug-index:table:dateTime'); ?></th>
+	            <th width="100"><?php echo $this->translate('ot-bug-index:table:status'); ?></th>
 	        </tr>
 	        <?php if (count($this->bugs) > 0) : ?>
 	        <?php foreach ($this->bugs as $b) : ?>
 	        <tr class="<?php $this->cycle('row1', 'row2'); ?>">
 	            <td>
 	            <?php if ($this->acl['details']) : ?>
-	                <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'details', 'bugId' => $b['bugId']), 'ot'); ?>"><?php echo $b['title']; ?></a>
+	                <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'details', 'bugId' => $b['bugId']), 'ot', true); ?>"><?php echo $b['title']; ?></a>
 	            <?php else: ?>
 	                <?php echo $b['title']; ?>
 	            <?php endif; ?>
@@ -29,7 +29,7 @@
 	       <?php endforeach; ?>
 	       <?php else:  ?>
 	        <tr>
-	            <td colspan="3" class="noResults"><?php echo $this->translate('admin-bug-index:noBugs'); ?></td>
+	            <td colspan="3" class="noResults"><?php echo $this->translate('ot-bug-index:noBugs'); ?></td>
 	        </tr>
     	    <?php endif; ?>
 	    </tbody>

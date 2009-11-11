@@ -1,7 +1,7 @@
 <div class="ui-state-error ui-corner-all">
     <span class="ui-icon ui-icon-alert"></span>
     <?php if ($this->message == '') : ?>
-        <?php echo $this->translate('error-error-error:noMessage'); ?>
+        <?php echo $this->translate('default-index-error:noMessage'); ?>
     <?php else: ?>
         <?php echo $this->translate($this->message); ?>
     <?php endif; ?>
@@ -12,9 +12,9 @@
     <table class="list">
         <tbody>
             <tr>
-                <th width="500"><?php echo $this->translate('error-error-error:file'); ?></th>
-                <th width="150"><?php echo $this->translate('error-error-error:function'); ?></th>
-                <th width="50"><?php echo $this->translate('error-error-error:line'); ?></th>
+                <th width="500"><?php echo $this->translate('default-index-error:file'); ?></th>
+                <th width="150"><?php echo $this->translate('default-index-error:function'); ?></th>
+                <th width="50"><?php echo $this->translate('default-index-error:line'); ?></th>
             </tr>
             <?php foreach($this->trackback as $t) : ?>
                 <tr>

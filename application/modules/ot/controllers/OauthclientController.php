@@ -56,9 +56,6 @@ class Ot_OauthclientController extends Zend_Controller_Action
                    );
                    
         $oAuthClient = new Ot_Oauth_Client($options);
-        
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNeverRender();
                 
         $token = $oAuthClient->getRequestToken();
 
@@ -66,8 +63,11 @@ class Ot_OauthclientController extends Zend_Controller_Action
         
         $otOauthToken = new Ot_Oauth_Client_Token();
         
-        $otOauthToken->storeToken($accountId, $consumerId, $token->key, $token->secret, 'request');
-               
+        $otOauthToken->storeToken($accountId, $consumerId, $token->key, $token->secret, 'request');  
+        
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNeverRender();
+                
         $this->_helper->redirector->gotoUrl($oAuthClient->getAuthorizeUrl());
     }
     

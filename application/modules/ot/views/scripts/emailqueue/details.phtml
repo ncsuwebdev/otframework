@@ -1,49 +1,49 @@
 <?php if ($this->acl['index']): ?>
-<a href="<?php echo $this->url(array('controller' => 'emailqueue'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("admin-emailqueue-details:linkBack"); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<a href="<?php echo $this->url(array('controller' => 'emailqueue'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-emailqueue-details:linkBack"); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
 <?php endif; ?>
 <div id="adminemailDetails">
     <table class="form">
         <tbody>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:status"); ?></label></td>
-	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'status' => $this->email['status']), 'ot'); ?>"><?php echo ucwords($this->email['status']); ?></a></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:status"); ?></label></td>
+	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'status' => $this->email['status']), 'ot', true); ?>"><?php echo ucwords($this->email['status']); ?></a></td>
 	        </tr>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:queueDate"); ?></label></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:queueDate"); ?></label></td>
 	            <td><?php echo $this->dateFormat($this->email['queueDt'], $this->config['dateTimeFormat']); ?></td>
 	        </tr>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:sentDate"); ?></label></td>
-	            <td><?php echo ($this->email['status'] == 'sent') ? $this->formatDate($this->email['sentDt'], $this->config['dateTimeFormat']) : $this->translate("admin-emailqueue-details:notSent"); ?></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:sentDate"); ?></label></td>
+	            <td><?php echo ($this->email['status'] == 'sent') ? $this->formatDate($this->email['sentDt'], $this->config['dateTimeFormat']) : $this->translate("ot-emailqueue-details:notSent"); ?></td>
 	        </tr>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:affected"); ?></label></td>
-	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'attributeName' => $this->email['attributeName'], 'attributeId' => $this->email['attributeId']), 'ot'); ?>>"><?php echo $this->email['attributeName']; ?> = <?php $this->email['attributeId']; ?></a></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:affected"); ?></label></td>
+	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'attributeName' => $this->email['attributeName'], 'attributeId' => $this->email['attributeId']), 'ot', true); ?>>"><?php echo $this->email['attributeName']; ?> = <?php $this->email['attributeId']; ?></a></td>
 	        </tr>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:callId"); ?></label></td>
-	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'callId' => $this->email['callId']), 'ot'); ?>"><?php echo (!empty($this->email['callId'])) ? $this->email['callId'] : $this->translate("admin-emailqueue-details:none"); ?></a></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:callId"); ?></label></td>
+	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'callId' => $this->email['callId']), 'ot', true); ?>"><?php echo (!empty($this->email['callId'])) ? $this->email['callId'] : $this->translate("ot-emailqueue-details:none"); ?></a></td>
 	        </tr>
         </tbody>
     </table>
     <br /><br />
-    <b><?php echo $this->translate("admin-emailqueue-details:message"); ?></b><br /><br />
+    <b><?php echo $this->translate("ot-emailqueue-details:message"); ?></b><br /><br />
     <table class="form">
         <tbody>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:to"); ?></label></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:to"); ?></label></td>
 	            <td><?php echo $this->email['msg']['to']; ?></td>
 	        </tr>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:from"); ?></label></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:from"); ?></label></td>
 	            <td><?php echo $this->email['msg']['from']; ?></td>
 	        </tr>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:subject"); ?></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:subject"); ?></td>
 	            <td><?php echo $this->email['msg']['subject']; ?></td>
 	        </tr>
 	        <tr>
-	            <td><label><?php echo $this->translate("admin-emailqueue-details:body"); ?></label></td>
+	            <td><label><?php echo $this->translate("ot-emailqueue-details:body"); ?></label></td>
 	            <td><?php echo $this->email['msg']['body']; ?></td>
 	        </tr>
         </tbody>

@@ -1,11 +1,11 @@
-<?php echo $this->translate('admin-bug-edit:header'); ?>
+<?php echo $this->translate('ot-bug-edit:header'); ?>
 <br /><br />
 <?php echo $this->form; ?>
-<h2><?php echo $this->translate('admin-bug-edit:textTitle'); ?></h2>
+<h2><?php echo $this->translate('ot-bug-edit:textTitle'); ?></h2>
 <?php foreach ($this->text as $t) : ?>
     <div class="bugText">
         <div class="header">
-        	<?php echo $this->translate('admin-bug-edit:submittedBy', array($t['userInfo']['firstName'], $t['userInfo']['lastName'], $t['userInfo']['username'], $this->dateFormat($t['postDt'], $this->config->user->dateTimeFormat->val))); ?>
+        	<?php echo $this->translate('ot-bug-edit:submittedBy', array($t['userInfo']['firstName'], $t['userInfo']['lastName'], $t['userInfo']['username'], $this->dateFormat($t['postDt'], $this->config->user->dateTimeFormat->val))); ?>
         </div>
         <div class="bugContent">
            <?php echo nl2br($t['text']); ?>

@@ -1,7 +1,7 @@
 <script type="text/javascript">
 $('document').ready(function() {
 	$("#allUsers").flexigrid({
-		url: <?php echo $this->url(array('action' => 'all'), 'account'); ?>,
+		url: '<?php echo $this->url(array('action' => 'all'), 'account', true); ?>',
 		dataType: 'json',
 		colModel : [
 		    {display: '<?php echo $this->translate('model-account-username'); ?>', name : 'username', width : 80, sortable : true, align: 'left'},
@@ -32,11 +32,11 @@ $('document').ready(function() {
 
 function preProcess(data) {
 	$.each(data.rows, function(i,row) {
-		row.cell[0] = '<a href="<?php echo $this->url(array('action' => 'index'), 'account'); ?>?accountId=' + row.id + '">' + row.cell[0] + '</a>';
+		row.cell[0] = '<a href="<?php echo $this->url(array('action' => 'index'), 'account', true); ?>?accountId=' + row.id + '">' + row.cell[0] + '</a>';
 		<?php if ($this->acl['edit']): ?>
-		row.cell[row.cell.length] = '<a href="<?php echo $this->url(array('action' => 'edit'), 'account'); ?>?accountId=' + row.id + '" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>';
+		row.cell[row.cell.length] = '<a href="<?php echo $this->url(array('action' => 'edit'), 'account', true); ?>?accountId=' + row.id + '" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>';
 		<?php endif; if ($this->acl['delete']): ?>
-		row.cell[row.cell.length] = '<a href="<?php echo $this->url(array('action' => 'delete'), 'account'); ?>?accountId=' + row.id + '" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>';
+		row.cell[row.cell.length] = '<a href="<?php echo $this->url(array('action' => 'delete'), 'account', true); ?>?accountId=' + row.id + '" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>';
 		<?php endif; ?>
 	});
 	
@@ -45,11 +45,11 @@ function preProcess(data) {
 </script>
 
 <?php if ($this->acl['add']): ?>
-<a href="<?php echo $this->url(array('action' => 'add'), 'account'); ?>" class="ui-state-default ui-corner-all linkButton">
-<?php echo $this->translate('account-index-all:linkNewAccount'); ?>
+<a href="<?php echo $this->url(array('action' => 'add'), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
+<?php echo $this->translate('ot-account-all:linkNewAccount'); ?>
 <span class="ui-icon ui-icon-plusthick"></span></a>
 <br /><br />
 <?php endif; ?>
-<?php echo $this->translate('account-index-all:header'); ?>
+<?php echo $this->translate('ot-account-all:header'); ?>
 <br /><br />
 <table id="allUsers" style="display:none"></table>

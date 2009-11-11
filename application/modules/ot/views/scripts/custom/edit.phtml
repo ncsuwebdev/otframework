@@ -1,15 +1,15 @@
 <div>
-    <?php echo $this->translate("admin-custom-edit:header"); ?>
+    <?php echo $this->translate("ot-custom-edit:header"); ?>
     <br /><br />
     <form method="post" action="?attributeId=<?php echo $this->attribute['attributeId']; ?>" id="edit" class="checkRequiredFields">
         <table class="form">
             <tbody>
 	            <tr>
-	                <td width="100"><label><?php echo $this->translate("admin-custom-form:object"); ?></label></td>
+	                <td width="100"><label><?php echo $this->translate("ot-custom-form:object"); ?></label></td>
 	                <td><?php echo $this->objectId; ?></td>
 	            </tr>
 	            <tr>
-	                <td><label><?php echo $this->translate("admin-custom-form:description"); ?></label></td>
+	                <td><label><?php echo $this->translate("ot-custom-form:description"); ?></label></td>
 	                <td><?php echo $this->objectDescription; ?></td>
 	            </tr>
             </tbody>
@@ -19,11 +19,11 @@
 
         <table class="form">
             <tr>
-                <td width="130"><label><?php echo $this->translate("admin-custom-form:label"); ?></label></td>
+                <td width="130"><label><?php echo $this->translate("ot-custom-form:label"); ?></label></td>
                 <td><input type="text" name="label" id="label" value="<?php echo $this->attribute['label']; ?>" size="20" class="required" /></td>
             </tr>
             <tr>
-                <td><label><?php echo $this->translate("admin-custom-form:type"); ?></label></td>
+                <td><label><?php echo $this->translate("ot-custom-form:type"); ?></label></td>
                 <td>
                     <select id="type" name="type" class="required">
                         <?php foreach ($this->types as $key => $value) : ?>
@@ -34,37 +34,37 @@
 
                 <div id="opt"<?php if ($this->attribute['type'] == 'select' || $this->attribute['type'] == 'radio') { echo ' style="display: block;"'; } ?>>
                     <?php foreach ($this->attribute['options'] as $o) : ?>
-                        <input type="checkbox" value="<?php echo $o; ?>" name="opt_delete[]" /> <?php echo $this->translate("admin-custom-edit:delete", $o); ?><br />
+                        <input type="checkbox" value="<?php echo $o; ?>" name="opt_delete[]" /> <?php echo $this->translate("ot-custom-edit:delete", $o); ?><br />
                     <?php endforeach; ?>
                     <br /><br />
-                    <?php echo $this->translate("admin-custom-edit:addOptions"); ?>
+                    <?php echo $this->translate("ot-custom-edit:addOptions"); ?>
                     <table class="form" id="options">
                         <tbody>
 	                        <tr id="optionRow">
-	                            <td width="50"><label for="option[]"><?php echo $this->translate("admin-custom-form:option"); ?></label></td>
+	                            <td width="50"><label for="option[]"><?php echo $this->translate("ot-custom-form:option"); ?></label></td>
 	                            <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
 	                        </tr>
                         </tbody>
                     </table>
-                    <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate("admin-custom-form:linkAddRow"); ?></a>
-                    <a id="removeRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-minusthick"></span><?php echo $this->translate("admin-custom-form:linkRemoveRow"); ?></a>
+                    <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate("ot-custom-form:linkAddRow"); ?></a>
+                    <a id="removeRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-minusthick"></span><?php echo $this->translate("ot-custom-form:linkRemoveRow"); ?></a>
                 </div>
                 </td>
             </tr>
             <tr>
-                <td><label><?php echo $this->translate("admin-custom-form:required"); ?></label></td>
+                <td><label><?php echo $this->translate("ot-custom-form:required"); ?></label></td>
                 <td><input type="checkbox" value="1" name="required" id="required"<?php if ($this->attribute['required']) echo ' checked="checked"'; ?> /></td>
             </tr>
             <tr>
-                <td><label><?php echo $this->translate("admin-custom-form:direction"); ?></label></td>
+                <td><label><?php echo $this->translate("ot-custom-form:direction"); ?></label></td>
                 <td>
-                    <label for="direction"><input type="radio" value="vertical" name="direction"<?php if ($this->attribute['direction'] == 'vertical') echo ' checked="checked"'; ?> /> <?php echo $this->translate("admin-custom-form:vertical"); ?></label>
+                    <label for="direction"><input type="radio" value="vertical" name="direction"<?php if ($this->attribute['direction'] == 'vertical') echo ' checked="checked"'; ?> /> <?php echo $this->translate("ot-custom-form:vertical"); ?></label>
                     <br />
-                    <label for="direction"><input type="radio" value="horizontal" name="direction" <?php if ($this->attribute['direction'] == 'horizontal') echo ' checked="checked"'; ?> /> <?php echo $this->translate("admin-custom-form:horizontal"); ?></label>
+                    <label for="direction"><input type="radio" value="horizontal" name="direction" <?php if ($this->attribute['direction'] == 'horizontal') echo ' checked="checked"'; ?> /> <?php echo $this->translate("ot-custom-form:horizontal"); ?></label>
                 </td>
             </tr>
         </table>
-        <input type="submit" value="<?php echo $this->translate("admin-custom-edit:linkSave"); ?>" />
+        <input type="submit" value="<?php echo $this->translate("ot-custom-edit:linkSave"); ?>" />
         <input type="button" value="<?php echo $this->translate("form-button-cancel"); ?>" id="cancel" />
     </form>
 </div>

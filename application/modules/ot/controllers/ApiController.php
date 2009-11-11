@@ -41,7 +41,7 @@ class Ot_ApiController extends Zend_Controller_Action
 
         $this->view->api = $allMethods;
         
-        $this->_helper->pageTitle('api-documentation-index:title');
+        $this->_helper->pageTitle('ot-api-index:title');
     }
 	
     public function soapAction()

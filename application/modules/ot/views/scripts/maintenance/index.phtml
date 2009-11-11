@@ -1,15 +1,15 @@
 <?php if (!$this->maintenanceMode) : ?>
 <div class="ui-corner-all maintenance maintenanceModeOff">
-    <?php echo $this->translate("admin-maintenance-index:notMaintenance"); ?>
+    <?php echo $this->translate("ot-maintenance-index:notMaintenance"); ?>
 </div>
 <?php endif; ?>
 <br />
-<form action="<?php echo $this->url(array('controller' => 'maintenance', 'actin' => 'toggle'), 'ot'); ?>" method="get">
+<form action="<?php echo $this->url(array('controller' => 'maintenance', 'action' => 'toggle'), 'ot', true); ?>" method="get">
 <?php if ($this->maintenanceMode == 1) : ?>
     <input type="hidden" name="status" value="off" />
-    <input type="submit" value="<?php echo $this->translate("admin-maintenance-index:turnOff"); ?>" />
+    <input type="submit" value="<?php echo $this->translate("ot-maintenance-index:turnOff"); ?>" />
 <?php else : ?>
     <input type="hidden" name="status" value="on" />
-    <input type="submit" value="<?php echo $this->translate("admin-maintenance-index:turnOn"); ?>" />
+    <input type="submit" value="<?php echo $this->translate("ot-maintenance-index:turnOn"); ?>" />
 <?php endif; ?>
 </form>

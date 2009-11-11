@@ -43,7 +43,7 @@ class Ot_MaintenanceController extends Zend_Controller_Action
     public function indexAction()
     {
         $this->view->maintenanceMode = (is_file(APPLICATION_PATH . '/../overrides/' . $this->_maintenanceModeFileName)) ? true : false;
-        $this->_helper->pageTitle('admin-maintenance-index:title');
+        $this->_helper->pageTitle('ot-maintenance-index:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
 
@@ -90,7 +90,7 @@ class Ot_MaintenanceController extends Zend_Controller_Action
         
         $this->_helper->log(Zend_Log::INFO, $logMsg, $logOptions);
 
-        $this->_helper->redirector->gotoRoute(array('controller' => 'maintenance'), 'ot');
+        $this->_helper->redirector->gotoRoute(array('controller' => 'maintenance'), 'ot', true);
         
         $this->view->messages = $messages;
     }

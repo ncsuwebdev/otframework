@@ -85,7 +85,7 @@ class Ot_AclController extends Zend_Controller_Action
         
                 
         $this->view->roles = $roles;
-        $this->_helper->pageTitle("admin-acl-index:title");
+        $this->_helper->pageTitle("ot-acl-index:title");
     }
     
     /**
@@ -143,15 +143,15 @@ class Ot_AclController extends Zend_Controller_Action
         
         $this->view->remoteResources = $remoteAcl->getRemoteResources($thisRole['roleId']);
         
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/ot/css/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.tipsy.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
                 
         if ($thisRole['inheritRoleId'] != 0) {
             $inheritRole = $role->find($thisRole['inheritRoleId']);
             
             $this->view->inheritRole = $inheritRole->name;
         }
-        $this->_helper->pageTitle("admin-acl-details:title");
+        $this->_helper->pageTitle("ot-acl-details:title");
 
     }    
 
@@ -195,7 +195,7 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->messages = $messages;
         $this->view->form = $form;
         
-        $this->_helper->pageTitle("admin-acl-add:title");
+        $this->_helper->pageTitle("ot-acl-add:title");
     }
 
     /**
@@ -254,7 +254,7 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->messages = $messages;
                               
-        $this->_helper->pageTitle("admin-acl-edit:title");
+        $this->_helper->pageTitle("ot-acl-edit:title");
     }
 
     /**
@@ -322,7 +322,7 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/ot/css/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.tipsy.js');
                       
-        $this->_helper->pageTitle("admin-acl-applicationAccess:title");  
+        $this->_helper->pageTitle("ot-acl-applicationAccess:title");  
     }
     
     /**
@@ -392,7 +392,7 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/ot/css/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/ot/scripts/jquery.plugin.tipsy.js');
                       
-        $this->_helper->pageTitle("admin-acl-remoteAccess:title");  
+        $this->_helper->pageTitle("ot-acl-remoteAccess:title");  
     }    
       
     /**
@@ -494,7 +494,7 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->role = $thisRole;
         $this->view->form = $form;
         
-        $this->_helper->pageTitle("admin-acl-delete:title");
+        $this->_helper->pageTitle("ot-acl-delete:title");
     }
 
 

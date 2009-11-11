@@ -44,7 +44,7 @@ class Ot_OauthController extends Zend_Controller_Action
         
         $config = Zend_Registry::get('config');
         
-       	$this->_helper->pageTitle('oauth-index-index:title', $config->user->appTitle->val);
+       	$this->_helper->pageTitle('ot-oauth-index:title', $config->user->appTitle->val);
 		$this->view->messages = $this->_helper->flashMessenger->getMessages();
 	}
 	
@@ -62,7 +62,7 @@ class Ot_OauthController extends Zend_Controller_Action
         
         $config = Zend_Registry::get('config');
         
-        $this->_helper->pageTitle('oauth-index-allConsumers:title', $config->user->appTitle->val);
+        $this->_helper->pageTitle('ot-oauth-allConsumers:title', $config->user->appTitle->val);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ class Ot_OauthController extends Zend_Controller_Action
 		$tokens = $st->getTokensForConsumerId($thisConsumer->consumerId, 'access');
 		
 		$this->view->usage = $tokens->count();
-		$this->_helper->pageTitle('oauth-index-details:title', $thisConsumer->name);
+		$this->_helper->pageTitle('ot-oauth-details:title', $thisConsumer->name);
 		$this->view->messages = $this->_helper->flashMessenger->getMessages();
 		
 	}
@@ -110,7 +110,7 @@ class Ot_OauthController extends Zend_Controller_Action
 	 */
 	public function addAction()
 	{
-		$this->_helper->pageTitle('oauth-index-add:title');
+		$this->_helper->pageTitle('ot-oauth-add:title');
 		
 		$consumer = new Ot_Oauth_Server_Consumer();
 		
@@ -148,7 +148,7 @@ class Ot_OauthController extends Zend_Controller_Action
 				
 				$this->_helper->flashMessenger->addMessage('Your application was successfully registered.');
 				
-				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $consumerId), 'oauth');
+				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $consumerId), 'oauth', true);
 			} else {
 				$messages[] = 'There was a problem submitting your form.';
 			}
@@ -164,7 +164,7 @@ class Ot_OauthController extends Zend_Controller_Action
 	 */
 	public function editAction()
 	{
-		$this->_helper->pageTitle('oauth-index-edit:title');
+		$this->_helper->pageTitle('ot-oauth-edit:title');
 		
 		$get = Zend_Registry::get('getFilter');
 		
@@ -217,7 +217,7 @@ class Ot_OauthController extends Zend_Controller_Action
 				
 				$this->_helper->flashMessenger->addMessage('Your application was successfully modified.');
 				
-				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $data['consumerId']), 'oauth');
+				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $data['consumerId']), 'oauth', true);
 			} else {
 				$messages[] = 'There was a problem submitting your form.';
 			}
@@ -229,7 +229,7 @@ class Ot_OauthController extends Zend_Controller_Action
 	
 	public function deleteAction()
 	{
-		$this->_helper->pageTitle('oauth-index-delete:title');
+		$this->_helper->pageTitle('ot-oauth-delete:title');
 		
 		$get = Zend_Registry::get('getFilter');
 		
@@ -255,7 +255,7 @@ class Ot_OauthController extends Zend_Controller_Action
 						
 			$this->_helper->flashMessenger->addMessage('Your application was successfully removed.');
 			
-			$this->_helper->redirector->gotoRoute(array(), 'oauth');
+			$this->_helper->redirector->gotoRoute(array(), 'oauth', true);
 		}
 		
 		$this->view->form = $form;
@@ -290,7 +290,7 @@ class Ot_OauthController extends Zend_Controller_Action
 			throw new Ot_Exception_Data('You already have an existing access token for this consumer.  Remove that token to create a new one.');
 		}	
 				
-		$this->_helper->pageTitle('oauth-index-generateToken:title');
+		$this->_helper->pageTitle('ot-oauth-generateToken:title');
 		
 		$form = Ot_Form_Template::delete('genereateToken', 'Generate Access Token/Secret');
 		
@@ -323,7 +323,7 @@ class Ot_OauthController extends Zend_Controller_Action
 	
 	public function regenerateConsumerKeysAction()
 	{
-		$this->_helper->pageTitle('oauth-index-regenerateConsumerKeys:title');
+		$this->_helper->pageTitle('ot-oauth-regenerateConsumerKeys:title');
 		
 		$get = Zend_Registry::get('getFilter');
 		
@@ -350,7 +350,7 @@ class Ot_OauthController extends Zend_Controller_Action
 			
 			$this->_helper->flashMessenger->addMessage('The consumer key and secret was reset for your application.  Please update your application to allow access.');
 			
-			$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $thisConsumer->consumerId), 'oauth');
+			$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $thisConsumer->consumerId), 'oauth', true);
 		}
 		
 		$this->view->form = $form;

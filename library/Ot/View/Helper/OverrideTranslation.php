@@ -17,7 +17,7 @@ class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
     public function js()
     {
     	if ($this->_hasAccess()) {
-    		echo '<script type="text/javascript" src="' . $this->_baseUrl . '/ot/scripts/translate.js"></script>';
+    		echo '<script type="text/javascript" src="' . $this->_baseUrl . '/scripts/ot/translate.js"></script>';
     	}
     }
      
@@ -27,12 +27,9 @@ class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
     	
     	$request = $zcf->getRequest();
 
-    	$url = $this->_baseUrl 
-    	     . "/ot/translate/index"
-    	     . "?module=" . $request->getModuleName() . "&"
-    	     . "controller=" . $request->getControllerName() . "&"
-    	     . "action=" . $request->getActionName()
-    	     ;
+    	$helper = Zend_Controller_Action_HelperBroker::getStaticHelper('url');
+    	
+    	$url = $helper->url(array('controller' => 'translate', 'm' => $request->getModuleName(), 'c' => $request->getControllerName(), 'a' => $request->getActionName()), 'ot', true);
     	     
     	if ($this->_hasAccess()) {
     		$translate = Zend_Registry::get('Zend_Translate');

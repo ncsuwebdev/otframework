@@ -34,7 +34,7 @@ class Ot_LogController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->_helper->pageTitle('admin-log-index:title');  
+        $this->_helper->pageTitle('ot-log-index:title');  
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css'); 
         
