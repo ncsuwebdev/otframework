@@ -421,7 +421,7 @@ class Ot_AccountController extends Zend_Controller_Action
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
 
-                $dba = Zend_Registry::get('dbAdapter');
+                $dba = Zend_Db_Table::getDefaultAdapter();
 
                 $data = array(
                 	'accountId'    => $this->_userData['accountId'],

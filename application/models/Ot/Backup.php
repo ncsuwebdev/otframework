@@ -126,20 +126,21 @@ class Ot_Backup {
             $tableName = $this->_tableName;
             $cmd = "mysqldump $dbName --host=$dbHost --user=$dbUser --password=$dbPass --extended-insert $tableName > $path/$fileName";
         }
-        
+        echo $path . '/' . $fileName;
         exec($cmd, $result, $rc);
-        
+        /*
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Length: ' . filesize($path . '/' . $fileName));
         header("Content-Disposition: attachment; filename=$fileName");
         readfile($path . '/' . $fileName);
         unlink($path . '/' . $fileName);
+        */
     }   
     
     protected function _getTables()
     {
-        $db = Zend_Registry::get('dbAdapter');
+        $db = Zend_Db_Table::getDefaultAdapter();
         
         $tables = $db->listTables();
         $tableList = array();

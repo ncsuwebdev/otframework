@@ -47,7 +47,7 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
     
     public function addProcess($data)
     {
-        $dba = Zend_Registry::get('dbAdapter');
+        $dba = Zend_Db_Table::getDefaultAdapter();
         $dba->insert($this->_name, $data);
     }
     
@@ -60,7 +60,7 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
     
     public function editProcess($data)
     {
-        $dba = Zend_Registry::get('dbAdapter');
+        $dba = Zend_Db_Table::getDefaultAdapter();
         
         $where = $dba->quoteInto('accountId = ?', $data['accountId']);
         
@@ -80,7 +80,7 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
     
     public function deleteProcess($id)
     {
-        $dba = Zend_Registry::get('dbAdapter');
+        $dba = Zend_Db_Table::getDefaultAdapter();
         
         $where = $dba->quoteInto('accountId = ?', $id);
 
@@ -89,7 +89,7 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
     
     public function get($id)
     {
-        $dba = Zend_Registry::get('dbAdapter');
+        $dba = Zend_Db_Table::getDefaultAdapter();
         
         $select = $dba->select();
 

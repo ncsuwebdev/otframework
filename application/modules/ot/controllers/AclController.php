@@ -28,7 +28,7 @@
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-class Admin_AclController extends Zend_Controller_Action 
+class Ot_AclController extends Zend_Controller_Action 
 {
     
     /**
@@ -81,7 +81,8 @@ class Admin_AclController extends Zend_Controller_Action
             } else {
                 $r['inheritedFrom'] = 0;
             }
-        }
+        } 
+        
                 
         $this->view->roles = $roles;
         $this->_helper->pageTitle("admin-acl-index:title");
