@@ -138,7 +138,7 @@ class Ot_CronController extends Zend_Controller_Action
         }
         
         if ($get->name == 'all') {
-            $this->view->displayName = 'admin-cron-toggle:displayName';
+            $this->view->displayName = 'all cron jobs';
         } else {
             $this->view->displayName = $get->name;
         }

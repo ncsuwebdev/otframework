@@ -1,6 +1,6 @@
 $('document').ready(function() {
 	$("#queueResults").flexigrid({
-		url: baseUrl + '/admin/emailqueue/index/',
+		url: baseUrl + '/ot/emailqueue/index/',
 		dataType: 'json',
 		colModel : [
 		    {display: 'To',         name: 'to',            width: 150, sortable: false, align:'left'},

@@ -11,13 +11,13 @@ $('document').ready(function() {
     	
     	if ($('#roleNamePreset').val() != undefined) {
 	    	if (confirm('You will lose any changes you have made.')) {
-	    		location.href = $('#baseUrl').val() + '/admin/acl/add' 
+	    		location.href = $('#baseUrl').val() + '/ot/acl/add' 
 	    					  + '/?roleName=' + $('#roleName').val() + '&inheritRoleId=' + $('#inheritRoleId').val();
 	    	} else {
 	    		return false;
 	    	}
     	} else {
-    		location.href = $('#baseUrl').val() + '/admin/acl/add' 
+    		location.href = $('#baseUrl').val() + '/ot/acl/add' 
 			  + '/?roleName=' + $('#roleName').val() + '&inheritRoleId=' + $('#inheritRoleId').val();
     	}
     });

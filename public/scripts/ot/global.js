@@ -56,7 +56,7 @@ $('document').ready(function() {
             	$(this).dialog("close"); 
         	},
             "Logout": function() { 
-        		location.href = baseUrl + '/login/index/logout/';
+        		location.href = baseUrl + '/login/logout/';
             } 
         }     	
     }, "close");
