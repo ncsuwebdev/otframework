@@ -1,28 +1,28 @@
 <?php if (!$this->guestHasAccess) : ?>
     <div class="ui-widget ui-state-highlight ui-corner-all">
         <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-        <?php echo $this->translate('admin-acl-index:defaultRoleNeedsAccess', $this->defaultRole->name); ?>
+        <?php echo $this->translate('ot-acl-index:defaultRoleNeedsAccess', $this->defaultRole->name); ?>
     </div>
     <br />
 <?php endif; ?>
 <div id="aclIndexIndex">
-    <?php echo $this->translate('admin-acl-index:header'); ?>
+    <?php echo $this->translate('ot-acl-index:header'); ?>
     <br /><br />
 
     <?php if ($this->acl['add']): ?>
-    <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'add'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+    <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'add'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
     <br /><br />
     <?php endif; ?>
     <table class="list">
         <tbody>
         <tr class="ui-widget-header">
-            <th width="200"><?php echo $this->translate('admin-acl-index:table:roleName'); ?></th>
-            <th width="200"><?php echo $this->translate('admin-acl-index:table:inheritedFrom'); ?></th>
+            <th width="200"><?php echo $this->translate('ot-acl-index:table:roleName'); ?></th>
+            <th width="200"><?php echo $this->translate('ot-acl-index:table:inheritedFrom'); ?></th>
             <?php if ($this->acl['application-access']): ?>
-            <th width="120"><?php echo $this->translate('admin-acl-index:table:applicationAccess'); ?></th>
+            <th width="120"><?php echo $this->translate('ot-acl-index:table:applicationAccess'); ?></th>
             <?php endif; ?> 
             <?php if ($this->acl['remote-access']): ?>
-            <th width="120"><?php echo $this->translate('admin-acl-index:table:remoteAccess'); ?></th>
+            <th width="120"><?php echo $this->translate('ot-acl-index:table:remoteAccess'); ?></th>
             <?php endif; ?> 
             <?php if ($this->acl['edit']): ?>
             <th width="50"><?php echo $this->translate('table-header-edit'); ?></th>
@@ -35,7 +35,7 @@
         <?php foreach ($this->roles as $r) : ?>
         <tr class="<?php $this->cycle('row1', 'row2'); ?>">
             <td><a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $r['roleId']), 'ot', true); ?>"><?php echo $r['name']; ?></a></td>
-            <td align="center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("admin-acl-form:noInheritance"); } ?></td>         
+            <td align="center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("ot-acl-form:noInheritance"); } ?></td>         
             <?php if ($this->acl['application-access']): ?>
             <td align="center">
                 <?php if ($r['editable']): ?>
@@ -80,7 +80,7 @@
         <?php endforeach; ?>
         <?php else: ?>
         <tr>
-            <td colspan="4" class="noResults"><?php echo $this->translate('admin-acl-index:noRoles'); ?></td>
+            <td colspan="4" class="noResults"><?php echo $this->translate('ot-acl-index:noRoles'); ?></td>
         </tr>
         <?php endif; ?>
         </tbody>

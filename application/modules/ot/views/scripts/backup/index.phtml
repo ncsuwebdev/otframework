@@ -1,9 +1,9 @@
-<?php echo $this->translate('admin-backup-index:header'); ?>
+<?php echo $this->translate('ot-backup-index:header'); ?>
 
 <?php echo $this->form; ?>
 
 <br /><br />
 
 <?php if ($this->downloadAllSql) : ?>
-<a class="ui-state-default ui-corner-all linkButtonNoIcon" href="<?php echo $this->url(array('controller' => 'backup', 'action' => 'download-all-sql'), 'ot', true); ?>"><?php echo $this->translate('admin-backup-index:downloadAllSql'); ?></a>
+<a class="ui-state-default ui-corner-all linkButtonNoIcon" href="<?php echo $this->url(array('controller' => 'backup', 'action' => 'download-all-sql'), 'ot', true); ?>"><?php echo $this->translate('ot-backup-index:downloadAllSql'); ?></a>
 <?php endif; ?>

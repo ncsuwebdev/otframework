@@ -76,7 +76,7 @@ class Ot_NavController extends Zend_Controller_Action
                         'save' => $this->_helper->hasAccess('save')
                      );
         
-        $this->_helper->pageTitle('admin-nav-index:title');;
+        $this->_helper->pageTitle('ot-nav-index:title');;
         
         $this->view->siteUrl = Zend_Registry::get('siteUrl');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.jtree.js')

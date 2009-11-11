@@ -48,15 +48,15 @@ class ErrorController extends Zend_Controller_Action
 	        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
 	            // 404 error -- controller or action not found
 	            $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
-	            $message = 'error-error-error:404:message';
-	            $title = 'error-error-error:404:header';
+	            $message = 'default-index-error:404:message';
+	            $title = 'default-index-error:404:header';
 	            break;
 	        default:
 	            $exception = $errors->exception;
 	            if ($exception instanceof Ot_Exception) {
 	            	$title = $exception->getTitle();
 	            } else {
-	            	$title = 'error-error-error:generic';
+	            	$title = 'default-index-error:generic';
 	            }
 	            
 	            $this->view->showTrackback = $config->user->showTrackbackOnErrors->val;
@@ -67,7 +67,7 @@ class ErrorController extends Zend_Controller_Action
         
         $this->_helper->pageTitle($title);
         
-        $this->view->title = $this->view->translate('error-error-error:title') . ' ' . $this->view->title;
+        $this->view->title = $this->view->translate('default-index-error:title') . ' ' . $this->view->title;
         $this->view->message = $message;
     }
 }

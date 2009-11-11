@@ -1,14 +1,14 @@
-<?php echo $this->translate("admin-trigger-add:header"); ?>
+<?php echo $this->translate("ot-trigger-add:header"); ?>
 <?php echo $this->form; ?>
-<?php echo $this->translate("admin-trigger-availableTitle"); ?>
+<?php echo $this->translate("ot-trigger-availableTitle"); ?>
 <br /><br />
-<?php echo $this->translate("admin-trigger-availableHeader"); ?>
+<?php echo $this->translate("ot-trigger-availableHeader"); ?>
 <br /><br />
 <table class="list">
     <tbody>
         <tr class="ui-widget-header">
-            <th width="200"><?php echo $this->translate("admin-trigger-table:variable"); ?></th>
-            <th width="300"><?php echo $this->translate("admin-trigger-table:description"); ?></th>
+            <th width="200"><?php echo $this->translate("ot-trigger-table:variable"); ?></th>
+            <th width="300"><?php echo $this->translate("ot-trigger-table:description"); ?></th>
         </tr>
         <?php if (count($this->templateVars) > 0) : ?>
             <?php foreach ($this->templateVars as $key => $variable) : ?>
@@ -19,7 +19,7 @@
             <?php endforeach; ?>
         <?php else: ?>
         <tr>
-            <td colspan="2"><?php echo $this->translate("admin-trigger-add:noVariables"); ?></td>
+            <td colspan="2"><?php echo $this->translate("ot-trigger-add:noVariables"); ?></td>
         </tr>
         <?php endif; ?>
     </tbody>

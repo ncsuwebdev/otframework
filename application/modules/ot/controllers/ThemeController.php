@@ -33,7 +33,7 @@ class Ot_ThemeController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->_helper->pageTitle('admin-theme-index:title');
+        $this->_helper->pageTitle('ot-theme-index:title');
         
         // Note: Must load themes from /public/themes/ot and /public/themes seperately because scandir does not include paths in array
         $themes = array();

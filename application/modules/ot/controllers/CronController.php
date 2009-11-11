@@ -54,7 +54,7 @@ class Ot_CronController extends Zend_Controller_Action
         
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->view->cronjobs = $jobs;
-        $this->_helper->pageTitle('admin-cron-index:title');
+        $this->_helper->pageTitle('ot-cron-index:title');
     }
 
     /**
@@ -144,7 +144,7 @@ class Ot_CronController extends Zend_Controller_Action
         }
 
         $this->view->status = ($status == 'enabled') ? 'disable' : 'enable';
-        $this->_helper->pageTitle('admin-cron-toggle:title');
+        $this->_helper->pageTitle('ot-cron-toggle:title');
         $this->view->form   = $form;
     }
     

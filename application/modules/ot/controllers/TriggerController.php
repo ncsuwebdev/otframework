@@ -52,7 +52,7 @@ class Ot_TriggerController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->_helper->pageTitle('admin-trigger-index:title');
+        $this->_helper->pageTitle('ot-trigger-index:title');
         
         $this->view->acl = array(
             'details'   => $this->_helper->hasAccess('details')
@@ -95,7 +95,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         
         $this->view->triggerId = $get->triggerId;
         $this->view->trigger = $thisTrigger;
-        $this->_helper->pageTitle('admin-trigger-details:title', $get->triggerId);
+        $this->_helper->pageTitle('ot-trigger-details:title', $get->triggerId);
         
         $action = new Ot_Trigger_Action();
 
@@ -139,7 +139,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         
         $this->view->triggerId = $get->triggerId;
         $this->view->trigger = $thisTrigger;
-        $this->_helper->pageTitle('admin-trigger-add:title');
+        $this->_helper->pageTitle('ot-trigger-add:title');
         
         $action = new Ot_Trigger_Action();
 
@@ -242,7 +242,7 @@ class Ot_TriggerController extends Zend_Controller_Action
        
         $this->view->trigger = $thisTrigger;
         
-        $this->_helper->pageTitle('admin-trigger-edit:title');
+        $this->_helper->pageTitle('ot-trigger-edit:title');
 
         $config = Zend_Registry::get('config');
         
@@ -358,7 +358,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->action = $thisAction->toArray();
         $this->view->triggerId = $triggerId;
-        $this->_helper->pageTitle('admin-trigger-delete:title');
+        $this->_helper->pageTitle('ot-trigger-delete:title');
     }
     
     /**
@@ -420,6 +420,6 @@ class Ot_TriggerController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->action = $thisAction->toArray();
         $this->view->triggerId = $triggerId;
-        $this->_helper->pageTitle('admin-trigger-changeStatus:title',array(ucwords($status)));
+        $this->_helper->pageTitle('ot-trigger-changeStatus:title',array(ucwords($status)));
     }
 }

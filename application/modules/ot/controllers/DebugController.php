@@ -44,7 +44,7 @@ class Ot_DebugController extends Zend_Controller_Action
     public function indexAction()
     {
         $this->view->debugMode = (isset($_COOKIE[$this->_debugModeCookieName])) ? true : false;
-        $this->_helper->pageTitle('admin-debug-index:title');
+        $this->_helper->pageTitle('ot-debug-index:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
 

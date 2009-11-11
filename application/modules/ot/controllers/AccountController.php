@@ -106,7 +106,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->view->userData = $this->_userData;
         
-        $this->_helper->pageTitle('account-index-index:title', array($this->_userData['firstName'], $this->_userData['lastName'], $this->_userData['username']));
+        $this->_helper->pageTitle('ot-account-index:title', array($this->_userData['firstName'], $this->_userData['lastName'], $this->_userData['username']));
 
         if (isset($config->app->accountPlugin)) {
             $acctPlugin = new $config->app->accountPlugin;
@@ -195,7 +195,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'delete' => $this->_helper->hasAccess('delete'),
         );
         
-        $this->_helper->pageTitle('account-index-all:title');
+        $this->_helper->pageTitle('ot-account-all:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();     
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css'); 
@@ -397,7 +397,7 @@ class Ot_AccountController extends Zend_Controller_Action
         }
         
         $this->view->messages = $messages;
-        $this->_helper->pageTitle('account-index-add:title');
+        $this->_helper->pageTitle('ot-account-add:title');
         $this->view->form = $form;
 
     }   
@@ -521,7 +521,7 @@ class Ot_AccountController extends Zend_Controller_Action
         
         $this->view->messages = $messages;
         $this->view->form = $form;
-        $this->_helper->pageTitle('account-index-edit:title');
+        $this->_helper->pageTitle('ot-account-edit:title');
     }
 
     /**
@@ -589,7 +589,7 @@ class Ot_AccountController extends Zend_Controller_Action
         }
         
         $this->view->userData = $this->_userData;
-        $this->_helper->pageTitle('account-index-delete:title');
+        $this->_helper->pageTitle('ot-account-delete:title');
         $this->view->form = $form;
     }
     
@@ -666,28 +666,28 @@ class Ot_AccountController extends Zend_Controller_Action
 	         ))
              ;
                          
-        $oldPassword = $form->createElement('password', 'oldPassword', array('label' => 'account-index-changePassword:form:oldPassword'));
+        $oldPassword = $form->createElement('password', 'oldPassword', array('label' => 'ot-account-changePassword:form:oldPassword'));
         $oldPassword->setRequired(true)
                     ->addValidator('StringLength', false, array(6, 20))
                     ->addFilter('StringTrim')
                     ->addFilter('StripTags')
                     ;   
                     
-        $newPassword = $form->createElement('password', 'newPassword', array('label' => 'account-index-changePassword:form:newPassword'));
+        $newPassword = $form->createElement('password', 'newPassword', array('label' => 'ot-account-changePassword:form:newPassword'));
         $newPassword->setRequired(true)
                     ->addValidator('StringLength', false, array(6, 20))
                     ->addFilter('StringTrim')
                     ->addFilter('StripTags')
                     ; 
                      
-        $newPasswordConf = $form->createElement('password', 'newPasswordConf', array('label' => 'account-index-changePassword:form:newPasswordConf'));
+        $newPasswordConf = $form->createElement('password', 'newPasswordConf', array('label' => 'ot-account-changePassword:form:newPasswordConf'));
         $newPasswordConf->setRequired(true)
                         ->addValidator('StringLength', false, array(6, 20))
                         ->addFilter('StringTrim')
                         ->addFilter('StripTags')
                         ;    
                         
-        $submit = $form->createElement('submit', 'changeButton', array('label' => 'account-index-changePassword:form:submit'));
+        $submit = $form->createElement('submit', 'changeButton', array('label' => 'ot-account-changePassword:form:submit'));
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit'))
                  ));
@@ -747,7 +747,7 @@ class Ot_AccountController extends Zend_Controller_Action
         
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.passStrength.js');
         $this->view->messages = $messages;
-        $this->_helper->pageTitle('account-index-changePassword:title');
+        $this->_helper->pageTitle('ot-account-changePassword:title');
         $this->view->form  = $form;
     }        
 

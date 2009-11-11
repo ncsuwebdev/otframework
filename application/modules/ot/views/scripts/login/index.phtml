@@ -1,4 +1,4 @@
-<?php echo $this->translate("login-index-index:header"); ?>
+<?php echo $this->translate("ot-login-index:header"); ?>
 <br /><br />
 <div id="loginForms" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
     <?php $tabSelectedIndex = 0; ?>
@@ -20,7 +20,7 @@
         <?php echo $f['form']; ?>
         <?php if (!$f['autoLogin']): ?>
         <div class="forgot">
-        	<a href="<?php echo $this->url(array('action' => 'forgot', 'realm' => $f['realm']), 'login', true); ?>"><?php echo $this->translate("login-index-index:linkForgot"); ?></a>
+        	<a href="<?php echo $this->url(array('action' => 'forgot', 'realm' => $f['realm']), 'login', true); ?>"><?php echo $this->translate("ot-login-index:linkForgot"); ?></a>
         </div>
         <?php endif; ?>
     </div> 

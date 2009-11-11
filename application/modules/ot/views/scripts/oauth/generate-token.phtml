@@ -1,28 +1,28 @@
 <?php if ($this->accessToken): ?>
 <div class="ui-state-error ui-corner-all"> 
 	<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-	<strong><?php echo $this->translate('oauth-index-generateToken:alert'); ?></strong> 
-	<?php echo $this->translate('oauth-index-generateToken:alertPost'); ?></p>
+	<strong><?php echo $this->translate('ot-oauth-generateToken:alert'); ?></strong> 
+	<?php echo $this->translate('ot-oauth-generateToken:alertPost'); ?></p>
 </div>
-<?php echo $this->translate('oauth-index-generateToken:headerSubmit'); ?>
+<?php echo $this->translate('ot-oauth-generateToken:headerSubmit'); ?>
 <br /><br />
 
-<div class="access"><?php echo $this->translate('oauth-index-generateToken:accessToken'); ?></div>
+<div class="access"><?php echo $this->translate('ot-oauth-generateToken:accessToken'); ?></div>
 <div class="key"><?php echo $this->accessToken['oauth_token']; ?></div>
 
-<div class="access"><?php echo $this->translate('oauth-index-generateToken:tokenSecret'); ?></div>
+<div class="access"><?php echo $this->translate('ot-oauth-generateToken:tokenSecret'); ?></div>
 <div class="key"><?php echo $this->accessToken['oauth_token_secret']; ?></div>
 
 <br /><br />
-<a href="<?php echo $this->url(array('action' => 'details', 'consumerId' => $this->consumer->consumerId), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('oauth-index-generateToken:back', $this->consumer->name); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<a href="<?php echo $this->url(array('action' => 'details', 'consumerId' => $this->consumer->consumerId), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-oauth-generateToken:back', $this->consumer->name); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
 
 <?php else: ?>
 <div class="ui-state-error ui-corner-all"> 
 	<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-	<strong><?php echo $this->translate('oauth-index-generateToken:alert'); ?></strong> 
-	<?php echo $this->translate('oauth-index-generateToken:alertPre'); ?></p>
+	<strong><?php echo $this->translate('ot-oauth-generateToken:alert'); ?></strong> 
+	<?php echo $this->translate('ot-oauth-generateToken:alertPre'); ?></p>
 </div>
-<?php echo $this->translate('oauth-index-generateToken:header'); ?>
+<?php echo $this->translate('ot-oauth-generateToken:header'); ?>
 <br /><br />
 <?php echo $this->form; ?>
 <?php endif; ?>

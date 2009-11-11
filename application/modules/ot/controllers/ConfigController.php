@@ -43,7 +43,7 @@ class Ot_ConfigController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.tipsy.js');
         
         $this->view->messages   = $this->_helper->flashMessenger->getMessages();
-        $this->_helper->pageTitle('admin-config-index:title');
+        $this->_helper->pageTitle('ot-config-index:title');
     }
 
     /**
@@ -97,9 +97,9 @@ class Ot_ConfigController extends Zend_Controller_Action
         $el->setValue($config->user->{$get->key}->val);
         $el->setLabel($get->key . ':');
         
-        $reset = $form->createElement('checkbox', 'resetToDefault', array('label' => 'admin-config-edit:form:reset '));
+        $reset = $form->createElement('checkbox', 'resetToDefault', array('label' => 'ot-config-edit:form:reset '));
         
-        $submit = $form->createElement('submit', 'editButton', array('label' => 'admin-config-edit:form:submit'));
+        $submit = $form->createElement('submit', 'editButton', array('label' => 'ot-config-edit:form:submit'));
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit'))
                  ));
@@ -180,6 +180,6 @@ class Ot_ConfigController extends Zend_Controller_Action
         $this->view->messages    = $messages;
         $this->view->form        = $form;
         $this->view->description = $config->user->{$get->key}->description;
-        $this->_helper->pageTitle('admin-config-edit:title');
+        $this->_helper->pageTitle('ot-config-edit:title');
     }
 }

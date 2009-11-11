@@ -40,7 +40,7 @@ class Ot_CacheController extends Zend_Controller_Action
         );
 
         $this->view->messages = array_merge($this->_helper->flashMessenger->getMessages(), $messages);
-        $this->_helper->pageTitle('admin-cache-index:title');
+        $this->_helper->pageTitle('ot-cache-index:title');
     }
     
     /**

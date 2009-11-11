@@ -1,20 +1,20 @@
 <?php if (!$this->guestHasAccess && $this->role['roleId'] == $this->defaultRole->roleId) : ?>
     <div class="ui-widget ui-state-highlight ui-corner-all">
         <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-        <?php echo $this->translate('admin-acl-details:defaultRoleNeedsAccess', $this->defaultRole->name); ?>
+        <?php echo $this->translate('ot-acl-details:defaultRoleNeedsAccess', $this->defaultRole->name); ?>
     </div>
     <br />
 <?php endif; ?>
-    <?php echo $this->translate('admin-acl-details:header', $this->role['name']); ?>
+    <?php echo $this->translate('ot-acl-details:header', $this->role['name']); ?>
     <br /><br />
     <?php if ($this->acl['index']): ?>
-        <a href="<?php echo $this->url(array('controller' => 'acl'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'acl'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
     <?php endif; ?>
     <?php if ($this->acl['edit'] && $this->role['editable']): ?>
-        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'edit', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:edit'); ?><span class="ui-icon ui-icon-pencil"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'edit', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:edit'); ?><span class="ui-icon ui-icon-pencil"></span></a>
     <?php endif; ?>
     <?php if ($this->acl['delete'] && $this->role['editable']): ?>
-        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'delete', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:delete'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'delete', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:delete'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
     <?php endif; ?>
     <br /><br />
     <table class="form">
@@ -25,25 +25,25 @@
 	        </tr>
 	        <tr>
 	            <td><label><?php echo $this->translate('model-role-form:inheritRoleId'); ?></label></td>
-	            <td><?php echo ($this->role['inheritRoleId'] != 0) ? $this->inheritRole : $this->translate('admin-acl-form:noInheritance'); ?></td>
+	            <td><?php echo ($this->role['inheritRoleId'] != 0) ? $this->inheritRole : $this->translate('ot-acl-form:noInheritance'); ?></td>
 	        </tr>
 	        <tr>
-	            <td><label><?php echo $this->translate('admin-acl-details:editable') ?></label></td>
+	            <td><label><?php echo $this->translate('ot-acl-details:editable') ?></label></td>
 	            <td><?php echo ($this->role['editable'] == 1) ? $this->translate('form-button-yes') : $this->translate('form-button-no'); ?></td>
 	        </tr>
         </tbody>
     </table>
 <div id="access" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 	<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-       <li class="ui-state-default ui-corner-top"><a href="#tabs-application"><span><?php echo $this->translate('admin-acl-index:table:applicationAccess'); ?></span></a></li>
-       <li class="ui-state-default ui-corner-top"><a href="#tabs-remote"><span><?php echo $this->translate('admin-acl-index:table:remoteAccess'); ?></span></a></li>
+       <li class="ui-state-default ui-corner-top"><a href="#tabs-application"><span><?php echo $this->translate('ot-acl-index:table:applicationAccess'); ?></span></a></li>
+       <li class="ui-state-default ui-corner-top"><a href="#tabs-remote"><span><?php echo $this->translate('ot-acl-index:table:remoteAccess'); ?></span></a></li>
 	</ul>
     <div id="tabs-application" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 	    <?php if ($this->acl['application-access'] && $this->role['editable']): ?>
-	        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:applicationAccess:edit'); ?><span class="ui-icon ui-icon-newwin"></span></a>
+	        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:applicationAccess:edit'); ?><span class="ui-icon ui-icon-newwin"></span></a>
 	        <br /><br />
 	    <?php endif; ?>     
-    	<?php echo $this->translate('admin-acl-details:applicationAccess:header'); ?>
+    	<?php echo $this->translate('ot-acl-details:applicationAccess:header'); ?>
     	<br /><br />   
 	    <div class="accessTable"> 
         <?php foreach ($this->resources as $module => $controllers) : ?>
@@ -52,7 +52,7 @@
                 <tbody>
                 <tr class="ui-widget-header">
                     <td width="300"><b><?php echo ucwords($module); ?></b></td>
-                    <td width="120"><?php echo $this->translate('admin-acl-details:form:access'); ?></td>
+                    <td width="120"><?php echo $this->translate('ot-acl-details:form:access'); ?></td>
                 </tr>
                 <?php foreach ($controllers as $controller => $actions) : ?>
                 <tr class="controller">
@@ -61,12 +61,12 @@
                     </td>
                     <td class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
                     <?php if (!empty($actions['all']['access'])) : ?>
-                        <?php echo $this->translate('admin-acl-form:allAccess'); ?>
+                        <?php echo $this->translate('ot-acl-form:allAccess'); ?>
                     <?php else: ?>
                         <?php if (isset($actions['someaccess'])) : ?>
-                        <?php echo $this->translate('admin-acl-form:someAccess'); ?>
+                        <?php echo $this->translate('ot-acl-form:someAccess'); ?>
                         <?php else: ?>
-                        <?php echo $this->translate('admin-acl-form:noAccess'); ?>
+                        <?php echo $this->translate('ot-acl-form:noAccess'); ?>
                         <?php endif; ?>
                     <?php endif; ?>
                     </td>
@@ -78,7 +78,7 @@
                     <img src="<?php echo $this->baseUrl(); ?>/images/ot/help.png" width="16" height="16" class="info" />
                     <?php echo ucwords($action); ?>
                     </td>
-                    <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('admin-acl-form:hasAccess') : $this->translate('admin-acl-form:noAccess'); ?></td>
+                    <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:hasAccess') : $this->translate('ot-acl-form:noAccess'); ?></td>
                 </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -91,17 +91,17 @@
     </div>  
     <div id="tabs-remote" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 	    <?php if ($this->acl['remote-access'] && $this->role['editable']): ?>
-	        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-details:remoteAccess:edit'); ?><span class="ui-icon ui-icon-transferthick-e-w"></span></a>
+	        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:remoteAccess:edit'); ?><span class="ui-icon ui-icon-transferthick-e-w"></span></a>
 	        <br /><br />
 	    <?php endif; ?>     	
-    	<?php echo $this->translate('admin-acl-details:remoteAccess:header'); ?>
+    	<?php echo $this->translate('ot-acl-details:remoteAccess:header'); ?>
     	<br /><br />   
 	    <div class="accessTable">    
         <table class="list">
             <tbody>
             <tr class="ui-widget-header">
-                <td width="300"><b><?php echo $this->translate('admin-acl-form:method'); ?></b></td>
-                <td width="120"><?php echo $this->translate('admin-acl-details:form:access'); ?></td>
+                <td width="300"><b><?php echo $this->translate('ot-acl-form:method'); ?></b></td>
+                <td width="120"><?php echo $this->translate('ot-acl-details:form:access'); ?></td>
             </tr>
             <?php foreach ($this->remoteResources as $method => $access) : ?>
             <tr class="controller">
@@ -110,9 +110,9 @@
                 </td>
                 <td class="<?php if ($access['access']) { echo 'access'; } else { echo 'noAccess'; } ?>">
                 <?php if ($access['access']) : ?>
-                    <?php echo $this->translate('admin-acl-form:allAccess'); ?>
+                    <?php echo $this->translate('ot-acl-form:allAccess'); ?>
                 <?php else: ?>
-                    <?php echo $this->translate('admin-acl-form:noAccess'); ?>
+                    <?php echo $this->translate('ot-acl-form:noAccess'); ?>
                 <?php endif; ?>
                 </td>
             </tr> 

@@ -74,7 +74,7 @@ class Ot_BackupController extends Zend_Controller_Action
             $this->view->downloadAllSql = true;
         }
         
-        $this->_helper->pageTitle('admin-backup-index:title');
+        $this->_helper->pageTitle('ot-backup-index:title');
     }
     
     public function downloadAllSqlAction()

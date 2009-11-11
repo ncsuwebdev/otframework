@@ -44,7 +44,7 @@ class Ot_BugController extends Zend_Controller_Action
             );
 
         $this->view->bugs = $bugs->toArray();
-        $this->_helper->pageTitle('admin-bug-index:title');
+        $this->_helper->pageTitle('ot-bug-index:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
 
@@ -84,7 +84,7 @@ class Ot_BugController extends Zend_Controller_Action
         $this->view->text = $text;
 
         $this->view->bug = $thisBug->toArray();
-        $this->_helper->pageTitle('admin-bug-details:title');
+        $this->_helper->pageTitle('ot-bug-details:title');
     }
 
     /**
@@ -136,7 +136,7 @@ class Ot_BugController extends Zend_Controller_Action
         }
         
         $this->view->messages = $messages;
-        $this->_helper->pageTitle('admin-bug-add:title');
+        $this->_helper->pageTitle('ot-bug-add:title');
         $this->view->form = $form;
 
     }
@@ -220,7 +220,7 @@ class Ot_BugController extends Zend_Controller_Action
 
         }
         
-        $this->_helper->pageTitle('admin-bug-edit:title');
+        $this->_helper->pageTitle('ot-bug-edit:title');
         $this->view->messages = $messages;
         $this->view->form     = $form;
     }    

@@ -1,10 +1,10 @@
 <?php foreach ($this->api as $a) : ?>   
     <div class="docBlock">
-        <p><b><?php echo $this->translate('api-documentation-index:method'); ?>: </b><code><?php echo $a['method']; ?></code></p>
-        <p><b><?php echo $this->translate('api-documentation-index:description'); ?>: </b><?php echo $a['description']; ?></p>
-        <p><b><?php echo $this->translate('api-documentation-index:returnValue'); ?>: </b><?php echo $this->defaultVal($a['return'], $this->translate('api-documentation-index:noReturnValue')); ?></p>
+        <p><b><?php echo $this->translate('ot-api-index:method'); ?>: </b><code><?php echo $a['method']; ?></code></p>
+        <p><b><?php echo $this->translate('ot-api-index:description'); ?>: </b><?php echo $a['description']; ?></p>
+        <p><b><?php echo $this->translate('ot-api-index:returnValue'); ?>: </b><?php echo $this->defaultVal($a['return'], $this->translate('ot-api-index:noReturnValue')); ?></p>
 		<span>
-            <b><?php echo $this->translate('api-documentation-index:arguments'); ?>: </b>
+            <b><?php echo $this->translate('ot-api-index:arguments'); ?>: </b>
             <?php if (count($a['args']) > 0) : ?>
                 <ul class="args">
                     <?php foreach ($a['args'] as $arg) : ?>
@@ -12,7 +12,7 @@
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <?php echo $this->translate('api-documentation-index:noArguments'); ?>
+                <?php echo $this->translate('ot-api-index:noArguments'); ?>
             <?php endif; ?>
         </span>
     </div>   

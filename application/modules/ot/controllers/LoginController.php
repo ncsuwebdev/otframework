@@ -36,7 +36,7 @@ class Ot_LoginController extends Zend_Controller_Action
      */
     public function indexAction()
     {    	
-        $this->_helper->pageTitle('login-index-index:title');
+        $this->_helper->pageTitle('ot-login-index:title');
         
 		$req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
@@ -66,12 +66,12 @@ class Ot_LoginController extends Zend_Controller_Action
             
             if (!$a->autoLogin()) {
 		        // Create and configure username element:
-		        $username = $form->createElement('text', 'username', array('label' => 'login-index-form:username'));
+		        $username = $form->createElement('text', 'username', array('label' => 'ot-login-form:username'));
 		        $username->setRequired(true)
 		                 ->addFilter('StringTrim');
 		        
 		        // Create and configure password element:
-		        $password = $form->createElement('password', 'password', array('label' => 'login-index-index:password'));
+		        $password = $form->createElement('password', 'password', array('label' => 'ot-login-index:password'));
 		        $password->addFilter('StringTrim')
 		                 ->setRequired(true);
 		                 
@@ -85,7 +85,7 @@ class Ot_LoginController extends Zend_Controller_Action
                   array('Label', array('tag' => 'span')),      
               ));          
             
-	        $loginButton = $form->createElement('submit', 'loginButton', array('label' => 'login-index-index:login'));
+	        $loginButton = $form->createElement('submit', 'loginButton', array('label' => 'ot-login-index:login'));
 	        $loginButton->setDecorators(array(
 	                   array('ViewHelper', array('helper' => 'formSubmit'))
 	                 ));   
@@ -93,7 +93,7 @@ class Ot_LoginController extends Zend_Controller_Action
 	        $form->addElement($loginButton);
             
             if ($a->allowUserSignUp()) {
-                $signupButton = $form->createElement('button', 'signup_' . $key, array('label' => 'login-index-index:signUp'));
+                $signupButton = $form->createElement('button', 'signup_' . $key, array('label' => 'ot-login-index:signUp'));
 		        $signupButton->setDecorators(array(
 		                   array('ViewHelper', array('helper' => 'formButton'))
 		                ));
@@ -313,11 +313,11 @@ class Ot_LoginController extends Zend_Controller_Action
 		       ));
         
         // Create and configure username element:
-        $username = $form->createElement('text', 'username', array('label' => 'login-index-form:username'));
+        $username = $form->createElement('text', 'username', array('label' => 'ot-login-form:username'));
         $username->setRequired(true)
                  ->addFilter('StringTrim');
         
-        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'login-index-forgot:linkReset'));
+        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'ot-login-forgot:linkReset'));
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit'))
                  ));
@@ -382,7 +382,7 @@ class Ot_LoginController extends Zend_Controller_Action
         }
 
         $this->view->messages = $messages;
-        $this->_helper->pageTitle('login-index-forgot:title');             
+        $this->_helper->pageTitle('ot-login-forgot:title');             
         $this->view->form = $form;
     }
     
@@ -468,19 +468,19 @@ class Ot_LoginController extends Zend_Controller_Action
                    array('ViewHelper'),    // element's view helper
                ));
                             
-        $password = $form->createElement('password', 'password', array('label' => 'login-index-passwordReset:new'));
+        $password = $form->createElement('password', 'password', array('label' => 'ot-login-passwordReset:new'));
         $password->setRequired(true)
                  ->addValidator('StringLength', false, array(6, 20))
                  ->addFilter('StringTrim')
                  ->addFilter('StripTags');   
 
-        $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'login-index-passwordReset:confirm'));
+        $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'ot-login-passwordReset:confirm'));
         $passwordConf->setRequired(true)
                      ->addValidator('StringLength', false, array(6, 20))
                      ->addFilter('StringTrim')
                      ->addFilter('StripTags');                           
 
-        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'login-index-passwordReset:linkReset'));
+        $submit = $form->createElement('submit', 'resetPasswordButton', array('label' => 'ot-login-passwordReset:linkReset'));
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit'))
                  ));
@@ -533,7 +533,7 @@ class Ot_LoginController extends Zend_Controller_Action
         }
 
         $this->view->messages = $messages;
-        $this->_helper->pageTitle('login-index-passwordReset:title');             
+        $this->_helper->pageTitle('ot-login-passwordReset:title');             
         $this->view->form = $form;
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.passStrength.js');
     }    
@@ -687,7 +687,7 @@ class Ot_LoginController extends Zend_Controller_Action
     	
     	$this->view->messages = $messages;
         $this->view->form = $form;
-    	$this->_helper->pageTitle('login-index-signup:title');
+    	$this->_helper->pageTitle('ot-login-signup:title');
     	$this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.passStrength.js');
     	   	
     }

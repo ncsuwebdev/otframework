@@ -1,11 +1,11 @@
-<?php echo $this->translate("admin-custom-index:header"); ?>
+<?php echo $this->translate("ot-custom-index:header"); ?>
 <br /><br />
 
 <table class="list">
     <tbody>
         <tr class="ui-widget-header">
-            <th width="200"><?php echo $this->translate("admin-custom-index:table:object"); ?></th>
-            <th width="350"><?php echo $this->translate("admin-custom-index:table:description"); ?></th>
+            <th width="200"><?php echo $this->translate("ot-custom-index:table:object"); ?></th>
+            <th width="350"><?php echo $this->translate("ot-custom-index:table:description"); ?></th>
         </tr>
         <?php if (count($this->objects) > 0) : ?>
 	    <?php foreach ($this->objects as $o) : ?>
@@ -16,7 +16,7 @@
 	    <?php endforeach; ?>
         <?php else : ?>
 	    <tr>
-	        <td colspan="2" class="noResults"><?php echo $this->translate("admin-custom-index:noObjects"); ?></td>
+	        <td colspan="2" class="noResults"><?php echo $this->translate("ot-custom-index:noObjects"); ?></td>
 	    </tr>
         <?php endif; ?>
     </tbody>

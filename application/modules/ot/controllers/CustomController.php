@@ -36,7 +36,7 @@ class Ot_CustomController extends Zend_Controller_Action
     {
     	$config = Zend_Registry::get('config');
 
-        $this->_helper->pageTitle('admin-custom-index:title');
+        $this->_helper->pageTitle('ot-custom-index:title');
 
         $this->view->acl = array(
             'details'   => $this->_helper->hasAccess('details')
@@ -83,7 +83,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $custom = new Ot_Custom();
         $attributes = $custom->getAttributesForObject($get->objectId);
 
-        $this->_helper->pageTitle('admin-custom-details:title', $get->objectId);
+        $this->_helper->pageTitle('ot-custom-details:title', $get->objectId);
         
         $this->view->attributes        = $attributes;
         $this->view->objectId          = $get->objectId;
@@ -185,7 +185,7 @@ class Ot_CustomController extends Zend_Controller_Action
     	$this->view->attribute = $attribute;
         $this->view->objectId = $attribute['objectId'];
         $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
-    	$this->_helper->pageTitle('admin-custom-attributeDetails');
+    	$this->_helper->pageTitle('ot-custom-attributeDetails');
     }
 
     /**
@@ -256,7 +256,7 @@ class Ot_CustomController extends Zend_Controller_Action
         }
 
         $this->view->types = $custom->getTypes();
-	    $this->_helper->pageTitle('admin-custom-add:title', $get->objectId);
+	    $this->_helper->pageTitle('ot-custom-add:title', $get->objectId);
 	    $this->view->objectId = $get->objectId;
 	    	    
         $this->view->objectDescription = $config->app->customFieldObjects->{$get->objectId};
@@ -354,7 +354,7 @@ class Ot_CustomController extends Zend_Controller_Action
             $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'objectId' => $attribute['objectId']), 'ot', true);
         }
 
-        $this->_helper->pageTitle('admin-custom-edit:title', $attribute['objectId']);
+        $this->_helper->pageTitle('ot-custom-edit:title', $attribute['objectId']);
         $this->view->objectId          = $attribute['objectId'];
         $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
         $this->view->attribute         = $attribute;
@@ -419,6 +419,6 @@ class Ot_CustomController extends Zend_Controller_Action
 	    $this->view->attribute         = $attribute;
         $this->view->objectId          = $attribute['objectId'];
         $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
-	    $this->_helper->pageTitle('admin-custom-delete:title', $attribute['objectId']);
+	    $this->_helper->pageTitle('ot-custom-delete:title', $attribute['objectId']);
     }
 }

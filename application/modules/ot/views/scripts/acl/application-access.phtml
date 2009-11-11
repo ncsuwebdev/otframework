@@ -1,7 +1,7 @@
 <div id="aclIndexAdd">
-<a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $this->role->roleId), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('admin-acl-applicationAccess:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $this->role->roleId), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-applicationAccess:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
 <br /><br />
-    <?php echo $this->translate('admin-acl-applicationAccess:header'); ?>
+    <?php echo $this->translate('ot-acl-applicationAccess:header'); ?>
     <br /><br />
 
 <table class="form">
@@ -20,11 +20,11 @@
         <?php if (count($this->children) != 0) : ?>
         <div class="ui-state-highlight ui-corner-all">
         	<span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-	        <?php echo $this->translate('admin-acl-applicationAccess:caution'); ?>
+	        <?php echo $this->translate('ot-acl-applicationAccess:caution'); ?>
 	        <ul>
 	        <?php foreach ($this->children as $c) : ?>
 	        	<li>
-	            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $c['roleId']), 'ot', true); ?>"><?php echo $c['name']; ?></a> <?php echo $this->translate('admin-acl-applicationAccess:via'); ?>
+	            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $c['roleId']), 'ot', true); ?>"><?php echo $c['name']; ?></a> <?php echo $this->translate('ot-acl-applicationAccess:via'); ?>
 	            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $c['parent']['roleId']), 'ot', true); ?>"><?php echo $c['parent']['name']; ?></a>
 	            </li>
 	        <?php endforeach; ?>
@@ -38,8 +38,8 @@
                     <tbody>
                     <tr class="ui-widget-header">
                         <td width="300"><b><?php echo ucwords($module); ?></b></td>
-                        <td width="120"><?php echo $this->translate('admin-acl-form:currently'); ?></td>
-                        <td width="180"><?php echo $this->translate('admin-acl-form:grantRevoke'); ?></td>
+                        <td width="120"><?php echo $this->translate('ot-acl-form:currently'); ?></td>
+                        <td width="180"><?php echo $this->translate('ot-acl-form:grantRevoke'); ?></td>
                     </tr>
                     <?php foreach ($controllers as $controller => $actions) : ?>
                     <tr class="controller">
@@ -48,26 +48,26 @@
                         </td>
                         <td class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
                         <?php if (!empty($actions['all']['access'])) : ?>
-                            <?php echo $this->translate('admin-acl-form:allAccess'); ?>
+                            <?php echo $this->translate('ot-acl-form:allAccess'); ?>
                         <?php else: ?>
                             <?php if (isset($actions['someaccess'])) : ?>
-                            <?php echo $this->translate('admin-acl-form:someAccess'); ?>
+                            <?php echo $this->translate('ot-acl-form:someAccess'); ?>
                             <?php else: ?>
-                            <?php echo $this->translate('admin-acl-form:noAccess'); ?>
+                            <?php echo $this->translate('ot-acl-form:noAccess'); ?>
                             <?php endif; ?>
                         <?php endif; ?>
                         </td>
                         <td>
                         <select size="1" class="allAccess" name="<?php echo $module . '[' . $controller . '][all]'; ?>" id="<?php echo $module . '_' . $controller; ?>">
-                            <option value="<?php if (!empty($actions['all']['access'])) { echo 'allow'; } else { if (!empty($actions['someaccess'])) { echo 'some'; } else { echo 'deny'; }} ?>"><?php echo $this->translate('admin-acl-form:noChange'); ?></option>
+                            <option value="<?php if (!empty($actions['all']['access'])) { echo 'allow'; } else { if (!empty($actions['someaccess'])) { echo 'some'; } else { echo 'deny'; }} ?>"><?php echo $this->translate('ot-acl-form:noChange'); ?></option>
                         <?php if (empty($actions['all']['access'])) : ?>
-                            <option value="allow"><?php echo $this->translate('admin-acl-form:grantAllAccess'); ?></option>
+                            <option value="allow"><?php echo $this->translate('ot-acl-form:grantAllAccess'); ?></option>
                         <?php endif; ?>
                         <?php if (empty($actions['someaccess']) || !empty($actions['all']['access'])) : ?>
-                            <option value="some"><?php echo (empty($actions['all']['access'])) ? $this->translate('admin-acl-form:grant') : $this->translate('admin-acl-form:revoke'); ?> <?php echo $this->translate('admin-acl-form:someAccess'); ?></option>
+                            <option value="some"><?php echo (empty($actions['all']['access'])) ? $this->translate('ot-acl-form:grant') : $this->translate('ot-acl-form:revoke'); ?> <?php echo $this->translate('ot-acl-form:someAccess'); ?></option>
                         <?php endif; ?>
                         <?php if (!empty($actions['all']['access']) || !empty($actions['someaccess'])) : ?>
-                            <option value="deny"><?php echo $this->translate('admin-acl-form:revokeAllAccess'); ?></option>
+                            <option value="deny"><?php echo $this->translate('ot-acl-form:revokeAllAccess'); ?></option>
                         <?php endif; ?>
                         </select>
                         </td>
@@ -78,8 +78,8 @@
                         <td class="td1 description" title="<?php echo $access['description']; ?>">
                         <?php echo ucwords($action); ?>
                         </td>
-                        <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('admin-acl-form:hasAccess') : $this->translate('admin-acl-form:noAccess'); ?></td>
-                        <td class="td3"><input type="checkbox" class="<?php echo $module . '_' . $controller; ?>_action" value="<?php echo (!empty($access['access'])) ? 'deny' : 'allow'; ?>" name="<?php echo $module . '[' . $controller . '][part][' . $action . ']'; ?>" id="<?php echo $module . '_' . $controller . '_part_' . $action; ?>" /> <?php echo (!empty($access['access'])) ? $this->translate('admin-acl-form:revokeAccess') : $this->translate('admin-acl-form:grantAccess'); ?></td>
+                        <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:hasAccess') : $this->translate('ot-acl-form:noAccess'); ?></td>
+                        <td class="td3"><input type="checkbox" class="<?php echo $module . '_' . $controller; ?>_action" value="<?php echo (!empty($access['access'])) ? 'deny' : 'allow'; ?>" name="<?php echo $module . '[' . $controller . '][part][' . $action . ']'; ?>" id="<?php echo $module . '_' . $controller . '_part_' . $action; ?>" /> <?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:revokeAccess') : $this->translate('ot-acl-form:grantAccess'); ?></td>
                     </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

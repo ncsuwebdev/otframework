@@ -34,7 +34,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->_helper->pageTitle('admin-emailqueue-index:title');  
+        $this->_helper->pageTitle('ot-emailqueue-index:title');  
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css'); 
         
@@ -124,6 +124,6 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             );
 
         $this->view->email = $email;
-        $this->_helper->pageTitle('admin-emailqueue-details:title');
+        $this->_helper->pageTitle('ot-emailqueue-details:title');
     }
 }
