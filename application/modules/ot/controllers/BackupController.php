@@ -44,13 +44,16 @@ class Ot_BackupController extends Zend_Controller_Action
         		$this->_helper->layout->disableLayout();
                 $this->_helper->viewRenderer->setNeverRender();
 	            
-	            $db = Zend_Registry::get('dbAdapter');
-	            $tableName = $_POST['tableName'];
+	            $db = Zend_Db_Table::getDefaultAdapter();
 	            
-	            if (isset($_POST['submitSql'])) {
+	            $post = Zend_Registry::get('postFilter');
+	            
+	            $tableName = $post->tableName;
+	            
+	            if (isset($post->submitSql)) {
 	                $type = 'sql';
 	            } else {
-	               $type = 'csv';   
+	                $type = 'csv';   
 	            }
 
   	            // this call sends it to the browser too 
@@ -83,7 +86,7 @@ class Ot_BackupController extends Zend_Controller_Action
             $this->_helper->layout->disableLayout();
             $this->_helper->viewRenderer->setNeverRender();
             
-            $db = Zend_Registry::get('dbAdapter');
+            $db = Zend_Db_Table::getDefaultAdapter();
             
             // this call sends it to the browser too 
             $backup->getBackup($db, '', 'sqlAll');
@@ -93,7 +96,7 @@ class Ot_BackupController extends Zend_Controller_Action
                     'attributeId'   => 'allTables',
             );
                 
-            $this->_helper->log(Zend_Log::INFO, 'Backup of database table ' . $tableName . ' was downloaded', $logOptions);
+            $this->_helper->log(Zend_Log::INFO, 'Backup of entire database was downloaded', $logOptions);
         }
     }
 }

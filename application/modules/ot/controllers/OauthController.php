@@ -148,7 +148,7 @@ class Ot_OauthController extends Zend_Controller_Action
 				
 				$this->_helper->flashMessenger->addMessage('Your application was successfully registered.');
 				
-				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $consumerId), 'oauth');
+				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $consumerId), 'oauth', true);
 			} else {
 				$messages[] = 'There was a problem submitting your form.';
 			}
@@ -217,7 +217,7 @@ class Ot_OauthController extends Zend_Controller_Action
 				
 				$this->_helper->flashMessenger->addMessage('Your application was successfully modified.');
 				
-				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $data['consumerId']), 'oauth');
+				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $data['consumerId']), 'oauth', true);
 			} else {
 				$messages[] = 'There was a problem submitting your form.';
 			}
@@ -255,7 +255,7 @@ class Ot_OauthController extends Zend_Controller_Action
 						
 			$this->_helper->flashMessenger->addMessage('Your application was successfully removed.');
 			
-			$this->_helper->redirector->gotoRoute(array(), 'oauth');
+			$this->_helper->redirector->gotoRoute(array(), 'oauth', true);
 		}
 		
 		$this->view->form = $form;
@@ -350,7 +350,7 @@ class Ot_OauthController extends Zend_Controller_Action
 			
 			$this->_helper->flashMessenger->addMessage('The consumer key and secret was reset for your application.  Please update your application to allow access.');
 			
-			$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $thisConsumer->consumerId), 'oauth');
+			$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $thisConsumer->consumerId), 'oauth', true);
 		}
 		
 		$this->view->form = $form;

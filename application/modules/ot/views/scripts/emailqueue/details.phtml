@@ -1,12 +1,12 @@
 <?php if ($this->acl['index']): ?>
-<a href="<?php echo $this->url(array('controller' => 'emailqueue'), 'ot'); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("admin-emailqueue-details:linkBack"); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<a href="<?php echo $this->url(array('controller' => 'emailqueue'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("admin-emailqueue-details:linkBack"); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
 <?php endif; ?>
 <div id="adminemailDetails">
     <table class="form">
         <tbody>
 	        <tr>
 	            <td><label><?php echo $this->translate("admin-emailqueue-details:status"); ?></label></td>
-	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'status' => $this->email['status']), 'ot'); ?>"><?php echo ucwords($this->email['status']); ?></a></td>
+	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'status' => $this->email['status']), 'ot', true); ?>"><?php echo ucwords($this->email['status']); ?></a></td>
 	        </tr>
 	        <tr>
 	            <td><label><?php echo $this->translate("admin-emailqueue-details:queueDate"); ?></label></td>
@@ -18,11 +18,11 @@
 	        </tr>
 	        <tr>
 	            <td><label><?php echo $this->translate("admin-emailqueue-details:affected"); ?></label></td>
-	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'attributeName' => $this->email['attributeName'], 'attributeId' => $this->email['attributeId']), 'ot'); ?>>"><?php echo $this->email['attributeName']; ?> = <?php $this->email['attributeId']; ?></a></td>
+	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'attributeName' => $this->email['attributeName'], 'attributeId' => $this->email['attributeId']), 'ot', true); ?>>"><?php echo $this->email['attributeName']; ?> = <?php $this->email['attributeId']; ?></a></td>
 	        </tr>
 	        <tr>
 	            <td><label><?php echo $this->translate("admin-emailqueue-details:callId"); ?></label></td>
-	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'callId' => $this->email['callId']), 'ot'); ?>"><?php echo (!empty($this->email['callId'])) ? $this->email['callId'] : $this->translate("admin-emailqueue-details:none"); ?></a></td>
+	            <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'callId' => $this->email['callId']), 'ot', true); ?>"><?php echo (!empty($this->email['callId'])) ? $this->email['callId'] : $this->translate("admin-emailqueue-details:none"); ?></a></td>
 	        </tr>
         </tbody>
     </table>

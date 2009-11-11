@@ -66,7 +66,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
 	 */
 	public function addProcess($data)
 	{
-		$dba = Zend_Registry::get('dbAdapter');
+		$dba = Zend_Db_Table::getDefaultAdapter();
 		$dba->insert($this->_name, $data);
 	}
 	
@@ -95,7 +95,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
 	 */
 	public function editProcess($data)
 	{
-        $dba = Zend_Registry::get('dbAdapter');
+        $dba = Zend_Db_Table::getDefaultAdapter();
         
         $where = $dba->quoteInto('triggerActionId = ?', $data['triggerActionId']);
         
@@ -110,7 +110,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
 	 */
 	public function deleteProcess($id)
 	{
-		$dba = Zend_Registry::get('dbAdapter');
+		$dba = Zend_Db_Table::getDefaultAdapter();
 		
 		$where = $dba->quoteInto('triggerActionId = ?', $id);
 
@@ -125,7 +125,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
 	 */
 	public function get($id)
 	{
-		$dba = Zend_Registry::get('dbAdapter');
+		$dba = Zend_Db_Table::getDefaultAdapter();
 		
         $select = $dba->select();
 

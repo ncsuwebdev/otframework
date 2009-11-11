@@ -4,7 +4,7 @@
 </div>
 <br />
 
-<form action="<?php echo $this->url(array('controller' => 'cache', 'action' => 'clear'), 'ot'); ?>">
+<form action="<?php echo $this->url(array('controller' => 'cache', 'action' => 'clear'), 'ot', true); ?>">
     <input type="submit" value="<?php echo $this->translate('admin-cache-index:linkClear'); ?>" />
 </form>
 <?php endif; ?>

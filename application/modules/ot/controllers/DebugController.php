@@ -83,7 +83,7 @@ class Ot_DebugController extends Zend_Controller_Action
         
         $this->_helper->log(Zend_Log::INFO, $logMsg, $logOptions);
 
-        $this->_helper->redirector->gotoRoute(array('controller' => 'debug'), 'ot');
+        $this->_helper->redirector->gotoRoute(array('controller' => 'debug'), 'ot', true);
         
         $this->view->messages = $messages;
     }

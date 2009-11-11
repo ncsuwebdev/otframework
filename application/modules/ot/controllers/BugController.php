@@ -129,7 +129,7 @@ class Ot_BugController extends Zend_Controller_Action
                 $this->_helper->log(Zend_Log::INFO, 'Bug was added', $logOptions);
                 $this->_helper->flashMessenger->addMessage('msg-info-bugSubmitted');
 	
-	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $bugId), 'ot');
+	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $bugId), 'ot', true);
         	} else {
         		$messages[] = 'msg-error-formError';
         	}
@@ -213,7 +213,7 @@ class Ot_BugController extends Zend_Controller_Action
                 $this->_helper->log(Zend_Log::INFO, 'Bug was modified', $logOptions);
                 $this->_helper->flashMessenger->addMessage('msg-info-bugUpdated');
 	            
-	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $get->bugId), 'ot');
+	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $get->bugId), 'ot', true);
         	} else {
         		$messages[] = 'msg-error-formError';
         	}

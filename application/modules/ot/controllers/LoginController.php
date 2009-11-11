@@ -237,7 +237,7 @@ class Ot_LoginController extends Zend_Controller_Action
 		        	
 		         	$this->_helper->redirector->gotoUrl($uri);
 		        } else {
-		            $this->_helper->redirector->gotoRoute(array(), 'default');
+		            $this->_helper->redirector->gotoRoute(array(), 'default', true);
 		        }
             } else {
             	if (count($result->getMessages()) == 0) {
@@ -257,7 +257,7 @@ class Ot_LoginController extends Zend_Controller_Action
             	$authRealm->realm = $key;
                 $authRealm->autoLogin = true;
             
-                $this->_helper->redirector->gotoRoute(array('realm' => $authRealm->realm), 'login');
+                $this->_helper->redirector->gotoRoute(array('realm' => $authRealm->realm), 'login', true);
             }
         }
         
@@ -280,7 +280,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $filter = Zend_Registry::get('getFilter');
         
         if (Zend_Auth::getInstance()->hasIdentity()) {
-            $this->_helper->redirector->gotoRoute(array(), 'default');
+            $this->_helper->redirector->gotoRoute(array(), 'default', true);
             return;
         }            
         
@@ -372,7 +372,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     
                     $et->dispatch('Login_Index_Forgot');
 		                                
-		            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login');
+		            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
 	            } else {
 	            	$messages[] = 'msg-error-userAccountNotFound';
 	            }
@@ -395,7 +395,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $config = Zend_Registry::get('config');
         
         if (Zend_Auth::getInstance()->hasIdentity()) {
-            $this->_helper->redirector->gotoRoute(array(), 'default');
+            $this->_helper->redirector->gotoRoute(array(), 'default', true);
             return;
         }            
 
@@ -523,7 +523,7 @@ class Ot_LoginController extends Zend_Controller_Action
 			        
 			        $this->_helper->log(Zend_Log::INFO, 'User reset their password', $loggerOptions);
                     
-                    $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login');
+                    $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
                 } else {
                     $messages[] = 'msg-error-passwordsNotMatch';
                 }
@@ -553,7 +553,7 @@ class Ot_LoginController extends Zend_Controller_Action
         
         Zend_Auth::getInstance()->clearIdentity();
                 
-        $this->_helper->redirector->gotoRoute(array(), 'default');  	
+        $this->_helper->redirector->gotoRoute(array(), 'default', true);  	
     	
     } 
     
@@ -675,7 +675,7 @@ class Ot_LoginController extends Zend_Controller_Action
 	                    
 	                    $et->dispatch('Login_Index_Signup');		            
 			
-			            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'ot');
+			            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'ot', true);
 			        }
     	    	} else {
     	    		$messages[] = 'msg-error-passwordsNotMatch';

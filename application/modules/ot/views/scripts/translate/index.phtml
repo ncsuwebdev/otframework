@@ -2,7 +2,7 @@
 <?php echo $this->translate("admin-translate-index:header"); ?>
 </div>
 <?php if (count($this->translationTable) != 0): ?>
-<form method="post" id="translationForm" action="<?php echo $this->url(array('controller' => 'translate', 'm' => $this->module, 'c' => $this->controller, 'a' => $this->action), 'ot'); ?>">
+<form method="post" id="translationForm" action="<?php echo $this->url(array('controller' => 'translate', 'm' => $this->module, 'c' => $this->controller, 'a' => $this->action), 'ot', true); ?>">
 	<div id="translateKeys">
 	  	<?php foreach ($this->translationTable as $key => $value): ?>
 			<div>

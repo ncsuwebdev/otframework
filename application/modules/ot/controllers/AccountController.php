@@ -389,7 +389,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     
                     $this->_helper->log(Zend_Log::INFO, 'Account was added', $logOptions);
         
-                    $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account'); 
+                    $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true); 
                 }
             } else {
                 $messages[] = 'msg-error-invalidForm';
@@ -507,7 +507,7 @@ class Ot_AccountController extends Zend_Controller_Action
 			        } else {
 			        	$this->_helper->flashMessenger->addMessage('msg-info-accountUpdated');
 			        	
-			            $this->_helper->redirector->gotoRoute(array('accountId' => $this->_userData['accountId']), 'account');
+			            $this->_helper->redirector->gotoRoute(array('accountId' => $this->_userData['accountId']), 'account', true);
 			        }	                
                 }
             } else {
@@ -585,7 +585,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
             $this->_helper->flashMessenger->addMessage('msg-info-accountUpdated');
             
-            $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account');
+            $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true);
         }
         
         $this->view->userData = $this->_userData;
@@ -628,7 +628,7 @@ class Ot_AccountController extends Zend_Controller_Action
 			
 			$this->_helper->flashMessenger->addMessage('Token has been removed.  ' . $thisConsumer->name . ' no longer has access to your account.');
 			
-			$this->_helper->redirector->gotoRoute(array(), 'account');
+			$this->_helper->redirector->gotoRoute(array(), 'account', true);
 		}
 		
 		$this->view->form = $form;
@@ -738,7 +738,7 @@ class Ot_AccountController extends Zend_Controller_Action
 	                
 	                $this->_helper->log(Zend_Log::INFO, 'User changed Password', $loggerOptions);  
 	                
-                    $this->_helper->redirector->gotoRoute(array(), 'account');
+                    $this->_helper->redirector->gotoRoute(array(), 'account', true);
                 }
             } else {
                 $messages[] = 'msg-error-invalidForm';

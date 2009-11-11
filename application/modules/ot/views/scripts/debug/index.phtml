@@ -6,7 +6,7 @@
 
 <p><?php echo $this->translate("admin-debug-index:debugInfo"); ?></p>
 
-<form action="<?php echo $this->url(array('controller' => 'debug', 'action' => 'toggle'), 'ot'); ?>" method="get">
+<form action="<?php echo $this->url(array('controller' => 'debug', 'action' => 'toggle'), 'ot', true); ?>" method="get">
 <?php if ($this->debugMode) : ?>
     <input type="hidden" name="status" value="off" />
     <input type="submit" value="<?php echo $this->translate("admin-debug-index:turnOff"); ?>" />

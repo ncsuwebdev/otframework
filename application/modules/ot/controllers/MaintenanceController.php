@@ -90,7 +90,7 @@ class Ot_MaintenanceController extends Zend_Controller_Action
         
         $this->_helper->log(Zend_Log::INFO, $logMsg, $logOptions);
 
-        $this->_helper->redirector->gotoRoute(array('controller' => 'maintenance'), 'ot');
+        $this->_helper->redirector->gotoRoute(array('controller' => 'maintenance'), 'ot', true);
         
         $this->view->messages = $messages;
     }

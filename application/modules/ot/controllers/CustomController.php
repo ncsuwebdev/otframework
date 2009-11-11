@@ -252,7 +252,7 @@ class Ot_CustomController extends Zend_Controller_Action
             
             $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-attributeAdded', array($data['label'], $data['objectId'])));
 
-            $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'objectId' => $data['objectId']), 'ot');
+            $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'objectId' => $data['objectId']), 'ot', true);
         }
 
         $this->view->types = $custom->getTypes();
@@ -351,7 +351,7 @@ class Ot_CustomController extends Zend_Controller_Action
             
             $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-attributeSaved', $data['label']));
 
-            $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'objectId' => $attribute['objectId']), 'ot');
+            $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'objectId' => $attribute['objectId']), 'ot', true);
         }
 
         $this->_helper->pageTitle('admin-custom-edit:title', $attribute['objectId']);
@@ -411,7 +411,7 @@ class Ot_CustomController extends Zend_Controller_Action
 
             $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-attributeDeleted', $attribute['label']));
 
-            $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'objectId' => $attribute['objectId']), 'ot');
+            $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'objectId' => $attribute['objectId']), 'ot', true);
 
         }
 
