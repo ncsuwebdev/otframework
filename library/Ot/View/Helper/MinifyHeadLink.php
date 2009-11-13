@@ -20,10 +20,10 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
         $items = array();
         $stylesheets = array();
         $baseUrl = $this->getBaseUrl();
-         
+                 
         foreach ($this as $item) {
             if ($item->type == 'text/css' && $item->conditionalStylesheet === false) {
-                $stylesheets[$item->media][] = str_replace($baseUrl, '', $item->href);
+                $stylesheets[$item->media][] = preg_replace('/^' . preg_quote($baseUrl, '/') . '/i', '', $item->href);
             } else {
                 $items[] = $this->itemToString($item);
             }
