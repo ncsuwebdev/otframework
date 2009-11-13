@@ -3,7 +3,7 @@
 	<production>
 	    <theme>
 	        <name>Office of Information Technology</name>
-	        <description>This is the most OITish looking theme.</description>
+	        <description>An OIT theme.</description>
 	    </theme>
 	    <css>
 	        <file path="reset-fonts-grids-base.css" order="prepend"/>
