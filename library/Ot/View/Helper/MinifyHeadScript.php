@@ -24,7 +24,7 @@ class Ot_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript
         // we can only support files
         foreach ($this as $item) {
             if (isset($item->attributes['src']) && !empty($item->attributes['src'])) {
-                $scripts[] = str_replace($baseUrl, '', $item->attributes['src']);
+                $scripts[] = preg_replace('/^' . preg_quote($baseUrl, '/') . '/i', '', $item->attributes['src']);
             }
         }
         
