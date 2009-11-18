@@ -49,6 +49,18 @@ ot-api-index:arguments;Arguments
 ot-api-index:noArguments;No Arguments Required
 ot-api-index:noReturnValue;No return value
 
+ot-auth-index:title;Manage Authentication Adapters
+ot-auth-index:header;This page allows you to enable and disable different authentication adapters such as WRAP. Note that one adapter must be enabled at all times.
+ot-auth-index:adapter;Adapter
+ot-auth-index:description;Description
+ot-auth-index:status;Status
+ot-auth-index:enabled;Enabled
+ot-auth-index:disabled;Disabled
+
+ot-auth-toggle:title;Toggle Authentication Adapter
+ot-auth-toggle:header;Are you sure you want to %1$s the "%2$s" adapter?.
+
+
 ot-oauth-add:title;Register Application for Remote Access
 ot-oauth-add:header;This page allows you to register your application to use this application's API.
 
@@ -347,6 +359,8 @@ ot-emailqueue-details:subject;Subject:
 ot-emailqueue-details:body;Body:
 ot-index-index:title;Application Library Versions
 ot-index-index:header;The following library versions are installed for this application:
+ot-index-index:library;Library
+ot-index-index:version;Version
 ot-index-index:ot;OT Application Framework
 ot-index-index:zend;Zend Framework
 ot-index-index:jQuery;jQuery

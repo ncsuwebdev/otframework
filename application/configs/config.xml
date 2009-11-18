@@ -5,18 +5,22 @@
       <version>1.2.3.4.5</version>
       <theme>default</theme>
       <tablePrefix>ot_</tablePrefix>
+      <!--
       <authentication>
         <wrap>
           <class>Ot_Auth_Adapter_Wrap</class>
           <name>NCSU Wrap</name>
           <description>Authentication using your Unity ID and Password</description>
+          <enabled>true</enabled>
         </wrap>
         <local>
           <class>Ot_Auth_Adapter_Local</class>
           <name>Local</name>
           <description>Authentication using a local ID and Password</description>
+          <enabled>true</enabled>
         </local>
       </authentication>
+      -->
       <loginOptions>
       	<generateAccountOnLogin>1</generateAccountOnLogin>
         <passwordReset>

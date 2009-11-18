@@ -49,20 +49,37 @@ class Ot_LoginController extends Zend_Controller_Action
         	$this->_redirect('/');
         }
         
+        
+        /*
         $adapters = $config->app->authentication->toArray();
+       
+        foreach ($adapters as $key => $adapter) {
+            if ($adapter['enabled'] != 'true') {
+                unset($adapters[$key]);
+            }
+        }
+        */
+        
+        $authAdapter = new Ot_Auth_Adapter;
+        $where = $authAdapter->getAdapter()->quoteInto("enabled = ?", 1);
+        $adapters = $authAdapter->fetchAll($where);
+        
+        if ($adapters->count() == 0) {
+            throw new Ot_Exception_Data('No authentication adapters are enabled. Please contact an administrator.');
+        }
         
         $loginForms = array();
         
-        foreach ($adapters as $key => $value) {
+        foreach ($adapters as $adapter) {
 	        $form = new Zend_Form();
-	        $form->setAttrib('id', $value['class'])
+	        $form->setAttrib('id', $adapter->class)
 	             ->setDecorators(array(
 	                 'FormElements',
 	                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
 	                 'Form',
 	             ));
 	             
-            $a = new $value['class'];
+            $a = new $adapter->class;
             
             if (!$a->autoLogin()) {
 		        // Create and configure username element:
@@ -93,7 +110,7 @@ class Ot_LoginController extends Zend_Controller_Action
 	        $form->addElement($loginButton);
             
             if ($a->allowUserSignUp()) {
-                $signupButton = $form->createElement('button', 'signup_' . $key, array('label' => 'ot-login-index:signUp'));
+                $signupButton = $form->createElement('button', 'signup_' . $adapter->key, array('label' => 'ot-login-index:signUp'));
 		        $signupButton->setDecorators(array(
 		                   array('ViewHelper', array('helper' => 'formButton'))
 		                ));
@@ -103,18 +120,18 @@ class Ot_LoginController extends Zend_Controller_Action
             }
             
 			$realm = $form->createElement('hidden', 'realm');
-            $realm->setValue($key);
+            $realm->setValue($adapter->key);
             $realm->setDecorators(array(
                 array('ViewHelper', array('helper' => 'formHidden'))
             ));        
 
             $form->addElement($realm);
             
-            $loginForms[$key] = array(
+            $loginForms[$adapter->key] = array(
             	'form'        => $form,
-            	'realm'       => $key,
-            	'name'        => $value['name'],
-            	'description' => $value['description'],
+            	'realm'       => $adapter->key,
+            	'name'        => $adapter->name,
+            	'description' => $adapter->description,
             	'autoLogin'   => $a->autoLogin(),
             );
         }
