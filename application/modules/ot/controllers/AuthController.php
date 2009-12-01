@@ -50,14 +50,14 @@ class Ot_AuthController extends Zend_Controller_Action
         
         $get = Zend_Registry::get('getFilter');
 
-        if (!isset($get->id)) {
-            throw new Ot_Exception_Data('The authentication adapter id is not set in the query string.');
+        if (!isset($get->key)) {
+            throw new Ot_Exception_Data('The authentication adapter key is not set in the query string.');
         }
         
         $authAdapter = new Ot_Auth_Adapter;
-        $adapter = $authAdapter->find($get->id);
+        $adapter = $authAdapter->find($get->key);
         if (is_null($adapter)) {
-            throw new Ot_Exception_Data('No authentication adapter exists with the given id.');
+            throw new Ot_Exception_Data('No authentication adapter exists with the given key.');
         }
         $this->view->adapter = $adapter;
         if ($adapter->enabled) {
@@ -70,7 +70,7 @@ class Ot_AuthController extends Zend_Controller_Action
         $adaptersEnabled = $authAdapter->fetchAll($where)->count();
 
         $form = new Zend_Form();
-        $form->setAction('?id=' . $get->id)
+        $form->setAction('?key=' . $get->key)
              ->setMethod('post')
              ->setAttrib('id', 'toggleAuthAdapter');
        
@@ -96,19 +96,19 @@ class Ot_AuthController extends Zend_Controller_Action
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             if ($adapter->enabled) {
                 if ($adaptersEnabled > 1) {
-                    $where = $authAdapter->getAdapter()->quoteInto("adapterId = ?", $adapter->adapterId);
+                    $where = $authAdapter->getAdapter()->quoteInto('adapterKey = ?', $adapter->adapterKey);
                     $authAdapter->update(array('enabled' => 0), $where);
                 } else {
                     throw new Ot_Exception_Data('There must be one authentication adapter enabled at all times.');
                 }
             } else {
-                $where = $authAdapter->getAdapter()->quoteInto("adapterId = ?", $adapter->adapterId);
-                $authAdapter->update(array('enabled' => 1), $where);
+                $data = array('enabled' => 1, 'adapterKey' => $adapter->adapterKey);
+                $authAdapter->update($data, null);
             }
             $this->_helper->redirector->gotoRoute(array('controller' => 'auth'), 'ot', true);
         }
 
         $this->_helper->pageTitle('ot-auth-toggle:title');
-        $this->view->form   = $form;
+        $this->view->form = $form;
     }
 }

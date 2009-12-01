@@ -59,7 +59,7 @@ class Ot_LoginController extends Zend_Controller_Action
             }
         }
         */
-        
+
         $authAdapter = new Ot_Auth_Adapter;
         $where = $authAdapter->getAdapter()->quoteInto("enabled = ?", 1);
         $adapters = $authAdapter->fetchAll($where);
@@ -94,7 +94,7 @@ class Ot_LoginController extends Zend_Controller_Action
 		                 
 		        $form->addElements(array($username, $password));
             }
-            
+
 			$form->setElementDecorators(array(
                   'ViewHelper',
                   'Errors',      
@@ -110,7 +110,7 @@ class Ot_LoginController extends Zend_Controller_Action
 	        $form->addElement($loginButton);
             
             if ($a->allowUserSignUp()) {
-                $signupButton = $form->createElement('button', 'signup_' . $adapter->key, array('label' => 'ot-login-index:signUp'));
+                $signupButton = $form->createElement('button', 'signup_' . $adapter->adapterKey, array('label' => 'ot-login-index:signUp'));
 		        $signupButton->setDecorators(array(
 		                   array('ViewHelper', array('helper' => 'formButton'))
 		                ));
@@ -120,16 +120,16 @@ class Ot_LoginController extends Zend_Controller_Action
             }
             
 			$realm = $form->createElement('hidden', 'realm');
-            $realm->setValue($adapter->key);
+            $realm->setValue($adapter->adapterKey);
             $realm->setDecorators(array(
                 array('ViewHelper', array('helper' => 'formHidden'))
             ));        
 
             $form->addElement($realm);
-            
-            $loginForms[$adapter->key] = array(
+
+            $loginForms[$adapter->adapterKey] = array(
             	'form'        => $form,
-            	'realm'       => $adapter->key,
+            	'realm'       => $adapter->adapterKey,
             	'name'        => $adapter->name,
             	'description' => $adapter->description,
             	'autoLogin'   => $a->autoLogin(),
@@ -137,7 +137,7 @@ class Ot_LoginController extends Zend_Controller_Action
         }
         
         $this->view->loginForms = $loginForms;
-                  
+     
         $formUserId   = null;
         $formPassword = null;
         $validForm    = false;
@@ -148,12 +148,12 @@ class Ot_LoginController extends Zend_Controller_Action
         if (isset($get->realm)) {
             $realm = $get->realm;
         }
-                
+
         if ($this->_request->isPost()) {
-        	
+            $form = $loginForms[$realm]['form'];
+            
         	if (!$form->isValid($_POST)) {
         		$realm = $form->getValue('realm');
-        		
         		if (isset($loginForms[$realm]) && $loginForms[$realm]['autoLogin']) {
         			$formUserId = '';
         			$formPassword = '';
@@ -164,9 +164,9 @@ class Ot_LoginController extends Zend_Controller_Action
         		$validForm = true;
         	}
         }
-        
+                
         if ((isset($authRealm->realm) && $authRealm->autoLogin) || ($this->_request->isPost() && $validForm)) {
-
+            
             if (isset($authRealm->realm) && !$this->_request->isPost()) {
             	$realm = $authRealm->realm;
             } else {
@@ -175,11 +175,16 @@ class Ot_LoginController extends Zend_Controller_Action
             
             $username   = ($formUserId) ? $formUserId : $form->getValue('username');
             $password   = ($formPassword) ? $formPassword : $form->getValue('password');
-            
+
+            $authAdapter = new Ot_Auth_Adapter;
+            $adapter = $authAdapter->find($realm);
+            $className = (string)$adapter->class;
+
             // Set up the authentication adapter
-            $authAdapter = new $config->app->authentication->{$realm}->class($username, $password);
-            $auth = Zend_Auth::getInstance();            
-            
+            $authAdapter = new $className($username, $password);
+        
+            $auth = Zend_Auth::getInstance();
+echo $username . $password;
             $authRealm->realm = $realm;
             $authRealm->autoLogin = $authAdapter->autoLogin();
             

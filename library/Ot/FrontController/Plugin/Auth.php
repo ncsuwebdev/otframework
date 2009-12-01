@@ -60,7 +60,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
     {
         $auth = Zend_Auth::getInstance();
         $acl  = new Ot_Acl();
-        
+
         $view = Zend_Layout::getMvcInstance()->getView();
         $baseUrl = $view->baseUrl();
         
@@ -85,12 +85,16 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         $thisAccount = null;
         
         if ($auth->hasIdentity() && $auth->getIdentity() != '' && !is_null($auth->getIdentity())) {
+            
+            $authAdapter = new Ot_Auth_Adapter;
+            $adapter = $authAdapter->find($auth->getIdentity()->realm);
+            $className = (string)$adapter->class;
         	
             // We check to see if the adapter allows auto logging in, if it does we do it
-            if (call_user_func(array($config->app->authentication->{$auth->getIdentity()->realm}->class, 'autoLogin'))) {
+            if (call_user_func(array($className, 'autoLogin'))) {
 
                 // Set up the authentication adapter
-                $authAdapter = new $config->app->authentication->{$auth->getIdentity()->realm}->class;
+                $authAdapter = new $className;
             
                 // Attempt authentication, saving the result
                 $result = $auth->authenticate($authAdapter);

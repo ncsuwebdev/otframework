@@ -41,6 +41,6 @@ class Ot_Auth_Adapter extends Ot_Db_Table
      *
      * @var string
      */
-    protected $_primary = 'adapterId';
+    protected $_primary = 'adapterKey';
     
 }
