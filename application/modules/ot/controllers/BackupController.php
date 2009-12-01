@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Admin_BackupController
+ * @package    Ot_BackupController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
@@ -22,7 +22,7 @@
 /**
  * Allows the user to dump their database to a csv for backup purposes.
  *
- * @package    Admin_BackupController
+ * @package    Ot_BackupController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */

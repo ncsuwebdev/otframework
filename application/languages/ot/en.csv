@@ -16,24 +16,18 @@ ot-account-index:linkEditUserData;Edit User Data
 ot-account-index:linkChangePassword;Change Password
 ot-account-index:linkDeleteUser;Delete User
 ot-account-index:connectionHeader;Connections can be made between this application and other apps.  The requesting application must make the request on your behalf, then you will be asked to login here to grant the requesting application access.  You may revoke any unwanted access by these connections at any time.
-
 ot-account-index:remote;External Application Access
 ot-account-index:remoteHeader;If you would like another application to access this application's data, you will need to individually grant them this access. 
 ot-account-index:consumerHasAccessButton;Revoke Access
-
 ot-account-all:title;Manage Users
 ot-account-all:linkNewAccount;Add New Account
 ot-account-all:header;Here you can add users and grant them roles.  Roles are defined by the application administrator.
-
 ot-account-add:title;Add Account
 ot-account-add:header;Enter in the information below to add a user to the system.
-
 ot-account-edit:title;Edit Account
 ot-account-edit:header;Make any desired changes to your user data.
-
 ot-account-delete:title;Delete User
 ot-account-delete:header;You have selected to delete the user <b>%1$s</b> who logs in via <b>%2$s</b>.
-
 ot-account-changePassword:title;Change My Password
 ot-account-changePassword:header;You may change your own password by filling in the fields below. If this is the first time logging into the system, you must change your password to proceed. Fill in the following fields to change your password.
 ot-account-changePassword:form:oldPassword;Old Password:
@@ -56,17 +50,13 @@ ot-auth-index:description;Description
 ot-auth-index:status;Status
 ot-auth-index:enabled;Enabled
 ot-auth-index:disabled;Disabled
-
 ot-auth-toggle:title;Toggle Authentication Adapter
 ot-auth-toggle:header;Are you sure you want to %1$s the "%2$s" adapter?.
 
-
 ot-oauth-add:title;Register Application for Remote Access
 ot-oauth-add:header;This page allows you to register your application to use this application's API.
-
 ot-oauth-delete:title;Remove Application from Remote Access
 ot-oauth-delete:header;You have selected to remove <b>%1$s</b> as a registered application from this system.  All access tokens for this application will be removed, and no more access will be granted to %1$s.
-
 ot-oauth-details:back;Back to Applications
 ot-oauth-details:consumerEditButton;Edit Application
 ot-oauth-details:consumerRegenerateButton;Reset Consumer Key/Secret
@@ -81,10 +71,8 @@ ot-oauth-details:requestTokenUrl;Request Token URL
 ot-oauth-details:accessTokenUrl;Access Token URL
 ot-oauth-details:authorizeUrl;Authorize URL
 ot-oauth-details:encryptionNotice;We only support hmac-sha1 signatures.  We do not support the plaintext signature method.
-
 ot-oauth-edit:title;Edit Consumer Application's Details
 ot-oauth-edit:header;Change the details of the consumer application below.
-
 ot-oauth-generateToken:title;Manually create a connection
 ot-oauth-generateToken:header;If your application does not require each user to register access to this application, you can create a single access token and use that in your application.  Beware that any API access to this application will be done so under <b>your</b> username, so make sure your application doesn't need user-level access granted.<br /><br />Because you are registering your application manually, some methods that rely on the logged-in-user's credentials will not work as you may expect.  Remember that on every request, you are the logged-in-user.<br /><br />If you are sure that you would like to setup your application this way, you can generate an access token and a token secret.  These keys will only be displayed once, so please record these keys as you will need them when sending API requests to this application.
 ot-oauth-generateToken:alert;Alert
@@ -94,42 +82,34 @@ ot-oauth-generateToken:headerSubmit;Here are your access token/secret combinatio
 ot-oauth-generateToken:accessToken;Access Token
 ot-oauth-generateToken:accessSecret;Token Secret
 ot-oauth-generateToken:back;Back to %1$s Details
-
 ot-oauth-index:title;Applications using %1$s
 ot-oauth-index:header;If you are a developer and would like your application to access this application, you will need to register your application here.<br /><Br />This application uses OAuth to manage its remote access.  Once you register, you will be given a Consumer Key/Secret which you will use to access our data.  If you are new to OAuth or would like to set your application up to access our API, you can find out more from the <a href="http://oauth.net">OAuth Website</a>.
 ot-oauth-index:addButton;Register an Application
 ot-oauth-index:detailsButton;Get Application Details
 ot-oauth-index:applicationListText;You have registered the following applications:
 ot-oauth-index:noApplications;You have not setup any applications to access this application's data remotely.
-
 ot-oauth-allConsumers:title;All Applications using %1$s 
 ot-oauth-allConsumers:header;This list consists of every consumer application that has been registered to use %1$s.
 ot-oauth-allConsumers:detailsButton;Get Application Details
 ot-oauth-allConsumers:applicationListText;The following applications have been registered:
 ot-oauth-allConsumers:noApplications;No applications have been setup to access this application's data remotely.
-
 ot-oauth-regenerateConsumerKeys:title;Reset Consumer Key/Secret
 ot-oauth-regenerateConsumerKeys:header;You have selected to reset the consumer secret/key for <b>%1$s</b>. This will require you to update the secret/key in your application before it will be allowed to communicate with this app.
 
 ot-oauthserver-authorize:title;Authorize Consumer
 ot-oauthserver-authorize:header;The application <b>%1$s</b> would like to have access to this application on your behalf.  If you agree to allowing %1$s access, click the button below authorizing it access.
-
 ot-oauthserver-grant:title;Application Authorized...Redirecting
 ot-oauthserver-grant:header;Access granted to %1$s
 ot-oauthserver-grant:redirectMessage;You will now be redirected back to %1$s.  If you are not redirected, you may <a id="callbackUrl" href="%2$s">click here</a> as well.
 ot-oauthserver-grant:accessNotGranted;You have chosen to allow %1$s access to your account.  You may now return to %1$s and proceed with the authorization process.
-
 ot-oauthserver-deny:title;Application Denied Access
 ot-oauthserver-deny:header;Access denied to %1$s
 ot-oauthserver-deny:info;The access token passed from %1$s has been removed.  The requesting application will not be granted access.  If you would like to grant this access in the future, you can use %1$s to request access again. 
-
 ot-oauthserver-revoke:title;Revoke access to %1$s
 ot-oauthserver-revoke:header;The application <b>%1$s</b> currently has access to this application on your behalf.  Would you like to revoke access from %1$s?
-
 ot-oauthserver-alreadyAuthorized:title;Application Already Authorized
 ot-oauthserver-alreadyAuthorized:hasAccess;%1$s Has Access.
 ot-oauthserver-alreadyAuthorized:info;You have already granted access to %1$s.  If you no longer wish to allow %1$s access to your account, you should remove the access via <b><a href="%2$s/account/">My Account</a></b>.
-
 ot-oauthserver-generateToken:title;Manually create a connection
 
 model-account-username;Username:
@@ -157,6 +137,7 @@ msg-error-authAdapterSupport;The authentication adapter for your account does no
 msg-error-passwordMismatch;New passwords do not match
 msg-error-passwordInvalidOriginal;Original Password was incorrect
 msg-error-noRemoteAccess;This application is not configured for remote access
+
 msg-info-requiredDataBeforeContinuing;You must fill out the following information about yourself before continuing.
 msg-info-accountCreated;The user account was successfully created.
 msg-info-accountPasswordCreated;A password has been created to the account and emailed to the user.
@@ -165,9 +146,11 @@ msg-info-passwordChanged;Your password has been changed.  You can now log in wit
 msg-info-loginBeforeContinuing;You must log in before continuing
 msg-info-apiCodeCreated;The API Code was successfully created.  This user has remote access now.
 msg-info-apiCodeDeleted;The API Code was successfully deleted.  This user has no more remote access.
+
 table-header-edit;Edit
 table-header-delete;Delete
 table-header-status;Status
+
 form-button-delete;Yes, Delete
 form-button-enable;Yes, Enable
 form-button-disable;Yes, Disable
@@ -197,7 +180,6 @@ ot-acl-form:grantAccess;Grant Access
 ot-acl-form:revokeAccess;Revoke Access
 ot-acl-form:noInheritance;No Inheritance
 ot-acl-form:method;Method
-
 ot-acl-index:title;Manage Access Roles
 ot-acl-index:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_acl. The API will not work correctly until access is granted to the default role (%1$s).
 ot-acl-index:header;Access Roles provide a simple approach to managing user access within the application. Roles are created by any user with access, allowing them to grand and revoke access to certain resources within the application.  Resources are defined as accessible functions within the application.<br /><br />Below are all active roles that are available to be assigned to users:
@@ -207,7 +189,6 @@ ot-acl-index:table:inheritedFrom;Inherited From
 ot-acl-index:table:applicationAccess;Application Access
 ot-acl-index:table:remoteAccess;Remote Access
 ot-acl-index:noRoles;No Roles found
-
 ot-acl-details:title;Access Role Details
 ot-acl-details:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_acl. The API will not work correctly until access is granted to the default role (%1$s).
 ot-acl-details:accessTitle;Application Access
@@ -221,22 +202,17 @@ ot-acl-details:applicationAccess:header;These are the access rules for this role
 ot-acl-details:applicationAccess:edit;Edit these rules
 ot-acl-details:remoteAccess:header;These are the access rules for this role when someone is accessing this application remotely.
 ot-acl-details:remoteAccess:edit;Edit these rules
-
 ot-acl-add:title;Add Access Role
 ot-acl-add:header;Select the name that you would like to call the role.  This system also allows roles to inherit permission from an existing role.  Inhertance is optional but is useful in implementing a tiered access system.
-
 ot-acl-edit:title;Edit Access Role
 ot-acl-edit:header;Select the name that you would like to call the role.  This system also allows roles to inherit permission from an existing role.  Inhertance is optional but is useful in implementing a tiered access system.
-
 ot-acl-applicationAccess:caution;<b>Caution!</b>  Making changes to this role will affect the following roles which are inherited (directly or indirectly) from this role:
 ot-acl-applicationAccess:via;via
 ot-acl-applicationAccess:title;Edit Application Access Rules
 ot-acl-applicationAccess:header;Set the access rules that will determine a role's access within the application.
 ot-acl-applicationAccess:back;Back to Role Details
-
 ot-acl-remoteAccess:title;Edit Remote Access Rules
 ot-acl-remoteAccess:header;Set the access rules that will determine a role's access to remote procedure calls.
-
 ot-acl-delete:title;Delete Access Role
 ot-acl-delete:header;You have selected to delete the role <b>%1$s</b>.
 ot-acl-delete:accountRoleChange;There are currently users who are assigned this role.  They will be put into the default role of <b>%1$s</b>.
@@ -244,6 +220,7 @@ ot-acl-delete:accountRoleChange;There are currently users who are assigned this 
 ot-backup-index:title;Backup Admin
 ot-backup-index:header;<p>Select the table you would like to download.</p>
 ot-backup-index:downloadAllSql;Click Here to Download All Tables as SQL
+
 ot-bug-index:title;Bug Reports
 ot-bug-index:header;These are the bugs which have been filed.
 ot-bug-index:linkNew;New Bug Report
@@ -268,9 +245,11 @@ ot-bug-edit:title;Edit Bug
 ot-bug-edit:textTitle;Existing Bug Text:
 ot-bug-edit:header;Make any changes you would like to the bug.
 ot-bug-edit:submittedBy;Submitted by %1$s %2$s (%3$s) on %4$s
+
 ot-cache-index:title;Cache Management
 ot-cache-index:header;If you are having issues with something that may be cached, you can clear the cache here.
 ot-cache-index:linkClear;Click here to clear the cache
+
 ot-config-index:title;Configuration Admin
 ot-config-index:header;This is the current configuration of the application.
 ot-config-index:table:name;Name
@@ -282,6 +261,7 @@ ot-config-edit:title;Edit Configuration Option
 ot-config-edit:header;You can edit the application configuration from here. These changes will be made globally and immediately.
 ot-config-edit:description;<b>Description:</b>
 ot-config-edit:noDescription;No Description Provided
+
 ot-cron-index:title;Cron Job Status
 ot-cron-index:header;This interface provides the ability to manage cron jobs.
 ot-cron-index:linkAdd;Add New Cron Job
@@ -301,6 +281,7 @@ ot-cron-index:noJobsFound;No Cron Jobs Found.
 ot-cron-toggle:title;Toggle Cron Job Status
 ot-cron-toggle:header;Are you sure you want to <b>%1$s</b> <b>%2$s</b>?
 ot-cron-toggle:displayName;all cron jobs
+
 ot-custom-form:object;Object:
 ot-custom-form:description;Description:
 ot-custom-form:label;Label:
@@ -341,6 +322,7 @@ ot-debug-index:debugInfo;Debug mode will only show up for you.  No one else will
 ot-debug-index:notDebug;This application is not in debug mode.
 ot-debug-index:turnOff;Turn debug mode off
 ot-debug-index:turnOn;Turn debug mode on
+
 ot-emailqueue-index:title;Email Queue
 ot-emailqueue-index:header;The following are the emails that have been sent or are queued to be sent.
 ot-emailqueue-details:title;Queued Email Details
@@ -357,6 +339,7 @@ ot-emailqueue-details:to;To:
 ot-emailqueue-details:from;From:
 ot-emailqueue-details:subject;Subject:
 ot-emailqueue-details:body;Body:
+
 ot-index-index:title;Application Library Versions
 ot-index-index:header;The following library versions are installed for this application:
 ot-index-index:library;Library
@@ -365,12 +348,15 @@ ot-index-index:ot;OT Application Framework
 ot-index-index:zend;Zend Framework
 ot-index-index:jQuery;jQuery
 ot-index-index:jQueryUi;JQuery UI
+
 ot-log-index:title;Action Logs
 ot-log-index:header;The following are the action logs recorded.
+
 ot-maintenance-index:title;Maintenance Mode Admin
 ot-maintenance-index:notMaintenance;This application is not in maintenance mode.
 ot-maintenance-index:turnOff;Turn maintenance mode off
 ot-maintenance-index:turnOn;Turn maintenance mode on
+
 ot-nav-index:title;Navigation Editor
 ot-nav-index:addElement;Add New Navigation Element
 ot-nav-index:display;Display
@@ -384,16 +370,20 @@ ot-nav-index:action;Action
 ot-nav-index:noPermissions;If no permissions are specified, default/index/index will be used.
 ot-nav-index:linkSave;Save Navigation Structure
 ot-nav-index:linkAdd;Add New Item
+
 ot-theme-index:title;Select Theme
 ot-theme-index:header;This interface provides the ability to change the system theme.
-ot-theme-index:name;Name
-ot-theme-index:selected;Selected
+ot-theme-index:currentTheme;Current Theme
+ot-theme-index:additionalThemes;Additional Themes
+ot-theme-index:noPreviewAvailable;No Preview Available
+
 ot-translate-index:header;You may change any of the text on this page by including text in the <b>Change Text To:</b> block.  If you wish to remove an existing text change and reset it back to the default text, check the box marked <b>Remove custom text and reset to default</b>.  When you are done, click <b>Save</b> to save your changes.
 ot-translate-index:section;Section: %1$s
 ot-translate-index:currentText;<b>Current Text is:</b>
 ot-translate-index:changeText;<b>Change Text to: </b>(leave blank for no changes)
 ot-translate-index:removeText;Remove custom text and reset to default
 ot-translate-index:noChange;No text can be changed on this page.
+
 ot-trigger-availableTitle;<b>Available Variables</b>
 ot-trigger-availableHeader;These variables are available for inclusion in your scripts.  The placeholders will be processed with actual data when a trigger is executed.
 ot-trigger-table:variable;Variable
@@ -421,6 +411,7 @@ ot-trigger-delete:title;Delete Action
 ot-trigger-delete:header;You have selected to delete the action <b>%1$s</b> for <b>%2$s</b>.  Are you sure you want to do this?
 ot-trigger-changeStatus:title;%1$s Action
 ot-trigger-changeStatus:header;You have selected to <b>%1$s</b> the action <b>%2$s</b> for <b>%3$s</b>.  Are you sure you want to do this?
+
 msg-error-roleIdNotSet;Role ID not set in query string.
 msg-error-noRole;Role not found.
 msg-error-blankRole;Role Name can not be blank.
@@ -458,6 +449,7 @@ msg-error-noTrigger;Trigger does not exist in configuration file.
 msg-error-triggerActionIdNotFound;Trigger Action ID not found in query string.
 msg-error-noTriggerActionId;Trigger action does not exist.
 msg-error-triggerHelperNotFound;Trigger Helper not found.
+
 msg-info-bugSubmitted;Bug was submitted successfully.
 msg-info-bugUpdated;Bug was saved successfully.
 msg-info-cacheCleared;Cache was cleared successfully.
@@ -476,6 +468,7 @@ msg-info-triggerAdded;The action was added successfully.
 msg-info-triggerUpdated;The action was modified successfully.
 msg-info-triggerDeleted;The action was deleted successfully.
 msg-info-triggerActionStatus;The action status was changed successfully.
+
 ot-login-form:username;Username:
 ot-login-index:title;Login
 ot-login-index:header;Select the way you would like to log in.
@@ -492,7 +485,7 @@ ot-login-passwordReset:linkReset;Reset My Password
 ot-login-passwordReset:title;Password Reset
 ot-login-passwordReset:header;You can reset your password to whatever you like.
 ot-login-signup:title;Sign-up for an Account
-ot-login-signup:header;You can create a new account here.  A password will be created for you and sent to the email address you provide.  If you already have an account for %1$s, you can  
+ot-login-signup:header;You can create a new account here. A password will be created for you and sent to the email address you provide. If you already have an account for %1$s, you can  
 ot-login-signup:clickHere;click here to log in.
 ot-login-signup:enterId;Enter your requested user ID below, as well as your email address.
 ot-login-login:header;Please log in to access your account. 
@@ -500,11 +493,12 @@ ot-login-login:userId;User ID:
 ot-login-login:password;Password:
 ot-login-login:clickHere;Click here if you have forgotten your password.
 ot-login-login:noAccountTitle;Don't have an account?
-ot-login-login:noAccountHeader;If you want to submit a proposal, you can sign up for an account.  A confirmation email will be sent to the email you provided that contains your password.
+ot-login-login:noAccountHeader;If you want to submit a proposal, you can sign up for an account. A confirmation email will be sent to the email you provided that contains your password.
 ot-login-login:alphanumericOnly;(Should only contain alphanumeric characters)
 ot-login-login:email;Email Address:
 ot-login-login:linkSignup;Sign Up Now!
 ot-login-logout:header;Are you sure you want to log out of the application?
+
 msg-error-createAccountNotAllowed;You are not allowed to create an account.
 msg-error-invalidUsername;Your entered an invalid username/password.
 msg-error-invalidFormInfo;You did not fill in valid information into the form.
@@ -513,10 +507,23 @@ msg-error-authNotSupported;The authentication adapter for your account does not 
 msg-error-userAccountNotFound;The user account you entered was not found.
 msg-error-noKeyFound;No key found.
 msg-error-invalidKey;The key is not valid.
-msg-error-keyExpired;This key has expired.  You need to generate another request to reset your password and try again.
+msg-error-keyExpired;This key has expired. You need to generate another request to reset your password and try again.
 msg-error-passwordsNotMatch;The passwords you entered did not match.
 msg-error-authoNotAllowed;The authentication adapter for your account does not allow users to signup.
 msg-error-usernameTaken;This username is already taken.  Please choose another name and try again.
+
 msg-info-passwordResetRequest;A password reset request was sent to the email address on file.
 msg-info-passwordReset;Your password has been reset.
-msg-info-accountCreated;Your account was created successfully.  You may now log in.
+msg-info-accountCreated;Your account was created successfully. You may now log in.
+
+theme-scripts-auth:notLoggedIn;You are not Logged in!
+theme-scripts-auth:logInHere;%1$sLog in%2$s here.
+theme-scripts-auth:welcome;Welcome
+theme-scripts-auth:myAccount;My Account
+theme-scripts-auth:logOut;Log Out
+theme-scripts-auth:sureLogOut;Are you sure you want to log out?
+theme-scripts-footer:poweredByZendFramework;Powered by Zend Framework
+theme-scripts-footer:OIT;OIT - Outreach Technologies
+theme-scripts-footer:NCSU;North Carolina State University
+theme-layouts-layout:editText;Edit Text For This Page
+

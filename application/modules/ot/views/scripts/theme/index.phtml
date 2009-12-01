@@ -1,43 +1,19 @@
 <?php echo $this->translate('ot-theme-index:header'); ?>
 <br /><br />
-<?php
-// This shows a table of the themes with information from the $themes array
-if (false) : ?>
-<table class="list">
-    <tr class="ui-widget-header">
-        <th width="175">ID</th>
-        <th width="130">Name</th>
-        <th width="130">Description</th>
-        <th width="130">Path</th>
-        <th width="130">Url</th>
-    </tr>
-    <?php foreach ($this->themes as $id => $data): ?>
-        <tr class="<?php $this->cycle('row1', 'row2'); ?>">
-            <td><?php echo $id; ?></td>
-            <td><?php echo $data['name']; ?></td>
-            <td><?php echo $data['description']; ?></td>
-            <td><?php echo $data['path']; ?></td>
-            <td><?php echo $data['url']; ?></td>
-            
-        </tr>
-    <?php endforeach; ?>
-</table>
-<?php endif; ?>
-
-<h3>Current Theme</h3>
+<h3><?php echo $this->translate('ot-theme-index:currentTheme'); ?></h3>
 <center>
     <div class="activeTheme">
         <?php echo $this->themes[$this->currentTheme]['name']; ?>
         <?php if (file_exists($this->themes[$this->currentTheme]["path"] . '/public/images/theme.png')) : ?>
         	<?php echo '<img src="' . $this->baseUrl() . '/' . $this->themes[$this->currentTheme]['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
         <?php else : ?>
-        	<div style="height:200px;width:200px;"><br /><br /><br /><br />[No Preview Available]</div>
+        	<div style="height:200px;width:200px;"><br /><br /><br /><br />[<?php echo $this->translate('ot-theme-index:noPreviewAvailable'); ?>]</div>
         <?php endif; ?>
         <?php echo $this->themes[$this->currentTheme]['description']; ?>
     </div>
 </center>
 <hr />
-<h3>Additional Themes</h3>
+<h3><?php echo $this->translate('ot-theme-index:additionalThemes'); ?></h3>
 <?php foreach ($this->themes as $id => $theme) : ?>
     <?php if ($id != $this->currentTheme) : ?>
 	    <a href="<?php echo $this->url(array('controller' => 'theme', 'action' => 'select', 'theme' => $id), 'ot', true); ?>" class="themePreview">
@@ -45,7 +21,7 @@ if (false) : ?>
             <?php if (file_exists($theme['path'] . '/public/images/theme.png')) : ?>
             	<?php echo '<img src="' . $this->baseUrl() . '/' . $theme['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
             <?php else : ?>
-            	<div style="height:200px; width:200px;"><br /><br /><br /><br />[No Preview Available]</div>
+            	<div style="height:200px; width:200px;"><br /><br /><br /><br />[<?php echo $this->translate('ot-theme-index:noPreviewAvailable'); ?>]</div>
             <?php endif; ?>
             <?php echo $theme['description']; ?>
         </a>

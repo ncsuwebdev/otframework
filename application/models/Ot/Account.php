@@ -110,8 +110,9 @@ class Ot_Account extends Ot_Db_Table
                      array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
                      'Form',
              ));
-        
-        $adapters = $config->app->authentication->toArray();
+
+        $authAdapter = new Ot_Auth_Adapter;
+        $adapters = $authAdapter->fetchAll()->toArray();
         
         // Realm Select box
         $realmSelect = $form->createElement('select', 'realm', array('label' => 'Login Method'));

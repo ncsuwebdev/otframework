@@ -2,12 +2,12 @@
 $auth = Zend_Auth::getInstance();
 
 if (!$auth->hasIdentity()) {
-    echo '<b>You are not Logged in!</b> <a href="' . $this->url(array(), 'login') . '" id="authLogin" class="authModal">Log in</a> here.';
+    echo '<b>' . $this->translate('theme-scripts-auth:notLoggedIn') . '</b> ' . $this->translate('theme-scripts-auth:logInHere',array('<a href="' . $this->url(array(), 'login', true) . '" id="authLogin" class="authModal">', '</a>'));
 } else {
     
     $identity = $auth->getIdentity();
     
-    echo "Welcome ";
+    echo $this->translate('theme-scripts-auth:welcome') . ' ';
     
     if ($identity->firstName != '' && $identity->lastName != '') {
         echo $identity->firstName . ' ' . $identity->lastName;  
@@ -17,9 +17,9 @@ if (!$auth->hasIdentity()) {
     
     echo '&nbsp; | &nbsp;';
 
-    echo '<a href="' . $this->url(array(), 'account') . '" id="authMyAccount">My Account</a>'
+    echo '<a href="' . $this->url(array(), 'account') . '" id="authMyAccount">' . $this->translate('theme-scripts-auth:myAccount') . '</a>'
         . '&nbsp; | &nbsp;'
-        . '<a href="' . $this->url(array('action' => 'logout'), 'login') . '" id="authLogout" class="authModal">Sign Out</a>';      
+        . '<a href="' . $this->url(array('action' => 'logout'), 'login') . '" id="authLogout" class="authModal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';
 }
     
 
@@ -37,5 +37,5 @@ if (!$auth->hasIdentity()) {
     }
 ?>
 <div id="authLogoutDialog" title="Logout">
-Are you sure you want to log out?
+<?php echo $this->translate('theme-scripts-auth:sureLogOut'); ?>
 </div>

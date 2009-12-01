@@ -58,7 +58,7 @@ echo "\n";
                     <?php echo $this->layout()->content; ?>
                 </div>
             </div>
-            <?php $this->overrideTranslation()->link('Edit Text For This Page'); ?>
+            <?php $this->overrideTranslation()->link($this->translate('theme-layouts-layout:editText')); ?>
         </div>
         <div id="ft" class="ui-corner-bottom">
             <?php echo $this->render('footer.phtml'); ?>

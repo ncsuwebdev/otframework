@@ -184,7 +184,6 @@ class Ot_LoginController extends Zend_Controller_Action
             $authAdapter = new $className($username, $password);
         
             $auth = Zend_Auth::getInstance();
-echo $username . $password;
             $authRealm->realm = $realm;
             $authRealm->autoLogin = $authAdapter->autoLogin();
             
@@ -312,7 +311,11 @@ echo $username . $password;
         
         $realm = $filter->realm;
         
-        $auth = new $config->app->authentication->$realm->class();
+        // Set up the auth adapter
+        $authAdapter = new Ot_Auth_Adapter;
+        $adapter = $authAdapter->find($realm);
+        $className = (string)$adapter->class;
+        $auth = new $className();
         
         if (!$auth->manageLocally()) {
             throw new Ot_Exception_Access('msg-error-authNotSupported');
@@ -419,8 +422,8 @@ echo $username . $password;
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_helper->redirector->gotoRoute(array(), 'default', true);
             return;
-        }            
-
+        }
+         
         $filter = Zend_Registry::get('getFilter');
         
         if (!$filter->key) {
@@ -454,7 +457,11 @@ echo $username . $password;
         $realm = preg_replace('/^[^@]*@/', '', $userId);
         $username = preg_replace('/@.*/', '', $userId);
         
-        $auth = new $config->app->authentication->$realm->class();
+        // Set up the auth adapter
+        $authAdapter = new Ot_Auth_Adapter;
+        $adapter = $authAdapter->find($realm);
+        $className = (string)$adapter->class;
+        $auth = new $className();
         
         if (!$auth->manageLocally()) {
             throw new Ot_Exception_Access('msg-error-authNotSupported');

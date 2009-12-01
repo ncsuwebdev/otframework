@@ -71,8 +71,13 @@ class Ot_AccountController extends Zend_Controller_Action
         }               
         
         $userData = array_merge($userData, $thisAccount->toArray());
+      
         
-        $a = $config->app->authentication->{$userData['realm']};
+        $authAdapter = new Ot_Auth_Adapter;
+        $adapter = $authAdapter->find($userData['realm']);
+        $a = $adapter;
+        
+        //$a = $config->app->authentication->{$userData['realm']};
         $this->_authAdapter = new $a->class;
         $userData['authAdapter'] = array(
            'realm'       => $userData['realm'],

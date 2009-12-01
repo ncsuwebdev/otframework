@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Admin_ConfigController
+ * @package    Ot_ConfigController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
@@ -22,7 +22,7 @@
 /**
  * Allows the user to change the theme
  *
- * @package    Admin_ThemeController
+ * @package    Ot_ThemeController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */

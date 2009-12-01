@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Admin_AclController
+ * @package    Ot_AclController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
@@ -23,7 +23,7 @@
  * Manages all access control the the application.  Allows the user to build
  * custom roles.
  *
- * @package    Admin_AclController
+ * @package    Ot_AclController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  *
@@ -186,7 +186,7 @@ class Ot_AclController extends Zend_Controller_Action
                     
                 $this->_helper->log(Zend_Log::INFO, 'Role ' . $data['name'] . ' was added', $logOptions);
     
-                $this->_helper->redirector->gotoUrl('/admin/acl/details?roleId=' . $roleId);
+                $this->_helper->redirector->gotoUrl('/ot/acl/details?roleId=' . $roleId);
             } else {
                 $messages[] = 'msg-error-invalidForm';
             }
@@ -243,7 +243,7 @@ class Ot_AclController extends Zend_Controller_Action
                     
                 $this->_helper->log(Zend_Log::INFO, 'Role ' . $data['name'] . ' was modified', $logOptions);
     
-                $this->_helper->redirector->gotoUrl('/admin/acl/details/?roleId=' . $data['roleId']);
+                $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $data['roleId']);
             } else {
                 $messages[] = 'msg-error-invalidForm';
             }
@@ -297,7 +297,7 @@ class Ot_AclController extends Zend_Controller_Action
                 
             $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
 
-            $this->_helper->redirector->gotoUrl('/admin/acl/details/?roleId=' . $thisRole->roleId);
+            $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $thisRole->roleId);
 
         }
 
@@ -378,7 +378,7 @@ class Ot_AclController extends Zend_Controller_Action
                 
             $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
 
-            $this->_helper->redirector->gotoUrl('/admin/acl/details/?roleId=' . $thisRole->roleId);
+            $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $thisRole->roleId);
 
         }
 
@@ -488,7 +488,7 @@ class Ot_AclController extends Zend_Controller_Action
                 
             $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole['name'] . ' was deleted', $logOptions);
 
-            $this->_helper->redirector->gotoUrl('/admin/acl/');
+            $this->_helper->redirector->gotoUrl('/ot/acl/');
         }      
         
         $this->view->role = $thisRole;

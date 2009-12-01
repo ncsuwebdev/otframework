@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Admin_BugController
+ * @package    Ot_BugController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
@@ -22,7 +22,7 @@
 /**
  * Manage bug reports for the application
  *
- * @package    Admin_BugController
+ * @package    Ot_BugController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */

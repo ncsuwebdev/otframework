@@ -4,7 +4,7 @@
         The deafult role (<?php echo $this->defaultRole->name; ?>) does not have access to cron_index. CRON jobs will not run correctly until access is granted to the default role (<?php echo $this->defaultRole->name; ?>).
         <?php if ($this->acl['acl']) : ?>
         <br />
-        <a href="<?php echo $this->baseUrl(); ?>/admin/acl">Click here to edit the ACL</a> 
+        <a href="<?php echo $this->baseUrl(); ?>/ot/acl">Click here to edit the ACL</a> 
         <?php endif; ?>
     </div>
     <br />
@@ -14,7 +14,7 @@
 <br /><br />
 
     <?php if ($this->acl['add']): ?>
-        <a href="<?php echo $this->baseUrl(); ?>/admin/cron/add/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-cron-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+        <a href="<?php echo $this->baseUrl(); ?>/ot/cron/add/" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-cron-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
     <?php endif; ?>
     
     <div id="alertWrapper">

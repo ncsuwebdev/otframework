@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Admin_CustomController
+ * @package    Ot_CustomController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  * @license    BSD License
@@ -23,7 +23,7 @@
  * Allows the management of custom attributes to certain parent nodes within
  * the application.
  *
- * @package    Admin_CustomController
+ * @package    Ot_CustomController
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
  */
