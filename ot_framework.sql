@@ -88,6 +88,29 @@ INSERT INTO `ot_tbl_ot_account` VALUES(31, 'admin', 'local', '21232f297a57a5a743
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ot_tbl_ot_auth_adapter`
+--
+
+CREATE TABLE IF NOT EXISTS `ot_tbl_ot_auth_adapter` (
+  `adapterKey` varchar(24) NOT NULL,
+  `class` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  PRIMARY KEY (`adapterKey`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `ot_tbl_ot_auth_adapter`
+--
+
+INSERT INTO `ot_tbl_ot_auth_adapter` (`adapterKey`, `class`, `name`, `description`, `enabled`) VALUES
+('local', 'Ot_Auth_Adapter_Local', 'Local', 'Authentication using a local ID and Password', 1),
+('wrap', 'Ot_Auth_Adapter_Wrap', 'NCSU Wrap', 'Authentication using your Unity ID and Password', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ot_tbl_ot_bug`
 --
 
