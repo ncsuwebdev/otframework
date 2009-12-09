@@ -105,13 +105,13 @@ class Ot_CustomController extends Zend_Controller_Action
             $post = Zend_Registry::get('postFilter');
             
             if (!isset($post->objectId)) {
-                $ret = array('rc' => 0, 'msg' => 'msg-error-objectIdNotSet');
+                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-objectIdNotSet'));
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             }
             
             if (!isset($post->attributeIds)) {
-                $ret = array('rc' => 0, 'msg' => 'msg-error-attributeIdsNotSet');
+                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-attributeIdsNotSet'));
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             }
@@ -127,7 +127,7 @@ class Ot_CustomController extends Zend_Controller_Action
 
             try {
                 $custom->updateAttributeOrder($objectId, $attributeIds);
-                $ret = array('rc' => 1, 'msg' => 'msg-info-newOrderSaved');
+                $ret = array('rc' => 1, 'msg' => $this->view->translate('msg-info-newOrderSaved'));
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             } catch (Exception $e) {
