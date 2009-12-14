@@ -49,8 +49,8 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
         
         if (is_file(APPLICATION_PATH . '/../overrides/' . $maintenanceModeFileName) && (!$request->isXmlHttpRequest() && !$viewRenderer->getNeverRender())) {
             if (!$acl->isAllowed($role, 'ot_maintenance', 'index')) {
-                if (!($request->getModuleName() == 'login' && $request->getControllerName() == 'index' && $request->getActionName() == 'index')) {
-                    $layout->setLayoutPath(OT_APPLICATION_PATH . '/layouts');
+                if (!($request->getModuleName() == 'ot' && $request->getControllerName() == 'login' && $request->getActionName() == 'index')) {
+                    $layout->setLayoutPath(APPLICATION_PATH . '/views/layouts');
                     $layout->setLayout('maintenance');
                 }
             } else {
