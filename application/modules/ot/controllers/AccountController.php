@@ -594,7 +594,7 @@ class Ot_AccountController extends Zend_Controller_Action
 	                
 	        $this->_helper->log(Zend_Log::INFO, 'Account was deleted', $loggerOptions);
 
-            $this->_helper->flashMessenger->addMessage('msg-info-accountUpdated');
+            $this->_helper->flashMessenger->addMessage('msg-info-accountDeleted');
             
             $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true);
         }

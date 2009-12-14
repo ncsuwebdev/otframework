@@ -235,9 +235,7 @@ class Ot_LoginController extends Zend_Controller_Action
 	            	'attributeId'   => $thisAccount->accountId,
 	            );
 	            
-	            $this->_helper->log(Zend_Log::INFO, 'User Logged In', $loggerOptions);
-
-	            
+	            $this->_helper->log(Zend_Log::INFO, 'User Logged In', $loggerOptions);            
 		            	
 		        if (isset($req->uri) && $req->uri != '') {
 		        	$uri = $req->uri;

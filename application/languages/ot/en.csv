@@ -142,6 +142,7 @@ msg-info-requiredDataBeforeContinuing;You must fill out the following informatio
 msg-info-accountCreated;The user account was successfully created.
 msg-info-accountPasswordCreated;A password has been created to the account and emailed to the user.
 msg-info-accountUpdated;The account was successfully updated
+msg-info-accountDeleted;The account was successfully deleted
 msg-info-passwordChanged;Your password has been changed.  You can now log in with your new credentials
 msg-info-loginBeforeContinuing;You must log in before continuing
 msg-info-apiCodeCreated;The API Code was successfully created.  This user has remote access now.

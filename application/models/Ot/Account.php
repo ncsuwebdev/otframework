@@ -39,7 +39,7 @@ class Ot_Account extends Ot_Db_Table
     /**
      * The minimum length for a password
      */
-    protected $_minPasswordLength = 6;
+    protected $_minPasswordLength = 5;
     
     /**
      * The maximum length for a generated password
