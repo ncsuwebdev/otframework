@@ -12,6 +12,12 @@
 	            <th width="250"><?php echo $this->translate('ot-bug-index:table:title'); ?></th>
 	            <th width="300"><?php echo $this->translate('ot-bug-index:table:dateTime'); ?></th>
 	            <th width="100"><?php echo $this->translate('ot-bug-index:table:status'); ?></th>
+	            <?php if ($this->acl['edit']) : ?>
+	            <th width="75"><?php echo $this->translate('ot-bug-index:table:edit'); ?></th>
+	            <?php endif; ?>
+	            <?php if ($this->acl['delete']) : ?>
+	            <th width="75"><?php echo $this->translate('ot-bug-index:table:delete'); ?></th>
+	            <?php endif; ?>
 	        </tr>
 	        <?php if (count($this->bugs) > 0) : ?>
 	        <?php foreach ($this->bugs as $b) : ?>
@@ -25,11 +31,21 @@
 	            </td>
 	            <td style="text-align: center"><?php echo $this->dateFormat($b['submitDt'], $this->config->user->dateTimeFormat->val); ?> (<?php echo $this->elapsedTime($b['submitDt']); ?>)</td>
 	            <td style="text-align: center"><?php echo ucwords($b['status']); ?></td>
+	            <?php if ($this->acl['edit']) : ?>
+	            <td align="center">
+    				<a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'edit', 'bugId' => $b['bugId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
+    			</td>
+				<?php endif; ?>
+				<?php if ($this->acl['delete']) : ?>
+				<td align="center">
+    				<a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'delete', 'bugId' => $b['bugId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>
+				</td>
+				<?php endif; ?>
 	        </tr>
 	       <?php endforeach; ?>
 	       <?php else:  ?>
 	        <tr>
-	            <td colspan="3" class="noResults"><?php echo $this->translate('ot-bug-index:noBugs'); ?></td>
+	            <td colspan="5" class="noResults"><?php echo $this->translate('ot-bug-index:noBugs'); ?></td>
 	        </tr>
     	    <?php endif; ?>
 	    </tbody>

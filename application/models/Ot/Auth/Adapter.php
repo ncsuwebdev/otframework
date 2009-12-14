@@ -20,7 +20,7 @@
  */
 
 /**
- * Model to do deal with bug reports
+ * Model to do deal with auth adapters
  *
  * @package    Ot_Bug
  * @category   Model
@@ -43,4 +43,12 @@ class Ot_Auth_Adapter extends Ot_Db_Table
      */
     protected $_primary = 'adapterKey';
     
+    /**
+     * Returns all the enabled adapters
+     */
+    public function getEnabledAdapters()
+    {
+    	$where = $this->getAdapter()->quoteInto('enabled = ?', 1);
+    	return $this->fetchAll($where);
+    }
 }

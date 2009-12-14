@@ -250,11 +250,13 @@ class Ot_AccountController extends Zend_Controller_Action
         	);
         	
 			$config = Zend_Registry::get('config');
-        	$realms = $config->app->authentication->toArray();
+        	
+			$otAuth = new Ot_Auth_Adapter();	
+			$adapters = $otAuth->getEnabledAdapters();
         	
         	$realmMap = array();
-        	foreach ($realms as $key => $r) {
-        		$realmMap[$key] = $r['name'];
+        	foreach ($adapters as $a) {
+        		$realmMap[$a->adapterKey] = $a->name;
         	}
                 	
         	foreach ($accounts as $a) {
@@ -305,7 +307,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     'role'         => $form->getValue('role'),
                 );    
 
-                $dba = Zend_Registry::get('dbAdapter');
+                $dba = Zend_Db_Table::getDefaultAdapter();
                 $dba->beginTransaction();
                 
                 // Account table                    
@@ -374,10 +376,14 @@ class Ot_AccountController extends Zend_Controller_Action
                     $role = new Ot_Role();
                     $thisRole = $role->find($accountData['role']);
                     
-                    $trigger->role = $thisRole->name;
-                    $trigger->loginMethod = $config->app->authentication->{$accountData['realm']}->name;
+                    $otAuthAdapter = new Ot_Auth_Adapter();
+                                       
+                    $thisAdapter = $otAuthAdapter->find($accountData['realm']);
                     
-                    $authAdapter = new $config->app->authentication->{$accountData['realm']}->class;
+                    $trigger->role = $thisRole->name;
+                    $trigger->loginMethod = $thisAdapter->name;
+                    
+                    $authAdapter = new $thisAdapter->class;
                     
                     if ($authAdapter->manageLocally()) {
                         $this->_helper->flashMessenger->addMessage('msg-info-accountPasswordCreated');
@@ -655,8 +661,9 @@ class Ot_AccountController extends Zend_Controller_Action
         	throw new Ot_Exception_Data('msg-error-noAccount');
         }
         
-        $config   = Zend_Registry::get('config');
-        $auth = new $config->app->authentication->{$thisAccount->realm}->class();
+        $otAuthAdapter = new Ot_Auth_Adapter();
+        $thisAdapter = $otAuthAdapter->find($thisAccount->realm);
+        $auth = new $thisAdapter->class();
         
         if (!$auth->manageLocally()) {
             throw new Ot_Exception_Access('msg-error-authAdapterSupport');
@@ -673,21 +680,21 @@ class Ot_AccountController extends Zend_Controller_Action
                          
         $oldPassword = $form->createElement('password', 'oldPassword', array('label' => 'ot-account-changePassword:form:oldPassword'));
         $oldPassword->setRequired(true)
-                    ->addValidator('StringLength', false, array(6, 20))
+                    ->addValidator('StringLength', false, array(5, 20))
                     ->addFilter('StringTrim')
                     ->addFilter('StripTags')
                     ;   
                     
         $newPassword = $form->createElement('password', 'newPassword', array('label' => 'ot-account-changePassword:form:newPassword'));
         $newPassword->setRequired(true)
-                    ->addValidator('StringLength', false, array(6, 20))
+                    ->addValidator('StringLength', false, array(5, 20))
                     ->addFilter('StringTrim')
                     ->addFilter('StripTags')
                     ; 
                      
         $newPasswordConf = $form->createElement('password', 'newPasswordConf', array('label' => 'ot-account-changePassword:form:newPasswordConf'));
         $newPasswordConf->setRequired(true)
-                        ->addValidator('StringLength', false, array(6, 20))
+                        ->addValidator('StringLength', false, array(5, 20))
                         ->addFilter('StringTrim')
                         ->addFilter('StripTags')
                         ;    

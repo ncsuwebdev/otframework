@@ -33,10 +33,11 @@ class Ot_EmailqueueController extends Zend_Controller_Action
      *
      */
     public function indexAction()
-    {
+    {    	
         $this->_helper->pageTitle('ot-emailqueue-index:title');  
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css'); 
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css');
+        $this->view->messages = $this->_helper->flashMessenger->getMessages(); 
         
         if ($this->_request->isXmlHttpRequest()) {
         	
@@ -71,10 +72,17 @@ class Ot_EmailqueueController extends Zend_Controller_Action
         	$config = Zend_Registry::get('config');
 	        
         	foreach ($emails as $e) {
+        		
+        		if ($this->_helper->hasAccess('details')) {
+        			$recipientField = '<a href="' . $this->view->url(array('controller' => 'emailqueue', 'action' => 'details', 'queueId' => $e['queueId']), 'ot', true) . '">' . implode(', ', $e['zendMailObject']->getRecipients()) . '</a>';
+        		} else {
+        			$recipientField = implode(', ', $e['zendMailObject']->getRecipients());
+        		}
+        		
         		$row = array(
         			'id'   => $e['queueId'],
         			'cell' => array(
-        				implode(', ', $e['zendMailObject']->getRecipients()),
+        				$recipientField,
                 		$e['zendMailObject']->getSubject(),        		
         				ucwords($e['status']),
         				strftime($config->user->dateTimeFormat->val, $e['queueDt']), 
@@ -98,7 +106,8 @@ class Ot_EmailqueueController extends Zend_Controller_Action
     public function detailsAction()
     {
         $this->view->acl = array(
-            'index' => $this->_helper->hasAccess('index')
+            'index'  => $this->_helper->hasAccess('index'),
+        	'delete' => $this->_helper->hasAccess('delete')
             );
         
         $eq = new Ot_Email_Queue();
@@ -125,5 +134,40 @@ class Ot_EmailqueueController extends Zend_Controller_Action
 
         $this->view->email = $email;
         $this->_helper->pageTitle('ot-emailqueue-details:title');
+    }
+    
+    
+    /**
+     * Deletes an email from the queue
+     */
+    public function deleteAction()
+    {
+    	$eq = new Ot_Email_Queue();
+
+        $get = Zend_Registry::get('getFilter');
+
+        if (!isset($get->queueId)) {
+            throw new Ot_Exception_Input('msg-error-queueIdNotSet');
+        }
+
+        $email = $eq->find($get->queueId);
+
+        if (is_null($email)) {
+            throw new Ot_Exception_Data('msg-error-noQueue');
+        }
+        
+        $form = Ot_Form_Template::delete('deleteEmail');
+
+        if ($this->_request->isPost() && $form->isValid($_POST)) {
+        	
+        	$where = $eq->getAdapter()->quoteInto('queueId = ?', $get->queueId);
+        	$eq->delete($where);
+        	
+        	$this->_helper->flashMessenger->addMessage('ot-emailqueue-delete:success');
+        	$this->_helper->redirector->gotoRoute(array('controller' => 'emailqueue'), 'ot', true);
+        }
+        
+        $this->view->form = $form;
+        $this->_helper->pageTitle('ot-emailqueue-delete:pageTitle');
     }
 }

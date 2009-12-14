@@ -68,7 +68,7 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $config->user->defaultRole->val);
         
         $role = new Ot_Role();
-        $this->view->defaultRole =  $role->find($config->user->defaultRole->val);     
+        $this->view->defaultRole = $role->find($config->user->defaultRole->val);     
             
         $roles = $this->_acl->getAvailableRoles();
       
@@ -106,7 +106,7 @@ class Ot_AclController extends Zend_Controller_Action
         
         $config = Zend_Registry::get('config');
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_acl', $config->user->defaultRole->val);
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $config->user->defaultRole->val);
         
         $role = new Ot_Role();
         $this->view->defaultRole =  $role->find($config->user->defaultRole->val);   

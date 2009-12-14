@@ -2,25 +2,9 @@
 <configData>
   <production>
     <app>
-      <version>1.2.3.4.5</version>
+      <version>2.3.2</version>
       <theme>default</theme>
       <tablePrefix>ot_</tablePrefix>
-      <!--
-      <authentication>
-        <wrap>
-          <class>Ot_Auth_Adapter_Wrap</class>
-          <name>NCSU Wrap</name>
-          <description>Authentication using your Unity ID and Password</description>
-          <enabled>true</enabled>
-        </wrap>
-        <local>
-          <class>Ot_Auth_Adapter_Local</class>
-          <name>Local</name>
-          <description>Authentication using a local ID and Password</description>
-          <enabled>true</enabled>
-        </local>
-      </authentication>
-      -->
       <loginOptions>
       	<generateAccountOnLogin>1</generateAccountOnLogin>
         <passwordReset>
@@ -78,7 +62,7 @@
     <user>
       <timezone description="The current timezone for the application." val="America/New_York"/>
       <language description="The default language for the application." val="en"/>
-      <appTitle description="The title of the application." val="Web App"/>
+      <appTitle description="The title of the application." val="OT Framework Application"/>
       <appDescription description="The application description." val="App description!"/>
       <metaKeywords description="The meta keywords you would like to use for the application." val=""/>
       <fromEmailAddress description="The global from email address.  All email from the system will come from this address." val="admin@app.com"/>

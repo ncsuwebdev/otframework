@@ -6,10 +6,6 @@
     </app>
     <user>
       <language val="en"/>
-      <appTitle val="Web App"/>
-      <appDescription val="App Description"/>
-      <newAccountRole val="6"/>
-      <customTheme val="default"/>
     </user>
   </production>
 </configData>

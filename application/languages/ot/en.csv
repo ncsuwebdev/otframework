@@ -112,15 +112,15 @@ ot-oauthserver-alreadyAuthorized:hasAccess;%1$s Has Access.
 ot-oauthserver-alreadyAuthorized:info;You have already granted access to %1$s.  If you no longer wish to allow %1$s access to your account, you should remove the access via <b><a href="%2$s/account/">My Account</a></b>.
 ot-oauthserver-generateToken:title;Manually create a connection
 
-model-account-username;Username:
-model-account-loginMethod;Login Method:
-model-account-firstName;First Name:
-model-account-lastName;Last Name:
-model-account-emailAddress;Email Address:
-model-account-password;Password;
-model-account-passwordConf;Confirm Password:
-model-account-role;Access Role:
-model-account-timezone;Timezone:
+model-account-username;Username
+model-account-loginMethod;Login Method
+model-account-firstName;First Name
+model-account-lastName;Last Name
+model-account-emailAddress;Email Address
+model-account-password;Password
+model-account-passwordConf;Confirm Password
+model-account-role;Access Role
+model-account-timezone;Timezone
 
 msg-error-otExceptionAccess:title;You do not have access
 msg-error-otExceptionData:title;Error accessing data
@@ -181,7 +181,7 @@ ot-acl-form:revokeAccess;Revoke Access
 ot-acl-form:noInheritance;No Inheritance
 ot-acl-form:method;Method
 ot-acl-index:title;Manage Access Roles
-ot-acl-index:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_acl. The API will not work correctly until access is granted to the default role (%1$s).
+ot-acl-index:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_api. The API will not work correctly until access is granted to the default role (%1$s).
 ot-acl-index:header;Access Roles provide a simple approach to managing user access within the application. Roles are created by any user with access, allowing them to grand and revoke access to certain resources within the application.  Resources are defined as accessible functions within the application.<br /><br />Below are all active roles that are available to be assigned to users:
 ot-acl-index:linkAdd;Add New Access Role
 ot-acl-index:table:roleName;Role Name
@@ -190,7 +190,7 @@ ot-acl-index:table:applicationAccess;Application Access
 ot-acl-index:table:remoteAccess;Remote Access
 ot-acl-index:noRoles;No Roles found
 ot-acl-details:title;Access Role Details
-ot-acl-details:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_acl. The API will not work correctly until access is granted to the default role (%1$s).
+ot-acl-details:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_api. The API will not work correctly until access is granted to the default role (%1$s).
 ot-acl-details:accessTitle;Application Access
 ot-acl-details:header;These are the individual details for the %1$s access role as they appear in the actual ACL configuration file.
 ot-acl-details:back;Back to ACL List
@@ -227,11 +227,14 @@ ot-bug-index:linkNew;New Bug Report
 ot-bug-index:table:title;Bug Title
 ot-bug-index:table:dateTime;Submit Date/Time
 ot-bug-index:table:status;Status
+ot-bug-index:table:edit;Edit
+ot-bug-index:table:delete;Delete
 ot-bug-index:noBugs;No Bugs Found.
 ot-bug-details:title;Bug Details
 ot-bug-details:header;These are the details provided about the bug.
 ot-bug-details:back;Back to Bug List
 ot-bug-details:edit;Edit Bug
+ot-bug-details:delete;Delete Bug
 ot-bug-details:form:status;Status:
 ot-bug-details:form:submitDate;Submit Date:
 ot-bug-details:form:reproducibility;Reproducibility:
@@ -242,9 +245,11 @@ ot-bug-details:submittedBy;Submitted by %1$s %2$s (%3$s) on %4$s (%5$s)
 ot-bug-add:title;File Bug Report
 ot-bug-add:header;If you are experiencing an issue with this application, you can file a bug report here.  If you have a feature request, you should contact your administrator directly.
 ot-bug-edit:title;Edit Bug
-ot-bug-edit:textTitle;Existing Bug Text:
+ot-bug-edit:textTitle;Existing Bug Text
 ot-bug-edit:header;Make any changes you would like to the bug.
 ot-bug-edit:submittedBy;Submitted by %1$s %2$s (%3$s) on %4$s
+ot-bug-delete:title;Delete Bug
+ot-bug-delete:textTitle;Are you sure you want to delete this bug?
 
 ot-cache-index:title;Cache Management
 ot-cache-index:header;If you are having issues with something that may be cached, you can clear the cache here.
@@ -327,18 +332,21 @@ ot-emailqueue-index:title;Email Queue
 ot-emailqueue-index:header;The following are the emails that have been sent or are queued to be sent.
 ot-emailqueue-details:title;Queued Email Details
 ot-emailqueue-details:linkBack;Back to Email List
+ot-emailqueue-details:deleteEmail;Delete Email
 ot-emailqueue-details:status;Status:
-ot-emailqueue-details:queueDate;Queue Date:
-ot-emailqueue-details:sentDate;Sent Date:
+ot-emailqueue-details:queueDate;Queue Date
+ot-emailqueue-details:sentDate;Sent Date
 ot-emailqueue-details:notSent;Not Sent
-ot-emailqueue-details:affected;Affected Attribute:
-ot-emailqueue-details:callId;Call ID:
+ot-emailqueue-details:affected;Affected Attribute
 ot-emailqueue-details:none;None
 ot-emailqueue-details:message;Message:
 ot-emailqueue-details:to;To:
 ot-emailqueue-details:from;From:
 ot-emailqueue-details:subject;Subject:
 ot-emailqueue-details:body;Body:
+ot-emailqueue-delete:pageTitle;Delete Email
+ot-emailqueue-delete:textTitle;Are you sure you want to delete this email?
+ot-emailqueue-delete:success;Email successfully deleted
 
 ot-index-index:title;Application Library Versions
 ot-index-index:header;The following library versions are installed for this application:
@@ -452,6 +460,7 @@ msg-error-triggerHelperNotFound;Trigger Helper not found.
 
 msg-info-bugSubmitted;Bug was submitted successfully.
 msg-info-bugUpdated;Bug was saved successfully.
+msg-info-bugDeleted;Bug was deleted successfully.
 msg-info-cacheCleared;Cache was cleared successfully.
 msg-info-configUpdated;The value for %1$s has been updated successfully!
 msg-info-newOrderSaved;New order was saved successfully.

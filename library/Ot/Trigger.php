@@ -60,7 +60,7 @@ class Ot_Trigger
     }
     
     /**
-     * Dispatches (sends) the email specified 
+     * Dispatches the trigger specified 
      * 
      * @param int $triggerId
      */

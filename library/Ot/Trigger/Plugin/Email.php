@@ -66,7 +66,7 @@ class Ot_Trigger_Plugin_Email implements Ot_Plugin_Interface
 	 */
 	public function addProcess($data)
 	{
-		$dba = Zend_Registry::get('dbAdapter');
+		$dba = Zend_Db_Table::getDefaultAdapter();
 		$dba->insert($this->_name, $data);
 	}
 	

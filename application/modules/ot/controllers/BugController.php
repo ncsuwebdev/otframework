@@ -40,6 +40,8 @@ class Ot_BugController extends Zend_Controller_Action
 
         $this->view->acl = array(
             'add'     => $this->_helper->hasAccess('add'),
+	        'edit'    => $this->_helper->hasAccess('edit'),
+	        'delete'  => $this->_helper->hasAccess('delete'),
             'details' => $this->_helper->hasAccess('details')
             );
 
@@ -55,8 +57,9 @@ class Ot_BugController extends Zend_Controller_Action
     public function detailsAction()
     {
         $this->view->acl = array(
-            'index' => $this->_helper->hasAccess('index'),
-            'edit'  => $this->_helper->hasAccess('edit')
+            'index'  => $this->_helper->hasAccess('index'),
+            'edit'   => $this->_helper->hasAccess('edit'),
+        	'delete' => $this->_helper->hasAccess('delete')
             );
         
         $get = Zend_Registry::get('getFilter');
@@ -85,6 +88,47 @@ class Ot_BugController extends Zend_Controller_Action
 
         $this->view->bug = $thisBug->toArray();
         $this->_helper->pageTitle('ot-bug-details:title');
+    }
+    
+    /**
+     * deletes a bug from the system
+     */
+    public function deleteAction()
+    {
+    	$get = Zend_Registry::get('getFilter');
+        
+        if (!isset($get->bugId)) {
+            throw new Ot_Exception_Input('msg-error-bugIdNotFound');
+        }
+
+        $bug = new Ot_Bug();
+
+        $thisBug = $bug->find($get->bugId);
+        
+        if (is_null($thisBug)) {
+            throw new Ot_Exception_Data('msg-error-noBug');
+        }
+        
+        $form = Ot_Form_Template::delete('deleteBug');
+        
+        if ($this->_request->isPost() && $form->isValid($_POST)) {
+                
+            $bug->delete($get->bugId);
+            
+            $logOptions = array(
+                        'attributeName' => 'bugId',
+                        'attributeId'   => $get->bugId,
+                );
+                    
+                $this->_helper->log(Zend_Log::INFO, 'Bug was deleted', $logOptions);
+                $this->_helper->flashMessenger->addMessage('msg-info-bugDeleted');
+            
+            $this->_helper->redirector->gotoRoute(array('controller' => 'bug'), 'ot', true);
+            
+        }
+        
+        $this->_helper->pageTitle('ot-bug-delete:title');
+        $this->view->form     = $form;	
     }
 
     /**

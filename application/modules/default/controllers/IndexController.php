@@ -34,7 +34,7 @@ class IndexController extends Zend_Controller_Action
      *
      */
     public function indexAction()
-    {
+    {    	
         //$this->_helper->pageTitle('default-index-index:title');
     }
 }

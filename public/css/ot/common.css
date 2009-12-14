@@ -71,7 +71,9 @@ table.form label {
 div.elm {
     margin-bottom: 10px;
     line-height: 20px;
-    margin-left: 130px;
+	clear: both;
+	/*margin-left: 130px;
+	float: left;*/
 }
 
 div.zend_form {
@@ -79,15 +81,17 @@ div.zend_form {
 }
 
 div.zend_form label.optional, div.zend_form label.required {
-    float: left;
+    
+	clear: both;
     font-weight: bold;
     display: block;
-    width: 115px;
-    overflow: hidden;
     line-height: 20px;
     height: 20px;
     white-space: nowrap;
     margin-right: 10px;
+	/*float: left;
+    width: 115px;
+    overflow: hidden;*/
 }
 
 ul.errors {

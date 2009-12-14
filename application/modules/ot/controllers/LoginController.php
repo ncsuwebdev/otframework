@@ -48,21 +48,9 @@ class Ot_LoginController extends Zend_Controller_Action
         if (Zend_Auth::getInstance()->hasIdentity()) {
         	$this->_redirect('/');
         }
-        
-        
-        /*
-        $adapters = $config->app->authentication->toArray();
-       
-        foreach ($adapters as $key => $adapter) {
-            if ($adapter['enabled'] != 'true') {
-                unset($adapters[$key]);
-            }
-        }
-        */
 
         $authAdapter = new Ot_Auth_Adapter;
-        $where = $authAdapter->getAdapter()->quoteInto("enabled = ?", 1);
-        $adapters = $authAdapter->fetchAll($where);
+        $adapters = $authAdapter->getEnabledAdapters();
         
         if ($adapters->count() == 0) {
             throw new Ot_Exception_Data('No authentication adapters are enabled. Please contact an administrator.');
@@ -605,10 +593,17 @@ class Ot_LoginController extends Zend_Controller_Action
         
         $account = new Ot_Account();
         
-        $realm = $get->realm;
+        $realm = strtolower($get->realm);
         $this->view->realm = $realm;
         
-        $authAdapter = new $config->app->authentication->$realm->class();
+        $otAuthAdapter = new Ot_Auth_Adapter();
+        $thisAdapter = $otAuthAdapter->find($realm);
+        
+        if (is_null($thisAdapter)) {
+        	throw new Ot_Exception_Data('Realm ' . $realm . ' not found');
+        }
+        
+        $authAdapter = new $thisAdapter->class();
         
         if (!$authAdapter->manageLocally()) {
             throw new Ot_Exception_Access('msg-error-authNotSupported');
@@ -641,7 +636,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     if (!is_null($thisAccount)) {
                     	$messages[] = 'msg-error-usernameTaken';
                     } else {
-	                    $dba = Zend_Registry::get('dbAdapter');
+	                    $dba = Zend_Db_Table::getDefaultAdapter();
 	                    $dba->beginTransaction();
 	                        
 	                    try {

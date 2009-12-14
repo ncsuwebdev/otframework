@@ -17,9 +17,9 @@ if (!$auth->hasIdentity()) {
 	
 	echo '&nbsp; | &nbsp;';
 
-    echo '<a href="' . $this->url(array(), 'account') . '" id="authMyAccount">' . $this->translate('theme-scripts-auth:myAccount') . '</a>'
+    echo '<a href="' . $this->url(array(), 'account', true) . '" id="authMyAccount">' . $this->translate('theme-scripts-auth:myAccount') . '</a>'
     	. '&nbsp; | &nbsp;'
-        . '<a href="' . $this->url(array('action' => 'logout'), 'login') . '" id="authLogout" class="authModal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';
+        . '<a href="' . $this->url(array('action' => 'logout'), 'login', true) . '" id="authLogout" class="authModal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';
 }
     
 

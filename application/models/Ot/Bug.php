@@ -79,6 +79,41 @@ class Ot_Bug extends Ot_Db_Table
         return $bugId;
     }
     
+	/**
+     * Deletes a bug
+     *
+     * @param array $bugId
+     * @return Result from Zend_Db_Table::insert()
+     */
+    public function delete($bugId)
+    {
+        $dba = $this->getAdapter();
+        
+        $dba->beginTransaction();
+        
+        $bt = new Ot_Bug_Text();
+        
+        $where = $dba->quoteInto('bugId = ?', $bugId);
+        
+        try {
+            parent::delete($where);
+        } catch (Exception $e) {
+            $dba->rollback();
+            throw $e;
+        }
+        
+        try {
+            $bt->delete($where);
+        } catch (Exception $e) {
+            $dba->rollback();
+            throw $e;
+        }
+
+        $dba->commit();
+        
+        return true;
+    }
+    
     public function update(array $data, $where)
     {
         $dba = $this->getAdapter();
