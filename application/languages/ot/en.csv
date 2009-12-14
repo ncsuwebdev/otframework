@@ -384,6 +384,7 @@ ot-theme-index:header;This interface provides the ability to change the system t
 ot-theme-index:currentTheme;Current Theme
 ot-theme-index:additionalThemes;Additional Themes
 ot-theme-index:noPreviewAvailable;No Preview Available
+ot-theme-select:changeSuccess;Theme changed successfully!
 
 ot-translate-index:header;You may change any of the text on this page by including text in the <b>Change Text To:</b> block.  If you wish to remove an existing text change and reset it back to the default text, check the box marked <b>Remove custom text and reset to default</b>.  When you are done, click <b>Save</b> to save your changes.
 ot-translate-index:section;Section: %1$s

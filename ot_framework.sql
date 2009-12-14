@@ -310,26 +310,27 @@ CREATE TABLE `ot_tbl_ot_nav` (
 -- Dumping data for table `ot_tbl_ot_nav`
 --
 
-INSERT INTO `ot_tbl_ot_nav` VALUES(1, 0, 'Home', 'default', 'index', '', 'index/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(2, 0, 'Admin', 'ot', 'index', 'index', '', '');
-INSERT INTO `ot_tbl_ot_nav` VALUES(3, 2, 'Configuration', 'ot', 'index', 'index', '', '');
-INSERT INTO `ot_tbl_ot_nav` VALUES(4, 3, 'App Config', 'ot', 'config', 'index', 'ot/config/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(5, 3, 'Debug Mode', 'ot', 'debug', 'index', 'ot/debug', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(6, 3, 'Maintenance Mode', 'ot', 'maintenance', 'index', 'ot/maintenance', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(7, 3, 'Navigation Editor', 'ot', 'nav', 'index', 'ot/nav/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(8, 2, 'App Triggers', 'ot', 'trigger', 'index', 'ot/trigger/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(10, 2, 'Bug Reports', 'ot', 'bug', '', 'ot/bug', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(11, 2, 'Caching', 'ot', 'cache', '', 'ot/cache', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(12, 2, 'Cron Jobs', 'ot', 'cron', 'index', 'ot/cron/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(13, 2, 'Custom Fields', 'ot', 'custom', 'index', 'ot/custom/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(14, 2, 'Database Backup', 'ot', 'backup', '', 'ot/backup', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(15, 2, 'Email Queue', 'ot', 'emailqueue', 'index', 'ot/emailqueue/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(16, 2, 'Logs', 'ot', 'log', 'index', 'ot/log/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(17, 2, 'Registered Applications', 'ot', 'oauth', 'all-consumers', 'ot/oauth/all-consumers', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(18, 2, 'Users', 'ot', 'account', 'all', 'account/index/all', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(19, 2, 'User Access Roles', 'ot', 'acl', 'index', 'ot/acl/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(20, 2, 'Theme', 'ot', 'theme', 'index', 'ot/theme/index', '_self');
-INSERT INTO `ot_tbl_ot_nav` VALUES(21, 2, 'Version Information', 'ot', 'index', 'index', 'ot/index/index', '_self');
+INSERT INTO `ot_tbl_ot_nav` (`id`, `parent`, `display`, `module`, `controller`, `action`, `link`, `target`) VALUES
+(1, 0, 'Home', 'default', 'index', '', 'index/index', '_self'),
+(2, 0, 'Admin', 'ot', 'index', 'index', '', ''),
+(3, 2, 'Configuration', 'ot', 'index', 'index', '', ''),
+(4, 3, 'App Config', 'ot', 'config', 'index', 'ot/config/index', '_self'),
+(5, 3, 'Debug Mode', 'ot', 'debug', 'index', 'ot/debug', '_self'),
+(6, 3, 'Maintenance Mode', 'ot', 'maintenance', 'index', 'ot/maintenance', '_self'),
+(7, 3, 'Navigation Editor', 'ot', 'nav', 'index', 'ot/nav/index', '_self'),
+(8, 2, 'App Triggers', 'ot', 'trigger', 'index', 'ot/trigger/index', '_self'),
+(10, 2, 'Bug Reports', 'ot', 'bug', '', 'ot/bug', '_self'),
+(11, 2, 'Caching', 'ot', 'cache', '', 'ot/cache', '_self'),
+(12, 2, 'Cron Jobs', 'ot', 'cron', 'index', 'ot/cron/index', '_self'),
+(13, 2, 'Custom Fields', 'ot', 'custom', 'index', 'ot/custom/index', '_self'),
+(14, 2, 'Database Backup', 'ot', 'backup', '', 'ot/backup', '_self'),
+(15, 2, 'Email Queue', 'ot', 'emailqueue', 'index', 'ot/emailqueue/index', '_self'),
+(16, 2, 'Logs', 'ot', 'log', 'index', 'ot/log/index', '_self'),
+(17, 2, 'Registered Applications', 'ot', 'oauth', 'all-consumers', 'ot/oauth/all-consumers', '_self'),
+(18, 2, 'Users', 'ot', 'account', 'all', 'account/all', '_self'),
+(19, 2, 'User Access Roles', 'ot', 'acl', 'index', 'ot/acl/index', '_self'),
+(20, 2, 'Theme', 'ot', 'theme', 'index', 'ot/theme/index', '_self'),
+(21, 2, 'Version Information', 'ot', 'index', 'index', 'ot/index/index', '_self');
 
 -- --------------------------------------------------------
 
