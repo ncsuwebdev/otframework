@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 15, 2009 at 03:03 PM
+-- Generation Time: Dec 15, 2009 at 04:12 PM
 -- Server version: 5.1.32
 -- PHP Version: 5.3.0
 
@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_log` (
   KEY `userId` (`accountId`),
   KEY `attributeName` (`attributeName`),
   KEY `attributeId` (`attributeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=860 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=861 ;
 
 --
 -- Dumping data for table `ot_tbl_ot_log`
@@ -299,7 +299,8 @@ INSERT INTO `ot_tbl_ot_log` (`logId`, `accountId`, `role`, `request`, `sid`, `ti
 (856, 31, '3', '/ot/custom/delete/attributeId/18', 's84neqkc4u3oqvmvl7uh1ujg02', 1260906474, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '18'),
 (857, 31, '3', '/account/delete?accountId=32', 's84neqkc4u3oqvmvl7uh1ujg02', 1260906484, 'Account was deleted', 6, 'INFO', 'accountId', '32'),
 (858, 31, '3', '/ot/custom/add/objectId/Ot_Profile', 's84neqkc4u3oqvmvl7uh1ujg02', 1260906499, 'Attribute test added', 6, 'INFO', 'objectId', 'Ot_Profile'),
-(859, 31, '3', '/ot/custom/add/objectId/Ot_Profile', 's84neqkc4u3oqvmvl7uh1ujg02', 1260906499, 'test added', 6, 'INFO', 'attributeId', '19');
+(859, 31, '3', '/ot/custom/add/objectId/Ot_Profile', 's84neqkc4u3oqvmvl7uh1ujg02', 1260906499, 'test added', 6, 'INFO', 'attributeId', '19'),
+(860, 31, '3', '/ot/nav/save', 's84neqkc4u3oqvmvl7uh1ujg02', 1260911530, 'Navigation structure modified', 6, 'INFO', 'navigation', 'modified');
 
 -- --------------------------------------------------------
 
@@ -332,6 +333,7 @@ INSERT INTO `ot_tbl_ot_nav` (`id`, `parent`, `display`, `module`, `controller`, 
 (6, 3, 'Maintenance Mode', 'ot', 'maintenance', 'index', 'ot/maintenance', '_self'),
 (7, 3, 'Navigation Editor', 'ot', 'nav', 'index', 'ot/nav/index', '_self'),
 (8, 2, 'App Triggers', 'ot', 'trigger', 'index', 'ot/trigger/index', '_self'),
+(9, 2, 'Authentication Adapters', 'ot', 'auth', 'index', 'ot/auth', '_self'),
 (10, 2, 'Bug Reports', 'ot', 'bug', '', 'ot/bug', '_self'),
 (11, 2, 'Caching', 'ot', 'cache', '', 'ot/cache', '_self'),
 (12, 2, 'Cron Jobs', 'ot', 'cron', 'index', 'ot/cron/index', '_self'),
