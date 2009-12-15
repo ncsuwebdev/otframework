@@ -1,9 +1,15 @@
 <?php
 class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceAbstract
 {   
+    protected $_useLog = null;
+    
+    public function setUseLog($val)
+    {
+        $this->_useLog = $val;
+    }
     
     public function init()
-    {
+    {            
         $tbl = 'tbl_ot_log';
         
         $config = Zend_Registry::get('config');
@@ -13,9 +19,12 @@ class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceA
         }
         
         // Setup logger
-        $adapter = Zend_Db_Table::getDefaultAdapter();
-        
-        $writer = new Zend_Log_Writer_Db($adapter, $tbl);
+        if (!is_null($this->_useLog) && $this->_useLog) {
+            $adapter = Zend_Db_Table::getDefaultAdapter();
+            $writer = new Zend_Log_Writer_Db($adapter, $tbl);
+        } else {
+            $writer = new Zend_Log_Writer_Null();
+        }
 
         $logger = new Zend_Log($writer);
 

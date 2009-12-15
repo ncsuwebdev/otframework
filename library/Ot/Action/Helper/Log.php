@@ -39,13 +39,13 @@ class Ot_Action_Helper_Log extends Zend_Controller_Action_Helper_Abstract
 	
     public function log($priority, $action, $options = array())
     {
-		foreach ($options as $key => $value) {
+ 		foreach ($options as $key => $value) {
 			$this->_logger->setEventItem($key, $value);
 		}
 		
 		$this->_logger->log($action, $priority);
     }
-    
+
     public function direct($priority, $action, $options = array())
     {
         return $this->log($priority, $action, $options);

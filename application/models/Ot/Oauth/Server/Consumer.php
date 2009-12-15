@@ -149,7 +149,7 @@ class Ot_Oauth_Server_Consumer extends Ot_Db_Table
              
         $image = $form->createElement('file', 'image', array('label' => 'Application Icon:'));
         $image->addValidator('Count', false, 1)     // ensure only 1 file
-              ->addValidator('Size', false, 102400) // limit to 100K
+              ->addValidator('Size', false, 204800) // limit to 200K
               ->addValidator('Extension', false, 'jpg,jpeg,png'); // only JPEG, PNG
                            
         $name = $form->createElement('text', 'name', array('label' => 'Application Name:'));

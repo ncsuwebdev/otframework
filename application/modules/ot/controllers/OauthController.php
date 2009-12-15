@@ -196,7 +196,9 @@ class Ot_OauthController extends Zend_Controller_Action
 					'callbackUrl'         => $form->getValue('callbackUrl'),
 				);
 				
-				if ($form->getValue('image') != '/tmp/' && $form->getValue('image') != '') {
+				$imageValue = $form->getValue('image');
+				
+				if ($imageValue != '/tmp/' && $imageValue != '') {
 
 	                $image = new Ot_Image();
 	
