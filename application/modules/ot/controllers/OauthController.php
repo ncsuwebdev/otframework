@@ -211,13 +211,14 @@ class Ot_OauthController extends Zend_Controller_Action
 	                 }
 	                 	               
 	                 $data['imageId'] = $image->insert($iData);
+	                 echo 'narf' . $data['imageId'];
 	            }					
 				
 				$consumer->update($data, null);
 				
 				$this->_helper->flashMessenger->addMessage('Your application was successfully modified.');
 				
-				$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $data['consumerId']), 'oauth', true);
+				//$this->_helper->redirector->gotoRoute(array('action' => 'details', 'consumerId' => $data['consumerId']), 'oauth', true);
 			} else {
 				$messages[] = 'There was a problem submitting your form.';
 			}

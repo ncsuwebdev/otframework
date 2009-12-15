@@ -358,6 +358,8 @@ ot-index-index:zend;Zend Framework
 ot-index-index:jQuery;jQuery
 ot-index-index:jQueryUi;JQuery UI
 
+ot-log-clear:title;Clear Logs
+ot-log-clear:header;You have selected to clear the logs.
 ot-log-index:title;Action Logs
 ot-log-index:header;The following are the action logs recorded.
 
@@ -471,6 +473,7 @@ msg-info-attributeSaved;%1$s successfully saved.
 msg-info-attributeDeleted;%1$s successfully deleted.
 msg-info-debugOn;Debug mode has been turned on.
 msg-info-debugOff;Debug mode has been turned off.
+msg-info-logsCleared;The logs have been cleared.
 msg-info-maintenanceOn;Maintenance mode has been turned on.
 msg-info-maintenanceOff;Maintenance mode has been turned off.
 msg-info-savedNav;Navigation structure saved successfully to the database.

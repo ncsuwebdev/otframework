@@ -34,6 +34,7 @@ class Ot_LogController extends Zend_Controller_Action
      */
     public function indexAction()
     {
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->_helper->pageTitle('ot-log-index:title');  
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css'); 
@@ -111,5 +112,30 @@ class Ot_LogController extends Zend_Controller_Action
         	echo Zend_Json::encode($response);
 	        return;
         }
+    }
+    
+     /**
+     * Clear the logs.
+     *
+     */
+    public function clearAction()
+    {
+        
+        $form = Ot_Form_Template::delete('deleteLogForm', 'Clear Logs');                  
+
+        if ($this->_request->isPost() && $form->isValid($_POST)) {
+            
+            $log = new Ot_Log();
+            $log->delete(true);
+	                
+	        $this->_helper->log(Zend_Log::INFO, 'Logs were cleared.');
+
+            $this->_helper->flashMessenger->addMessage('msg-info-logsCleared');
+            
+            $this->_helper->redirector->gotoRoute(array('controller' => 'log', 'action' => 'index'), 'ot', true);
+        }
+        
+        $this->_helper->pageTitle('ot-log-clear:title');
+        $this->view->form = $form;
     }
 }

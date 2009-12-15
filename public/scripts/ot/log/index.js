@@ -34,4 +34,5 @@ $('document').ready(function() {
 		rp: 40,
 		showTableToggleBtn: false
 	});
+    
 });
