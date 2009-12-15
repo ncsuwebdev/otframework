@@ -14,8 +14,8 @@
     position: absolute;
 }
 
-#attributeList li a {
-    text-decoration: underline;    
+#attributeList li a.attributeLabel {
+    text-decoration: underline; 
 }
 
 #attributeList li table {

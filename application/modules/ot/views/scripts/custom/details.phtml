@@ -31,7 +31,7 @@
                             <td>
                                 <span class="ui-icon ui-icon-arrowthick-2-n-s dragIndicator"></span>
                                 <?php if ($this->acl['attributeDetails']) : ?>
-                                    <a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'attribute-details', 'attributeId' => $a['attributeId']), 'ot', true); ?>"><?php echo $this->truncate($a['label'], 50); ?></a>
+                                    <a class="attributeLabel" href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'attribute-details', 'attributeId' => $a['attributeId']), 'ot', true); ?>"><?php echo $this->truncate($a['label'], 50); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->truncate($a['label'], 50); ?>
                                 <?php endif;  ?>

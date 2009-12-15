@@ -185,7 +185,7 @@ class Ot_CustomController extends Zend_Controller_Action
     	$this->view->attribute = $attribute;
         $this->view->objectId = $attribute['objectId'];
         $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
-    	$this->_helper->pageTitle('ot-custom-attributeDetails');
+    	$this->_helper->pageTitle('ot-custom-attributeDetails:title');
     }
 
     /**
