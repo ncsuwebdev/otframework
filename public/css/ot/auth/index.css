@@ -1,0 +1,15 @@
+.enabled {
+    background-color: #0C0;
+}
+
+.enabled a {
+    color: #FFF;    
+}
+
+.disabled {
+    background-color: #C00;
+}
+
+.disabled a {
+    color: #FFF;
+}
