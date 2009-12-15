@@ -23,27 +23,7 @@
         <Ot_Profile>User Profile</Ot_Profile>
       </customFieldObjects>
       <oauth>
-      	<consumers>
-	      	<jasonotf>
-	      		<name>Jason OT Framework</name>
-	      		<description>Testing</description>
-	      		<website>http://webapps-dev.ncsu.edu/jason/framework2/</website>
-	      		<consumerKey>c54483e4f5bb0a29a8caf690b73eefcb</consumerKey>
-	      		<consumerSecret>7e609fc70e01cbb25b9fe79a274573b9</consumerSecret>
-	      		<requestTokenUrl>http://webapps-dev.ncsu.edu/jason/framework2/oauth/server/request-token</requestTokenUrl>
-	      		<accessTokenUrl>http://webapps-dev.ncsu.edu/jason/framework2/oauth/server/access-token</accessTokenUrl>
-	      		<authorizeUrl>http://webapps-dev.ncsu.edu/jason/framework2/oauth/server/authorize</authorizeUrl>
-	      	</jasonotf>      	
-	      	<garrisonotf>
-	      		<name>Garrison OT Framework</name>
-	      		<description>Testing</description>
-	      		<website>http://webapps-dev.ncsu.edu/garrison/framework2/</website>
-	      		<consumerKey>0124ec0f9aa103c1b9c29a74a6b2a8c7</consumerKey>
-	      		<consumerSecret>5e538f270919ce0f915552529cd3c250</consumerSecret>
-	      		<requestTokenUrl>http://webapps-dev.ncsu.edu/garrison/framework2/oauth/server/request-token</requestTokenUrl>
-	      		<accessTokenUrl>http://webapps-dev.ncsu.edu/garrison/framework2/oauth/server/access-token</accessTokenUrl>
-	      		<authorizeUrl>http://webapps-dev.ncsu.edu/garrison/framework2/oauth/server/authorize</authorizeUrl>
-	      	</garrisonotf>    
+      	<consumers>    
       <!-- use 
             <{consumerId}>
                 <name></name>
