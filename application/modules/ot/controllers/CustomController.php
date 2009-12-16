@@ -227,7 +227,7 @@ class Ot_CustomController extends Zend_Controller_Action
                 'label'     => $filter->filter($_POST['label']),
                 'type'      => $filter->filter($_POST['type']),
                 'options'   => $custom->convertOptionsToString($options),
-                'required'  => $filter->filter($_POST['required']),
+                'required'  => (isset($_POST['required']) ? $filter->filter($_POST['required']) : 0),
                 'direction' => $filter->filter($_POST['direction']),
                 'order'     => 0,
                 );
@@ -318,19 +318,20 @@ class Ot_CustomController extends Zend_Controller_Action
 
             $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
 
-            foreach ($_POST['opt_delete'] as $opt) {
-            	$key = array_search($filter->filter($opt), $attribute['options']);
-            	unset($attribute['options'][$key]);
+            if (isset($_POST['opt_delete'])) {
+                foreach ($_POST['opt_delete'] as $opt) {
+                	$key = array_search($filter->filter($opt), $attribute['options']);
+                	unset($attribute['options'][$key]);
+                }
             }
 
             $attribute['options'] = array_merge($attribute['options'], $options);
-
 
             $data = array(
                        'attributeId' => $get->attributeId,
                        'label'       => $filter->filter($_POST['label']),
                        'type'        => $filter->filter($_POST['type']),
-                       'required'    => $filter->filter($_POST['required']),
+                       'required'    => (isset($_POST['required']) ? $filter->filter($_POST['required']) : 0),
                        'direction'   => $filter->filter($_POST['direction']),
                     );
 
