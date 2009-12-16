@@ -23,16 +23,7 @@ $('document').ready(function() {
     // adds *'s to required fields and moves it to the top right corner of 
     // textareas and multi-select boxes
     $('label.required').each(function() {        
-        var id = $(this).attr('for');
-        var el = $('#' + id);
-        el.after('<span style="padding-left: 5px;" class="required">*</span>');
-        if (el.attr('tagName').toLowerCase() == "textarea" || el.attr('tagName').toLowerCase() == "select") {
-            if ($.browser.msie) {
-                el.next().css({position: 'relative', top: '-' + el.height()});
-            } else {
-                el.next().css({position: 'absolute', top: '-' + el.height()});
-            }
-        }
+        $(this).append('<span style="padding-left: 5px;" class="required">*</span>');
     });
     
     if ($('#systemMessages')) {   	
