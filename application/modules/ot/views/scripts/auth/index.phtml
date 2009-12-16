@@ -1,0 +1,29 @@
+<?php echo $this->translate("ot-auth-index:header"); ?>
+<br /><br />
+<table class="list">
+    <tbody>
+        <tr class="ui-widget-header">
+            <th width="200"><?php echo $this->translate('ot-auth-index:adapter'); ?></th>
+            <th width="400"><?php echo $this->translate('ot-auth-index:description'); ?></th>
+            <th width="100"><?php echo $this->translate('ot-auth-index:status'); ?></th>
+        </tr>
+        <?php foreach ($this->adapters as $adapter): ?>
+        <tr> 
+            <td><?php echo $adapter->name; ?></td>
+            <td><?php echo $adapter->description; ?></td>
+            <td style="text-align: center;" class="<?php echo ($adapter->enabled) ? 'enabled' : 'disabled'; ?>">
+            <?php if ($adapter->enabled): ?>
+                <?php if ($this->numEnabledAdapters > 1 && $this->acl['toggle']): ?>
+                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $adapter->adapterKey), 'ot', true); ?>"><?php echo $this->translate('ot-auth-index:enabled'); ?></a>
+                <?php else: ?>
+                    <?php echo $this->translate('ot-auth-index:enabled'); ?>
+                <?php endif; ?>
+            <?php else: ?>
+                <?php if ($this->acl['toggle']) : ?>
+                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $adapter->adapterKey), 'ot', true); ?>"><?php echo $this->translate('ot-auth-index:disabled'); ?></a>
+                <?php endif; ?>
+            <?php endif; ?>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
