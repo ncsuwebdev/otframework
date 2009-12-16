@@ -40,23 +40,25 @@ class Ot_ThemeController extends Zend_Controller_Action
         
         // Obtain all directories in the theme folder, add them to the theme array
         $dirs = array(
-                       'otThemes'  => APPLICATION_PATH . '/../public/themes/ot/',
-                       'appThemes' => APPLICATION_PATH . '/../public/themes/'
+                       'otThemes'  => 'public/themes/ot/',
+                       'appThemes' => 'public/themes/'
                     );
         
         foreach ($dirs as $dir) {
+            
+            $dirPath = APPLICATION_PATH . '/../' . $dir;
 
-            $themeDirs = scandir($dir);
+            $themeDirs = scandir($dirPath);
         
             foreach ($themeDirs as $theme) {
                 
-                $path = $dir . $theme;
+                $path = $dirPath . $theme;
                 
                 // Keep only the directories that are themes (criteria being that they contain a config.xml); load name and description into the array
                 if (file_exists($path . '/config.xml')) {
                             
                     $themes[$theme]["path"] = $path;
-                    $themes[$theme]["url"] = 'public/themes/ot/' . $theme;
+                    $themes[$theme]["url"] = $dir . $theme;
     
                     $xml = simplexml_load_file($path . '/config.xml');
                     $themes[$theme]["name"]        = trim((string)$xml->production->theme->name);
@@ -84,30 +86,32 @@ class Ot_ThemeController extends Zend_Controller_Action
     	
     	// Obtain all directories in the theme folder, add them to the theme array
         $dirs = array(
-                       'otThemes'  => APPLICATION_PATH . '/../public/themes/ot/',
-                       'appThemes' => APPLICATION_PATH . '/../public/themes/'
+                       'otThemes'  => 'public/themes/ot/',
+                       'appThemes' => 'public/themes/'
                     );
-    	
+        
         foreach ($dirs as $dir) {
+            
+            $dirPath = APPLICATION_PATH . '/../' . $dir;
 
-            $themeDirs = scandir($dir);
+            $themeDirs = scandir($dirPath);
         
             foreach ($themeDirs as $theme) {
                 
-                $path = $dir . $theme;
+                $path = $dirPath . $theme;
                 
                 // Keep only the directories that are themes (criteria being that they contain a config.xml); load name and description into the array
                 if (file_exists($path . '/config.xml')) {
                             
                     $themes[$theme]["path"] = $path;
-                    $themes[$theme]["url"] = 'public/themes/ot/' . $theme;
+                    $themes[$theme]["url"] = $dir . $theme;
     
                     $xml = simplexml_load_file($path . '/config.xml');
                     $themes[$theme]["name"]        = trim((string)$xml->production->theme->name);
                     $themes[$theme]["description"] = trim((string)$xml->production->theme->description);
                 }
             }
-        }
+        }  
         
         if (!isset($themes[$newTheme])) {
         	$newTheme = 'default';

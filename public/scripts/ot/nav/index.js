@@ -103,8 +103,8 @@ $('document').ready(function() {
         modal: true, 
         autoOpen: false,
         resizable: false,
-        width: 700,
-        height: 500,
+        width: 720,
+        height: 575,
         overlay: { 
             opacity: 0.5, 
             background: "black" 
