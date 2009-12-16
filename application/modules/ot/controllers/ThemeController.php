@@ -80,26 +80,33 @@ class Ot_ThemeController extends Zend_Controller_Action
     		$newTheme = strtolower($get->theme);
     	}
     	
-        // Note: Must load themes from /public/ot/themes and /public/themes seperately because scandir does not include paths in array
-        $themes = array();
-        
-        // Obtain all directories in the theme folder, add them to the theme array
-        $themes = scandir(APPLICATION_PATH . '/../public/themes/ot/');
-        foreach ($themes as $theme) {
-            $themes[$theme]["path"] = APPLICATION_PATH . '/../public/themes/ot/' . $theme;
-            $themes[$theme]["url"] = 'public/themes/ot/' . $theme;
-        }
+    	$themes = array();
+    	
+    	// Obtain all directories in the theme folder, add them to the theme array
+        $dirs = array(
+                       'otThemes'  => APPLICATION_PATH . '/../public/themes/ot/',
+                       'appThemes' => APPLICATION_PATH . '/../public/themes/'
+                    );
+    	
+        foreach ($dirs as $dir) {
 
-        // Keep only the directories that are themes (criteria being that they contain a config.xml); load name and description into the array
-        foreach ($themes as $theme => $data) {
-           if (!file_exists($data['path'] . '/config.xml')) {
-               unset($themes[$theme]);
-               continue;
-           }
-           
-           $xml = simplexml_load_file($data["path"] . '/config.xml');
-           $themes[$theme]['name']        = trim((string)$xml->production->theme->name);
-           $themes[$theme]['description'] = trim((string)$xml->production->theme->description);
+            $themeDirs = scandir($dir);
+        
+            foreach ($themeDirs as $theme) {
+                
+                $path = $dir . $theme;
+                
+                // Keep only the directories that are themes (criteria being that they contain a config.xml); load name and description into the array
+                if (file_exists($path . '/config.xml')) {
+                            
+                    $themes[$theme]["path"] = $path;
+                    $themes[$theme]["url"] = 'public/themes/ot/' . $theme;
+    
+                    $xml = simplexml_load_file($path . '/config.xml');
+                    $themes[$theme]["name"]        = trim((string)$xml->production->theme->name);
+                    $themes[$theme]["description"] = trim((string)$xml->production->theme->description);
+                }
+            }
         }
         
         if (!isset($themes[$newTheme])) {
@@ -113,7 +120,7 @@ class Ot_ThemeController extends Zend_Controller_Action
         }
         
         if (!is_writable($overrideFile)) {
-        	throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $xml));
+        	throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $overrideFile));
         }
         
         $xml = simplexml_load_file($overrideFile);

@@ -29,20 +29,21 @@
 class Ot_AuthController extends Zend_Controller_Action 
 {
     /**
-     * shows the homepage
+     * shows the list of adapters
      *
      */
     public function indexAction()
-    {       
-        $this->_helper->pageTitle('ot-auth-index:title');
+    {               
+        $this->view->acl = array(
+                            'toggle' => $this->_helper->hasAccess('toggle')
+                           );        
         
-        $authAdapter = new Ot_Auth_Adapter;
+        $authAdapter = new Ot_Auth_Adapter();
         $adapters = $authAdapter->fetchAll();
         $this->view->adapters = $adapters;
         
-        $where = $authAdapter->getAdapter()->quoteInto("enabled = ?", 1);
-        $adaptersEnabled = $authAdapter->fetchAll($where)->count();
-        $this->view->adaptersEnabled = $adaptersEnabled;
+        $this->view->numEnabledAdapters = $authAdapter->getNumberOfEnabledAdapters();
+        $this->_helper->pageTitle('ot-auth-index:title');
     }
     
     public function toggleAction()
@@ -54,7 +55,7 @@ class Ot_AuthController extends Zend_Controller_Action
             throw new Ot_Exception_Data('The authentication adapter key is not set in the query string.');
         }
         
-        $authAdapter = new Ot_Auth_Adapter;
+        $authAdapter = new Ot_Auth_Adapter();
         $adapter = $authAdapter->find($get->key);
         if (is_null($adapter)) {
             throw new Ot_Exception_Data('No authentication adapter exists with the given key.');
@@ -66,8 +67,7 @@ class Ot_AuthController extends Zend_Controller_Action
             $this->view->verb = 'enable';
         }
         
-        $where = $authAdapter->getAdapter()->quoteInto("enabled = ?", 1);
-        $adaptersEnabled = $authAdapter->fetchAll($where)->count();
+        $numEnabledAdapters = $authAdapter->getNumberOfEnabledAdapters();
 
         $form = new Zend_Form();
         $form->setAction('?key=' . $get->key)
@@ -95,9 +95,9 @@ class Ot_AuthController extends Zend_Controller_Action
 
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             if ($adapter->enabled) {
-                if ($adaptersEnabled > 1) {
-                    $where = $authAdapter->getAdapter()->quoteInto('adapterKey = ?', $adapter->adapterKey);
-                    $authAdapter->update(array('enabled' => 0), $where);
+                if ($numEnabledAdapters > 1) {
+                    $data = array('adapterKey' => $adapter->adapterKey, 'enabled' => 0);
+                    $authAdapter->update($data, null);
                 } else {
                     throw new Ot_Exception_Data('There must be one authentication adapter enabled at all times.');
                 }
