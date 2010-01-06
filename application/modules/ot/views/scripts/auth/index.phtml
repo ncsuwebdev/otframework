@@ -1,29 +1,44 @@
 <?php echo $this->translate("ot-auth-index:header"); ?>
 <br /><br />
-<table class="list">
-    <tbody>
-        <tr class="ui-widget-header">
-            <th width="200"><?php echo $this->translate('ot-auth-index:adapter'); ?></th>
-            <th width="400"><?php echo $this->translate('ot-auth-index:description'); ?></th>
-            <th width="100"><?php echo $this->translate('ot-auth-index:status'); ?></th>
-        </tr>
-        <?php foreach ($this->adapters as $adapter): ?>
-        <tr> 
-            <td><?php echo $adapter->name; ?></td>
-            <td><?php echo $adapter->description; ?></td>
-            <td style="text-align: center;" class="<?php echo ($adapter->enabled) ? 'enabled' : 'disabled'; ?>">
-            <?php if ($adapter->enabled): ?>
-                <?php if ($this->numEnabledAdapters > 1 && $this->acl['toggle']): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $adapter->adapterKey), 'ot', true); ?>"><?php echo $this->translate('ot-auth-index:enabled'); ?></a>
-                <?php else: ?>
-                    <?php echo $this->translate('ot-auth-index:enabled'); ?>
-                <?php endif; ?>
-            <?php else: ?>
-                <?php if ($this->acl['toggle']) : ?>
-                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $adapter->adapterKey), 'ot', true); ?>"><?php echo $this->translate('ot-auth-index:disabled'); ?></a>
-                <?php endif; ?>
-            <?php endif; ?>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+<p>
+    <span id="orderMessage" class="ui-corner-all"></span>
+</p>
+<ul id="adapterList" class="ui-sortable">
+    <?php foreach ($this->adapters as $a) : ?>
+        <li id="attribute_<?php echo $a->adapterKey; ?>">
+            <table>
+                <thead>
+                    <tr class="header <?php echo ($a->enabled) ? 'enabled' : 'disabled'; ?>">
+                        <td width="20">
+                            <span class="ui-icon ui-icon-arrowthick-2-n-s dragIndicator">&nbsp;</span>
+                        </td>
+                        <td>
+                            <?php echo $a->name; ?> (<?php echo ($a->enabled) ? 'Enabled' : 'Disabled'; ?>)
+                        </td>
+                        <td class="controlButtons" width="250">
+                        <?php if ($a->enabled): ?>
+                            <?php if ($this->numEnabledAdapters > 1 && $this->acl['toggle']): ?>
+                                <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $a->adapterKey), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-auth-index:disable'); ?></a>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <?php if ($this->acl['toggle']) : ?>
+                                <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $a->adapterKey), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-auth-index:enable'); ?></a>
+                            <?php endif; ?>
+                        <?php endif; ?>                        
+                        <?php if ($this->acl['edit']): ?>
+                            <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'edit', 'key' => $a->adapterKey), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
+                        <?php endif;?>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">
+                        <?php echo $a->description; ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </li>
+    <?php endforeach; ?>
+</ul>
