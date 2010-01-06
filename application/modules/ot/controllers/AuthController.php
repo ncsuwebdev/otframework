@@ -35,11 +35,12 @@ class Ot_AuthController extends Zend_Controller_Action
     public function indexAction()
     {               
         $this->view->acl = array(
-                            'toggle' => $this->_helper->hasAccess('toggle')
-                           );        
+            'toggle' => $this->_helper->hasAccess('toggle'),
+            'edit'   => $this->_helper->hasAccess('edit'),
+        );        
         
         $authAdapter = new Ot_Auth_Adapter();
-        $adapters = $authAdapter->fetchAll();
+        $adapters = $authAdapter->fetchAll(null, 'displayOrder');
         $this->view->adapters = $adapters;
         
         $this->view->numEnabledAdapters = $authAdapter->getNumberOfEnabledAdapters();
@@ -111,4 +112,82 @@ class Ot_AuthController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-auth-toggle:title');
         $this->view->form = $form;
     }
+    
+    public function editAction()
+    {
+        $get = Zend_Registry::get('getFilter');
+        
+        if (!isset($get->key)) {
+            throw new Ot_Exception_Input('Value for key not found in query string.');
+        }
+        
+        $authAdapter = new Ot_Auth_Adapter();
+        $thisAdapter = $authAdapter->find($get->key);
+        if (is_null($thisAdapter)) {
+            throw new Ot_Exception_Data('No authentication adapter exists with the given key.');
+        }     
+
+        $form = $authAdapter->form($thisAdapter->toArray());
+        
+        $messages = array();
+        if ($this->_request->isPost()) {
+            if ($form->isValid($_POST)) {
+                $data = array(
+                    'adapterKey'  => $thisAdapter->adapterKey,
+                    'name'        => $form->getValue('name'),
+                    'description' => $form->getValue('description'),
+                );
+                
+                $authAdapter->update($data, null);
+                
+                $this->_helper->redirector->gotoRoute(array('controller' => 'auth'), 'ot', true);
+            } else {
+                $messages[] = 'There was a problem submitting the form';
+            }
+        }
+        
+        $this->view->form = $form;
+        $this->view->messages = $messages;
+        $this->_helper->pageTitle('Edit Authentication Adapter');
+    }
+    
+    /**
+     * Updates the display order of the attributes from the AJAX request
+     *
+     */
+    public function saveAdapterOrderAction()
+    {
+        $this->_helper->viewRenderer->setNeverRender();
+        $this->_helper->layout->disableLayout();
+
+        if ($this->_request->isPost()) {
+            
+            $post = Zend_Registry::get('postFilter');
+            
+            if (!isset($post->adapterKeys)) {
+                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-attributeIdsNotSet'));
+                echo Zend_Json_Encoder::encode($ret);
+                return;
+            }
+
+            $adapterKeys = $post->adapterKeys;
+            
+            foreach ($adapterKeys as &$key) {
+                $key = substr($key, strpos($key, '_')+1);
+            }
+
+            $adapter = new Ot_Auth_Adapter();
+            
+            try {
+                $adapter->updateAdapterOrder($adapterKeys);
+                $ret = array('rc' => 1, 'msg' => $this->view->translate('msg-info-newOrderSaved'));
+                echo Zend_Json_Encoder::encode($ret);
+                return;
+            } catch (Exception $e) {
+                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-orderNotSaved', $e->getMessage()));
+                echo Zend_Json_Encoder::encode($ret);
+                return;
+            }
+        }
+    }    
 }

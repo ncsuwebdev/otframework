@@ -2,14 +2,58 @@
     background-color: #0C0;
 }
 
-.enabled a {
-    color: #FFF;    
-}
-
 .disabled {
     background-color: #C00;
+    color: #FFF;
 }
 
-.disabled a {
-    color: #FFF;
+a.linkButton {
+	font-weight: normal;
+	padding: 0.3em 1em;
+}
+
+#adapterList tr.header td {
+    margin: 3px;
+    padding: 0.4em;
+    font-weight: bold;
+}
+
+#adapterList tbody {
+	border: 1px solid #DDD;
+}
+
+#adapterList {
+    list-style-type: none;
+    width: 500px;
+    margin-left: 0px;
+}
+
+#adapterList li table {
+    width: 100%;
+    height: inherit;
+    background-color: #FFF;
+}
+
+#adapterList li table tr td {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+#adapterList li table tbody tr td {
+    padding: 5px;
+}
+
+
+#adapterList li table td.controlButtons {
+    text-align: right;
+}
+
+#orderMessage {
+	padding: 3px 10px;
+}
+
+p {
+	height: 25px;
+	padding-left: 15px;
 }

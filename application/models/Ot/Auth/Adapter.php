@@ -49,7 +49,7 @@ class Ot_Auth_Adapter extends Ot_Db_Table
     public function getEnabledAdapters()
     {
     	$where = $this->getAdapter()->quoteInto('enabled = ?', 1);
-    	return $this->fetchAll($where);
+    	return $this->fetchAll($where, 'displayOrder');
     }
     
     /**
@@ -60,4 +60,84 @@ class Ot_Auth_Adapter extends Ot_Db_Table
         $enabledAdapters = $this->getEnabledAdapters();
         return $enabledAdapters->count();
     }
+    
+    public function form($values = array())
+    {
+        $form = new Zend_Form();
+        $form->setAttrib('id', 'authAdapterForm')
+             ->setDecorators(array(
+                     'FormElements',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     'Form',
+             ));
+             
+        $name = $form->createElement('text', 'name', array('label' => 'Name:'));
+        $name->setRequired(true)
+              ->addFilter('StringTrim')
+              ->addFilter('StripTags')
+              ->setAttrib('maxlength', '64')
+              ->setValue((isset($values['name']) ? $values['name'] : ''));
+
+        $description = $form->createElement('textarea', 'description', array('label' => 'Description:'));
+        
+        $description->setRequired(true)
+                    ->addFilter('StringTrim')
+                    ->addFilter('StripTags')
+                    ->setAttrib('maxlength', '64')
+                    ->setAttrib('style', 'width: 300px; height: 50px;')
+                    ->setValue((isset($values['description']) ? $values['description'] : ''));
+
+        $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
+        $submit->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formSubmit'))
+                 ));
+
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+                   array('ViewHelper', array('helper' => 'formButton'))
+                ));
+
+        $form->addElements(array($name, $description));
+
+        $form->setElementDecorators(array(
+                  'ViewHelper',
+                  'Errors',
+                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                  array('Label', array('tag' => 'span')),
+              ))
+             ->addElements(array($submit, $cancel));
+
+        return $form;        
+    }
+    
+    /**
+     * Updates the display order of the Adapters
+     *
+     * @param array $order
+     */
+    public function updateAdapterOrder($order)
+    {
+        $dba = $this->getAdapter();
+        
+        $dba->beginTransaction();
+
+        $i = 1;
+        foreach ($order as $o) {
+
+            $data = array("displayOrder" => $i);
+
+            $where = $dba->quoteInto('adapterKey = ?', $o);
+
+            try {
+                $this->update($data, $where);
+            } catch(Exception $e) {
+                $dba->rollBack();
+                throw $e;
+            }
+            $i++;
+        }
+        
+        $dba->commit();
+    }           
 }

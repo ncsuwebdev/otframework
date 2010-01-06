@@ -44,12 +44,13 @@ ot-api-index:noArguments;No Arguments Required
 ot-api-index:noReturnValue;No return value
 
 ot-auth-index:title;Manage Authentication Adapters
-ot-auth-index:header;This page allows you to enable and disable different authentication adapters such as WRAP. Note that one adapter must be enabled at all times.
+ot-auth-index:header;This page allows you to enable and disable different ways users can log into your application. Note that one adapter must be enabled at all times.<br /><br />Drag the arrows below to reorder the way the different types are displayed on the login page.
 ot-auth-index:adapter;Adapter
 ot-auth-index:description;Description
 ot-auth-index:status;Status
-ot-auth-index:enabled;Enabled
-ot-auth-index:disabled;Disabled
+ot-auth-index:enable;Enable
+ot-auth-index:disable;Disable
+ot-auth-index:edit;Edit
 ot-auth-toggle:title;Toggle Authentication Adapter
 ot-auth-toggle:header;Are you sure you want to %1$s the "%2$s" adapter?.
 
