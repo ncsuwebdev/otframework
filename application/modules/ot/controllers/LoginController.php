@@ -697,7 +697,7 @@ class Ot_LoginController extends Zend_Controller_Action
 	                    
 	                    $et->dispatch('Login_Index_Signup');		            
 			
-			            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'ot', true);
+			            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
 			        }
     	    	} else {
     	    		$messages[] = 'msg-error-passwordsNotMatch';

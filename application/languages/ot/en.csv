@@ -499,7 +499,7 @@ ot-login-passwordReset:linkReset;Reset My Password
 ot-login-passwordReset:title;Password Reset
 ot-login-passwordReset:header;You can reset your password to whatever you like.
 ot-login-signup:title;Sign-up for an Account
-ot-login-signup:header;You can create a new account here. A password will be created for you and sent to the email address you provide. If you already have an account for %1$s, you can  
+ot-login-signup:header;You can create a new account here. If you already have an account for %1$s, you can  
 ot-login-signup:clickHere;click here to log in.
 ot-login-signup:enterId;Enter your requested user ID below, as well as your email address.
 ot-login-login:header;Please log in to access your account. 
