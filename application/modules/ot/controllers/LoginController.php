@@ -189,7 +189,7 @@ class Ot_LoginController extends Zend_Controller_Action
             	$thisAccount = $account->getAccount($username, $realm);
             	
             	if (is_null($thisAccount)) {
-            		$password = $account->geneatePassword();
+            		$password = $account->generatePassword();
             		
             		$acctData = array(
 	            		'username'  => $username,
