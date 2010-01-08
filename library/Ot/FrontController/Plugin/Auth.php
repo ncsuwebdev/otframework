@@ -139,7 +139,9 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 $controller = $this->_noAuth['controller'];
                 $action     = $this->_noAuth['action'];
                 
-                $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);
+                if (!$request->isXmlHttpRequest()) {
+                    $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);
+                }
             } else {
                 throw new Ot_Exception_Access('You do not have the proper credentials to access this page.');
             }
@@ -165,7 +167,9 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 	                $controller = $this->_noAccount['controller'];
 	                $action     = $this->_noAccount['action'];
 	                
-	                $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);             
+	                if (!$request->isXmlHttpRequest()) {
+	                   $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);    
+	                }         
 	            }
         	}
         }

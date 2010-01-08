@@ -189,7 +189,7 @@ class Ot_LoginController extends Zend_Controller_Action
             	$thisAccount = $account->getAccount($username, $realm);
             	
             	if (is_null($thisAccount)) {
-            		$password = $account->generatePassword();
+            		$password = $account->geneatePassword();
             		
             		$acctData = array(
 	            		'username'  => $username,
@@ -261,7 +261,7 @@ class Ot_LoginController extends Zend_Controller_Action
         	$method = array_pop($loginForms);
         	
             if ($method['autoLogin']) {
-            	$authRealm->realm = $key;
+            	$authRealm->realm = $method['realm'];
                 $authRealm->autoLogin = true;
             
                 $this->_helper->redirector->gotoRoute(array('realm' => $authRealm->realm), 'login', true);
@@ -561,10 +561,13 @@ class Ot_LoginController extends Zend_Controller_Action
         $config = Zend_Registry::get('config');
 
         $userId = Zend_Auth::getInstance()->getIdentity();
-        foreach ($config->app->authentication as $a) {
-            $auth = new $a->class;
-            $auth->autoLogout();
-        }
+        
+        // Set up the auth adapter
+        $authAdapter = new Ot_Auth_Adapter;
+        $adapter = $authAdapter->find($userId->realm);
+        $className = (string)$adapter->class;
+        $auth = new $className();
+        $auth->autoLogout();
         
         Zend_Auth::getInstance()->clearIdentity();
                 
@@ -697,7 +700,7 @@ class Ot_LoginController extends Zend_Controller_Action
 	                    
 	                    $et->dispatch('Login_Index_Signup');		            
 			
-			            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'ot', true);
+			            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
 			        }
     	    	} else {
     	    		$messages[] = 'msg-error-passwordsNotMatch';

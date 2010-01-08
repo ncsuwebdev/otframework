@@ -112,7 +112,7 @@ class Ot_Account extends Ot_Db_Table
              ));
 
         $authAdapter = new Ot_Auth_Adapter;
-        $adapters = $authAdapter->fetchAll();
+        $adapters = $authAdapter->fetchAll(null, 'displayOrder');
         
         // Realm Select box
         $realmSelect = $form->createElement('select', 'realm', array('label' => 'Login Method'));
