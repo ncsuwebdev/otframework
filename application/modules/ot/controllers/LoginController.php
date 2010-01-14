@@ -60,12 +60,13 @@ class Ot_LoginController extends Zend_Controller_Action
         
         foreach ($adapters as $adapter) {
 	        $form = new Zend_Form();
-	        $form->setAttrib('id', $adapter->class)
-	             ->setDecorators(array(
-	                 'FormElements',
-	                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-	                 'Form',
-	             ));
+            $form->setAttrib('id', $adapter->class)
+                 ->setDecorators(array(
+                     'FormElements',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     'Form',
+                 ))
+                 ->setAction($this->view->url(array(), 'login', true));
 	             
             $a = new $adapter->class;
             
