@@ -67,6 +67,7 @@ class Ot_ThemeController extends Zend_Controller_Action
             }
         }  
 
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->view->themes = $themes;
         $config = Zend_Registry::get('config');
         $this->view->currentTheme = $config->app->theme;
@@ -143,7 +144,7 @@ class Ot_ThemeController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNeverRender(true);
         $this->_helper->layout->disableLayout();
 
-        $this->_helper->flashMessenger->addMessage('ot-theme-select:changeSuccess');
+        $this->_helper->flashMessenger->addMessage($this->view->translate('ot-theme-select:changeSuccess'));
         $this->_helper->redirector->gotoRoute(array('controller' => 'theme'), 'ot', true);
     }
 

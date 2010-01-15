@@ -4,7 +4,7 @@
 <center>
     <div class="activeTheme">
         <?php echo $this->themes[$this->currentTheme]['name']; ?>
-        <?php if (file_exists($this->themes[$this->currentTheme]["path"] . '/public/images/theme.png')) : ?>
+        <?php if (file_exists($this->themes[$this->currentTheme]['path'] . '/public/images/theme.png')) : ?>
         	<?php echo '<img src="' . $this->baseUrl() . '/' . $this->themes[$this->currentTheme]['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
         <?php else : ?>
         	<div style="height:200px;width:200px;"><br /><br /><br /><br />[<?php echo $this->translate('ot-theme-index:noPreviewAvailable'); ?>]</div>
