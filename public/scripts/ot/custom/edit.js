@@ -2,7 +2,7 @@ $('document').ready(function() {
    
 	$('#type').change(function() {
     
-	    if ($(this).val() == 'radio' || $(this).val() == 'select') {
+		if ($(this).val() == 'multiselect' || $(this).val() == 'multicheckbox' || $(this).val() == 'radio' || $(this).val() == 'select') {
 	        $('#opt').css('display', 'block');
 	    } else {
 	        $('#opt').css('display', 'none');

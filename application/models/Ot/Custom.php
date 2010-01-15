@@ -41,6 +41,8 @@ class Ot_Custom
        'textarea',
        'radio',
        'checkbox',
+       'multicheckbox',
+       'multiselect',
        'select',
        'ranking'
     );
@@ -180,6 +182,14 @@ class Ot_Custom
                 $elm = new Zend_Form_Element_Select($name);
                 $elm->addMultiOptions($this->convertOptionsToArray($attribute['options']));
                 break;
+            case 'multicheckbox':
+                $elm = new Zend_Form_Element_MultiCheckbox($name);
+                $elm->addMultiOptions($this->convertOptionsToArray($attribute['options']));
+                break;
+            case 'multiselect':
+                $elm = new Zend_Form_Element_Multiselect($name);
+                $elm->addMultiOptions($this->convertOptionsToArray($attribute['options']));
+                break;
             case 'ranking':
                 $elm = new Zend_Form_Element_Radio($name);
                 $elm->addMultiOptions($this->_rankingOptions);
@@ -196,7 +206,12 @@ class Ot_Custom
         }
         
         if (!is_null($value)) {
-            $elm->setValue($value);
+            if (is_array($value)) {
+                $elm->setValue(array_keys($value));
+            } else {
+                $elm->setValue($value);
+            }
+            
         }
         $elm->setLabel($attribute['label'] . ":");
         
@@ -244,6 +259,14 @@ class Ot_Custom
                 $opts['size'] = '1';
                 $formField = $view->formSelect($name, $value, $opts, $attribute['options']);
                 break;
+            case 'multicheckbox':
+                $opts['size'] = '5';
+                $formField = $view->formMultiCheckbox($name, $value, $opts, $attribute['options']);
+                break;
+            case 'multiselect':
+                $opts['size'] = '5';
+                $formField = $view->formMultiselect($name, $value, $opts, $attribute['options']);
+                break;
             case 'ranking':
                 $tmpOptions = $this->_rankingOptions;
                              
@@ -282,13 +305,17 @@ class Ot_Custom
         }
         
         foreach ($data as $key => $value) {
+            if(is_array($value)) { 
+                $value = serialize($value);
+            }
+            
             $d = array(
                 'objectId'    => $objectId,
                 'parentId'    => $parentId,
                 'attributeId' => $key,
                 'value'       => $value,
             );
-
+            
             $where = $dba->quoteInto('objectId = ?', $objectId) . ' AND ' . 
                 $dba->quoteInto('parentId = ?', $parentId) . ' AND ' . 
                 $dba->quoteInto('attributeId = ?', $key);
@@ -373,10 +400,30 @@ class Ot_Custom
             
             $a['options'] = $this->convertOptionsToArray($a['options']);
             
+            
+            switch ($a['type']) {
+                case 'multicheckbox':
+                case 'multiselect':
+                    $value = unserialize($value);
+                    
+                    $displayValue = array();
+                    
+                    foreach ($value as $key => $v) {
+                        $displayValue[$key] = (isset($a['options'][$v])) ? $a['options'][$v] : $v;
+                    }
+                    
+                    $value = $displayValue;
+                    
+                    break;
+                case 'select':
+                case 'radio':
+                    $value = (isset($a['options'][$value])) ? $a['options'][$value] : '';
+                    break;  
+            }
             $temp = array(
-                 'attribute' => $a,
-                 'value'     => ($a['type'] == 'select' || $a['type'] == 'radio') ? ((isset($a['options'][$value])) ? $a['options'][$value] : '') : $value,
-                 'formRender'    => '',
+                 'attribute'  => $a,
+                 'value'      => $value,
+                 'formRender' => '',
             );
             
             $temp['formRender'] = $this->renderFormElement($tempA, $renderType, $value);

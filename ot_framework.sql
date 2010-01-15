@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 08, 2010 at 09:16 AM
+-- Generation Time: Jan 15, 2010 at 09:39 AM
 -- Server version: 5.1.32
 -- PHP Version: 5.3.0
 
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_account` (
 --
 
 INSERT INTO `ot_tbl_ot_account` (`accountId`, `username`, `realm`, `password`, `apiCode`, `role`, `emailAddress`, `firstName`, `lastName`, `timezone`, `lastLogin`) VALUES
-(31, 'admin', 'local', '21232f297a57a5a743894a0e4a801fc3', '', 3, 'admin@admin.com', 'Admin', 'Mcadmin', 'America/New_York', 1262959840);
+(31, 'admin', 'local', '21232f297a57a5a743894a0e4a801fc3', '', 3, 'admin@admin.com', 'Admin', 'Mcadmin', 'America/New_York', 1263564691);
 
 -- --------------------------------------------------------
 
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_custom_attribute` (
   `attributeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `objectId` varchar(64) NOT NULL DEFAULT '',
   `label` varchar(255) NOT NULL DEFAULT '',
-  `type` enum('text','textarea','radio','checkbox','select','ranking') CHARACTER SET utf8 NOT NULL DEFAULT 'text',
+  `type` enum('text','textarea','radio','checkbox','select','ranking','multicheckbox','multiselect') CHARACTER SET utf8 NOT NULL DEFAULT 'text',
   `options` text NOT NULL,
   `required` binary(1) NOT NULL DEFAULT '\0',
   `direction` enum('vertical','horizontal') NOT NULL DEFAULT 'vertical',
@@ -276,12 +276,15 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_log` (
   KEY `userId` (`accountId`),
   KEY `attributeName` (`attributeName`),
   KEY `attributeId` (`attributeId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `ot_tbl_ot_log`
 --
 
+INSERT INTO `ot_tbl_ot_log` (`logId`, `accountId`, `role`, `request`, `sid`, `timestamp`, `message`, `priority`, `priorityName`, `attributeName`, `attributeId`) VALUES
+(1, 31, '3', '/login', '0ui8ot8v4c4jd30fl4bgqi9o33', 1263318628, 'User Logged In', 6, 'INFO', 'accountId', '31'),
+(2, 31, '3', '/login', '9p5qj2tsgfq5964eaivpg8q6n0', 1263564691, 'User Logged In', 6, 'INFO', 'accountId', '31');
 
 -- --------------------------------------------------------
 
@@ -308,10 +311,10 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_nav` (
 INSERT INTO `ot_tbl_ot_nav` (`id`, `parent`, `display`, `module`, `controller`, `action`, `link`, `target`) VALUES
 (1, 0, 'Home', 'default', 'index', '', 'index/index', '_self'),
 (2, 0, 'Admin', 'ot', 'index', 'index', '', ''),
-(3, 2, 'Access', 'default', 'index', 'index', '', '_self'),
+(3, 2, 'Access', 'ot', 'index', 'index', '', '_self'),
 (4, 3, 'Registered Applications', 'ot', 'oauth', 'all-consumers', 'ot/oauth/all-consumers', '_self'),
 (5, 3, 'User Access Roles', 'ot', 'acl', 'index', 'ot/acl/index', '_self'),
-(6, 3, 'Users', 'ot', 'account', 'all', 'account/index/all', '_self'),
+(6, 3, 'Users', 'ot', 'account', 'all', 'account/all', '_self'),
 (7, 2, 'Configuration', 'ot', 'index', 'index', '', ''),
 (8, 7, 'App Config', 'ot', 'config', 'index', 'ot/config/index', '_self'),
 (9, 7, 'App Triggers', 'ot', 'trigger', 'index', 'ot/trigger/index', '_self'),
@@ -320,7 +323,7 @@ INSERT INTO `ot_tbl_ot_nav` (`id`, `parent`, `display`, `module`, `controller`, 
 (12, 7, 'Debug Mode', 'ot', 'debug', 'index', 'ot/debug', '_self'),
 (13, 7, 'Maintenance Mode', 'ot', 'maintenance', 'index', 'ot/maintenance', '_self'),
 (14, 7, 'Navigation Editor', 'ot', 'nav', 'index', 'ot/nav/index', '_self'),
-(15, 7, 'Theme', 'ot', 'theme', 'index', 'ot/theme/index', '_self'),
+(15, 7, 'Themes', 'ot', 'theme', 'index', 'ot/theme/index', '_self'),
 (16, 2, 'Bug Reports', 'ot', 'bug', '', 'ot/bug', '_self'),
 (17, 2, 'Caching', 'ot', 'cache', '', 'ot/cache', '_self'),
 (18, 2, 'Cron Jobs', 'ot', 'cron', 'index', 'ot/cron/index', '_self'),
