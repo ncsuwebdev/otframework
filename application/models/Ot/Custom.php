@@ -205,13 +205,12 @@ class Ot_Custom
                 return '';
         }
         
-        if (!is_null($value)) {
+        if (!is_null($value) && !empty($value)) {
             if (is_array($value)) {
                 $elm->setValue(array_keys($value));
             } else {
                 $elm->setValue($value);
             }
-            
         }
         $elm->setLabel($attribute['label'] . ":");
         
@@ -226,6 +225,10 @@ class Ot_Custom
                 
         if ($attribute['required']) {
             $opts['class'] = 'required';
+        }
+        
+        if (empty($value)) {
+            $value = null;
         }
         
         $name = 'custom_' . $attribute['attributeId'];
@@ -388,6 +391,7 @@ class Ot_Custom
             $where = $dba->quoteInto('objectId = ?', $objectId) . ' AND ' . 
                 $dba->quoteInto('parentId = ?', $parentId) . ' AND ' . 
                 $dba->quoteInto('attributeId = ?', $a['attributeId']);
+                
             $sv = $nv->fetchAll($where);
 
             $value = '';
@@ -404,15 +408,19 @@ class Ot_Custom
             switch ($a['type']) {
                 case 'multicheckbox':
                 case 'multiselect':
-                    $value = unserialize($value);
                     
-                    $displayValue = array();
+                    if (!empty($value)) {
                     
-                    foreach ($value as $key => $v) {
-                        $displayValue[$key] = (isset($a['options'][$v])) ? $a['options'][$v] : $v;
+                        $value = unserialize($value);
+                        
+                        $displayValue = array();
+                        
+                        foreach ($value as $key => $v) {
+                            $displayValue[$key] = (isset($a['options'][$v])) ? $a['options'][$v] : $v;
+                        }
+                        
+                        $value = $displayValue;
                     }
-                    
-                    $value = $displayValue;
                     
                     break;
                 case 'select':

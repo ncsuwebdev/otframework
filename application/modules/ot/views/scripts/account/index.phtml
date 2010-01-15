@@ -70,7 +70,15 @@
 		        <tr>
 		            <td>            
 		            <label><?php echo ucwords($key); ?>:</label></td>
-		            <td><?php echo (empty($attr) ? 'None' : $attr); ?></td>
+		            <td>
+                    <?php if (empty($attr)) : ?> 
+                          None
+                    <?php elseif (is_array($attr)): ?>
+                          <?php echo implode(', ', $attr); ?>
+                    <?php else : ?>
+                          <?php echo $attr; ?>
+                    <?php endif; ?>
+                    </td>
 		        </tr>         
 		        <?php endforeach; ?>
 		    </tbody>
