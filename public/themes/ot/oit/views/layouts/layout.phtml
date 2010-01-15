@@ -20,6 +20,10 @@ echo $this->headTitle() . "\n\n";
 
 //print the minified (common) css first, then the autoloaded css
 echo $this->minifyHeadLink() . "\n";
+
+//add the NCSU branding css to the headlink
+$this->headLink()->appendStylesheet('http://www.ncsu.edu/brand/utility-bar/iframe/css/utility_bar_iframe.css');
+
 echo $this->headLink() . "\n\n";
 
 // print the minified (common) scripts first, then the autoloaded scripts
@@ -33,6 +37,14 @@ echo "\n";
 
 <body>
 <input type="hidden" name="baseUrl" id="baseUrl" value="<?php echo $this->baseUrl(); ?>" />
+
+<!-- START NCSU Branding Utility Bar -->
+<iframe name="ncsu_branding_bar" id="ncsu_branding_bar" frameborder="0" src="http://www.ncsu.edu/brand/utility-bar/iframe/index.php?color=black_on_white&amp;inurl=<?php echo Zend_Registry::get('siteUrl'); ?>&amp;center=yes" scrolling="no">  
+Your browser does not support inline frames or is currently configured  not to display inline frames.
+<br />Visit <a href="http://ncsu.edu/">http://www.ncsu.edu</a>.
+</iframe>
+<!-- END NCSU Branding Utility Bar -->
+
     <div id="doc2" class="yui-t7">
         <div id="hd">
             <div id="logoBox">
