@@ -2,7 +2,7 @@
    display: block;
    float: left;
    width: 215px;
-   height: 250px;
+   height: 300px;
    text-align: center;
    padding: 5px;
    text-decoration: none;
@@ -19,7 +19,7 @@
 .activeTheme {
    display: block;
    width: 215px;
-   height: 250px;
+   height: 300px;
    text-align: center;
    padding: 5px;
    text-decoration: none;
