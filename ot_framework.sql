@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 15, 2010 at 09:39 AM
+-- Generation Time: Jan 15, 2010 at 10:52 AM
 -- Server version: 5.1.32
 -- PHP Version: 5.3.0
 
@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_account_attributes` (
 -- Dumping data for table `ot_tbl_account_attributes`
 --
 
+INSERT INTO `ot_tbl_account_attributes` (`accountId`, `age`) VALUES
+(31, '');
 
 -- --------------------------------------------------------
 
@@ -184,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_custom_attribute` (
   `direction` enum('vertical','horizontal') NOT NULL DEFAULT 'vertical',
   `order` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`attributeId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `ot_tbl_ot_custom_attribute`
@@ -276,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_log` (
   KEY `userId` (`accountId`),
   KEY `attributeName` (`attributeName`),
   KEY `attributeId` (`attributeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
 
 --
 -- Dumping data for table `ot_tbl_ot_log`
@@ -284,7 +286,36 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_log` (
 
 INSERT INTO `ot_tbl_ot_log` (`logId`, `accountId`, `role`, `request`, `sid`, `timestamp`, `message`, `priority`, `priorityName`, `attributeName`, `attributeId`) VALUES
 (1, 31, '3', '/login', '0ui8ot8v4c4jd30fl4bgqi9o33', 1263318628, 'User Logged In', 6, 'INFO', 'accountId', '31'),
-(2, 31, '3', '/login', '9p5qj2tsgfq5964eaivpg8q6n0', 1263564691, 'User Logged In', 6, 'INFO', 'accountId', '31');
+(2, 31, '3', '/login', '9p5qj2tsgfq5964eaivpg8q6n0', 1263564691, 'User Logged In', 6, 'INFO', 'accountId', '31'),
+(3, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263566690, 'Attribute Choose your favorite colors added', 6, 'INFO', 'objectId', 'Ot_Profile'),
+(4, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263566690, 'Choose your favorite colors added', 6, 'INFO', 'attributeId', '1'),
+(5, 31, '3', '/account/edit/accountId/31', '9p5qj2tsgfq5964eaivpg8q6n0', 1263567554, 'Account was modified.', 6, 'INFO', 'accountId', '31'),
+(6, 31, '3', '/account/edit/accountId/31', '9p5qj2tsgfq5964eaivpg8q6n0', 1263567719, 'Account was modified.', 6, 'INFO', 'accountId', '31'),
+(7, 31, '3', '/account/edit/accountId/31', '9p5qj2tsgfq5964eaivpg8q6n0', 1263567860, 'Account was modified.', 6, 'INFO', 'accountId', '31'),
+(8, 31, '3', '/account/edit/accountId/31', '9p5qj2tsgfq5964eaivpg8q6n0', 1263567865, 'Account was modified.', 6, 'INFO', 'accountId', '31'),
+(9, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568075, 'Attribute Choose some foods added', 6, 'INFO', 'objectId', 'Ot_Profile'),
+(10, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568075, 'Choose some foods added', 6, 'INFO', 'attributeId', '2'),
+(11, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568096, 'Attribute How awesome are beans? added', 6, 'INFO', 'objectId', 'Ot_Profile'),
+(12, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568096, 'How awesome are beans? added', 6, 'INFO', 'attributeId', '3'),
+(13, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568106, 'Attribute What is your favorite movie? added', 6, 'INFO', 'objectId', 'Ot_Profile'),
+(14, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568106, 'What is your favorite movie? added', 6, 'INFO', 'attributeId', '4'),
+(15, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568113, 'Attribute Type some stuff added', 6, 'INFO', 'objectId', 'Ot_Profile'),
+(16, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568113, 'Type some stuff added', 6, 'INFO', 'attributeId', '5'),
+(17, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568129, 'Attribute Pick one added', 6, 'INFO', 'objectId', 'Ot_Profile'),
+(18, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568129, 'Pick one added', 6, 'INFO', 'attributeId', '6'),
+(19, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568143, 'Attribute Check me added', 6, 'INFO', 'objectId', 'Ot_Profile'),
+(20, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568143, 'Check me added', 6, 'INFO', 'attributeId', '7'),
+(21, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568157, 'Attribute How many times? added', 6, 'INFO', 'objectId', 'Ot_Profile'),
+(22, 31, '3', '/ot/custom/add/objectId/Ot_Profile', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568157, 'How many times? added', 6, 'INFO', 'attributeId', '8'),
+(23, 31, '3', '/account/edit/accountId/31', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568539, 'Account was modified.', 6, 'INFO', 'accountId', '31'),
+(24, 31, '3', '/ot/custom/delete/attributeId/1', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568584, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '1'),
+(25, 31, '3', '/ot/custom/delete/attributeId/2', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568589, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '2'),
+(26, 31, '3', '/ot/custom/delete/attributeId/3', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568592, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '3'),
+(27, 31, '3', '/ot/custom/delete/attributeId/4', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568597, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '4'),
+(28, 31, '3', '/ot/custom/delete/attributeId/5', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568613, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '5'),
+(29, 31, '3', '/ot/custom/delete/attributeId/6', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568617, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '6'),
+(30, 31, '3', '/ot/custom/delete/attributeId/7', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568622, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '7'),
+(31, 31, '3', '/ot/custom/delete/attributeId/8', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568626, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '8');
 
 -- --------------------------------------------------------
 
