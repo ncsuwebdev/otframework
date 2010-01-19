@@ -36,7 +36,7 @@ class Ot_ImageController extends Zend_Controller_Action
     {      
         $this->_helper->viewRenderer->setNeverRender();
         $this->_helper->layout->disableLayout();
-            	
+                    
         $get = Zend_Registry::get('getFilter');
 
         if (!isset($get->imageId)) {

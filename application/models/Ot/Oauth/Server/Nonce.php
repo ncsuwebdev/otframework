@@ -44,27 +44,27 @@ class Ot_Oauth_Server_Nonce extends Ot_Db_Table
     
     public function getNonceByConsumerAndToken($consumerId, $token)
     {
-    	$where = $this->getAdapter()->quoteInto('consumerId = ?', $consumerId)
-    	       . ' AND '
-    	       . $this->getAdapter()->quoteInto('token = ?', $token);
-    	
-    	$result = $this->fetchAll($where, 'timestamp desc', 1);
-    	
-    	if ($result->count() != 1) {
-    		return null;
-    	}
-    	
-    	return $result->current();
+            $where = $this->getAdapter()->quoteInto('consumerId = ?', $consumerId)
+                   . ' AND '
+                   . $this->getAdapter()->quoteInto('token = ?', $token);
+            
+            $result = $this->fetchAll($where, 'timestamp desc', 1);
+            
+            if ($result->count() != 1) {
+                    return null;
+            }
+            
+            return $result->current();
     }    
     
     public function deleteOldNonce($consumerId, $token, $timestamp)
     {
-    	$where = $this->getAdapter()->quoteInto('consumerId = ?', $consumerId)
-    	       . ' AND '
-    	       . $this->getAdapter()->quoteInto('token = ?', $token)
-    	       . ' AND '
-    	       . $this->getAdapter()->quoteInto('timestamp < ?', (int)$timestamp);
-    	       
-    	$this->delete($where);
+            $where = $this->getAdapter()->quoteInto('consumerId = ?', $consumerId)
+                   . ' AND '
+                   . $this->getAdapter()->quoteInto('token = ?', $token)
+                   . ' AND '
+                   . $this->getAdapter()->quoteInto('timestamp < ?', (int)$timestamp);
+                   
+            $this->delete($where);
     }
 }

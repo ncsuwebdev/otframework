@@ -44,92 +44,92 @@ class Ot_Oauth_Server_Token extends Ot_Db_Table
     
     public function getTokenByTypeAndConsumerId($token, $tokenType, $consumerId)
     {
-    	
-    	$result = $this->getToken($token);
-    	
-    	if (is_null($result) || ($result->consumerId == $consumerId && $result->tokenType == $tokenType)) {
-    		return $result;
-    	}
-    	
-    	return null;
+            
+            $result = $this->getToken($token);
+            
+            if (is_null($result) || ($result->consumerId == $consumerId && $result->tokenType == $tokenType)) {
+                    return $result;
+            }
+            
+            return null;
     }
     
     public function getToken($token)
     {
-		$where = $this->getAdapter()->quoteInto('token = ?', $token);
-    	
-    	$result = $this->fetchAll($where);
-    	
-    	if ($result->count() != 1) {
-    		return null;
-    	}
-    	
-    	return $result->current();    	
+                $where = $this->getAdapter()->quoteInto('token = ?', $token);
+            
+            $result = $this->fetchAll($where);
+            
+            if ($result->count() != 1) {
+                    return null;
+            }
+            
+            return $result->current();            
     }
     
     public function authorizeToken($token, $accountId)
     {
-    	$thisToken = $this->getToken($token);
-    	
-    	if (is_null($thisToken)) {
-    		return null;
-    	}
-    	
-    	$thisToken->authorized = 1;
-    	$thisToken->accountId = $accountId;
-    	$thisToken->save();
-    	
-    	return $thisToken;
+            $thisToken = $this->getToken($token);
+            
+            if (is_null($thisToken)) {
+                    return null;
+            }
+            
+            $thisToken->authorized = 1;
+            $thisToken->accountId = $accountId;
+            $thisToken->save();
+            
+            return $thisToken;
     }
     
     public function removeToken($token)
     {
-    	$thisToken = $this->getToken($token);
-    	
-    	$thisToken->delete();
+            $thisToken = $this->getToken($token);
+            
+            $thisToken->delete();
     }
     
     public function getTokenByAccountAndConsumer($accountId, $consumerId, $tokenType)
     {
-    	$dba = $this->getAdapter();
-    	
-    	$where = $dba->quoteInto('accountId = ?', $accountId)
-    	       . ' AND '
-    	       . $dba->quoteInto('consumerId = ?', $consumerId)
-    	       . ' AND '
-    	       . $dba->quoteInto('tokenType = ?', $tokenType)
-    	       ;
-    	       
-    	$result = $this->fetchAll($where, null, 1);
+            $dba = $this->getAdapter();
+            
+            $where = $dba->quoteInto('accountId = ?', $accountId)
+                   . ' AND '
+                   . $dba->quoteInto('consumerId = ?', $consumerId)
+                   . ' AND '
+                   . $dba->quoteInto('tokenType = ?', $tokenType)
+                   ;
+                   
+            $result = $this->fetchAll($where, null, 1);
 
-    	if ($result->count() != 1) {
-    		return null;
-    	}
-    	
-    	return $result->current();
+            if ($result->count() != 1) {
+                    return null;
+            }
+            
+            return $result->current();
     }
     
     public function getTokensForAccount($accountId, $tokenType)
     {
-    	$dba = $this->getAdapter();
-    	
-    	$where = $dba->quoteInto('accountId = ?', $accountId)
-    	       . ' AND '
-    	       . $dba->quoteInto('tokenType = ?', $tokenType)
-    	       ;
-    	       
-    	return $this->fetchAll($where, 'requestDt DESC');    	
+            $dba = $this->getAdapter();
+            
+            $where = $dba->quoteInto('accountId = ?', $accountId)
+                   . ' AND '
+                   . $dba->quoteInto('tokenType = ?', $tokenType)
+                   ;
+                   
+            return $this->fetchAll($where, 'requestDt DESC');            
     }
     
     public function getTokensForConsumerId($consumerId, $tokenType)
     {
-    	$dba = $this->getAdapter();
-    	
-    	$where = $dba->quoteInto('consumerId = ?', $consumerId)
-    	       . ' AND '
-    	       . $dba->quoteInto('tokenType = ?', $tokenType)
-    	       ;
-    	       
-    	return $this->fetchAll($where, 'requestDt DESC');     	
+            $dba = $this->getAdapter();
+            
+            $where = $dba->quoteInto('consumerId = ?', $consumerId)
+                   . ' AND '
+                   . $dba->quoteInto('tokenType = ?', $tokenType)
+                   ;
+                   
+            return $this->fetchAll($where, 'requestDt DESC');             
     }
 }

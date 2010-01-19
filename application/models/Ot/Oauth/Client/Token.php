@@ -44,22 +44,22 @@ class Ot_Oauth_Client_Token extends Ot_Db_Table
     
     public function getTokenByAccountAndConsumer($accountId, $consumerId, $tokenType)
     {
-    	$dba = $this->getAdapter();
-    	
-    	$where = $dba->quoteInto('accountId = ?', $accountId)
-    	       . ' AND '
-    	       . $dba->quoteInto('consumerId = ?', $consumerId)
-    	       . ' AND '
-    	       . $dba->quoteInto('tokenType = ?', $tokenType)
-    	       ;
-    	       
-    	$result = $this->fetchAll($where, null, 1);
+            $dba = $this->getAdapter();
+            
+            $where = $dba->quoteInto('accountId = ?', $accountId)
+                   . ' AND '
+                   . $dba->quoteInto('consumerId = ?', $consumerId)
+                   . ' AND '
+                   . $dba->quoteInto('tokenType = ?', $tokenType)
+                   ;
+                   
+            $result = $this->fetchAll($where, null, 1);
 
-    	if ($result->count() != 1) {
-    		return null;
-    	}
-    	
-    	return $result->current();
+            if ($result->count() != 1) {
+                    return null;
+            }
+            
+            return $result->current();
     }
     
     public function getToken($token)
@@ -79,14 +79,14 @@ class Ot_Oauth_Client_Token extends Ot_Db_Table
     
     public function getTokensForAccount($accountId, $tokenType)
     {
-    	$dba = $this->getAdapter();
-    	
-    	$where = $dba->quoteInto('accountId = ?', $accountId)
-    	       . ' AND '
-    	       . $dba->quoteInto('tokenType = ?', $tokenType)
-    	       ;
-    	       
-    	return $this->fetchAll($where);    	
+            $dba = $this->getAdapter();
+            
+            $where = $dba->quoteInto('accountId = ?', $accountId)
+                   . ' AND '
+                   . $dba->quoteInto('tokenType = ?', $tokenType)
+                   ;
+                   
+            return $this->fetchAll($where);            
     }
     
     public function storeToken($accountId, $consumerId, $token, $tokenSecret, $tokenType = "request")

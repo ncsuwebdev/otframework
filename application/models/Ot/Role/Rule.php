@@ -45,8 +45,8 @@ class Ot_Role_Rule extends Ot_Db_Table
     
     public function getRulesForRole($roleId)
     {
-    	$where = $this->getAdapter()->quoteInto('roleId = ?', $roleId);
-    	
-    	return $this->fetchAll($where, 'type');
+            $where = $this->getAdapter()->quoteInto('roleId = ?', $roleId);
+            
+            return $this->fetchAll($where, 'type');
     }
 }

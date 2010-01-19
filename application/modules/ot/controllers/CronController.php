@@ -68,7 +68,7 @@ class Ot_CronController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->name)) {
-        	throw new Ot_Exception_Input('msg-error-nameNotSet');
+                throw new Ot_Exception_Input('msg-error-nameNotSet');
         }
         
         if (!isset($get->status)) {

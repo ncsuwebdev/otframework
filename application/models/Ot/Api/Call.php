@@ -29,58 +29,58 @@
  */
 class Ot_Api_Call
 {
-	/**
-	 * available attributes for the call
-	 * 
-	 * @var array
-	 */
-	protected $_attr = array(
-	   'class' => null,
-	   'method' => null,
-	);
-	
-	/**
-	 * overide the set method to assign data to the attr array
-	 * 
-	 * @param $attr - attribute name
-	 * @param $value - value of the attribute
-	 */
-	public function __set($attr, $value)
-	{
-		$this->_attr[$attr] = $value;
-	}
-	
-	/**
-	 * override of the get method to retrieve data from the attr array
-	 * 
-	 * @param $attr - attribute name
-	 * @return value of attr
-	 */
-	public function __get($attr)
-	{
-		return $this->_attr[$attr];
-	}
-	
-	/**
-	 * constructor to create the api call method
-	 * 
-	 * @param class - class of the API call
-	 * @param method - method in the class to call
-	 */
-	public function __construct($class, $method)
-	{
-		$this->class = $class;
-		$this->method = $method;
-	}
-	
-	/**
-	 * converts attr to array
-	 * 
-	 * @return array
-	 */
-	public function toArray()
-	{
-		return $this->_attr;
-	}
+        /**
+         * available attributes for the call
+         * 
+         * @var array
+         */
+        protected $_attr = array(
+           'class' => null,
+           'method' => null,
+        );
+        
+        /**
+         * overide the set method to assign data to the attr array
+         * 
+         * @param $attr - attribute name
+         * @param $value - value of the attribute
+         */
+        public function __set($attr, $value)
+        {
+                $this->_attr[$attr] = $value;
+        }
+        
+        /**
+         * override of the get method to retrieve data from the attr array
+         * 
+         * @param $attr - attribute name
+         * @return value of attr
+         */
+        public function __get($attr)
+        {
+                return $this->_attr[$attr];
+        }
+        
+        /**
+         * constructor to create the api call method
+         * 
+         * @param class - class of the API call
+         * @param method - method in the class to call
+         */
+        public function __construct($class, $method)
+        {
+                $this->class = $class;
+                $this->method = $method;
+        }
+        
+        /**
+         * converts attr to array
+         * 
+         * @return array
+         */
+        public function toArray()
+        {
+                return $this->_attr;
+        }
 }
 ?>

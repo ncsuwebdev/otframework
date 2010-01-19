@@ -48,8 +48,8 @@ class Ot_Auth_Adapter extends Ot_Db_Table
      */
     public function getEnabledAdapters()
     {
-    	$where = $this->getAdapter()->quoteInto('enabled = ?', 1);
-    	return $this->fetchAll($where, 'displayOrder');
+            $where = $this->getAdapter()->quoteInto('enabled = ?', 1);
+            return $this->fetchAll($where, 'displayOrder');
     }
     
     /**

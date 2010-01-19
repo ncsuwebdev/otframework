@@ -32,40 +32,40 @@ class Ot_BackupController extends Zend_Controller_Action
      * Shows the backup index page
      */
     public function indexAction()
-    {    	    	              
+    {                                      
         $backup = new Ot_Backup();
         
         $form = $backup->_form();
                 
         if ($this->_request->isPost()) {
-        	
-        	if ($form->isValid($_POST)) {
-        		
-        		$this->_helper->layout->disableLayout();
+                
+                if ($form->isValid($_POST)) {
+                        
+                        $this->_helper->layout->disableLayout();
                 $this->_helper->viewRenderer->setNeverRender();
-	            
-	            $db = Zend_Db_Table::getDefaultAdapter();
-	            
-	            $post = Zend_Registry::get('postFilter');
-	            
-	            $tableName = $post->tableName;
-	            
-	            if (isset($post->submitSql)) {
-	                $type = 'sql';
-	            } else {
-	                $type = 'csv';   
-	            }
+                    
+                    $db = Zend_Db_Table::getDefaultAdapter();
+                    
+                    $post = Zend_Registry::get('postFilter');
+                    
+                    $tableName = $post->tableName;
+                    
+                    if (isset($post->submitSql)) {
+                        $type = 'sql';
+                    } else {
+                        $type = 'csv';   
+                    }
 
-  	            // this call sends it to the browser too 
-	            $backup->getBackup($db, $tableName, $type);
-	            
-	            $logOptions = array(
+                      // this call sends it to the browser too 
+                    $backup->getBackup($db, $tableName, $type);
+                    
+                    $logOptions = array(
                         'attributeName' => 'databaseTableBackup',
                         'attributeId'   => $tableName,
                 );
                     
                 $this->_helper->log(Zend_Log::INFO, 'Backup of database table ' . $tableName . ' was downloaded', $logOptions);
-        	}
+                }
         }
         
         $this->view->form = $form;

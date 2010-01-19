@@ -45,89 +45,89 @@ class Ot_Oauth_Server_Consumer extends Ot_Db_Table
     
     public function getConsumerByKey($consumerKey)
     {
-    	$where = $this->getAdapter()->quoteInto('consumerKey = ?', $consumerKey);
-    	
-    	$result = $this->fetchAll($where);
-    	
-    	if ($result->count() != 1) {
-    		return null;
-    	}
-    	
-    	return $result->current();
+            $where = $this->getAdapter()->quoteInto('consumerKey = ?', $consumerKey);
+            
+            $result = $this->fetchAll($where);
+            
+            if ($result->count() != 1) {
+                    return null;
+            }
+            
+            return $result->current();
     }
     
 
     
     public function getConsumersForRegisteredAccounnt($accountId)
     {
-    	$where = $this->getAdapter()->quoteInto('registeredAccountId = ?', $accountId);
-    	
-    	return $this->fetchAll($where, 'name');
+            $where = $this->getAdapter()->quoteInto('registeredAccountId = ?', $accountId);
+            
+            return $this->fetchAll($where, 'name');
     }
     
     public function deleteConsumer($consumerId)
     {
-    	$dba = $this->getAdapter();
-    	
-    	$dba->beginTransaction();
-    	
-    	$thisConsumer = $this->find($consumerId);
-    	if (is_null($thisConsumer)) {
-    		return;
-    	}
-    	
-    	$where = $dba->quoteInto('consumerId = ?', $consumerId);
-    	
-    	try {
-    		$this->delete($where);
-    	} catch (Exception $e) {
-    		$dba->rollback();
-    		throw $e;
-    	}
-    	
-    	$st = new Ot_Oauth_Server_Token();
-    	
-    	try {
-    		$st->delete($where);
-    	} catch (Exception $e) {
-    		$dba->rollback();
-    		throw $e;
-    	}
-    	
-    	if (isset($thisConsumer->imageId) && $thisConsumer->imageId != 0) {
-    		$image = new Ot_Image();
-    		try {
-	    		$image->deleteImage($thisConsumer->imageId);
-    		} catch (Exception $e) {
-    			$dba->rollback();
-    			throw $e;
-    		}
-	    }    	
-    	
-    	$dba->commit();
+            $dba = $this->getAdapter();
+            
+            $dba->beginTransaction();
+            
+            $thisConsumer = $this->find($consumerId);
+            if (is_null($thisConsumer)) {
+                    return;
+            }
+            
+            $where = $dba->quoteInto('consumerId = ?', $consumerId);
+            
+            try {
+                    $this->delete($where);
+            } catch (Exception $e) {
+                    $dba->rollback();
+                    throw $e;
+            }
+            
+            $st = new Ot_Oauth_Server_Token();
+            
+            try {
+                    $st->delete($where);
+            } catch (Exception $e) {
+                    $dba->rollback();
+                    throw $e;
+            }
+            
+            if (isset($thisConsumer->imageId) && $thisConsumer->imageId != 0) {
+                    $image = new Ot_Image();
+                    try {
+                            $image->deleteImage($thisConsumer->imageId);
+                    } catch (Exception $e) {
+                            $dba->rollback();
+                            throw $e;
+                    }
+            }            
+            
+            $dba->commit();
     }
     
     public function insert(array $data)
     {
-    	$data = array_merge($data, $this->_generateConsumerKeySecret());
-    	
-    	return parent::insert($data);
+            $data = array_merge($data, $this->_generateConsumerKeySecret());
+            
+            return parent::insert($data);
     }
     
     public function resetConsumerKeySecret($consumerId)
     {
-    	$data = array(
-    		'consumerId' => $consumerId,
-    	);
-    	
-    	$data = array_merge($data, $this->_generateConsumerKeySecret());
-    	
-    	return $this->update($data, null);
+            $data = array(
+                    'consumerId' => $consumerId,
+            );
+            
+            $data = array_merge($data, $this->_generateConsumerKeySecret());
+            
+            return $this->update($data, null);
     }
     
     protected function _generateConsumerKeySecret()
     {
-    	return array('consumerKey' => md5(time()), 'consumerSecret' => md5(md5(time() + time())));
+            return array('consumerKey' => md5(time()), 'consumerSecret' => md5(md5(time() + time())));
     }
     
     /**
@@ -203,11 +203,11 @@ class Ot_Oauth_Server_Consumer extends Ot_Db_Table
         
         $image->addPrefixPath('Ot_Form_Decorator', 'Ot/Form/Decorator', 'decorator');
         $image->addDecorator('File');
-       	$image->addDecorator('Imageupload', 
-       		array(
-       			'id'        => 'applicationIconImage',
-       			'src'       => $values['imagePath'],
-       		));
+               $image->addDecorator('Imageupload', 
+                       array(
+                               'id'        => 'applicationIconImage',
+                               'src'       => $values['imagePath'],
+                       ));
 
         if (isset($values['consumerId'])) {
 

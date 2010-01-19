@@ -79,7 +79,7 @@ class Ot_Bug extends Ot_Db_Table
         return $bugId;
     }
     
-	/**
+        /**
      * Deletes a bug
      *
      * @param array $bugId

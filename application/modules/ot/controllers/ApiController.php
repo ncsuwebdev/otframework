@@ -29,11 +29,11 @@
  */
 class Ot_ApiController extends Zend_Controller_Action  
 {
-	
-	protected $_class = 'Internal_Api';
-	
-	protected $_parameters = array();
-	
+        
+        protected $_class = 'Internal_Api';
+        
+        protected $_parameters = array();
+        
     public function indexAction()
     {
         $api = new Ot_Api();
@@ -43,7 +43,7 @@ class Ot_ApiController extends Zend_Controller_Action
         
         $this->_helper->pageTitle('ot-api-index:title');
     }
-	
+        
     public function soapAction()
     {
         $this->_helper->viewRenderer->setNeverRender();
@@ -67,9 +67,9 @@ class Ot_ApiController extends Zend_Controller_Action
             $access->raiseError($access->getMessage());
         }
         
-    	$server = new Zend_Rest_Server();
-    	$server->setClass($this->_class);
-    	$server->handle($request->getParameters()); 
+            $server = new Zend_Rest_Server();
+            $server->setClass($this->_class);
+            $server->handle($request->getParameters()); 
     }
     
     public function jsonAction()
@@ -85,11 +85,11 @@ class Ot_ApiController extends Zend_Controller_Action
             $access->raiseError($access->getMessage());
         }
                 
-    	$server = new Zend_Rest_Server();
+            $server = new Zend_Rest_Server();
 
-    	$server->setClass($this->_class);
-    	$server->returnResponse(true);
-    	
+            $server->setClass($this->_class);
+            $server->returnResponse(true);
+            
         $jsoncallback = "";
         
         if ($request->getParameter('jsoncallback') != '') {

@@ -34,7 +34,7 @@ class Ot_CustomController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-    	$config = Zend_Registry::get('config');
+            $config = Zend_Registry::get('config');
 
         $this->_helper->pageTitle('ot-custom-index:title');
 
@@ -71,13 +71,13 @@ class Ot_CustomController extends Zend_Controller_Action
 
         $get = Zend_Registry::get('getFilter');
         if (!isset($get->objectId)) {
-        	throw new Ot_Exception_Input('msg-error-objectNotFound');
+                throw new Ot_Exception_Input('msg-error-objectNotFound');
         }
 
         $config = Zend_Registry::get('config');
 
         if (!isset($config->app->customFieldObjects->{$get->objectId})) {
-        	throw new Ot_Exception_Input('msg-error-objectNotSetup');
+                throw new Ot_Exception_Input('msg-error-objectNotSetup');
         }
 
         $custom = new Ot_Custom();
@@ -97,8 +97,8 @@ class Ot_CustomController extends Zend_Controller_Action
      */
     public function saveAttributeOrderAction()
     {
-    	$this->_helper->viewRenderer->setNeverRender();
-    	$this->_helper->layout->disableLayout();
+            $this->_helper->viewRenderer->setNeverRender();
+            $this->_helper->layout->disableLayout();
 
         if ($this->_request->isPost()) {
             
@@ -131,7 +131,7 @@ class Ot_CustomController extends Zend_Controller_Action
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             } catch (Exception $e) {
-            	$ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-orderNotSaved', $e->getMessage()));
+                    $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-orderNotSaved', $e->getMessage()));
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             }
@@ -157,24 +157,24 @@ class Ot_CustomController extends Zend_Controller_Action
             'delete' => $this->_helper->hasAccess('delete')
             );
 
-    	$get = Zend_Registry::get('getFilter');
+            $get = Zend_Registry::get('getFilter');
 
-    	$custom = new Ot_Custom();
-    	$attr   = new Ot_Custom_Attribute();
+            $custom = new Ot_Custom();
+            $attr   = new Ot_Custom_Attribute();
 
-    	if (!isset($get->attributeId)) {
-    		throw new Ot_Exception_Input('msg-error-attributeIdNotSet');
-    	}
+            if (!isset($get->attributeId)) {
+                    throw new Ot_Exception_Input('msg-error-attributeIdNotSet');
+            }
 
-    	$attribute = $attr->find($get->attributeId);
+            $attribute = $attr->find($get->attributeId);
 
-    	if (is_null($attribute)) {
-    		throw new Ot_Exception_Data('msg-error-noAttribute');
-    	}
+            if (is_null($attribute)) {
+                    throw new Ot_Exception_Data('msg-error-noAttribute');
+            }
 
-    	$attribute = $attribute->toArray();
+            $attribute = $attribute->toArray();
 
-    	$attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
+            $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
 
         $config = Zend_Registry::get('config');
 
@@ -182,10 +182,10 @@ class Ot_CustomController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-objectNotSetup');
         }
 
-    	$this->view->attribute = $attribute;
+            $this->view->attribute = $attribute;
         $this->view->objectId = $attribute['objectId'];
         $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
-    	$this->_helper->pageTitle('ot-custom-attributeDetails:title');
+            $this->_helper->pageTitle('ot-custom-attributeDetails:title');
     }
 
     /**
@@ -215,11 +215,11 @@ class Ot_CustomController extends Zend_Controller_Action
 
             $options = array();
             if (isset($_POST['option'])) {
-	            foreach ($_POST['option'] as $o) {
-	                if ($o != '') {
+                    foreach ($_POST['option'] as $o) {
+                        if ($o != '') {
                         $options[] = $filter->filter($o);
                     }
-	            }
+                    }
             }
 
             $data = array(
@@ -256,9 +256,9 @@ class Ot_CustomController extends Zend_Controller_Action
         }
 
         $this->view->types = $custom->getTypes();
-	    $this->_helper->pageTitle('ot-custom-add:title', $get->objectId);
-	    $this->view->objectId = $get->objectId;
-	    	    
+            $this->_helper->pageTitle('ot-custom-add:title', $get->objectId);
+            $this->view->objectId = $get->objectId;
+                        
         $this->view->objectDescription = $config->app->customFieldObjects->{$get->objectId};
     }
 
@@ -302,9 +302,9 @@ class Ot_CustomController extends Zend_Controller_Action
             $options = array();
             if (isset($_POST['option'])) {
                 foreach ($_POST['option'] as $o) {
-                	if ($o != '') {
+                        if ($o != '') {
                         $options[] = $filter->filter($o);
-                	}
+                        }
                 }
             }
 
@@ -320,8 +320,8 @@ class Ot_CustomController extends Zend_Controller_Action
 
             if (isset($_POST['opt_delete'])) {
                 foreach ($_POST['opt_delete'] as $opt) {
-                	$key = array_search($filter->filter($opt), $attribute['options']);
-                	unset($attribute['options'][$key]);
+                        $key = array_search($filter->filter($opt), $attribute['options']);
+                        unset($attribute['options'][$key]);
                 }
             }
 
@@ -336,9 +336,9 @@ class Ot_CustomController extends Zend_Controller_Action
                     );
 
             if (($data['type'] == 'select' || $data['type'] == 'radio') && is_array($attribute['options'])) {
-            	$data['options'] = $custom->convertOptionsToString($attribute['options']);
+                    $data['options'] = $custom->convertOptionsToString($attribute['options']);
             } else {
-            	$data['options'] = '';
+                    $data['options'] = '';
             }
 
             $attr->update($data, null);
@@ -417,9 +417,9 @@ class Ot_CustomController extends Zend_Controller_Action
         }
 
         $this->view->form              = $form;
-	    $this->view->attribute         = $attribute;
+            $this->view->attribute         = $attribute;
         $this->view->objectId          = $attribute['objectId'];
         $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
-	    $this->_helper->pageTitle('ot-custom-delete:title', $attribute['objectId']);
+            $this->_helper->pageTitle('ot-custom-delete:title', $attribute['objectId']);
     }
 }

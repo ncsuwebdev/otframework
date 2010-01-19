@@ -76,16 +76,16 @@ class Ot_ThemeController extends Zend_Controller_Action
     public function selectAction()
     {
 
-    	$get = Zend_Registry::get('getFilter');
-    	    	
-    	$newTheme = 'default';
-    	if (isset($get->theme)) {
-    		$newTheme = strtolower($get->theme);
-    	}
-    	
-    	$themes = array();
-    	
-    	// Obtain all directories in the theme folder, add them to the theme array
+            $get = Zend_Registry::get('getFilter');
+                        
+            $newTheme = 'default';
+            if (isset($get->theme)) {
+                    $newTheme = strtolower($get->theme);
+            }
+            
+            $themes = array();
+            
+            // Obtain all directories in the theme folder, add them to the theme array
         $dirs = array(
                        'otThemes'  => 'public/themes/ot/',
                        'appThemes' => 'public/themes/'
@@ -115,7 +115,7 @@ class Ot_ThemeController extends Zend_Controller_Action
         }  
         
         if (!isset($themes[$newTheme])) {
-        	$newTheme = 'default';
+                $newTheme = 'default';
         }
         
         $overrideFile = APPLICATION_PATH . '/../overrides/config/config.xml';
@@ -125,19 +125,19 @@ class Ot_ThemeController extends Zend_Controller_Action
         }
         
         if (!is_writable($overrideFile)) {
-        	throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $overrideFile));
+                throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $overrideFile));
         }
         
         $xml = simplexml_load_file($overrideFile);
 
-    	if (!isset($xml->production->app->theme)) {
-    		$xml->production->app->addChild("theme");
-    		$xml->production->app->theme = $newTheme;
-    	} else {
-    		$xml->production->app->theme = $newTheme;
-    	}
+            if (!isset($xml->production->app->theme)) {
+                    $xml->production->app->addChild("theme");
+                    $xml->production->app->theme = $newTheme;
+            } else {
+                    $xml->production->app->theme = $newTheme;
+            }
 
-    	if (!file_put_contents($overrideFile, $xml->asXml(), LOCK_EX)) {
+            if (!file_put_contents($overrideFile, $xml->asXml(), LOCK_EX)) {
             throw new Ot_Exception_Data("msg-error-savingConfig");
         }
 

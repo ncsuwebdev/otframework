@@ -40,8 +40,8 @@ class Ot_BugController extends Zend_Controller_Action
 
         $this->view->acl = array(
             'add'     => $this->_helper->hasAccess('add'),
-	        'edit'    => $this->_helper->hasAccess('edit'),
-	        'delete'  => $this->_helper->hasAccess('delete'),
+                'edit'    => $this->_helper->hasAccess('edit'),
+                'delete'  => $this->_helper->hasAccess('delete'),
             'details' => $this->_helper->hasAccess('details')
             );
 
@@ -59,7 +59,7 @@ class Ot_BugController extends Zend_Controller_Action
         $this->view->acl = array(
             'index'  => $this->_helper->hasAccess('index'),
             'edit'   => $this->_helper->hasAccess('edit'),
-        	'delete' => $this->_helper->hasAccess('delete')
+                'delete' => $this->_helper->hasAccess('delete')
             );
         
         $get = Zend_Registry::get('getFilter');
@@ -95,7 +95,7 @@ class Ot_BugController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-    	$get = Zend_Registry::get('getFilter');
+            $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->bugId)) {
             throw new Ot_Exception_Input('msg-error-bugIdNotFound');
@@ -128,7 +128,7 @@ class Ot_BugController extends Zend_Controller_Action
         }
         
         $this->_helper->pageTitle('ot-bug-delete:title');
-        $this->view->form     = $form;	
+        $this->view->form     = $form;        
     }
 
     /**
@@ -137,46 +137,46 @@ class Ot_BugController extends Zend_Controller_Action
      */
     public function addAction()
     {
-    	$bug = new Ot_Bug();
-    	
-    	$form = $bug->form(); 	
+            $bug = new Ot_Bug();
+            
+            $form = $bug->form();         
              
         $messages = array();
         
         if ($this->_request->isPost()) {
 
-        	if ($form->isValid($_POST)) {
-        	    
-        	    $time = time();
-        	    
-	            $data = array(
-	                'title'           => $form->getValue('title'),
-	                'reproducibility' => $form->getValue('reproducibility'),
-	                'severity'        => $form->getValue('severity'),
-	                'priority'        => $form->getValue('priority'),
-	                'submitDt'        => $time,
-	                'status'          => 'new',
-	                'text'            => array(
-	                    'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
-	                    'postDt'    => $time,
-	                    'text'      => $form->getValue('description'),
-	                    ),
-	                );
-	
-	            $bugId = $bug->insert($data);
-	            
-	            $logOptions = array(
+                if ($form->isValid($_POST)) {
+                    
+                    $time = time();
+                    
+                    $data = array(
+                        'title'           => $form->getValue('title'),
+                        'reproducibility' => $form->getValue('reproducibility'),
+                        'severity'        => $form->getValue('severity'),
+                        'priority'        => $form->getValue('priority'),
+                        'submitDt'        => $time,
+                        'status'          => 'new',
+                        'text'            => array(
+                            'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
+                            'postDt'    => $time,
+                            'text'      => $form->getValue('description'),
+                            ),
+                        );
+        
+                    $bugId = $bug->insert($data);
+                    
+                    $logOptions = array(
                         'attributeName' => 'bugId',
                         'attributeId'   => $bugId,
                 );
                     
                 $this->_helper->log(Zend_Log::INFO, 'Bug was added', $logOptions);
                 $this->_helper->flashMessenger->addMessage('msg-info-bugSubmitted');
-	
-	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $bugId), 'ot', true);
-        	} else {
-        		$messages[] = 'msg-error-formError';
-        	}
+        
+                    $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $bugId), 'ot', true);
+                } else {
+                        $messages[] = 'msg-error-formError';
+                }
         }
         
         $this->view->messages = $messages;
@@ -191,7 +191,7 @@ class Ot_BugController extends Zend_Controller_Action
      */
     public function editAction()
     {
-    	
+            
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->bugId)) {
@@ -221,46 +221,46 @@ class Ot_BugController extends Zend_Controller_Action
         $messages = array();
         
         if ($this->_request->isPost()) {
-        	if ($form->isValid($_POST)) {
-        		
-	            $data = array(
-	                'bugId'             => $get->bugId,
-	                'title'             => $form->getValue('title'),
-	                'reproducibility'   => $form->getValue('reproducibility'),
-	                'severity'          => $form->getValue('severity'),
-	                'priority'          => $form->getValue('priority'),
+                if ($form->isValid($_POST)) {
+                        
+                    $data = array(
+                        'bugId'             => $get->bugId,
+                        'title'             => $form->getValue('title'),
+                        'reproducibility'   => $form->getValue('reproducibility'),
+                        'severity'          => $form->getValue('severity'),
+                        'priority'          => $form->getValue('priority'),
                     'status'            => $form->getValue('status'),
-	                );
-	
-	            $thisBug = $bug->find($data['bugId']);
-	            
-	            if (is_null($thisBug)) {
-	                throw new Exception('msg-error-noBug');
-	            }
-	            
-	            if ($form->getValue('description') != '') {
-	            	$data['text'] = array(
-	            	    'bugId'     => $get->bugId,
-	            	    'postDt'    => time(),
-	            	    'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
-	            	    'text'      => $form->getValue('description'),
-	            	);
-	            }
-	                
-	            $bug->update($data, null);
-	            
-	            $logOptions = array(
+                        );
+        
+                    $thisBug = $bug->find($data['bugId']);
+                    
+                    if (is_null($thisBug)) {
+                        throw new Exception('msg-error-noBug');
+                    }
+                    
+                    if ($form->getValue('description') != '') {
+                            $data['text'] = array(
+                                'bugId'     => $get->bugId,
+                                'postDt'    => time(),
+                                'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
+                                'text'      => $form->getValue('description'),
+                            );
+                    }
+                        
+                    $bug->update($data, null);
+                    
+                    $logOptions = array(
                         'attributeName' => 'bugId',
                         'attributeId'   => $get->bugId,
                 );
                     
                 $this->_helper->log(Zend_Log::INFO, 'Bug was modified', $logOptions);
                 $this->_helper->flashMessenger->addMessage('msg-info-bugUpdated');
-	            
-	            $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $get->bugId), 'ot', true);
-        	} else {
-        		$messages[] = 'msg-error-formError';
-        	}
+                    
+                    $this->_helper->redirector->gotoRoute(array('controller' => 'bug', 'action' => 'details', 'bugId' => $get->bugId), 'ot', true);
+                } else {
+                        $messages[] = 'msg-error-formError';
+                }
 
         }
         

@@ -44,25 +44,25 @@ class ErrorController extends Zend_Controller_Action
         $message = '';
         
         switch ($errors->type) {
-	        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
-	        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
-	            // 404 error -- controller or action not found
-	            $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
-	            $message = 'default-index-error:404:message';
-	            $title = 'default-index-error:404:header';
-	            break;
-	        default:
-	            $exception = $errors->exception;
-	            if ($exception instanceof Ot_Exception) {
-	            	$title = $exception->getTitle();
-	            } else {
-	            	$title = 'default-index-error:generic';
-	            }
-	            
-	            $this->view->showTrackback = $config->user->showTrackbackOnErrors->val;
-	            $this->view->trackback     = $exception->getTrace();
-	            $message = $exception->getMessage();
-	            break;
+                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
+                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
+                    // 404 error -- controller or action not found
+                    $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
+                    $message = 'default-index-error:404:message';
+                    $title = 'default-index-error:404:header';
+                    break;
+                default:
+                    $exception = $errors->exception;
+                    if ($exception instanceof Ot_Exception) {
+                            $title = $exception->getTitle();
+                    } else {
+                            $title = 'default-index-error:generic';
+                    }
+                    
+                    $this->view->showTrackback = $config->user->showTrackbackOnErrors->val;
+                    $this->view->trackback     = $exception->getTrace();
+                    $message = $exception->getMessage();
+                    break;
         }
         
         $this->_helper->pageTitle($title);

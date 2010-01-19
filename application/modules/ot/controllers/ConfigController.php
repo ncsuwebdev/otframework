@@ -52,8 +52,8 @@ class Ot_ConfigController extends Zend_Controller_Action
      */
     public function editAction()
     {       
-    	$config = Zend_Registry::get('config');
-    	
+            $config = Zend_Registry::get('config');
+            
         $overrideFile = APPLICATION_PATH . '/../overrides/config/config.xml';
         
         if (!file_exists($overrideFile)) {
@@ -61,13 +61,13 @@ class Ot_ConfigController extends Zend_Controller_Action
         }
         
         if (!is_writable($overrideFile)) {
-        	throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $overrideFile));
+                throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $overrideFile));
         }
                 
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->key)) {
-        	throw new Ot_Exception_Input('msg-error-noKey');
+                throw new Ot_Exception_Input('msg-error-noKey');
         }
         
         $form = new Zend_Form();
@@ -79,19 +79,19 @@ class Ot_ConfigController extends Zend_Controller_Action
              ));
         
         if ($get->key == 'timezone') {
-        	$tz = Ot_Timezone::getTimezoneList();
-        	
-	        $el = new Zend_Form_Element_Select('keyValue');
-	        $el->addMultiOptions($tz);      	
+                $tz = Ot_Timezone::getTimezoneList();
+                
+                $el = new Zend_Form_Element_Select('keyValue');
+                $el->addMultiOptions($tz);              
         } else {
-        	$el = new Zend_Form_Element_Text('keyValue');
-        	$el->setAttrib('size', '40');
+                $el = new Zend_Form_Element_Text('keyValue');
+                $el->setAttrib('size', '40');
         }
         
         $config = Zend_Registry::get('config');
         
         if (!isset($config->user->{$get->key})) {
-        	throw new Ot_Exception_Input('msg-error-noConfigKey');
+                throw new Ot_Exception_Input('msg-error-noConfigKey');
         }
         
         $el->setValue($config->user->{$get->key}->val);
@@ -123,58 +123,58 @@ class Ot_ConfigController extends Zend_Controller_Action
         $messages = array();
         
         if ($this->_request->isPost()) {
-        	if ($form->isValid($_POST)) {
-        		
-        		if ($form->getValue('resetToDefault') || ($form->getValue('keyValue') != $config->user->{$get->key}->val)) {
-					$xml = simplexml_load_file($overrideFile);
-	        			            
-					$logMessage = '';
-					
-					if ($form->getValue('resetToDefault') && isset($xml->production->user->{$get->key})) {
-	        			unset($xml->production->user->{$get->key});
-	        			
-	        			$logMessage = 'Key was reset to default';
-	        		} else {
-		        		if (!isset($xml->production->user->{$get->key})) {
-		        			$xml->production->user->addChild($get->key);
-		        			$xml->production->user->{$get->key}['val'] = $form->getValue('keyValue');
-		        		} else {
-		        			$xml->production->user->{$get->key}->attributes()->val = $form->getValue('keyValue');
-		        		}	        	
+                if ($form->isValid($_POST)) {
+                        
+                        if ($form->getValue('resetToDefault') || ($form->getValue('keyValue') != $config->user->{$get->key}->val)) {
+                                        $xml = simplexml_load_file($overrideFile);
+                                                    
+                                        $logMessage = '';
+                                        
+                                        if ($form->getValue('resetToDefault') && isset($xml->production->user->{$get->key})) {
+                                        unset($xml->production->user->{$get->key});
+                                        
+                                        $logMessage = 'Key was reset to default';
+                                } else {
+                                        if (!isset($xml->production->user->{$get->key})) {
+                                                $xml->production->user->addChild($get->key);
+                                                $xml->production->user->{$get->key}['val'] = $form->getValue('keyValue');
+                                        } else {
+                                                $xml->production->user->{$get->key}->attributes()->val = $form->getValue('keyValue');
+                                        }                        
 
-		        		$logMessage = 'User config was edited';
-	        		}
-		            
-		            $xmlStr = $xml->asXml();
-		            
-		            if (!file_put_contents($overrideFile, $xmlStr, LOCK_EX)) {
-		                throw new Ot_Exception_Data("msg-error-savingConfig");
-		            }
-		            
-		            // this formats the xml file if the xmllint command is available.  If it's
+                                        $logMessage = 'User config was edited';
+                                }
+                            
+                            $xmlStr = $xml->asXml();
+                            
+                            if (!file_put_contents($overrideFile, $xmlStr, LOCK_EX)) {
+                                throw new Ot_Exception_Data("msg-error-savingConfig");
+                            }
+                            
+                            // this formats the xml file if the xmllint command is available.  If it's
                     // not, it should just return nothing and nothing bad will happen.  It's merely
                     // a bonus feature for boxes that have xmllib2 all up ons their box.
                     $cmd = "xmllint --format --output $overrideFile $overrideFile";
-                    exec($cmd, $result, $rc);		            
-		            
-		            $cache = Zend_Registry::get('cache');
-		            $cache->remove('configObject');
-		            
-		            $logOptions = array(
-	                        'attributeName' => 'userConfig',
-	                        'attributeId'   => $get->key,
-	                );
-	                    
-	                $this->_helper->log(Zend_Log::INFO, $logMessage, $logOptions);   
-	                     			
-        		}
-	            
-	            $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-configUpdated', $get->key));
-	            
-	            $this->_helper->redirector->gotoRoute(array('controller' => 'config'), 'ot', true);
-        	} else {
-        		$messages[] = 'msg-error-formError';
-        	}
+                    exec($cmd, $result, $rc);                            
+                            
+                            $cache = Zend_Registry::get('cache');
+                            $cache->remove('configObject');
+                            
+                            $logOptions = array(
+                                'attributeName' => 'userConfig',
+                                'attributeId'   => $get->key,
+                        );
+                            
+                        $this->_helper->log(Zend_Log::INFO, $logMessage, $logOptions);   
+                                                     
+                        }
+                    
+                    $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-configUpdated', $get->key));
+                    
+                    $this->_helper->redirector->gotoRoute(array('controller' => 'config'), 'ot', true);
+                } else {
+                        $messages[] = 'msg-error-formError';
+                }
         }
         
         $this->view->messages    = $messages;
