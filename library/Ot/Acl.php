@@ -14,7 +14,8 @@
  *
  * @package    Ot_Acl
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -24,7 +25,8 @@
  *
  * @package    Ot_Acl
  * @category   Access Control
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Ot_Acl extends Zend_Acl
 {

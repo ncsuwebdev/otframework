@@ -14,7 +14,8 @@
  *
  * @package    Ot_Bootstrap
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
  */

@@ -14,7 +14,8 @@
  *
  * @package    Ot_Action_Helper_Log
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -24,7 +25,8 @@
  *
  * @package    Ot_Action_Helper_Log
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Ot_Action_Helper_Log extends Zend_Controller_Action_Helper_Abstract
 {

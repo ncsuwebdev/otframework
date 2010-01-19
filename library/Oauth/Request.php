@@ -14,7 +14,8 @@
  *
  * @package    Oauth_Request
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -24,7 +25,8 @@
  *
  * @package    Oauth_Request
  * @category   Oauth_
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Oauth_Request 
 {

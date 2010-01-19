@@ -14,7 +14,8 @@
  *
  * @package    Index_Controller
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -24,7 +25,8 @@
  *
  * @package    Index_Controller
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class IndexController extends Zend_Controller_Action 
 {   

@@ -14,7 +14,8 @@
  *
  * @package    Ot_Api_Soap
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
  */

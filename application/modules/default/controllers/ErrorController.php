@@ -14,7 +14,8 @@
  *
  * @package    ErrorController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
  */
@@ -24,7 +25,8 @@
  *
  * @package    ErrorController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class ErrorController extends Zend_Controller_Action
 {

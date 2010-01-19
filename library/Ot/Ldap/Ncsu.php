@@ -14,7 +14,8 @@
  *
  * @package    Ot_Ldap_Ncsu
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -25,7 +26,8 @@
  *
  * @package    Ot_Ldap_Ncsu
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Ot_Ldap_Ncsu extends Ot_Ldap_Driver
 {

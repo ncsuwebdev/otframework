@@ -13,7 +13,8 @@
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
  * @package    Ot_Log
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -27,7 +28,8 @@
  *
  * @package    Ot_Log
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  *
  */
 class Ot_Log extends Ot_Db_Table 

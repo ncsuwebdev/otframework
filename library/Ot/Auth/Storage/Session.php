@@ -14,7 +14,8 @@
  *
  * @package    Ot_Auth_Storage_Session
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -34,7 +35,8 @@ require_once 'Zend/Session.php';
  *
  * @package    Ot_Auth_Storage_Session
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Ot_Auth_Storage_Session implements Zend_Auth_Storage_Interface
 {

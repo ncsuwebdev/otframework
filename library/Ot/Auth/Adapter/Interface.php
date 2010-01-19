@@ -14,7 +14,8 @@
  *
  * @package    Ot_Auth_Adapter_Interface
  * @category   Authentication Adapter
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -24,7 +25,8 @@
  *
  * @package    Ot_Auth_Adapter_Interface
  * @category   Authentication Adapter
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 interface Ot_Auth_Adapter_Interface
 {

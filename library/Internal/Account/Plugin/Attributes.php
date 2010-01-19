@@ -14,7 +14,8 @@
  *
  * @package    Internal_Account_Plugin_Attributes
  * @category   Account Plugin
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -25,7 +26,8 @@
  *
  * @package    Internal_Account_Plugin_Attributes
  * @category   Account Plugin
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
 {

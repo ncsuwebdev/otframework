@@ -14,7 +14,8 @@
  *
  * @package    Ot_Trigger_Action
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
  */
@@ -24,7 +25,8 @@
  *
  * @package    Ot_Trigger_Action
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  *
  */
 class Ot_Trigger_Action extends Ot_Db_Table

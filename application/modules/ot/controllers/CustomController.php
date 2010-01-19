@@ -14,7 +14,8 @@
  *
  * @package    Ot_CustomController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
  */
@@ -25,7 +26,8 @@
  *
  * @package    Ot_CustomController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Ot_CustomController extends Zend_Controller_Action
 {

@@ -14,7 +14,8 @@
  *
  * @package    Ot_Stats
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    BSD License
  * @see        http://itdapps.ncsu.edu
  * @version    SVN: $Id: $
@@ -25,7 +26,8 @@
  *
  * @package    Ot_Stats
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  *
  */
 class Ot_Stats extends Ot_Db_Table

@@ -14,7 +14,8 @@
  *
  * @package    Ot_FrontController_Plugin_Nav
  * @category   Front Controller Plugin
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -25,7 +26,8 @@
  *
  * @package    Ot_FrontController_Plugin_Nav
  * @category   Front Controller Plugin
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
 {

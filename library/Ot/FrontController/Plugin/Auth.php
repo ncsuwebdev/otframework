@@ -14,7 +14,8 @@
  *
  * @package    Ot_Plugin_Auth
  * @category   Front Controller Plugin
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -26,7 +27,8 @@
  *
  * @package    Ot_Plugin_Auth
  * @category   Front Controller Plugin
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 {

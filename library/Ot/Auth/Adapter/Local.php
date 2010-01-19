@@ -14,7 +14,8 @@
  *
  * @package    Ot_Auth_Adapter_Local
  * @category   Authentication Adapter
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -27,7 +28,8 @@
  *
  * @package    Ot_Auth_Adapter_Local
  * @category   Authentication Adapter
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  */
 class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapter_Interface
 {

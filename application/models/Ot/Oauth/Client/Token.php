@@ -14,7 +14,8 @@
  *
  * @package    Ot_Oauth_Server_Nonce
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
@@ -23,7 +24,8 @@
  *
  * @package    Ot_Oauth_Server_Token
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of Information Technology
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
  *
  */
 class Ot_Oauth_Client_Token extends Ot_Db_Table
