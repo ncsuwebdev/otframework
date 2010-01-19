@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_custom_attribute_value` (
   `objectId` varchar(64) NOT NULL DEFAULT '',
   `parentId` varchar(255) NOT NULL DEFAULT '',
   `attributeId` int(11) NOT NULL DEFAULT '0',
-  `value` text NOT NULL,
+  `value` text,
   PRIMARY KEY (`objectId`,`parentId`,`attributeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
