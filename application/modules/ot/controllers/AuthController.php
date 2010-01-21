@@ -45,7 +45,8 @@ class Ot_AuthController extends Zend_Controller_Action
         $adapters = $authAdapter->fetchAll(null, 'displayOrder');
         $this->view->adapters = $adapters;
         
-        $this->view->numEnabledAdapters = $authAdapter->getNumberOfEnabledAdapters();
+        $this->view
+             ->numEnabledAdapters = $authAdapter->getNumberOfEnabledAdapters();
         $this->_helper->pageTitle('ot-auth-index:title');
     }
     
@@ -55,13 +56,15 @@ class Ot_AuthController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
 
         if (!isset($get->key)) {
-            throw new Ot_Exception_Data('The authentication adapter key is not set in the query string.');
+            throw new Ot_Exception_Data('The authentication adapter key is not
+                set in the query string.');
         }
         
         $authAdapter = new Ot_Auth_Adapter();
         $adapter = $authAdapter->find($get->key);
         if (is_null($adapter)) {
-            throw new Ot_Exception_Data('No authentication adapter exists with the given key.');
+            throw new Ot_Exception_Data('No authentication adapter exists with
+                the given key.');
         }
         $this->view->adapter = $adapter;
         if ($adapter->enabled) {
@@ -77,38 +80,45 @@ class Ot_AuthController extends Zend_Controller_Action
              ->setMethod('post')
              ->setAttrib('id', 'toggleAuthAdapter');
        
-        $submit = $form->createElement('submit', 'submitButton', array('label' => 'form-button-yes'));
+        $submit = $form->createElement('submit', 'submitButton',
+            array('label' => 'form-button-yes'));
         $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+            array('ViewHelper', array('helper' => 'formSubmit'))
+        ));
                  
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
+        $cancel = $form->createElement('button', 'cancel',
+            array('label' => 'form-button-cancel'));
         $cancel->setAttrib('id', 'cancel');
         $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
+            array('ViewHelper', array('helper' => 'formButton'))
+        ));
                         
         $form->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',      
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                  array('Label', array('tag' => 'span')),      
-              ))
+              'ViewHelper',
+              'Errors',      
+              array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+              array('Label', array('tag' => 'span')),      
+        ))
              ->addElements(array($submit, $cancel));
 
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             if ($adapter->enabled) {
                 if ($numEnabledAdapters > 1) {
-                    $data = array('adapterKey' => $adapter->adapterKey, 'enabled' => 0);
+                    $data = array('adapterKey' => $adapter->adapterKey,
+                        'enabled' => 0);
                     $authAdapter->update($data, null);
                 } else {
-                    throw new Ot_Exception_Data('There must be one authentication adapter enabled at all times.');
+                    throw new Ot_Exception_Data('There must be one
+                        authentication adapter enabled at all times.');
                 }
             } else {
-                $data = array('enabled' => 1, 'adapterKey' => $adapter->adapterKey);
+                $data = array('enabled' => 1,
+                    'adapterKey' => $adapter->adapterKey);
                 $authAdapter->update($data, null);
             }
-            $this->_helper->redirector->gotoRoute(array('controller' => 'auth'), 'ot', true);
+            $this->_helper
+                 ->redirector
+                 ->gotoRoute(array('controller' => 'auth'), 'ot', true);
         }
 
         $this->_helper->pageTitle('ot-auth-toggle:title');
@@ -120,13 +130,15 @@ class Ot_AuthController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->key)) {
-            throw new Ot_Exception_Input('Value for key not found in query string.');
+            throw new Ot_Exception_Input('Value for key not found in query
+                string.');
         }
         
         $authAdapter = new Ot_Auth_Adapter();
         $thisAdapter = $authAdapter->find($get->key);
         if (is_null($thisAdapter)) {
-            throw new Ot_Exception_Data('No authentication adapter exists with the given key.');
+            throw new Ot_Exception_Data('No authentication adapter exists with
+                the given key.');
         }     
 
         $form = $authAdapter->form($thisAdapter->toArray());
@@ -142,7 +154,9 @@ class Ot_AuthController extends Zend_Controller_Action
                 
                 $authAdapter->update($data, null);
                 
-                $this->_helper->redirector->gotoRoute(array('controller' => 'auth'), 'ot', true);
+                $this->_helper
+                     ->redirector
+                     ->gotoRoute(array('controller' => 'auth'), 'ot', true);
             } else {
                 $messages[] = 'There was a problem submitting the form';
             }
@@ -167,7 +181,11 @@ class Ot_AuthController extends Zend_Controller_Action
             $post = Zend_Registry::get('postFilter');
             
             if (!isset($post->adapterKeys)) {
-                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-attributeIdsNotSet'));
+                $ret = array(
+                    'rc' => 0,
+                    'msg' => $this->view
+                                  ->translate('msg-error-attributeIdsNotSet'),
+                );
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             }
@@ -182,11 +200,18 @@ class Ot_AuthController extends Zend_Controller_Action
             
             try {
                 $adapter->updateAdapterOrder($adapterKeys);
-                $ret = array('rc' => 1, 'msg' => $this->view->translate('msg-info-newOrderSaved'));
+                $ret = array(
+                    'rc' => 1,
+                    'msg' => $this->view->translate('msg-info-newOrderSaved'),
+                );
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             } catch (Exception $e) {
-                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-orderNotSaved', $e->getMessage()));
+                $ret = array(
+                    'rc' => 0,
+                    'msg' => $this->view->translate('msg-error-orderNotSaved',
+                    $e->getMessage()),
+                );
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             }

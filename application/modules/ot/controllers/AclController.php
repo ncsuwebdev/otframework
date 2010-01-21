@@ -60,14 +60,17 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->acl = array(
             'add'                => $this->_helper->hasAccess('add'),
             'edit'               => $this->_helper->hasAccess('edit'),
-            'application-access' => $this->_helper->hasAccess('application-access'),
+            'application-access' => $this->_helper
+                                         ->hasAccess('application-access'),
             'remote-access'      => $this->_helper->hasAccess('remote-access'),
             'delete'             => $this->_helper->hasAccess('delete'),
-            );
+        );
 
         $config = Zend_Registry::get('config');
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $config->user->defaultRole->val);
+        $this->view
+             ->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api',
+                $config->user->defaultRole->val);
         
         $role = new Ot_Role();
         $this->view->defaultRole = $role->find($config->user->defaultRole->val);     
@@ -100,7 +103,8 @@ class Ot_AclController extends Zend_Controller_Action
             'index'              => $this->_helper->hasAccess('index'),
             'edit'               => $this->_helper->hasAccess('edit'),
             'delete'             => $this->_helper->hasAccess('delete'),
-            'application-access' => $this->_helper->hasAccess('application-access'),
+            'application-access' => $this->_helper
+                                         ->hasAccess('application-access'),
             'remote-access'      => $this->_helper->hasAccess('remote-access'),
             );
 
@@ -108,10 +112,14 @@ class Ot_AclController extends Zend_Controller_Action
         
         $config = Zend_Registry::get('config');
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $config->user->defaultRole->val);
+        $this->view
+             ->guestHasAccess = $this->_helper
+                                     ->hasAccess('index', 'ot_api',
+                                        $config->user->defaultRole->val);
         
         $role = new Ot_Role();
-        $this->view->defaultRole =  $role->find($config->user->defaultRole->val);   
+        $this->view
+             ->defaultRole =  $role->find($config->user->defaultRole->val);   
 
         if (!isset($get->roleId)) {
             throw new Ot_Exception_Input('msg-error-roleIdNotSet');
@@ -143,14 +151,21 @@ class Ot_AclController extends Zend_Controller_Action
         
         $remoteAcl = new Ot_Acl('remote');
         
-        $this->view->remoteResources = $remoteAcl->getRemoteResources($thisRole['roleId']);
+        $this->view
+             ->remoteResources = $remoteAcl->getRemoteResources(
+                $thisRole['roleId']);
         
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
+        $this->view
+             ->headLink()
+             ->appendStylesheet($this->view->baseUrl()
+              . '/css/ot/jquery.plugin.tipsy.css');
+        $this->view
+             ->headScript()
+             ->appendFile(
+                $this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
                 
         if ($thisRole['inheritRoleId'] != 0) {
             $inheritRole = $role->find($thisRole['inheritRoleId']);
-            
             $this->view->inheritRole = $inheritRole->name;
         }
         $this->_helper->pageTitle("ot-acl-details:title");
@@ -175,20 +190,23 @@ class Ot_AclController extends Zend_Controller_Action
                 $data = array(
                     'name'          => preg_replace('/[^a-z0-9]/i', '_', $form->getValue('name')),
                     'inheritRoleId' => $form->getValue('inheritRoleId'),
-                    'editable'      => 1
-                    );
+                    'editable'      => 1,
+                );
         
                 $role = new Ot_Role();
                 $roleId = $role->insert($data);
                 
                 $logOptions = array(
-                        'attributeName' => 'accessRole',
-                        'attributeId'   => $roleId,
+                    'attributeName' => 'accessRole',
+                    'attributeId'   => $roleId,
                 );
                     
-                $this->_helper->log(Zend_Log::INFO, 'Role ' . $data['name'] . ' was added', $logOptions);
+                $this->_helper->log(Zend_Log::INFO,
+                        'Role ' . $data['name'] . ' was added', $logOptions);
     
-                $this->_helper->redirector->gotoUrl('/ot/acl/details?roleId=' . $roleId);
+                $this->_helper
+                     ->redirector
+                     ->gotoUrl('/ot/acl/details?roleId=' . $roleId);
             } else {
                 $messages[] = 'msg-error-invalidForm';
             }
@@ -196,7 +214,7 @@ class Ot_AclController extends Zend_Controller_Action
         
         $this->view->messages = $messages;
         $this->view->form = $form;
-        
+
         $this->_helper->pageTitle("ot-acl-add:title");
     }
 
@@ -231,21 +249,25 @@ class Ot_AclController extends Zend_Controller_Action
                 
                 $data = array(
                     'roleId'        => $get->roleId,
-                    'name'          => preg_replace('/[^a-z0-9]/i', '_', $form->getValue('name')),
+                    'name'          => preg_replace('/[^a-z0-9]/i', '_',
+                                           $form->getValue('name')),
                     'inheritRoleId' => $form->getValue('inheritRoleId'),
-                    );
+                );
     
                 $role = new Ot_Role();
                 $role->update($data, null);
                 
                 $logOptions = array(
-                        'attributeName' => 'accessRole',
-                        'attributeId'   => $data['roleId'],
+                    'attributeName' => 'accessRole',
+                    'attributeId'   => $data['roleId'],
                 );
                     
-                $this->_helper->log(Zend_Log::INFO, 'Role ' . $data['name'] . ' was modified', $logOptions);
+                $this->_helper->log(Zend_Log::INFO,
+                    'Role ' . $data['name'] . ' was modified', $logOptions);
     
-                $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $data['roleId']);
+                $this->_helper
+                     ->redirector
+                     ->gotoUrl('/ot/acl/details/?roleId=' . $data['roleId']);
             } else {
                 $messages[] = 'msg-error-invalidForm';
             }
@@ -287,23 +309,29 @@ class Ot_AclController extends Zend_Controller_Action
         }
         
         if ($this->_request->isPost()) {            
-            $rules = $this->_processAccessList($_POST, $thisRole->inheritRoleId);
+            $rules = $this->_processAccessList($_POST,
+                        $thisRole->inheritRoleId);
                             
             $role = new Ot_Role();
             $role->assignRulesForRole($get->roleId, 'application', $rules);
             
             $logOptions = array(
-                    'attributeName' => 'accessRole',
-                    'attributeId'   => $thisRole->roleId,
+                'attributeName' => 'accessRole',
+                'attributeId'   => $thisRole->roleId,
             );
                 
-            $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
+            $this->_helper
+                 ->log(Zend_Log::INFO,
+                    'Role ' . $thisRole->name . ' was modified', $logOptions);
 
-            $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $thisRole->roleId);
+            $this->_helper
+                 ->redirector
+                 ->gotoUrl('/ot/acl/details/?roleId=' . $thisRole->roleId);
 
         }
 
-        $this->view->children = $this->_acl->getChildrenOfRole($thisRole->roleId);
+        $this->view
+             ->children = $this->_acl->getChildrenOfRole($thisRole->roleId);
 
         $resources = $this->_acl->getResources($thisRole->roleId);
         
@@ -321,8 +349,10 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->resources = $resources;
         $this->view->role = $thisRole;
             
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl()
+            . '/css/ot/jquery.plugin.tipsy.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl()
+            . '/scripts/ot/jquery.plugin.tipsy.js');
                       
         $this->_helper->pageTitle("ot-acl-applicationAccess:title");  
     }
@@ -374,25 +404,35 @@ class Ot_AclController extends Zend_Controller_Action
             $role->assignRulesForRole($thisRole->roleId, 'remote', $rules);
             
             $logOptions = array(
-                    'attributeName' => 'accessRole',
-                    'attributeId'   => $thisRole->roleId,
+                'attributeName' => 'accessRole',
+                'attributeId'   => $thisRole->roleId,
             );
                 
-            $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
+            $this->_helper->log(Zend_Log::INFO,
+                'Role ' . $thisRole->name . ' was modified', $logOptions);
 
-            $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $thisRole->roleId);
+            $this->_helper
+                 ->redirector
+                 ->gotoUrl('/ot/acl/details/?roleId=' . $thisRole->roleId);
 
         }
 
-        $this->view->children = $this->_acl->getChildrenOfRole($thisRole->roleId);
+        $this->view
+             ->children = $this->_acl->getChildrenOfRole($thisRole->roleId);
 
         $resources = $remoteAcl->getRemoteResources($thisRole->roleId);
                 
         $this->view->resources = $resources;
         $this->view->role = $thisRole;
             
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
+        $this->view
+             ->headLink()
+             ->appendStylesheet($this->view->baseUrl()
+              . '/css/ot/jquery.plugin.tipsy.css');
+        $this->view
+             ->headScript()
+             ->appendFile($this->view->baseUrl()
+              . '/scripts/ot/jquery.plugin.tipsy.js');
                       
         $this->_helper->pageTitle("ot-acl-remoteAccess:title");  
     }    
@@ -454,7 +494,8 @@ class Ot_AclController extends Zend_Controller_Action
             $roleList = implode(', ', $roleList);
             
             if (count($inheritedRoles) > 0) {
-                throw new Ot_Exception_Data($this->view->translate('msg-error-dependedRoleCannotDelete', $roleList));
+                throw new Ot_Exception_Data($this->view->translate(
+                    'msg-error-dependedRoleCannotDelete', $roleList));
             }
 
             $role = new Ot_Role();
@@ -488,7 +529,8 @@ class Ot_AclController extends Zend_Controller_Action
                     'attributeId'   => $get->roleId,
             );
                 
-            $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole['name'] . ' was deleted', $logOptions);
+            $this->_helper->log(Zend_Log::INFO,
+                'Role ' . $thisRole['name'] . ' was deleted', $logOptions);
 
             $this->_helper->redirector->gotoUrl('/ot/acl/');
         }      
@@ -525,7 +567,8 @@ class Ot_AclController extends Zend_Controller_Action
 
                 if (isset($data[$module][$controller]['all'])) {
                     if ($data[$module][$controller]['all'] == 'allow') {
-                        if (!$this->_acl->isAllowed($inheritRoleId, $resource)) {
+                        if (!$this->_acl
+                                  ->isAllowed($inheritRoleId, $resource)) {
                             $rules[] = array(
                                 'type'      => 'allow',
                                 'resource'  => $resource,
@@ -541,8 +584,8 @@ class Ot_AclController extends Zend_Controller_Action
                                     $rules[] = array(
                                         'type'      => 'deny',
                                         'resource'  => $resource,
-                                        'privilege' => $action
-                                        );
+                                        'privilege' => $action,
+                                    );
                                 }
                             }
                         }
@@ -551,20 +594,21 @@ class Ot_AclController extends Zend_Controller_Action
                             $rules[] = array(
                                 'type'      => 'deny',
                                 'resource'  => $resource,
-                                'privilege' => '*'
-                                );
+                                'privilege' => '*',
+                            );
                         }
 
                         $parts = array_keys($actions['part']);
                         
                         foreach ($parts as $action) {
                             if (isset($data[$module][$controller]['part'][$action])) {
-                                if ($data[$module][$controller]['part'][$action] == 'allow' && !$this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
+                                if ($data[$module][$controller]['part'][$action] == 'allow'
+                                    && !$this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
                                     $rules[] = array(
                                         'type'      => 'allow',
                                         'resource'  => $resource,
-                                        'privilege' => $action
-                                        );
+                                        'privilege' => $action,
+                                    );
                                 }
                             }
                         }
@@ -574,20 +618,22 @@ class Ot_AclController extends Zend_Controller_Action
                     
                     foreach ($parts as $action) {                       
                         if (isset($data[$module][$controller]['part'][$action])) {
-                            if ($data[$module][$controller]['part'][$action] == 'allow' && !$this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
+                            if ($data[$module][$controller]['part'][$action] == 'allow'
+                                && !$this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
                                 $rules[] = array(
                                     'type'      => 'allow',
                                     'resource'  => $resource,
-                                    'privilege' => $action
-                                    );
+                                    'privilege' => $action,
+                                );
                             }
 
-                            if ($data[$module][$controller]['part'][$action] == 'deny' && $this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
+                            if ($data[$module][$controller]['part'][$action] == 'deny'
+                                && $this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
                                 $rules[] = array(
                                     'type'      => 'deny',
                                     'resource'  => $resource,
-                                    'privilege' => $action
-                                    );
+                                    'privilege' => $action,
+                                );
                             }
                         }
                     }

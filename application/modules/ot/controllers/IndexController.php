@@ -44,7 +44,8 @@ class Ot_IndexController extends Zend_Controller_Action
         $this->view->otVersion = Ot_Version::VERSION;
         $this->view->zfVersion = Zend_Version::VERSION;        
        
-        // the jQuery and jQueryUi library versions are acquired by the javascript
-        // for this controller and inserted into the page that way
+        /* The jQuery and jQueryUi library versions are acquired by the
+         * javascript for this controller and inserted into the page that way
+         */
     }
 }

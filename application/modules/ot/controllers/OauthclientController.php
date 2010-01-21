@@ -34,7 +34,9 @@ class Ot_OauthclientController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
+        $req = new Zend_Session_Namespace(
+            Zend_Registry::get('siteUrl') . '_request'
+        );
         $req->requestedFromUrl = $_SERVER['HTTP_REFERER'];
         
         $get = Zend_Registry::get('getFilter');
@@ -50,12 +52,12 @@ class Ot_OauthclientController extends Zend_Controller_Action
         $configData = $config->app->oauth->consumers->{$consumerId}->toArray();
         
         $options = array(
-                    'requestTokenUrl' => $configData['requestTokenUrl'], 
-                    'authorizeUrl'    => $configData['authorizeUrl'], 
-                    'accessTokenUrl'  => $configData['accessTokenUrl'], 
-                    'consumerKey'     => $configData['consumerKey'], 
-                    'consumerSecret'  => $configData['consumerSecret']
-                   );
+            'requestTokenUrl' => $configData['requestTokenUrl'], 
+            'authorizeUrl'    => $configData['authorizeUrl'], 
+            'accessTokenUrl'  => $configData['accessTokenUrl'], 
+            'consumerKey'     => $configData['consumerKey'], 
+            'consumerSecret'  => $configData['consumerSecret'],
+        );
                    
         $oAuthClient = new Ot_Oauth_Client($options);
                 
@@ -65,7 +67,13 @@ class Ot_OauthclientController extends Zend_Controller_Action
         
         $otOauthToken = new Ot_Oauth_Client_Token();
         
-        $otOauthToken->storeToken($accountId, $consumerId, $token->key, $token->secret, 'request');  
+        $otOauthToken->storeToken(
+            $accountId,
+            $consumerId,
+            $token->key,
+            $token->secret,
+            'request'
+        );  
         
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNeverRender();
@@ -102,22 +110,32 @@ class Ot_OauthclientController extends Zend_Controller_Action
         $configData = $config->app->oauth->consumers->{$consumerId}->toArray();
         
         $options = array(
-                    'requestTokenUrl' => $configData['requestTokenUrl'], 
-                    'authorizeUrl'    => $configData['authorizeUrl'], 
-                    'accessTokenUrl'  => $configData['accessTokenUrl'], 
-                    'consumerKey'     => $configData['consumerKey'], 
-                    'consumerSecret'  => $configData['consumerSecret']
-                   );
+            'requestTokenUrl' => $configData['requestTokenUrl'], 
+            'authorizeUrl'    => $configData['authorizeUrl'], 
+            'accessTokenUrl'  => $configData['accessTokenUrl'], 
+            'consumerKey'     => $configData['consumerKey'], 
+            'consumerSecret'  => $configData['consumerSecret'],
+        );
                    
         $oAuthClient = new Ot_Oauth_Client($options);
         
-        $oAuthClient->setRequestToken($requestToken->token, $requestToken->tokenSecret);
+        $oAuthClient->setRequestToken(
+            $requestToken->token,
+            $requestToken->tokenSecret
+        );
         
         $accessToken = $oAuthClient->getAccessToken();
         
-        $otOauthToken->convertRequestTokenToAccessToken($accountId, $consumerId, $accessToken->key, $accessToken->secret);
+        $otOauthToken->convertRequestTokenToAccessToken(
+            $accountId,
+            $consumerId,
+            $accessToken->key,
+            $accessToken->secret
+        );
         
-        $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
+        $req = new Zend_Session_Namespace(
+            end_Registry::get('siteUrl') . '_request'
+        );
         $this->_helper->redirector->gotoUrl($req->requestedFromUrl);
     }
 }

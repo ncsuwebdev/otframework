@@ -37,67 +37,86 @@ class Ot_EmailqueueController extends Zend_Controller_Action
     public function indexAction()
     {            
         $this->_helper->pageTitle('ot-emailqueue-index:title');  
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages(); 
+        $this->view
+             ->headScript()
+             ->appendFile($this->view->baseUrl()
+                . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
+        $this->view
+             ->headLink()
+             ->appendStylesheet($this->view->baseUrl()
+                . '/public/css/ot/jquery.plugin.flexigrid.css');
+        $this->view
+            ->messages = $this->_helper->flashMessenger->getMessages(); 
         
         if ($this->_request->isXmlHttpRequest()) {
                 
-                $filter = Zend_Registry::get('postFilter');
-                
-                $this->_helper->layout->disableLayout();
-                $this->_helper->viewRenderer->setNeverRender();
-                
-                $queue = new Ot_Email_Queue();
-                
-                $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'queueDt';
-                $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
-                $rp        = (isset($filter->rp)) ? $filter->rp : 40;
-                $page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
-                $qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
-                $query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
-                
-                
-                $where = null;
-                if (!is_null($query)) {
-                        $where = $queue->getAdapter()->quoteInto($qtype . ' = ?', $query);
+            $filter = Zend_Registry::get('postFilter');
+            
+            $this->_helper->layout->disableLayout();
+            $this->_helper->viewRenderer->setNeverRender();
+            
+            $queue = new Ot_Email_Queue();
+            
+            $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'queueDt';
+            $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
+            $rp        = (isset($filter->rp)) ? $filter->rp : 40;
+            $page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
+            $qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
+            $query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
+            
+            
+            $where = null;
+            if (!is_null($query)) {
+                $where = $queue->getAdapter()
+                               ->quoteInto($qtype . ' = ?', $query);
+            }
+                            
+            $emails = $queue->fetchAll($where,
+                $sortname . ' ' . $sortorder, $rp, $page * $rp);
+                            
+            $response = array(
+                'page' => $page + 1,
+                'total' => count($queue->fetchAll($where)),
+                'rows'  => array(),
+            );
+            
+            $config = Zend_Registry::get('config');
+            
+            foreach ($emails as $e) {
+                    
+                if ($this->_helper->hasAccess('details')) {
+                    $recipientField = '<a href="' . $this->view->url(array(
+                            'controller' => 'emailqueue',
+                            'action' => 'details',
+                            'queueId' => $e['queueId'],
+                        ), 'ot', true)
+                        . '">'
+                        . implode(', ', $e['zendMailObject']->getRecipients())
+                        . '</a>';
+                } else {
+                    $recipientField = implode(', ',
+                        $e['zendMailObject']->getRecipients());
                 }
-                                
-                $emails = $queue->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
-                                
-                $response = array(
-                        'page' => $page + 1,
-                        'total' => count($queue->fetchAll($where)),
-                        'rows'  => array()
+                
+                $row = array(
+                    'id'   => $e['queueId'],
+                    'cell' => array(
+                        $recipientField,
+                        $e['zendMailObject']->getSubject(),                        
+                        ucwords($e['status']),
+                        strftime($config->user
+                                        ->dateTimeFormat
+                                        ->val, $e['queueDt']), 
+                        ($e['sentDt'] == 0) ? 'Not Sent Yet' : strftime($config->user->dateTimeFormat->val, $e['sentDt']),
+                        $e['attributeName'],
+                        $e['attributeId'],
+                    )
                 );
                 
-                $config = Zend_Registry::get('config');
-                
-                foreach ($emails as $e) {
-                        
-                        if ($this->_helper->hasAccess('details')) {
-                                $recipientField = '<a href="' . $this->view->url(array('controller' => 'emailqueue', 'action' => 'details', 'queueId' => $e['queueId']), 'ot', true) . '">' . implode(', ', $e['zendMailObject']->getRecipients()) . '</a>';
-                        } else {
-                                $recipientField = implode(', ', $e['zendMailObject']->getRecipients());
-                        }
-                        
-                        $row = array(
-                                'id'   => $e['queueId'],
-                                'cell' => array(
-                                        $recipientField,
-                                $e['zendMailObject']->getSubject(),                        
-                                        ucwords($e['status']),
-                                        strftime($config->user->dateTimeFormat->val, $e['queueDt']), 
-                                        ($e['sentDt'] == 0) ? 'Not Sent Yet' : strftime($config->user->dateTimeFormat->val, $e['sentDt']),
-                                        $e['attributeName'],
-                                        $e['attributeId']                                     
-                                )
-                        );
-                        
-                        $response['rows'][] = $row;
-                }
-                echo Zend_Json::encode($response);
-                return;
+                $response['rows'][] = $row;
+            }
+            echo Zend_Json::encode($response);
+            return;
         }
     }        
     
@@ -127,12 +146,14 @@ class Ot_EmailqueueController extends Zend_Controller_Action
         }
 
         $email['msg'] = array(
-            'to'      => implode(', ', $email['zendMailObject']->getRecipients()),
+            'to'      => implode(', ',
+                            $email['zendMailObject']->getRecipients()),
             'from'    => $email['zendMailObject']->getFrom(),
             'subject' => $email['zendMailObject']->getSubject(),
-            'body'    => nl2br(quoted_printable_decode($email['zendMailObject']->getBodyText(true))),
+            'body'    => nl2br(quoted_printable_decode(
+                            $email['zendMailObject']->getBodyText(true))),
             'header'  => $email['zendMailObject']->getHeaders(),
-            );
+        );
 
         $this->view->email = $email;
         $this->_helper->pageTitle('ot-emailqueue-details:title');
@@ -144,7 +165,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-            $eq = new Ot_Email_Queue();
+        $eq = new Ot_Email_Queue();
 
         $get = Zend_Registry::get('getFilter');
 
@@ -162,11 +183,18 @@ class Ot_EmailqueueController extends Zend_Controller_Action
 
         if ($this->_request->isPost() && $form->isValid($_POST)) {
                 
-                $where = $eq->getAdapter()->quoteInto('queueId = ?', $get->queueId);
-                $eq->delete($where);
-                
-                $this->_helper->flashMessenger->addMessage('ot-emailqueue-delete:success');
-                $this->_helper->redirector->gotoRoute(array('controller' => 'emailqueue'), 'ot', true);
+            $where = $eq->getAdapter()
+                        ->quoteInto('queueId = ?', $get->queueId);
+            $eq->delete($where);
+            
+            $this->_helper
+                 ->flashMessenger
+                 ->addMessage('ot-emailqueue-delete:success');
+            $this->_helper
+                 ->redirector
+                 ->gotoRoute(array(
+                    'controller' => 'emailqueue'
+                 ), 'ot', true);
         }
         
         $this->view->form = $form;

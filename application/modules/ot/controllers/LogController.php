@@ -38,81 +38,89 @@ class Ot_LogController extends Zend_Controller_Action
     {
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->_helper->pageTitle('ot-log-index:title');  
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css'); 
+        $this->view
+             ->headScript()
+             ->appendFile($this->view->baseUrl()
+              . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
+        $this->view
+             ->headLink()
+             ->appendStylesheet($this->view->baseUrl()
+              . '/public/css/ot/jquery.plugin.flexigrid.css'); 
         
         if ($this->_request->isXmlHttpRequest()) {
                 
-                $filter = Zend_Registry::get('postFilter');
+            $filter = Zend_Registry::get('postFilter');
+            
+            $this->_helper->layout->disableLayout();
+            $this->_helper->viewRenderer->setNeverRender();
+            
+            $log = new Ot_Log();
+            
+            $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'timestamp';
+            $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
+            $rp        = (isset($filter->rp)) ? $filter->rp : 40;
+            $page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
+            $qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
+            $query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
+            
+            $acl = Zend_Registry::get('acl');
+            $roles = $acl->getAvailableRoles();
+            
+            $where = null;
                 
-                $this->_helper->layout->disableLayout();
-                $this->_helper->viewRenderer->setNeverRender();
-                
-                $log = new Ot_Log();
-                
-                $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'timestamp';
-                $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
-                $rp        = (isset($filter->rp)) ? $filter->rp : 40;
-                $page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
-                $qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
-                $query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
-                
-                $acl = Zend_Registry::get('acl');
-                $roles = $acl->getAvailableRoles();
-                
-                $where = null;
-                
-                if (!is_null($query)) {
-                        if ($qtype == 'role') {
-                                foreach ($roles as $r) {
-                                        if ($query == $r['name']) {
-                                                $query = $r['roleId'];
-                                                break;
-                                        }
-                                }
+            if (!is_null($query)) {
+                if ($qtype == 'role') {
+                    foreach ($roles as $r) {
+                        if ($query == $r['name']) {
+                            $query = $r['roleId'];
+                            break;
                         }
-                        
-                        $where = $log->getAdapter()->quoteInto($qtype . ' = ?', $query);
+                    }
                 }
-                                
-                $logs = $log->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
-                                
-                $response = array(
-                        'page' => $page + 1,
-                        'total' => $log->fetchAll($where)->count(),
-                        'rows'  => array()
+                    
+                $where = $log->getAdapter()->quoteInto($qtype . ' = ?', $query);
+            }
+                            
+            $logs = $log->fetchAll($where, $sortname . ' ' . $sortorder, $rp,
+                $page * $rp);
+                            
+            $response = array(
+                'page' => $page + 1,
+                'total' => $log->fetchAll($where)->count(),
+                'rows'  => array(),
+            );
+            
+            $config = Zend_Registry::get('config');
+                    
+            $account = new Ot_Account();
+            $accounts = $account->fetchAll(null,
+                array('firstName', 'lastName'));
+            
+            foreach ($accounts as $a) {
+                $accountMap[$a->accountId] = $a->firstName . ' ' . $a->lastName;
+            }
+            
+            foreach ($logs as $l) {
+                $row = array(
+                    'id'   => $l->accountId,
+                    'cell' => array(
+                        $l->accountId,
+                        (isset($accountMap[$l->accountId])) ? $accountMap[$l->accountId] : 'Unknown',
+                        (isset($roles[$l->role]['name'])) ? $roles[$l->role]['name'] : $l->role, 
+                        $l->request,
+                        $l->sid, 
+                        strftime($config->user->dateTimeFormat->val, $l->timestamp),
+                        $l->message,
+                        $l->priorityName,
+                        $l->attributeName,
+                        $l->attributeId,                                       
+                    ),
                 );
                 
-                $config = Zend_Registry::get('config');
-                        
-                $account = new Ot_Account();
-                $accounts = $account->fetchAll(null, array('firstName', 'lastName'));
-                
-                foreach ($accounts as $a) {
-                        $accountMap[$a->accountId] = $a->firstName . ' ' . $a->lastName;
-                }
-                
-                foreach ($logs as $l) {
-                        $row = array(
-                                'id'   => $l->accountId,
-                                'cell' => array(
-                                        $l->accountId,
-                                (isset($accountMap[$l->accountId])) ? $accountMap[$l->accountId] : 'Unknown',
-                                        (isset($roles[$l->role]['name'])) ? $roles[$l->role]['name'] : $l->role, 
-                                        $l->request,
-                                        $l->sid, 
-                                        strftime($config->user->dateTimeFormat->val, $l->timestamp),
-                                        $l->message,
-                                        $l->priorityName,
-                                        $l->attributeName,
-                                        $l->attributeId,                                       
-                                ),
-                        );
-                        
-                        $response['rows'][] = $row;
-                }
-                echo Zend_Json::encode($response);
-                return;
+                $response['rows'][] = $row;
+            }
+            echo Zend_Json::encode($response);
+            return;
         }
     }
     
@@ -134,7 +142,10 @@ class Ot_LogController extends Zend_Controller_Action
 
             $this->_helper->flashMessenger->addMessage('msg-info-logsCleared');
             
-            $this->_helper->redirector->gotoRoute(array('controller' => 'log', 'action' => 'index'), 'ot', true);
+            $this->_helper->redirector->gotoRoute(array(
+                'controller' => 'log',
+                'action' => 'index',
+            ), 'ot', true);
         }
         
         $this->_helper->pageTitle('ot-log-clear:title');

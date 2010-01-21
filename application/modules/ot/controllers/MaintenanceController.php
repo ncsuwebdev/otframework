@@ -44,7 +44,10 @@ class Ot_MaintenanceController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->view->maintenanceMode = (is_file(APPLICATION_PATH . '/../overrides/' . $this->_maintenanceModeFileName)) ? true : false;
+        $this->view
+             ->maintenanceMode = (is_file(APPLICATION_PATH . '/../overrides/'
+                               . $this->_maintenanceModeFileName)
+              ) ? true : false;
         $this->_helper->pageTitle('ot-maintenance-index:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
@@ -60,7 +63,9 @@ class Ot_MaintenanceController extends Zend_Controller_Action
         $path = realpath(APPLICATION_PATH . '/../overrides');
         
         if (!is_writable($path)) {
-            throw new Ot_Exception_Data($this->view->translate('msg-error-configDirNotWritable', $path));
+            throw new Ot_Exception_Data(
+                $this->view->translate('msg-error-configDirNotWritable', $path)
+            );
         }
         
         $get = Zend_Registry::get('getFilter');
@@ -72,7 +77,8 @@ class Ot_MaintenanceController extends Zend_Controller_Action
         $messages = array();
         
         if ($status == 'on') {
-            file_put_contents($path . '/' . $this->_maintenanceModeFileName, '');
+            file_put_contents($path . '/' . $this->_maintenanceModeFileName,
+                '');
         } else {
             unlink($path . '/' . $this->_maintenanceModeFileName); 
         }
@@ -84,15 +90,21 @@ class Ot_MaintenanceController extends Zend_Controller_Action
         
         if ($status == 'on') {
             $logMsg = "Application was put into maintenance mode";
-            $this->_helper->flashMessenger->addMessage('msg-info-maintenanceOn');
+            $this->_helper
+                 ->flashMessenger
+                 ->addMessage('msg-info-maintenanceOn');
         } else {
             $logMsg = "Application was taken out of maintenance mode";
-            $this->_helper->flashMessenger->addMessage('msg-info-maintenanceOff');
+            $this->_helper
+                 ->flashMessenger
+                 ->addMessage('msg-info-maintenanceOff');
         }
         
         $this->_helper->log(Zend_Log::INFO, $logMsg, $logOptions);
 
-        $this->_helper->redirector->gotoRoute(array('controller' => 'maintenance'), 'ot', true);
+        $this->_helper
+             ->redirector
+             ->gotoRoute(array('controller' => 'maintenance'), 'ot', true);
         
         $this->view->messages = $messages;
     }

@@ -68,9 +68,11 @@ class Ot_BackupController extends Zend_Controller_Action
                     $logOptions = array(
                         'attributeName' => 'databaseTableBackup',
                         'attributeId'   => $tableName,
-                );
+                    );
                     
-                $this->_helper->log(Zend_Log::INFO, 'Backup of database table ' . $tableName . ' was downloaded', $logOptions);
+                    $this->_helper->log(Zend_Log::INFO,
+                        'Backup of database table ' . $tableName
+                        . ' was downloaded', $logOptions);
                 }
         }
         
@@ -102,11 +104,12 @@ class Ot_BackupController extends Zend_Controller_Action
             $this->_helper->viewRenderer->setNeverRender();
             
             $logOptions = array(
-                    'attributeName' => 'databaseTableBackup',
-                    'attributeId'   => 'allTables',
+                'attributeName' => 'databaseTableBackup',
+                'attributeId'   => 'allTables',
             );
                 
-            $this->_helper->log(Zend_Log::INFO, 'Backup of entire database was downloaded', $logOptions);
+            $this->_helper->log(Zend_Log::INFO,
+                'Backup of entire database was downloaded', $logOptions);
         } else {
             throw new Ot_Exception();
         }

@@ -41,14 +41,15 @@ class Ot_CronController extends Zend_Controller_Action
             'edit'   => false,
             'toggle' => $this->_helper->hasAccess('toggle'),
             'acl'    => $this->_helper->hasAccess('index', 'ot_acl')
-            );
+        );
             
         $config = Zend_Registry::get('config');
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'cron_index', $config->user->defaultRole->val);
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index',
+            'cron_index', $config->user->defaultRole->val);
         
         $role = new Ot_Role();
-        $this->view->defaultRole =  $role->find($config->user->defaultRole->val);
+        $this->view->defaultRole = $role->find($config->user->defaultRole->val);
 
         $cs = new Ot_Cron_Status();
 
@@ -70,7 +71,7 @@ class Ot_CronController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->name)) {
-                throw new Ot_Exception_Input('msg-error-nameNotSet');
+            throw new Ot_Exception_Input('msg-error-nameNotSet');
         }
         
         if (!isset($get->status)) {
@@ -104,16 +105,18 @@ class Ot_CronController extends Zend_Controller_Action
             array('ViewHelper')
         ));
                
-        $submit = $form->createElement('submit', 'submitButton', array('label' => 'form-button-yes'));
+        $submit = $form->createElement('submit', 'submitButton',
+            array('label' => 'form-button-yes'));
         $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+            array('ViewHelper', array('helper' => 'formSubmit'))
+        ));
                  
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
+        $cancel = $form->createElement('button', 'cancel',
+            array('label' => 'form-button-cancel'));
         $cancel->setAttrib('id', 'cancel');
         $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
+            array('ViewHelper', array('helper' => 'formButton'))
+        ));
                         
         $form->addElements(array($hidden))
              ->setElementDecorators(array(
@@ -134,9 +137,13 @@ class Ot_CronController extends Zend_Controller_Action
                         'attributeId'   => $get->name,
             );
                     
-            $this->_helper->log(Zend_Log::INFO, 'cron was set to ' . $status, $logOptions);
+            $this->_helper
+                 ->log(Zend_Log::INFO, 'cron was set to ' . $status,
+                    $logOptions);
                         
-            $this->_helper->redirector->gotoRoute(array('controller' => 'cron'), 'ot', true);
+            $this->_helper
+                 ->redirector
+                 ->gotoRoute(array('controller' => 'cron'), 'ot', true);
         }
         
         if ($get->name == 'all') {

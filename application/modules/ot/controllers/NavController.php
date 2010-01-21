@@ -51,9 +51,9 @@ class Ot_NavController extends Zend_Controller_Action
     protected $_otNav;
     
     /**
-     * The ACL object for the application.  It's kept here because it's referenced
-     * in a recursive method (processChildren()) and we don't need to get it
-     * each time. 
+     * The ACL object for the application. It's kept here because it's 
+     * referenced in a recursive method (processChildren()) and we don't need to
+     * get it each time. 
      */
     protected $_acl;
     
@@ -81,11 +81,18 @@ class Ot_NavController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-nav-index:title');;
         
         $this->view->siteUrl = Zend_Registry::get('siteUrl');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.jtree.js')
-                                 ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
+        $this->view
+             ->headScript()
+             ->appendFile($this->view->baseUrl()
+              . '/public/scripts/ot/jquery.plugin.jtree.js')
+             ->appendFile($this->view->baseUrl()
+              . '/public/scripts/ot/jquery.plugin.json.js');
                                  
         $nav = new Ot_Nav();
-        $this->view->editNavTreeHtml = $nav->generateHtml(Zend_Registry::get('navArray'), true);
+        $this->view->editNavTreeHtml = $nav->generateHtml(
+            Zend_Registry::get('navArray'),
+            true
+        );
     }
 
     
@@ -153,20 +160,27 @@ class Ot_NavController extends Zend_Controller_Action
             
             $this->_otNav = new Ot_Nav();
                         
-            // put all this stuff in a transaction to make sure nothing gets screwed up
+            // Put this in a transaction to make sure nothing gets screwed up
             $this->_otNav->getAdapter()->beginTransaction();
             
-            // empty the table
+            // Empty the table
             $this->_otNav->delete(true);
             
-            // adds ids and parent ids to the array as well as splits apart the link into module, controller, and action
+            /* Adds ids and parent ids to the array as well as splits apart the
+             *  link into module, controller, and action
+             */
             try {
                 $this->_processChildren($rawData);
             } catch (Exception $e) {
                 
                 $this->_otNav->getAdapter()->rollBack();
                 
-                $retData = array('rc' => '0', 'msg' => $this->view->translate('msg-error-savingNav') . ' ' . $e->getMessage());
+                $retData = array(
+                    'rc' => '0',
+                    'msg' => $this->view
+                                  ->translate('msg-error-savingNav')
+                                   . ' ' . $e->getMessage(),
+                );
                 echo Zend_Json_Encoder::encode($retData);
                 return;
             }
@@ -181,9 +195,16 @@ class Ot_NavController extends Zend_Controller_Action
                        'attributeId'   => 'modified',
             );
                     
-            $this->_helper->log(Zend_Log::INFO, 'Navigation structure modified', $logOptions);
+            $this->_helper->log(
+                Zend_Log::INFO,
+                'Navigation structure modified',
+                $logOptions
+            );
     
-            $retData = array('rc' => '1', 'msg' => $this->view->translate('msg-info-savedNav'));
+            $retData = array(
+                'rc' => '1',
+                'msg' => $this->view->translate('msg-info-savedNav')
+            );
             echo Zend_Json_Encoder::encode($retData);
             return;
         }
@@ -219,7 +240,15 @@ class Ot_NavController extends Zend_Controller_Action
             try {
                 $this->_acl->get($a['module'] . "_" . $a['controller']);
             } catch (Exception $e) {
-                 throw new Exception($this->view->translate('msg-error-notValidResource', array($a['module'], $a['controller'])));
+                throw new Exception($this->view
+                                         ->translate(
+                                            'msg-error-notValidResource',
+                                            array(
+                                                $a['module'],
+                                                $a['controller']
+                                            )
+                                         )
+                );
             }
             
             $tab = array(
