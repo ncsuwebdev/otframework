@@ -43,8 +43,8 @@ class Ot_BackupController extends Zend_Controller_Action
                 
                 if ($form->isValid($_POST)) {
                         
-                        $this->_helper->layout->disableLayout();
-                $this->_helper->viewRenderer->setNeverRender();
+                    $this->_helper->layout->disableLayout();
+                    $this->_helper->viewRenderer->setNeverRender();
                     
                     $db = Zend_Db_Table::getDefaultAdapter();
                     
@@ -58,8 +58,12 @@ class Ot_BackupController extends Zend_Controller_Action
                         $type = 'csv';   
                     }
 
-                      // this call sends it to the browser too 
-                    $backup->getBackup($db, $tableName, $type);
+                    try {
+                        // this call sends it to the browser too 
+                        $backup->getBackup($db, $tableName, $type);
+                    } catch (Exception $e) {
+                        throw $e;
+                    }
                     
                     $logOptions = array(
                         'attributeName' => 'databaseTableBackup',
@@ -85,13 +89,17 @@ class Ot_BackupController extends Zend_Controller_Action
             
             $backup = new Ot_Backup();
             
-            $this->_helper->layout->disableLayout();
-            $this->_helper->viewRenderer->setNeverRender();
-            
             $db = Zend_Db_Table::getDefaultAdapter();
             
-            // this call sends it to the browser too 
-            $backup->getBackup($db, '', 'sqlAll');
+            try {
+                // this call sends it to the browser too                 
+                $backup->getBackup($db, '', 'sqlAll');
+            } catch (Exception $e) {
+                throw $e;
+            }
+            
+            $this->_helper->layout->disableLayout();
+            $this->_helper->viewRenderer->setNeverRender();
             
             $logOptions = array(
                     'attributeName' => 'databaseTableBackup',
@@ -99,6 +107,8 @@ class Ot_BackupController extends Zend_Controller_Action
             );
                 
             $this->_helper->log(Zend_Log::INFO, 'Backup of entire database was downloaded', $logOptions);
+        } else {
+            throw new Ot_Exception();
         }
     }
 }

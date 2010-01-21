@@ -438,6 +438,7 @@ msg-error-noBug;Bug not found.
 msg-error-formError;There was an error processing the form.
 msg-error-configFileNotFound;Config override file not found.
 msg-error-configFileNotWritable;Config override file (%1$s) is not writable, therefore it cannot be edited.
+msg-error-cacheDirectoryNotWritable;Cache directory is not writable. Please correct this and try again.
 msg-error-noKey;No key was found in query string.
 msg-error-noConfigKey;Key not found in config file.
 msg-error-savingConfig;Error saving user configuration file to disk.

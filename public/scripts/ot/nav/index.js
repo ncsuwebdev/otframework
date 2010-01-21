@@ -201,7 +201,7 @@ function serialize (items)
 		linkTarget = linkTarget.toLowerCase();
 		
 	    var link = $(this).children('a:not(.controlButton)').attr('href');
-	    link = (link != undefined) ? link.toLowerCase() : "";
+	    link = (link != undefined) ? link : "";
 	    	    
 		serial[i] = {
 			display:     $(this).attr('name'),

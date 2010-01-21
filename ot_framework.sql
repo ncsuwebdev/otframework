@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 15, 2010 at 10:52 AM
+-- Generation Time: Jan 21, 2010 at 02:00 PM
 -- Server version: 5.1.32
 -- PHP Version: 5.3.0
 
@@ -76,14 +76,14 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_account` (
   `lastLogin` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`accountId`),
   UNIQUE KEY `username` (`username`,`realm`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=33 ;
 
 --
 -- Dumping data for table `ot_tbl_ot_account`
 --
 
 INSERT INTO `ot_tbl_ot_account` (`accountId`, `username`, `realm`, `password`, `apiCode`, `role`, `emailAddress`, `firstName`, `lastName`, `timezone`, `lastLogin`) VALUES
-(31, 'admin', 'local', '21232f297a57a5a743894a0e4a801fc3', '', 3, 'admin@admin.com', 'Admin', 'Mcadmin', 'America/New_York', 1263564691);
+(31, 'admin', 'local', '21232f297a57a5a743894a0e4a801fc3', '', 3, 'admin@admin.com', 'Admin', 'Mcadmin', 'America/New_York', 1264100383);
 
 -- --------------------------------------------------------
 
@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_custom_attribute` (
   `direction` enum('vertical','horizontal') NOT NULL DEFAULT 'vertical',
   `order` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`attributeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `ot_tbl_ot_custom_attribute`
@@ -278,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_log` (
   KEY `userId` (`accountId`),
   KEY `attributeName` (`attributeName`),
   KEY `attributeId` (`attributeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=70 ;
 
 --
 -- Dumping data for table `ot_tbl_ot_log`
@@ -315,7 +315,45 @@ INSERT INTO `ot_tbl_ot_log` (`logId`, `accountId`, `role`, `request`, `sid`, `ti
 (28, 31, '3', '/ot/custom/delete/attributeId/5', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568613, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '5'),
 (29, 31, '3', '/ot/custom/delete/attributeId/6', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568617, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '6'),
 (30, 31, '3', '/ot/custom/delete/attributeId/7', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568622, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '7'),
-(31, 31, '3', '/ot/custom/delete/attributeId/8', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568626, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '8');
+(31, 31, '3', '/ot/custom/delete/attributeId/8', '9p5qj2tsgfq5964eaivpg8q6n0', 1263568626, 'Attribute and all values were deleted', 6, 'INFO', 'objectAttributeId', '8'),
+(32, 31, '3', '/ot/translate/index/m/ot/c/account/a/edit', '9p5qj2tsgfq5964eaivpg8q6n0', 1263913912, 'Language override file modified', 6, 'INFO', 'translation', 'en'),
+(33, 31, '3', '/ot/translate/index/m/ot/c/account/a/edit', '9p5qj2tsgfq5964eaivpg8q6n0', 1263913996, 'Language override file modified', 6, 'INFO', 'translation', 'en'),
+(34, 31, '3', '/ot/translate/index/m/ot/c/account/a/edit', '9p5qj2tsgfq5964eaivpg8q6n0', 1263914231, 'Language override file modified', 6, 'INFO', 'translation', 'en'),
+(35, 31, '3', '/login', '9p5qj2tsgfq5964eaivpg8q6n0', 1263928076, 'User Logged In', 6, 'INFO', 'accountId', '31'),
+(36, 31, '3', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264081721, 'User Logged In', 6, 'INFO', 'accountId', '31'),
+(37, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264082271, 'Backup of database table ot_tbl_account_attributes was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_account_attributes'),
+(38, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264083428, 'Backup of database table ot_tbl_net_reg_tracking was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_net_reg_tracking'),
+(39, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264083469, 'Backup of database table ot_tbl_net_reg_tracking was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_net_reg_tracking'),
+(40, 31, '3', '/ot/nav/save', 'kt13f145u54q80fs4ngcb7p1j5', 1264084292, 'Navigation structure modified', 6, 'INFO', 'navigation', 'modified'),
+(41, 31, '3', '/ot/nav/save', 'kt13f145u54q80fs4ngcb7p1j5', 1264084599, 'Navigation structure modified', 6, 'INFO', 'navigation', 'modified'),
+(42, 31, '3', '/ot/nav/save', 'kt13f145u54q80fs4ngcb7p1j5', 1264084758, 'Navigation structure modified', 6, 'INFO', 'navigation', 'modified'),
+(43, 31, '3', '/ot/nav/save', 'kt13f145u54q80fs4ngcb7p1j5', 1264084773, 'Navigation structure modified', 6, 'INFO', 'navigation', 'modified'),
+(44, 31, '3', '/ot/nav/save', 'kt13f145u54q80fs4ngcb7p1j5', 1264084786, 'Navigation structure modified', 6, 'INFO', 'navigation', 'modified'),
+(45, 31, '3', '/ot/backup/download-all-sql', 'kt13f145u54q80fs4ngcb7p1j5', 1264096294, 'Backup of entire database was downloaded', 6, 'INFO', 'databaseTableBackup', 'allTables'),
+(46, 31, '3', '/ot/backup/download-all-sql', 'kt13f145u54q80fs4ngcb7p1j5', 1264096725, 'Backup of entire database was downloaded', 6, 'INFO', 'databaseTableBackup', 'allTables'),
+(47, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264096801, 'Backup of database table ot_tbl_account_attributes was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_account_attributes'),
+(48, 31, '3', '/ot/backup/download-all-sql', 'kt13f145u54q80fs4ngcb7p1j5', 1264096808, 'Backup of entire database was downloaded', 6, 'INFO', 'databaseTableBackup', 'allTables'),
+(49, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264096872, 'Backup of database table ot_tbl_account_attributes was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_account_attributes'),
+(50, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264096992, 'Backup of database table ot_tbl_account_attributes was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_account_attributes'),
+(51, 31, '3', '/ot/backup/download-all-sql', 'kt13f145u54q80fs4ngcb7p1j5', 1264096998, 'Backup of entire database was downloaded', 6, 'INFO', 'databaseTableBackup', 'allTables'),
+(52, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264097009, 'Backup of database table ot_tbl_account_attributes was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_account_attributes'),
+(53, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264097671, 'Backup of database table ot_tbl_account_attributes was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_account_attributes'),
+(54, 31, '3', '/ot/backup', 'kt13f145u54q80fs4ngcb7p1j5', 1264097680, 'Backup of database table ot_tbl_account_attributes was downloaded', 6, 'INFO', 'databaseTableBackup', 'ot_tbl_account_attributes'),
+(55, 31, '3', '/ot/backup/download-all-sql', 'kt13f145u54q80fs4ngcb7p1j5', 1264098094, 'Backup of entire database was downloaded', 6, 'INFO', 'databaseTableBackup', 'allTables'),
+(56, 31, '3', '/ot/backup/download-all-sql', 'kt13f145u54q80fs4ngcb7p1j5', 1264098142, 'Backup of entire database was downloaded', 6, 'INFO', 'databaseTableBackup', 'allTables'),
+(57, 31, '3', '/account/add', 'kt13f145u54q80fs4ngcb7p1j5', 1264098962, 'Account was added', 6, 'INFO', 'accountId', '32'),
+(58, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099494, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(59, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099649, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(60, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099680, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(61, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099792, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(62, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099813, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(63, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099897, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(64, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099946, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(65, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099955, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(66, 32, '1', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264099965, 'User Logged In', 6, 'INFO', 'accountId', '32'),
+(67, 32, '1', '/', 'kt13f145u54q80fs4ngcb7p1j5', 1264099972, 'Account was modified.', 6, 'INFO', 'accountId', '32'),
+(68, 31, '3', '/login', 'kt13f145u54q80fs4ngcb7p1j5', 1264100383, 'User Logged In', 6, 'INFO', 'accountId', '31'),
+(69, 31, '3', '/account/delete?accountId=32', 'kt13f145u54q80fs4ngcb7p1j5', 1264100393, 'Account was deleted', 6, 'INFO', 'accountId', '32');
 
 -- --------------------------------------------------------
 
@@ -342,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `ot_tbl_ot_nav` (
 INSERT INTO `ot_tbl_ot_nav` (`id`, `parent`, `display`, `module`, `controller`, `action`, `link`, `target`) VALUES
 (1, 0, 'Home', 'default', 'index', '', 'index/index', '_self'),
 (2, 0, 'Admin', 'ot', 'index', 'index', '', ''),
-(3, 2, 'Access', 'ot', 'index', 'index', '', '_self'),
+(3, 2, 'Access', 'ot', 'index', 'index', '', ''),
 (4, 3, 'Registered Applications', 'ot', 'oauth', 'all-consumers', 'ot/oauth/all-consumers', '_self'),
 (5, 3, 'User Access Roles', 'ot', 'acl', 'index', 'ot/acl/index', '_self'),
 (6, 3, 'Users', 'ot', 'account', 'all', 'account/all', '_self'),

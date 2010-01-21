@@ -1,10 +1,43 @@
 <?php
 class Ot_Backup {
     
+    /**
+     * Database adapter to use
+     */
+    protected $_db = null;
+    
+    /**
+     * Name of table to get
+     */
+    protected $_tableName = '';
+    
+    /**
+     * Does some sanity checking to make sure there's a prefix and the user is
+     * only access the tables in their application and that the cache is 
+     * writable before dispatching which backup to get 
+     * 
+     * @param $db Zend_Db_Adapter to use
+     * @param $tableName The name of the table to fetch
+     * @param $type The type of backup to get (csv, sql, or sqlAll)
+     */
     public function getBackup($db, $tableName, $type)
     {
         $this->_db = $db;
         $this->_tableName = $tableName;
+        
+        $config = Zend_Registry::get('config');
+        
+        if (!(isset($config->app->tablePrefix) && !empty($config->app->tablePrefix))) {
+            throw new Ot_Exception_Access('No table prefix is defined, therefore you cannot make any backups.');
+        }
+        
+        if ($type != 'sqlAll' && !preg_match('/^' . $config->app->tablePrefix . '/i', $this->_tableName)) {
+            throw new Ot_Exception_Access('You are attempting to access a table outside your application.  This is not allowed.');
+        }
+        
+        if (!is_writable(APPLICATION_PATH . '/../cache')) {
+            throw new Ot_Exception_Data($this->view->translate('msg-error-cacheDirectoryNotWritable'));
+        }
         
         switch($type) {
             
@@ -18,7 +51,6 @@ class Ot_Backup {
                 
             case 'sqlAll':
                 $this->_getSql(true);
-                       echo 'test'; die();
                 break;
                 
             default: 
@@ -36,16 +68,6 @@ class Ot_Backup {
      */
     protected function _getCsv()
     {
-        $config = Zend_Registry::get('config');
-        
-        if (!(isset($config->app->tablePrefix) && !empty($config->app->tablePrefix))) {
-            throw new Ot_Exception_Access('No table prefix is defined, therefore you cannot make any backups.');
-        }
-
-        if (!preg_match('/^' . $config->app->tablePrefix . '/i', $this->_tableName)) {
-            throw new Ot_Exception_Access('You are attempting to access a table outside your application.  This is not allowed.');
-        }
-        
         $data = $this->_db->fetchAssoc("SELECT * FROM $this->_tableName");
         $colData = $this->_db->describeTable($this->_tableName);
         
@@ -55,11 +77,10 @@ class Ot_Backup {
             $columnNames[$colName] = '"' . $colName . '"';
         }
         
+        $filePath = APPLICATION_PATH . '/../cache/';
         $fileName = $this->_tableName . '.backup-' . date('Ymd-B') . '.csv';
         
-        $tmpName = tempnam('/tmp', $fileName);
-        
-        $fp = fopen($tmpName, 'w');
+        $fp = fopen($filePath . $fileName, 'w+');
         
         $ret = fputcsv($fp, $columnNames, ',', '"');
         
@@ -77,17 +98,17 @@ class Ot_Backup {
         
         fclose($fp);
         
-        file_get_contents($tmpName);
+        file_get_contents($filePath . $fileName);
         
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Length: ' . filesize($tmpName));
+        header('Content-Length: ' . filesize($filePath . $fileName));
         header("Content-Disposition: attachment; filename=$fileName");
-        readfile($tmpName);
-        unlink($tmpName);
+        readfile($filePath . $fileName);
+        unlink($filePath . $fileName);
     }
     
-/**
+    /**
      * Generates an SQL from a database table using mysqldump and sends it to 
      * the browser for download
      *
@@ -95,20 +116,7 @@ class Ot_Backup {
      * @param string $tableName
      */
     protected function _getSql($allTables = false)
-    {
-
-        $config = Zend_Registry::get('config');
-        
-        if (!(isset($config->app->tablePrefix) && !empty($config->app->tablePrefix))) {
-            throw new Ot_Exception_Access('No table prefix is defined, therefore you cannot make any backups.');
-        }
-
-        if (!$allTables) {
-            if (!preg_match('/^' . $config->app->tablePrefix . '/i', $this->_tableName)) {
-                throw new Ot_Exception_Access('You are attempting to access a table outside your application.  This is not allowed.');
-            }
-        }
-        
+    {        
         $dbConfig = $this->_db->getConfig();
         $dbName = $dbConfig['dbname'];
         $dbHost = $dbConfig['host'];
@@ -116,9 +124,8 @@ class Ot_Backup {
         $dbPass = $dbConfig['password'];
         
         $path = APPLICATION_PATH . '/../cache';
-        
-        if ($allTables) {
-
+                
+        if ($allTables) {            
             $fileName = $dbConfig['dbname'] . '_' . $config->app->tablePrefix . '.backup-' . date('Ymd-B') . '.sql';
             $tables = implode(' ', $this->_getTables());
             $cmd = "mysqldump $dbName --host=$dbHost --user=$dbUser --password=$dbPass --extended-insert $tables > $path/$fileName";

@@ -150,8 +150,8 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         }
         
         if ($auth->hasIdentity() && $config->user->requiredAccountFields->val != '') {
-        	
-        	if (!($request->getModuleName() == 'login' && $request->getControllerName() == 'index' && $request->getActionName() == 'logout')) {
+            
+        	if (!($request->getModuleName() == 'ot' && $request->getControllerName() == 'login' && $request->getActionName() == 'logout')) {
 	            
         		$required = explode(',', $config->user->requiredAccountFields->val);
         		

@@ -2,7 +2,7 @@
 <configData>
   <production>
     <app>
-      <theme>oit</theme>
+      <theme>default</theme>
     </app>
     <user>
       <language val="en"/>
