@@ -51,7 +51,7 @@ class Ot_Trigger_Action extends Ot_Db_Table
         
         if ($onlyEnabled) {
             $where .= ' AND '
-                    . $this->getAdapter()->quoteInto('enabled = ?', 1);
+                   . $this->getAdapter()->quoteInto('enabled = ?', 1);
         }
         
         return $this->fetchAll($where);

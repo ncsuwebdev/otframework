@@ -50,8 +50,8 @@ class Ot_Role extends Ot_Db_Table
      *
      */
     protected $_cacheKey = array(
-            'application' => 'Ot_Acl_Application',
-            'remote'      => 'Ot_Acl_Remote',
+        'application' => 'Ot_Acl_Application',
+        'remote'      => 'Ot_Acl_Remote',
     );
         
     /**
@@ -61,30 +61,30 @@ class Ot_Role extends Ot_Db_Table
      */
     public function getRoles($scope = 'application')
     {
-            $cache = Zend_Registry::get('cache');
+        $cache = Zend_Registry::get('cache');
         
         if (!$aclData = $cache->load($this->_cacheKey[$scope])) {
             
-                $rule = new Ot_Role_Rule();
+            $rule = new Ot_Role_Rule();
+        
+            $roles = $this->fetchAll(null)->toArray();
             
-                    $roles = $this->fetchAll(null)->toArray();
-                    
-                    $where = $rule->getAdapter()->quoteInto('scope = ?', $scope);
-                    $rules = $rule->fetchAll($where, 'roleId')->toArray();
-            
-                    $aclData = array();
-            
-                    foreach ($roles as $role) {
-                            $role['rules'] = array();
-                            foreach ($rules as $key => $rule) {
-                                    if ($rule['roleId'] == $role['roleId']) {
-                                            $role['rules'][] = $rule;
-                                            unset($rules[$key]);
-                                    }
-                            }
-                            
-                            $aclData[$role['roleId']] = $role;
+            $where = $rule->getAdapter()->quoteInto('scope = ?', $scope);
+            $rules = $rule->fetchAll($where, 'roleId')->toArray();
+    
+            $aclData = array();
+    
+            foreach ($roles as $role) {
+                $role['rules'] = array();
+                foreach ($rules as $key => $rule) {
+                    if ($rule['roleId'] == $role['roleId']) {
+                        $role['rules'][] = $rule;
+                        unset($rules[$key]);
                     }
+                }
+                
+                $aclData[$role['roleId']] = $role;
+            }
             
             $cache->save($aclData, $this->_cacheKey[$scope]);
         }
@@ -100,10 +100,10 @@ class Ot_Role extends Ot_Db_Table
      */
     public function insert(array $data)
     {
-            $roleId = parent::insert($data);
+        $roleId = parent::insert($data);
         $this->_clearCache();
         
-            return $roleId;
+        return $roleId;
     }
     
     /**
@@ -115,7 +115,7 @@ class Ot_Role extends Ot_Db_Table
      */
     public function update(array $data, $where)
     {
-                 parent::update($data, $where);
+        parent::update($data, $where);
         $this->_clearCache();
     }    
     
@@ -126,8 +126,8 @@ class Ot_Role extends Ot_Db_Table
      */
     public function delete($where) 
     {
-            parent::delete($where);
-            $this->_clearCache();
+        parent::delete($where);
+        $this->_clearCache();
     }
     
     /**
@@ -138,44 +138,49 @@ class Ot_Role extends Ot_Db_Table
      */
     public function assignRulesForRole($roleId, $scope, $rules)
     {
-            $dba = $this->getAdapter();
+        $dba = $this->getAdapter();
             
-             $inTransaction = false;
+        $inTransaction = false;
         
-            try {
+        try {
             $dba->beginTransaction();
         } catch (Exception $e) {
             $inTransaction = true;
         }
         
-            $roleRule = new Ot_Role_Rule();
-            
-            $where = $dba->quoteInto('roleId = ?', $roleId)
-                   . ' AND '
-                   . $dba->quoteInto('scope = ?', $scope);
-            try {
-                    $roleRule->delete($where);
-            } catch (Exception $e) {
-                    if (!$inTransaction) {
-                            $dba->rollback();
-                    }
-            }
-            
-            foreach ($rules as $rule) {
-                    $rule['roleId'] = $roleId;
-                    $rule['scope']  = $scope;
-                    
-                    try {
-                            $roleRule->insert($rule);
-                } catch (Exception $e) {
-                                if (!$inTransaction) {
-                            $dba->rollBack();
-                    }
-                    throw $e;                
-                }
-            }
-            
+        $roleRule = new Ot_Role_Rule();
+        
+        $where = $dba->quoteInto('roleId = ?', $roleId)
+               . ' AND '
+               . $dba->quoteInto('scope = ?', $scope);
+        try {
+                $roleRule->delete($where);
+        } catch (Exception $e) {
             if (!$inTransaction) {
+                $dba->rollback();
+            }
+        }
+            
+        foreach ($rules as $rule) {
+            
+            $rule['roleId'] = $roleId;
+            $rule['scope']  = $scope;
+                
+            try {
+                
+                $roleRule->insert($rule);
+                
+            } catch (Exception $e) {
+                
+                if (!$inTransaction) {
+                    $dba->rollBack();
+                }
+                
+                throw $e;                
+            }
+        }
+            
+        if (!$inTransaction) {
             $dba->commit();
         }
         
@@ -191,11 +196,11 @@ class Ot_Role extends Ot_Db_Table
      */
     public function deleteRole($roleId)
     {
-            $dba = $this->getAdapter();
+        $dba = $this->getAdapter();
             
-             $inTransaction = false;
+        $inTransaction = false;
         
-            try {
+        try {
             $dba->beginTransaction();
         } catch (Exception $e) {
             $inTransaction = true;
@@ -206,23 +211,23 @@ class Ot_Role extends Ot_Db_Table
         try {
                     parent::delete($where);
         } catch (Exception $e) {
-                        if (!$inTransaction) {
-                    $dba->rollBack();
+            if (!$inTransaction) {
+                $dba->rollBack();
             }
             throw $e;                
         }
             
-            $roleRule = new Ot_Role_Rule();
+        $roleRule = new Ot_Role_Rule();
             
-            try {
-                    $roleRule->delete($where);
-            } catch (Exception $e) {
-                    if (!$inTransaction) {
-                            $dba->rollback();
-                    }
-            }
-            
+        try {
+            $roleRule->delete($where);
+        } catch (Exception $e) {
             if (!$inTransaction) {
+                $dba->rollback();
+            }
+        }
+            
+        if (!$inTransaction) {
             $dba->commit();
         }
         
@@ -235,10 +240,10 @@ class Ot_Role extends Ot_Db_Table
      */
     protected function _clearCache()
     {
-            $cache = Zend_Registry::get('cache');
-            foreach ($this->_cacheKey as $c) {
-                    $cache->remove($c);
-            }
+        $cache = Zend_Registry::get('cache');
+        foreach ($this->_cacheKey as $c) {
+            $cache->remove($c);
+        }
     }
     
     /**
@@ -252,9 +257,15 @@ class Ot_Role extends Ot_Db_Table
         $form = new Zend_Form();
         $form->setAttrib('id', 'roleForm')
              ->setDecorators(array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
+                 'FormElements',
+                 array(
+                    'HtmlTag',
+                    array(
+                        'tag' => 'div',
+                        'class' => 'zend_form',
+                    ),
+                 ),
+                 'Form',
              ));
              
         $name = $form->createElement('text', 'name', array('label' => 'model-role-form:roleName'));
@@ -264,7 +275,8 @@ class Ot_Role extends Ot_Db_Table
               ->setAttrib('maxlength', '128')
               ->setValue((isset($values['name']) ? $values['name'] : ''));
               
-        $inheritRoleId = $form->createElement('select', 'inheritRoleId', array('label' => 'model-role-form:inheritRoleId'));
+        $inheritRoleId = $form->createElement('select', 'inheritRoleId',
+            array('label' => 'model-role-form:inheritRoleId'));
         
         $acl = Zend_Registry::get('acl');
         $roles = $acl->getAvailableRoles();

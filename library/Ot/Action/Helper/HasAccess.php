@@ -46,7 +46,9 @@ class Ot_Action_Helper_HasAccess extends Zend_Controller_Action_Helper_Abstract
     	$acl = Zend_Registry::get('acl');
     	
     	if (is_null($role)) {
-        	$role = (empty($this->_identity->role)) ? (string)$this->_config->user->defaultRole->val : $this->_identity->role;
+        	$role = (empty($this->_identity->role))
+        	      ? (string)$this->_config->user->defaultRole->val
+        	      : $this->_identity->role;
     	}
     	
     	if (is_null($resource)) {

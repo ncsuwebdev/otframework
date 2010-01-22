@@ -21,7 +21,7 @@
  */
 
 /**
- * validates a US phone number
+ * Validates a US phone number.
  *
  * @package    Ot_Validate_Phone
  * @category   Library
@@ -31,14 +31,14 @@
 class Ot_Validate_Phone implements Zend_Validate_Interface
 {
     /**
-     * error messages
+     * Error messages
      *
      * @var unknown_type
      */
     protected $_messages = array();
 
     /**
-     * checks if value is valid
+     * Checks if value is valid
      *
      * @param mixed $value
      * @return boolean
@@ -57,7 +57,7 @@ class Ot_Validate_Phone implements Zend_Validate_Interface
     }
 
     /**
-     * gets error messages
+     * Gets error messages
      *
      * @return array
      */
@@ -66,7 +66,7 @@ class Ot_Validate_Phone implements Zend_Validate_Interface
         return $this->_messages;
     }
     /**
-     * gets error messages
+     * Gets error messages
      *
      * @return array
      */

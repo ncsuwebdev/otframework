@@ -69,7 +69,8 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
             $tabData['target']     = (preg_match('/^http/i', $tabData['link'])) ? '_blank' : '_self';
             $tabData['parent']     = $tab->parent;
             $tabData['id']         = $tab->id;
-            $tabData['allowed']    = $acl->isAllowed($role, $tabResource, ($tab->action == '') ? 'index' : $tab->action);
+            $tabData['allowed']    = $acl->isAllowed($role, $tabResource,
+                                        ($tab->action == '') ? 'index' : $tab->action);
             $tabData['show']       = $tabData['allowed'];
 
 			$viewTabs[$tabData['id']] = $tabData;                
@@ -147,7 +148,8 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
     	} elseif ($target == "_self") {
             return $baseUrl . '/' . $link;
         } else {
-            return (preg_match('/^http/', $link)) ? $link : $baseUrl . ((preg_match('/^\//', $link)) ? '/' : '') . $link;
+            return (preg_match('/^http/', $link))
+                ? $link : $baseUrl . ((preg_match('/^\//', $link)) ? '/' : '') . $link;
         }
     }
 }

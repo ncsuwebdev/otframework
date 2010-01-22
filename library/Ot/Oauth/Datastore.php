@@ -82,7 +82,8 @@ class Ot_Oauth_Datastore implements Oauth_Datastore_Interface
 			try {
 				$sn->insert($data);
 			} catch (Exception $e) {
-				throw new Oauth_Exception('Nonce already used.  Possible replay attack!  Denying request.' . $e->getMessage());
+				throw new Oauth_Exception('Nonce already used. Possible replay attack! Denying request.'
+				    . $e->getMessage());
 			}
 			
 			$sn->deleteOldNonce($consumer->consumerId, $token, $timestamp);
@@ -91,12 +92,10 @@ class Ot_Oauth_Datastore implements Oauth_Datastore_Interface
 	
 	public function newToken($consumer, $type = "request", $accountId = 0) 
 	{ 
-		$key = md5(time());
+		$key    = md5(time());
 		$secret = md5(md5(time() + time()));
-		
-		$token = new Oauth_Token($key, $secret);
-		
-		$data = array(
+		$token  = new Oauth_Token($key, $secret);
+		$data   = array(
 			'consumerId'  => $consumer->consumerId,
 			'token'       => $key,
 			'tokenSecret' => $secret,
@@ -105,8 +104,7 @@ class Ot_Oauth_Datastore implements Oauth_Datastore_Interface
 			'accountId'   => $accountId,
 		);
 		
-		$st = new Ot_Oauth_Server_Token();
-		
+		$st     = new Ot_Oauth_Server_Token();
 		$st->insert($data);
 
 		return $token;
@@ -124,12 +122,13 @@ class Ot_Oauth_Datastore implements Oauth_Datastore_Interface
 		$thisToken = $st->getTokenByTypeAndConsumerId($token->key, 'request', $consumer->consumerId);
 		
 		if (is_null($thisToken)) {
-			throw new Oauth_Exception('Request token not found.  No access token granted.');
+			throw new Oauth_Exception('Request token not found. No access token granted.');
 			return null;
 		}
 		
-		if ($thisToken->authorized != 1) {
-			throw new Oauth_Exception('Request token is not authorized.  No access token granted and request token removed.');
+        if ($thisToken->authorized != 1) {
+            throw new Oauth_Exception('Request token is not authorized.
+                No access token granted and request token removed.');
 			return null;
 		}
 		

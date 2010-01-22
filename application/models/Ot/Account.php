@@ -119,7 +119,8 @@ class Ot_Account extends Ot_Db_Table
         // Realm Select box
         $realmSelect = $form->createElement('select', 'realm', array('label' => 'Login Method'));
         foreach ($adapters as $adapter) {
-            $realmSelect->addMultiOption($adapter->adapterKey, $adapter->name . (!$adapter->enabled ? ' (Disabled)' : ''));
+            $realmSelect->addMultiOption($adapter->adapterKey,
+                $adapter->name . (!$adapter->enabled ? ' (Disabled)' : ''));
         }
         $realmSelect->setValue((isset($default['realm'])) ? $default['realm'] : '');         
         
@@ -160,7 +161,8 @@ class Ot_Account extends Ot_Db_Table
                  ->addFilter('StripTags');   
 
         // password confirmation field
-        $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'model-account-passwordConf'));
+        $passwordConf = $form->createElement('password',
+            'passwordConf', array('label' => 'model-account-passwordConf'));
         $passwordConf->setRequired(true)
                      ->addValidator('StringLength', false, array($this->_minPasswordLength, $this->_maxPasswordLength))
                      ->addFilter('StringTrim')
@@ -175,7 +177,8 @@ class Ot_Account extends Ot_Db_Table
         
         $timezone = $form->createElement('select', 'timezone', array('label' => 'model-account-timezone'));
         $timezone->addMultiOptions(Ot_Timezone::getTimezoneList());
-        $timezone->setValue((isset($default['timezone']) && $default['timezone'] != '') ? $default['timezone'] : date_default_timezone_get()); 
+        $timezone->setValue((isset($default['timezone'])
+            && $default['timezone'] != '') ? $default['timezone'] : date_default_timezone_get()); 
         
         // Role select box
         $roleSelect = $form->createElement('select', 'role', array('label' => 'model-account-role'));
@@ -193,7 +196,8 @@ class Ot_Account extends Ot_Db_Table
         } else {
             $me = false;
             
-            if (isset($default['accountId']) && $default['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
+            if (isset($default['accountId'])
+                && $default['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
                 $me = true;
             }
             
@@ -236,21 +240,20 @@ class Ot_Account extends Ot_Db_Table
                 
         $submit = $form->createElement('submit', 'submit', array('label' => 'form-button-save'));
         $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+            array('ViewHelper', array('helper' => 'formSubmit'))
+        ));
         
         $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
         $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
+            array('ViewHelper', array('helper' => 'formButton'))
+        ));
                         
         $form->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',      
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                  array('Label', array('tag' => 'span'))      
-              ))
-              ->addElements(array($submit, $cancel));
+            'ViewHelper',
+            'Errors',      
+            array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+            array('Label', array('tag' => 'span')),   
+        ))->addElements(array($submit, $cancel));
               
         if (isset($default['accountId'])) {
             $accountId = $form->createElement('hidden', 'accountId');

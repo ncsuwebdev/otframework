@@ -32,7 +32,7 @@ class Oauth_Server
 {
     
 	protected $timestampThreshold = 3000; // in seconds, five minutes
-	protected $version = 1.0; // hi blaine
+	protected $version = 1.0;
 	protected $signatureMethods = array();
 	
 	protected $dataStore;
@@ -46,7 +46,7 @@ class Oauth_Server
 		$this->signatureMethods[$signatureMethod->getName()] = $signatureMethod;
 	} 
 	
-	// high level functions
+	// High level functions
 
 	/**
 	 * process a request_token request
@@ -69,7 +69,7 @@ class Oauth_Server
 	} 
 	
 	/**
-	 * process an access_token request
+	 * Process an access_token request
 	 * returns the access token on success
 	 */
 	public function fetchAccessToken(&$request)
@@ -89,7 +89,7 @@ class Oauth_Server
 	} 
 	
 	/**
-	 * verify an api call, checks all the parameters
+	 * Verify an api call, checks all the parameters
 	 */
 	public function verifyRequest(&$request)
 	{ 
@@ -117,7 +117,7 @@ class Oauth_Server
 	} 
 	
 	/**
-	 * figure out the signature with some defaults
+	 * Figure out the signature with some defaults
 	 */
 	private function getSignatureMethod(&$request)
 	{ 
@@ -126,13 +126,16 @@ class Oauth_Server
 			$signatureMethod = "PLAINTEXT";
 		}
 		if (!in_array($signatureMethod, array_keys($this->signatureMethods))) {
-			throw new Oauth_Exception("Signature method '$signatureMethod' not supported try one of the following: " . implode(", ", array_keys($this->signatureMethods)));
+			throw new Oauth_Exception(
+			 "Signature method '$signatureMethod' not supported try one of the following: "
+			 . implode(", ", array_keys($this->signatureMethods))
+			);
 		}
 		return $this->signatureMethods [$signatureMethod];
 	} 
 	
 	/**
-	 * try to find the consumer for the provided request's consumer key
+	 * Try to find the consumer for the provided request's consumer key
 	 */
 	private function getConsumer(&$request)
 	{ 
@@ -150,7 +153,7 @@ class Oauth_Server
 	} 
 	
 	/**
-	 * try to find the token for the provided request's token key
+	 * Try to find the token for the provided request's token key
 	 */
 	private function getToken(&$request, $consumer, $tokenType = "access")
 	{ 
@@ -162,7 +165,7 @@ class Oauth_Server
 	} 
 	
 	/**
-	 * all-in-one function to check the signature on a request
+	 * All-in-one function to check the signature on a request
 	 * should guess the signature method appropriately
 	 */
 	private function checkSignature(&$request, $consumer, $token)
@@ -185,7 +188,7 @@ class Oauth_Server
 	} 
 	
 	/**
-	 * check that the timestamp is new enough
+	 * Check that the timestamp is new enough
 	 */
 	private function checkTimestamp($timestamp)
 	{ 
@@ -197,11 +200,11 @@ class Oauth_Server
 	} 
 	
 	/**
-	 * check that the nonce is not repeated
+	 * Check that the nonce is not repeated
 	 */
 	private function checkNonce($consumer, $token, $nonce, $timestamp)
 	{ 
-		// verify that the nonce is uniqueish
+		// Verify that the nonce is uniqueish
 		$found = $this->dataStore->lookupNonce($consumer, $token, $nonce, $timestamp);
 		if ($found) {
 			throw new Oauth_Exception("Nonce already used: $nonce");

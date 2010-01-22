@@ -320,14 +320,14 @@ class Ot_Ldap_Ncsu extends Ot_Ldap_Driver
 			for ($entry_id = @ldap_first_entry($this->_link, $ldapResult); $entry_id != FALSE; $entry_id = @ldap_next_entry($this->_link, $entry_id)) {
 
 
-			        $this_dn = @ldap_get_dn($this->_link, $entry_id);
-			        $this_entry = @ldap_get_attributes($this->_link, $entry_id);
+		        $this_dn = @ldap_get_dn($this->_link, $entry_id);
+		        $this_entry = @ldap_get_attributes($this->_link, $entry_id);
 
-			        // parse dn
-			        $temp = explode(",", $this_dn);
-			        $checkou = $temp[1];
+		        // Parse dn
+		        $temp = explode(",", $this_dn);
+		        $checkou = $temp[1];
 
-			        switch ($checkou) {
+		        switch ($checkou) {
 
 					case "ou=accounts":
 						$user_info['info']['has_account'] = TRUE;
@@ -371,7 +371,7 @@ class Ot_Ldap_Ncsu extends Ot_Ldap_Driver
 			}
 
 
-			// merge information student, then employee, then account
+			// Merge information student, then employee, then account
 
 			if ($user_info['info']['is_student']) {
 				$user_info = array_merge($user_info, $student_info);
@@ -396,5 +396,3 @@ class Ot_Ldap_Ncsu extends Ot_Ldap_Driver
 	}
 
 }
-
-?>

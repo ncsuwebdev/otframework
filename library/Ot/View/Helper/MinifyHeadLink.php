@@ -1,4 +1,34 @@
 <?php
+/**
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ *
+ * This license is also available via the world-wide-web at
+ * http://itdapps.ncsu.edu/bsd.txt
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to itappdev@ncsu.edu so we can send you a copy immediately.
+ *
+ * @package    Ot_View_Helper_MinifyHeadLink
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
+ * @license    http://itdapps.ncsu.edu/bsd.txt BSD License
+ * @version    SVN: $Id: $
+ */
+
+/**
+ * Minifies the stylesheets added via the minifyHeadLink helper using 
+ * minify (http://code.google.com/p/minify/)
+ *
+ * @package    Ot_View_Helper_MinifyHeadLink
+ * @category   Library
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
+ */
 
 /**
  * Minifies the stylesheets added via the minifyHeadLink helper using 
@@ -10,7 +40,8 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
     
     protected $_regKey = 'Ot_View_Helper_MinifyHeadLink';
     
-    public function minifyHeadLink(array $attributes = null, $placement = Zend_View_Helper_Placeholder_Container_Abstract::APPEND)
+    public function minifyHeadLink(array $attributes = null,
+        $placement = Zend_View_Helper_Placeholder_Container_Abstract::APPEND)
     {
         return parent::headlink($attributes, $placement);
     }
@@ -29,7 +60,7 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
             }
         }
         
-        //remove the slash at the beginning if there is one
+        // Remove the slash at the beginning if there is one
         if (substr($baseUrl, 0, 1) == '/') {
             $baseUrl = substr($baseUrl, 1);
         }

@@ -44,7 +44,8 @@ class Ot_Api_Soap
             }
         }
         
-        return new SoapFault('Access denied', $name . 'The SoapOauth header must be set to access this application API');
+        return new SoapFault('Access denied',
+            $name . 'The SoapOauth header must be set to access this application API');
     }
     
     /**

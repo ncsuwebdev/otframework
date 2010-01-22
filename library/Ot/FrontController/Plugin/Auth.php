@@ -124,7 +124,8 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
        			
         	$auth->getStorage()->write($thisAccount);
         	
-        	date_default_timezone_set((isset($account->timezone) && $account->timezone != '') ? $account->timezone : date_default_timezone_get());
+        	date_default_timezone_set((isset($account->timezone) && $account->timezone != '')
+        	                           ? $account->timezone : date_default_timezone_get());
         		
         	$role = $thisAccount->role;
         }
@@ -135,7 +136,10 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
         
-        if (!$acl->isAllowed($role, $resource, $action) && !is_null($resource) && !$acl->isAllowed($defaultRole, $resource, $action)) {
+        if (!$acl->isAllowed($role, $resource, $action)
+            && !is_null($resource)
+            && !$acl->isAllowed($defaultRole, $resource, $action)) {
+                
             if (!$auth->hasIdentity()) {
                 $module     = $this->_noAuth['module'];
                 $controller = $this->_noAuth['controller'];
@@ -151,7 +155,9 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         
         if ($auth->hasIdentity() && $config->user->requiredAccountFields->val != '') {
             
-        	if (!($request->getModuleName() == 'ot' && $request->getControllerName() == 'login' && $request->getActionName() == 'logout')) {
+            if (!($request->getModuleName() == 'ot'
+        	    && $request->getControllerName() == 'login'
+        	    && $request->getActionName() == 'logout')) {
 	            
         		$required = explode(',', $config->user->requiredAccountFields->val);
         		

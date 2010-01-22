@@ -30,7 +30,7 @@
  */
 class Oauth_Token
 {
-	// access tokens and request tokens
+	// Access tokens and request tokens
 	public $key;
 	public $secret;
 	
@@ -45,7 +45,7 @@ class Oauth_Token
 	}
 	
 	/**
-	 * generates the basic string serialization of a token that a server
+	 * Generates the basic string serialization of a token that a server
 	 * would respond to request_token and access_token calls with
 	 */
 	public function __toString()

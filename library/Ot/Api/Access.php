@@ -44,7 +44,8 @@ class Ot_Api_Access
         $config = Zend_Registry::get('config');
         $publicRole = $config->user->defaultRole->val;
         
-        if ($request->getParameter('oauth_token') != '' || ($remoteAcl->has($method) && !$remoteAcl->isAllowed($publicRole, $method))) {
+        if ($request->getParameter('oauth_token') != ''
+            || ($remoteAcl->has($method) && !$remoteAcl->isAllowed($publicRole, $method))) {
             try {
                 $server->verifyRequest($request);
             } catch (Exception $e) {

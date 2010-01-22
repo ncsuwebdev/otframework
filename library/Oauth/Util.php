@@ -41,9 +41,10 @@ class Oauth_Util
 		}
 	}
 	
-	// This decode function isn't taking into consideration the above 
-	// modifications to the encoding process. However, this method doesn't 
-	// seem to be used anywhere so leaving it as is.
+	/* This decode function isn't taking into consideration the above 
+	 * modifications to the encoding process. However, this method doesn't 
+	 * seem to be used anywhere so leaving it as is.
+	 */
 	public static function urldecodeRfc3986($string)
 	{
 		return rawurldecode($string);

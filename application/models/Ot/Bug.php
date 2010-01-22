@@ -239,14 +239,14 @@ class Ot_Bug extends Ot_Db_Table
 
         $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
         $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+            array('ViewHelper', array('helper' => 'formSubmit'))
+        ));
 
         $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
         $cancel->setAttrib('id', 'cancel');
         $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
+            array('ViewHelper', array('helper' => 'formButton'))
+        ));
 
         $form->addElement($title);
         
@@ -261,7 +261,7 @@ class Ot_Bug extends Ot_Db_Table
                   'Errors',
                   array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
                   array('Label', array('tag' => 'span')),
-              ))
+             ))
              ->addElements(array($submit, $cancel));
 
         if (isset($values['bugId'])) {

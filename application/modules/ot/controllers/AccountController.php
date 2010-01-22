@@ -224,7 +224,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->messages = $this->_helper->flashMessenger->getMessages();     
         $this->view->headScript()->appendFile($this->view->baseUrl()
             . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl()\
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl()
             . '/public/css/ot/jquery.plugin.flexigrid.css'); 
         
         if ($this->_request->isXmlHttpRequest()) {
@@ -272,7 +272,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $response = array(
                 'page' => $page + 1,
                 'total' => $account->fetchAll($where)->count(),
-                'rows'  => array()
+                'rows'  => array(),
             );
             
             $config = Zend_Registry::get('config');

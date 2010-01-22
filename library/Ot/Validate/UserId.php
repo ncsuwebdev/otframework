@@ -21,7 +21,7 @@
  */
 
 /**
- * validates an NCSU unity ID
+ * Validates an NCSU unity ID.
  *
  * @package    Ot_Validate_UserId
  * @category   Library
@@ -31,14 +31,14 @@
 class Ot_Validate_UserId implements Zend_Validate_Interface
 {
     /**
-     * error messages
+     * Error messages
      *
      * @var unknown_type
      */
     protected $_messages = array();
 
     /**
-     * checks if value is valid
+     * Checks if value is valid
      *
      * @param mixed $value
      * @return boolean
@@ -56,7 +56,7 @@ class Ot_Validate_UserId implements Zend_Validate_Interface
     }
 
     /**
-     * gets error messages
+     * Gets error messages
      *
      * @return array
      */
@@ -65,7 +65,7 @@ class Ot_Validate_UserId implements Zend_Validate_Interface
         return $this->_messages;
     }
     /**
-     * gets error messages
+     * Gets error messages
      *
      * @return array
      */

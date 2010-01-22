@@ -51,7 +51,7 @@ class Ot_Api_Code extends Ot_Db_Table
     {
         $data = array(
             'userId' => $userId,
-            'code'   => md5(microtime())
+            'code'   => md5(microtime()),
         );
         
         $thisCode = $this->find($userId);
@@ -59,7 +59,7 @@ class Ot_Api_Code extends Ot_Db_Table
         if (is_null($thisCode)) {
             parent::insert($data);
         } else {
-                parent::update($data, null);
+            parent::update($data, null);
         }
         
         return $data['code'];
@@ -67,15 +67,15 @@ class Ot_Api_Code extends Ot_Db_Table
 
     public function verify($accessCode)
     {
-            $where = $this->getAdapter()->quoteInto('code = ?', $accessCode);
-            $this->_messages[] = $where;
-            $result = $this->fetchAll($where, null, 1);
-            
-            if ($result->count() != 1) {
-                    throw new Exception('Code not found');
-            }
-            
-            $this->_apiCodeUser = $result->current()->userId;
+        $where = $this->getAdapter()->quoteInto('code = ?', $accessCode);
+        $this->_messages[] = $where;
+        $result = $this->fetchAll($where, null, 1);
+        
+        if ($result->count() != 1) {
+            throw new Exception('Code not found');
+        }
+        
+        $this->_apiCodeUser = $result->current()->userId;
             
         $config = Zend_Registry::get('appConfig');
         Zend_Loader::loadClass($config->authorization);
@@ -87,6 +87,6 @@ class Ot_Api_Code extends Ot_Db_Table
     
     public function getApiUserId()
     {
-            return $this->_apiCodeUser;
+        return $this->_apiCodeUser;
     }
 }

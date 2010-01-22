@@ -50,8 +50,8 @@ class Ot_Auth_Adapter extends Ot_Db_Table
      */
     public function getEnabledAdapters()
     {
-            $where = $this->getAdapter()->quoteInto('enabled = ?', 1);
-            return $this->fetchAll($where, 'displayOrder');
+        $where = $this->getAdapter()->quoteInto('enabled = ?', 1);
+        return $this->fetchAll($where, 'displayOrder');
     }
     
     /**
@@ -68,9 +68,9 @@ class Ot_Auth_Adapter extends Ot_Db_Table
         $form = new Zend_Form();
         $form->setAttrib('id', 'authAdapterForm')
              ->setDecorators(array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
+                 'FormElements',
+                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                 'Form',
              ));
              
         $name = $form->createElement('text', 'name', array('label' => 'Name:'));

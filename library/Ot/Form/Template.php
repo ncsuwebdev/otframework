@@ -38,7 +38,8 @@ class Ot_Form_Template
 	 * @param string $cancelLabel
 	 * @return Zend_Form object
 	 */
-	public static function delete($formId = null, $deleteLabel = 'form-button-delete', $cancelLabel = 'form-button-cancel')
+	public static function delete($formId = null, $deleteLabel = 'form-button-delete',
+	   $cancelLabel = 'form-button-cancel')
 	{
         $form = new Zend_Form();
         $form->setAttrib('id', $formId);

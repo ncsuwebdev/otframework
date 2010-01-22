@@ -181,9 +181,9 @@ class Ot_Backup {
         
         $form->setAttrib('id', 'downloadDbTableForm')
              ->setDecorators(array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
+                'FormElements',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                'Form',
              ));
                        
         $tableName = $form->createElement('select', 'tableName', array('label' => 'Select A Table:'));
@@ -192,8 +192,8 @@ class Ot_Backup {
         
         $submitCsv = $form->createElement('submit', 'submitCsv', array('label' => 'Download as CSV'));
         $submitCsv->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+            array('ViewHelper', array('helper' => 'formSubmit'))
+        ));
 
         // if the mysqldump command is available on the system then allow the download as SQL option
         if (!is_null(`mysqldump`)) {

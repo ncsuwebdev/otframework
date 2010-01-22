@@ -81,9 +81,11 @@ class Ot_Image extends Ot_Db_Table
         
         // read image
         switch ($size['mime']) {
+            
             case 'image/jpeg':     // jpg
                 $src = imagecreatefromjpeg($image);
                 break;
+                
             case 'image/png':     // png
                 $src = imagecreatefrompng($image);
                 
@@ -101,9 +103,11 @@ class Ot_Image extends Ot_Db_Table
                     imagesavealpha($dst, true);
                 }                           
                 break;
-            /*case 'image/gif':
+                
+                /*case 'image/gif':
                 $src = imagecreatefromgif($image);
                 break;*/
+                
             default:
                 throw new Exception("Image type not supported (must be png or jpeg)");
                 return;

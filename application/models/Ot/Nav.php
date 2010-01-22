@@ -51,7 +51,6 @@ class Ot_Nav extends Ot_Db_Table
      */
     const CACHE_KEY = 'Ot_Nav';
     
-    
     /**
      * Gets the nav from the cache if it exists.  If not, it gets 
      * it from the database.
@@ -89,7 +88,8 @@ class Ot_Nav extends Ot_Db_Table
                 }
                 
                 if ($c['link'] != '' && $c['allowed']) {
-                    $str .= '<a ' . $title . ' href="' . $c['link'] . '" target="' . $c['target'] . '">' . $c['display'] . '</a>' . "\n";
+                    $str .= '<a ' . $title . ' href="' . $c['link'] . '" target="'
+                         . $c['target'] . '">' . $c['display'] . '</a>' . "\n";
                 } else {
                     $str .= '<a ' . $title . '>' . $c['display'] . "\n" . '</a>';
                 }

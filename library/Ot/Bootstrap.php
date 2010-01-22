@@ -47,7 +47,8 @@ class Ot_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $zcf->setBaseUrl($baseUrl);
         
         $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
-        $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
+        $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0,
+                        strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
         $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
         $url = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $baseUrl;
         
