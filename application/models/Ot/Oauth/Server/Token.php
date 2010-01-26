@@ -99,8 +99,7 @@ class Ot_Oauth_Server_Token extends Ot_Db_Table
                    . ' AND '
                    . $dba->quoteInto('consumerId = ?', $consumerId)
                    . ' AND '
-                   . $dba->quoteInto('tokenType = ?', $tokenType)
-                   ;
+                   . $dba->quoteInto('tokenType = ?', $tokenType);
                    
             $result = $this->fetchAll($where, null, 1);
 
@@ -117,8 +116,7 @@ class Ot_Oauth_Server_Token extends Ot_Db_Table
             
             $where = $dba->quoteInto('accountId = ?', $accountId)
                    . ' AND '
-                   . $dba->quoteInto('tokenType = ?', $tokenType)
-                   ;
+                   . $dba->quoteInto('tokenType = ?', $tokenType);
                    
             return $this->fetchAll($where, 'requestDt DESC');            
     }
@@ -129,8 +127,7 @@ class Ot_Oauth_Server_Token extends Ot_Db_Table
             
             $where = $dba->quoteInto('consumerId = ?', $consumerId)
                    . ' AND '
-                   . $dba->quoteInto('tokenType = ?', $tokenType)
-                   ;
+                   . $dba->quoteInto('tokenType = ?', $tokenType);
                    
             return $this->fetchAll($where, 'requestDt DESC');             
     }

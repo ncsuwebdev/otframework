@@ -1,5 +1,37 @@
 <?php
-class Ot_Backup {
+/**
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ *
+ * This license is also available via the world-wide-web at
+ * http://itdapps.ncsu.edu/bsd.txt
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to itappdev@ncsu.edu so we can send you a copy immediately.
+ *
+ * @package    Ot_Backup
+ * @category   Model
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
+ * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
+ * @version    SVN: $Id: $
+ */
+
+/**
+ * Handles backup functionality for the application.
+ *
+ * @package    Ot_Backup
+ * @category   Model
+ * @copyright  Copyright (c) 2007 NC State University Office of      
+ *             Information Technology
+ * 
+ */
+
+class Ot_Backup
+{
     
     /**
      * Database adapter to use
@@ -32,7 +64,8 @@ class Ot_Backup {
         }
         
         if ($type != 'sqlAll' && !preg_match('/^' . $config->app->tablePrefix . '/i', $this->_tableName)) {
-            throw new Ot_Exception_Access('You are attempting to access a table outside your application.  This is not allowed.');
+            throw new Ot_Exception_Access('You are attempting to access a table outside your application.
+                This is not allowed.');
         }
         
         if (!is_writable(APPLICATION_PATH . '/../cache')) {
@@ -128,12 +161,14 @@ class Ot_Backup {
         if ($allTables) {            
             $fileName = $dbConfig['dbname'] . '_' . $config->app->tablePrefix . '.backup-' . date('Ymd-B') . '.sql';
             $tables = implode(' ', $this->_getTables());
-            $cmd = "mysqldump $dbName --host=$dbHost --user=$dbUser --password=$dbPass --extended-insert $tables > $path/$fileName";
+            $cmd = "mysqldump $dbName --host=$dbHost --user=$dbUser
+                --password=$dbPass --extended-insert $tables > $path/$fileName";
         } else {
 
             $fileName = $this->_tableName . '.backup-' . date('Ymd-B') . '.sql';
             $tableName = $this->_tableName;
-            $cmd = "mysqldump $dbName --host=$dbHost --user=$dbUser --password=$dbPass --extended-insert $tableName > $path/$fileName";
+            $cmd = "mysqldump $dbName --host=$dbHost --user=$dbUser
+                --password=$dbPass --extended-insert $tableName > $path/$fileName";
         }
 
         exec($cmd, $result, $rc);
@@ -180,37 +215,36 @@ class Ot_Backup {
         $tableList = $this->_getTables();
         
         $form->setAttrib('id', 'downloadDbTableForm')
-             ->setDecorators(array(
-                'FormElements',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                'Form',
-             ));
+             ->setDecorators(
+                 array(
+                     'FormElements',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     'Form',
+             )
+        );
                        
         $tableName = $form->createElement('select', 'tableName', array('label' => 'Select A Table:'));
         $tableName->setRequired(true)
                   ->setMultiOptions($tableList);
         
         $submitCsv = $form->createElement('submit', 'submitCsv', array('label' => 'Download as CSV'));
-        $submitCsv->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formSubmit'))
-        ));
+        $submitCsv->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
 
         // if the mysqldump command is available on the system then allow the download as SQL option
         if (!is_null(`mysqldump`)) {
             $submitSql = $form->createElement('submit', 'submitSql', array('label' => 'Download as SQL'));
-            $submitSql->setDecorators(array(
-                array('ViewHelper', array('helper' => 'formSubmit'))
-            ));
+            $submitSql->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
         }
                         
         $form->addElements(array($tableName))
-             ->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',      
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                  array('Label', array('tag' => 'span')),      
-              ))
-             ->addElements(array($submitCsv));
+             ->setElementDecorators(
+                 array(
+                     'ViewHelper',
+                     'Errors',      
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+                     array('Label', array('tag' => 'span')),      
+            )
+        )->addElements(array($submitCsv));
              
         if (!is_null(`mysqldump`)) {
             $form->addElement($submitSql);    

@@ -29,7 +29,7 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_ApiController extends Zend_Controller_Action  
+class Ot_ApiController extends Zend_Controller_Action
 {
         
     protected $_class = 'Internal_Api';

@@ -107,11 +107,13 @@ class Ot_Account extends Ot_Db_Table
         
         $form = new Zend_Form();
         $form->setAttrib('id', 'account')
-             ->setDecorators(array(
+             ->setDecorators(
+                 array(
                      'FormElements',
                      array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
                      'Form',
-             ));
+                 )
+        );
 
         $authAdapter = new Ot_Auth_Adapter;
         $adapters = $authAdapter->fetchAll(null, 'displayOrder');
@@ -119,8 +121,10 @@ class Ot_Account extends Ot_Db_Table
         // Realm Select box
         $realmSelect = $form->createElement('select', 'realm', array('label' => 'Login Method'));
         foreach ($adapters as $adapter) {
-            $realmSelect->addMultiOption($adapter->adapterKey,
-                $adapter->name . (!$adapter->enabled ? ' (Disabled)' : ''));
+            $realmSelect->addMultiOption(
+                $adapter->adapterKey,
+                $adapter->name . (!$adapter->enabled ? ' (Disabled)' : '')
+            );
         }
         $realmSelect->setValue((isset($default['realm'])) ? $default['realm'] : '');         
         
@@ -160,7 +164,7 @@ class Ot_Account extends Ot_Db_Table
                  ->addFilter('StringTrim')
                  ->addFilter('StripTags');   
 
-        // password confirmation field
+        // Password confirmation field
         $passwordConf = $form->createElement('password',
             'passwordConf', array('label' => 'model-account-passwordConf'));
         $passwordConf->setRequired(true)
@@ -248,12 +252,14 @@ class Ot_Account extends Ot_Db_Table
             array('ViewHelper', array('helper' => 'formButton'))
         ));
                         
-        $form->setElementDecorators(array(
-            'ViewHelper',
-            'Errors',      
-            array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-            array('Label', array('tag' => 'span')),   
-        ))->addElements(array($submit, $cancel));
+        $form->setElementDecorators(
+            array(
+                'ViewHelper',
+                'Errors',      
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+                array('Label', array('tag' => 'span')),   
+            )
+        )->addElements(array($submit, $cancel));
               
         if (isset($default['accountId'])) {
             $accountId = $form->createElement('hidden', 'accountId');
@@ -266,12 +272,11 @@ class Ot_Account extends Ot_Db_Table
         }     
 
         if ($signup) {
+            
             // Realm hidden box
             $realmHidden = $form->createElement('hidden', 'realm');
             $realmHidden->setValue($default['realm']);
-            $realmHidden->setDecorators(array(
-                array('ViewHelper', array('helper' => 'formHidden'))
-            ));             
+            $realmHidden->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));             
             
             $form->addElement($realmHidden);
         }

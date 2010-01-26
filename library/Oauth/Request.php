@@ -52,27 +52,35 @@ class Oauth_Request
 	 */
 	public static function fromRequest($httpMethod = NULL, $httpUrl = NULL, $parameters = NULL) {
 		$scheme = (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") ? 'http' : 'https';
-		@$httpUrl or $httpUrl = $scheme . '://' . $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
+		@$httpUrl or $httpUrl = $scheme . '://' . $_SERVER['HTTP_HOST']
+		                      . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
 		@$httpMethod or $httpMethod = $_SERVER['REQUEST_METHOD'];
 		
 		$requestHeaders = Oauth_Request::getHeaders();
 		
-		// let the library user override things however they'd like, if they know
-		// which parameters to use then go for it, for example XMLRPC might want to
-		// do this
+		/* Let the library user override things however they'd like, if they know
+		 * which parameters to use then go for it, for example XMLRPC might want to
+		 * do this.
+		 */
 		if ($parameters) {
 			$req = new Oauth_Request($httpMethod, $httpUrl, $parameters);
 		} else {
-			// collect request parameters from query string (GET) and post-data (POST) if appropriate (note: POST vars have priority)
+		    
+			/* Collect request parameters from query string (GET) and post-data
+			 * (POST) if appropriate (note: POST vars have priority)
+			 */
 			$reqParameters = $_GET;
 			
-			if ($httpMethod == "POST" && @strstr($requestHeaders["Content-Type"], "application/x-www-form-urlencoded") ) {
+			if ($httpMethod == "POST"
+			    && @strstr($requestHeaders["Content-Type"], "application/x-www-form-urlencoded")
+			) {
 				$reqParameters = array_merge($reqParameters, $_POST);
 			}
 			
-			// next check for the auth header, we need to do some extra stuff
-			// if that is the case, namely suck in the parameters from GET or POST
-			// so that we can include them in the signature
+			/* Next check for the auth header, we need to do some extra stuff
+			 * if that is the case, namely suck in the parameters from GET or
+			 * POST so that we can include them in the signature.
+			 */
 			if (@substr($requestHeaders['Authorization'], 0, 6) == "OAuth ") {
 				$headerParameters = Oauth_Request::splitHeader($requestHeaders['Authorization']);
 				$parameters = array_merge($reqParameters, $headerParameters);
@@ -86,14 +94,16 @@ class Oauth_Request
 	}
 	
 	/**
-	 * pretty much a helper function to set up the request
+	 * Pretty much a helper function to set up the request
 	 */
 	public static function fromConsumerAndToken($consumer, $token, $httpMethod, $httpUrl, $parameters=NULL) {
-		@$parameters or $parameters = array();
+	    
+        @$parameters or $parameters = array();
 		$defaults = array("oauth_version" => Oauth_Request::$version,
-		                  "oauth_nonce" => Oauth_Request::generateNonce(),
-		                  "oauth_timestamp" => Oauth_Request::generateTimestamp(),
-		                  "oauth_consumer_key" => $consumer->key);
+            "oauth_nonce" => Oauth_Request::generateNonce(),
+            "oauth_timestamp" => Oauth_Request::generateTimestamp(),
+            "oauth_consumer_key" => $consumer->key,
+		);
 		$parameters = array_merge($defaults, $parameters);
 		
 		if ($token) {
@@ -148,8 +158,10 @@ class Oauth_Request
 		$pairs = array();
 		foreach ($params as $key =>$value ) {
 			if (is_array($value)) {
-				// If the value is an array, it's because there are multiple 
-				// with the same key, sort them, then add all the pairs
+			    
+				/* If the value is an array, it's because there are multiple 
+				 * with the same key, sort them, then add all the pairs
+				 */
 				natsort($value);
 				foreach ($value as $v2) {
 					$pairs[] = $key . '=' . $v2;
@@ -164,7 +176,7 @@ class Oauth_Request
 	}
 	
 	/**
-	 * Returns the base string of this request
+	 * Returns the base string of this request.
 	 *
 	 * The base string defined as the method, the url
 	 * and the parameters (normalized), each urlencoded
@@ -242,7 +254,7 @@ class Oauth_Request
 	}
 	
 	/**
-	 * builds the Authorization: header
+	 * Builds the Authorization: header
 	 */
 	public function toHeader() {
 		$out ='Authorization: OAuth realm=""';
@@ -278,14 +290,14 @@ class Oauth_Request
 	}
 	
 	/**
-	 * util function: current timestamp
+	 * Util function: current timestamp
 	 */
 	private static function generateTimestamp() {
 		return time();
 	}
 	
 	/**
-	 * util function: current nonce
+	 * Util function: current nonce
 	 */
 	private static function generateNonce() {
 		$mt = microtime();
@@ -295,7 +307,7 @@ class Oauth_Request
 	}
 	
 	/**
-	 * util function for turning the Authorization: header into
+	 * Util function for turning the Authorization: header into
 	 * parameters, has to do some unescaping
 	 */
 	public static function splitHeader($header) {

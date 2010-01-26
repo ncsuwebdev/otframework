@@ -255,10 +255,10 @@ class Ot_Role extends Ot_Db_Table
     public function form($values = array())
     {
         $form = new Zend_Form();
-        $form->setAttrib('id', 'roleForm')
-             ->setDecorators(array(
-                 'FormElements',
-                 array(
+        $form->setAttrib('id', 'roleForm')->setDecorators(
+            array(
+                'FormElements',
+                array(
                     'HtmlTag',
                     array(
                         'tag' => 'div',
@@ -266,7 +266,8 @@ class Ot_Role extends Ot_Db_Table
                     ),
                  ),
                  'Form',
-             ));
+             )
+        );
              
         $name = $form->createElement('text', 'name', array('label' => 'model-role-form:roleName'));
         $name->setRequired(true)
@@ -275,8 +276,11 @@ class Ot_Role extends Ot_Db_Table
               ->setAttrib('maxlength', '128')
               ->setValue((isset($values['name']) ? $values['name'] : ''));
               
-        $inheritRoleId = $form->createElement('select', 'inheritRoleId',
-            array('label' => 'model-role-form:inheritRoleId'));
+        $inheritRoleId = $form->createElement(
+            'select',
+            'inheritRoleId',
+            array('label' => 'model-role-form:inheritRoleId')
+        );
         
         $acl = Zend_Registry::get('acl');
         $roles = $acl->getAvailableRoles();
@@ -290,33 +294,28 @@ class Ot_Role extends Ot_Db_Table
 
 
         $submit = $form->createElement('submit', 'submitButton', array('label' => 'model-role-form:submit'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
 
         $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
         $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
+        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
 
         $form->addElements(array($name, $inheritRoleId));
 
-        $form->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                  array('Label', array('tag' => 'span')),
-              ))
-             ->addElements(array($submit, $cancel));
+        $form->setElementDecorators(
+            array(
+                'ViewHelper',
+                'Errors',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                array('Label', array('tag' => 'span')),
+            )
+        )->addElements(array($submit, $cancel));
 
         if (isset($values['roleId'])) {
 
             $roleId = $form->createElement('hidden', 'roleId');
             $roleId->setValue($values['roleId']);
-            $roleId->setDecorators(array(
-                array('ViewHelper', array('helper' => 'formHidden'))
-            ));
+            $roleId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
 
             $form->addElement($roleId);
         }

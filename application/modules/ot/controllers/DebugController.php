@@ -29,8 +29,8 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_DebugController extends Zend_Controller_Action  
-{       
+class Ot_DebugController extends Zend_Controller_Action
+{
     /**
      * The cookie name to use for debugMode
      * 
@@ -65,17 +65,12 @@ class Ot_DebugController extends Zend_Controller_Action
         $messages = array();
         
         if ($status == 'on') {
-            setcookie($this->_debugModeCookieName, '1', time()+60*60*24*30,
-                $this->view->baseUrl());
+            setcookie($this->_debugModeCookieName, '1', time()+60*60*24*30, $this->view->baseUrl());
         } else {
-            setcookie($this->_debugModeCookieName, '', time()-1,
-                $this->view->baseUrl()); 
+            setcookie($this->_debugModeCookieName, '', time()-1, $this->view->baseUrl()); 
         }
         
-        $logOptions = array(
-           'attributeName' => 'appConfig',
-           'attributeId'   => '0',
-        );
+        $logOptions = array('attributeName' => 'appConfig', 'attributeId'   => '0');
         
         if ($status == 'on') {
             $logMsg = "Application was put into debug mode";
@@ -87,8 +82,7 @@ class Ot_DebugController extends Zend_Controller_Action
         
         $this->_helper->log(Zend_Log::INFO, $logMsg, $logOptions);
 
-        $this->_helper->redirector->gotoRoute(array('controller' => 'debug'),
-            'ot', true);
+        $this->_helper->redirector->gotoRoute(array('controller' => 'debug'), 'ot', true);
         
         $this->view->messages = $messages;
     }

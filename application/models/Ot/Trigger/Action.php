@@ -73,16 +73,17 @@ class Ot_Trigger_Action extends Ot_Db_Table
         }
         
         if (count($helperTypes) == 0) {
-            throw new Ot_Exception_Data('No helpers are defined in the application config file.');
+            throw new Ot_Exception_Data('model-trigger-action:noHelpersDefined');
         }
         
         $form = new Zend_Form();
-        $form->setAttrib('id', 'actionForm')
-             ->setDecorators(array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
-             ));
+        $form->setAttrib('id', 'actionForm')->setDecorators(
+            array(
+                'FormElements',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                'Form',
+            )
+         );
 
          if (!isset($values['triggerActionId'])) {
             $helper = $form->createElement('select', 'helper', array('label' => 'Action:'));
@@ -125,29 +126,24 @@ class Ot_Trigger_Action extends Ot_Db_Table
         $form->addSubForm($subForm, $obj);
         
         $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
 
         $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
         $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));        
+        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));        
         
-        $form->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                  array('Label', array('tag' => 'span')),
-              ))
-             ->addElements(array($submit, $cancel));
+        $form->setElementDecorators(
+            array(
+                'ViewHelper',
+                'Errors',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                array('Label', array('tag' => 'span')),
+            )
+        )->addElements(array($submit, $cancel));
              
         $triggerId = $form->createElement('hidden', 'triggerId');
         $triggerId->setValue($values['triggerId']);
-        $triggerId->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formHidden'))
-        ));
+        $triggerId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
         
         $form->addElement($triggerId);
         
@@ -155,9 +151,7 @@ class Ot_Trigger_Action extends Ot_Db_Table
             
             $triggerActionId = $form->createElement('hidden', 'triggerActionId');
             $triggerActionId->setValue($values['triggerActionId']);
-            $triggerActionId->setDecorators(array(
-                array('ViewHelper', array('helper' => 'formHidden'))
-            ));
+            $triggerActionId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
             
             $form->addElement($triggerActionId);
         }             

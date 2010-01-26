@@ -29,8 +29,8 @@
  *             Information Technology
  *
  */
-class Ot_AccountController extends Zend_Controller_Action 
-{    
+class Ot_AccountController extends Zend_Controller_Action
+{
     /**
      * Authetication adapter
      *
@@ -52,7 +52,7 @@ class Ot_AccountController extends Zend_Controller_Action
      *
      */
     public function init()
-    {        
+    {
         parent::init();
         
         $config = Zend_Registry::get('config');
@@ -123,11 +123,13 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->view->userData = $this->_userData;
         
-        $this->_helper
-             ->pageTitle('ot-account-index:title', array(
-            $this->_userData['firstName'],
-            $this->_userData['lastName'],
-            $this->_userData['username'])
+        $this->_helper->pageTitle(
+            'ot-account-index:title',
+            array(
+                $this->_userData['firstName'],
+                $this->_userData['lastName'],
+                $this->_userData['username'],
+            )
         );
 
         if (isset($config->app->accountPlugin)) {
@@ -155,8 +157,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $st = new Ot_Oauth_Server_Token();
         $consumer = new Ot_Oauth_Server_Consumer();
         
-        $tokens = $st->getTokensForAccount($this->_userData['accountId'],
-            'access')->toArray();
+        $tokens = $st->getTokensForAccount($this->_userData['accountId'], 'access')->toArray();
         
         $consumerIds = array();
         foreach ($tokens as $t) {
@@ -164,8 +165,7 @@ class Ot_AccountController extends Zend_Controller_Action
         }
         
         if (count($consumerIds) != 0) {
-            $where = $consumer->getAdapter()->quoteInto('consumerId IN (?)',
-                $consumerIds);
+            $where = $consumer->getAdapter()->quoteInto('consumerId IN (?)', $consumerIds);
             $consumers = $consumer->fetchAll($where)->toArray();
             
             $consumerMap = array();
@@ -188,8 +188,7 @@ class Ot_AccountController extends Zend_Controller_Action
             
             $clientToken = new Ot_Oauth_Client_Token();
             
-            $accessTokens = $clientToken->getTokensForAccount(
-                $this->_userData['accountId'], 'access');
+            $accessTokens = $clientToken->getTokensForAccount($this->_userData['accountId'], 'access');
             
             $authorized = array();
             foreach ($accessTokens as $a) {
@@ -222,10 +221,12 @@ class Ot_AccountController extends Zend_Controller_Action
         
         $this->_helper->pageTitle('ot-account-all:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();     
-        $this->view->headScript()->appendFile($this->view->baseUrl()
-            . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl()
-            . '/public/css/ot/jquery.plugin.flexigrid.css'); 
+        $this->view
+             ->headScript()
+             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
+        $this->view
+             ->headLink()
+             ->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css'); 
         
         if ($this->_request->isXmlHttpRequest()) {
                 
@@ -266,8 +267,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
             
             
-            $accounts = $account->fetchAll($where,
-                $sortname . ' ' . $sortorder, $rp, $page * $rp);
+            $accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
                             
             $response = array(
                 'page' => $page + 1,
@@ -337,13 +337,11 @@ class Ot_AccountController extends Zend_Controller_Action
                 $dba->beginTransaction();
                 
                 // Account table                    
-                $thisAccount = $account->getAccount($accountData['username'],
-                    $accountData['realm']);
+                $thisAccount = $account->getAccount($accountData['username'], $accountData['realm']);
                     
                 if (is_null($thisAccount)) {
                     try {
-                        $accountData['accountId'] = $account->insert(
-                            $accountData);
+                        $accountData['accountId'] = $account->insert($accountData);
                     } catch (Exception $e) {
                         $dba->rollback();
                         throw $e;
@@ -383,13 +381,11 @@ class Ot_AccountController extends Zend_Controller_Action
         
                     $data = array();
                     foreach ($attributes as $a) {
-                        $data[$a['attributeId']] = $form->getValue(
-                            'custom_' . $a['attributeId']);
+                        $data[$a['attributeId']] = $form->getValue('custom_' . $a['attributeId']);
                     }                   
                     
                     try {
-                        $custom->saveData('Ot_Profile',
-                            $accountData['accountId'], $data);
+                        $custom->saveData('Ot_Profile', $accountData['accountId'], $data);
                     } catch (Exception $e) {
                         $dba->rollback();
                         throw $e;
@@ -419,9 +415,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     $authAdapter = new $thisAdapter->class;
                     
                     if ($authAdapter->manageLocally()) {
-                        $this->_helper
-                             ->flashMessenger
-                             ->addMessage('msg-info-accountPasswordCreated');
+                        $this->_helper->flashMessenger->addMessage('msg-info-accountPasswordCreated');
                         
                         $trigger->dispatch('Admin_Account_Create_Password');
                     } else {
@@ -433,12 +427,9 @@ class Ot_AccountController extends Zend_Controller_Action
                         'attributeId'   => $accountData['accountId'],
                     );
                     
-                    $this->_helper->log(Zend_Log::INFO, 'Account was added',
-                        $logOptions);
+                    $this->_helper->log(Zend_Log::INFO, 'Account was added', $logOptions);
         
-                    $this->_helper
-                         ->redirector
-                         ->gotoRoute(array('action' => 'all'), 'account', true); 
+                    $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true); 
                 }
             } else {
                 $messages[] = 'msg-error-invalidForm';
@@ -490,8 +481,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 
                 $account = new Ot_Account();
                 
-                $thisAccount = $account->getAccount($data['username'],
-                    $data['realm']);
+                $thisAccount = $account->getAccount($data['username'], $data['realm']);
                 
                 if (!is_null($thisAccount)
                     && $thisAccount->accountId != $data['accountId']) {
@@ -510,16 +500,14 @@ class Ot_AccountController extends Zend_Controller_Action
                     if (isset($config->app->accountPlugin)) {
                         $acctPlugin = new $config->app->accountPlugin();
                         
-                        $subform = $acctPlugin->editSubForm(
-                            $this->_userData['accountId']);
+                        $subform = $acctPlugin->editSubForm($this->_userData['accountId']);
                         
                         $data = array(
                             'accountId' => $this->_userData['accountId']
                         );
                         
                         foreach ($subform->getElements() as $e) {
-                            $data[$e->getName()] = $form->getValue(
-                                $e->getName());
+                            $data[$e->getName()] = $form->getValue($e->getName());
                         }
                         
                         try {
@@ -536,13 +524,11 @@ class Ot_AccountController extends Zend_Controller_Action
             
                     $data = array();
                     foreach ($attributes as $a) {
-                        $data[$a['attributeId']] = $form->getValue(
-                            'custom_' . $a['attributeId']);
+                        $data[$a['attributeId']] = $form->getValue('custom_' . $a['attributeId']);
                     }                   
                         
                     try {
-                        $custom->saveData('Ot_Profile',
-                            $this->_userData['accountId'], $data);
+                        $custom->saveData('Ot_Profile', $this->_userData['accountId'], $data);
                     } catch (Exception $e) {
                         $dba->rollback();
                         throw $e;
@@ -551,27 +537,25 @@ class Ot_AccountController extends Zend_Controller_Action
                     $dba->commit();
                     
                     $loggerOptions = array(
-                            'attributeName' => 'accountId',
-                            'attributeId'   => $this->_userData['accountId'],
+                        'attributeName' => 'accountId',
+                        'attributeId'   => $this->_userData['accountId'],
                     );
                     
-                    $this->_helper->log(Zend_Log::INFO, 'Account was modified.',
-                        loggerOptions);
+                    $this->_helper->log(Zend_Log::INFO, 'Account was modified.', loggerOptions);
                         
                     if (isset($req->uri) && $req->uri != '') {
                         $uri = $req->uri;
                         $req->unsetAll(); 
                         $this->_helper->redirector->gotoUrl($uri);
                     } else {
-                        $this->_helper
-                             ->flashMessenger
-                             ->addMessage('msg-info-accountUpdated');     
-                        $this->_helper
-                             ->redirector
-                             ->gotoRoute(array(
-                                'accountId' => $this->_userData['accountId']),
-                                'account', true
-                             );
+                        $this->_helper->flashMessenger->addMessage('msg-info-accountUpdated');     
+                        $this->_helper->redirector->gotoRoute(
+                            array(
+                                'accountId' => $this->_userData['accountId']
+                            ),
+                            'account',
+                            true
+                        );
                     }
                 }
             } else {
@@ -608,8 +592,7 @@ class Ot_AccountController extends Zend_Controller_Action
             
             $account = new Ot_Account();
             
-            $where = $account->getAdapter()->quoteInto('accountId = ?',
-                $this->_userData['accountId']);
+            $where = $account->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
             
             try {
                 $account->delete($where);
@@ -634,8 +617,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $custom = new Ot_Custom();
             
             try {
-                $custom->deleteData('Ot_Profile',
-                    $this->_userData['accountId']);
+                $custom->deleteData('Ot_Profile', $this->_userData['accountId']);
             } catch (Exception $e) {
                 $dba->rollback();
                 throw $e;
@@ -644,20 +626,15 @@ class Ot_AccountController extends Zend_Controller_Action
             $dba->commit();
             
             $loggerOptions = array(
-                           'attributeName' => 'accountId',
-                           'attributeId'   => $this->_userData['accountId'],
+                'attributeName' => 'accountId',
+                'attributeId'   => $this->_userData['accountId'],
             );
                         
-            $this->_helper
-                 ->log(Zend_Log::INFO, 'Account was deleted', $loggerOptions);
+            $this->_helper->log(Zend_Log::INFO, 'ot-account-delete:accountDeleted', $loggerOptions);
 
-            $this->_helper
-                 ->flashMessenger
-                 ->addMessage('msg-info-accountDeleted');
+            $this->_helper->flashMessenger->addMessage('msg-info-accountDeleted');
             
-            $this->_helper
-                 ->redirector
-                 ->gotoRoute(array('action' => 'all'), 'account', true);
+            $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true);
         }
         
         $this->view->userData = $this->_userData;
@@ -671,49 +648,41 @@ class Ot_AccountController extends Zend_Controller_Action
      */
         public function revokeConnectionAction()
         {
-                $this->_helper->pageTitle('Revoke Application Access');
+                $this->_helper->pageTitle('ot-account-revokeConnection:title');
                 
                 $get = Zend_Registry::get('getFilter');
                 
                 if (!isset($get->consumerId)) {
-                    throw new Ot_Exception_Input(
-                        'The consumerId is not set in the query string.');
+                    throw new Ot_Exception_Input('ot-account-revokeConnection:consumerIdNotSet');
                 }
 
                 $consumer = new Ot_Oauth_Server_Consumer();
                 
                 $thisConsumer = $consumer->find($get->consumerId);
                 if (is_null($thisConsumer)) {
-                    throw new Ot_Exception_Data(
-                        'The consumer associated with your request token no
-                            longer exists');
+                    throw new Ot_Exception_Data('ot-account-revokeConnection:consumerIdNotExists');
                 }
                 
                 $st = new Ot_Oauth_Server_Token();
                 
                 $existingAccessToken = $st->getTokenByAccountAndConsumer(
                     $this->_userData['accountId'], $thisConsumer->consumerId,
-                    'access');
+                    'access'
+                );
                 if (is_null($existingAccessToken)) {
-                    throw new Ot_Exception_Data('You do not have an existing
-                        access token for this consumer');
+                    throw new Ot_Exception_Data('ot-account-revokeConnection:noAccessToken');
                 }
 
-                $form = Ot_Form_Template::delete('revokeAccess',
-                    'Revoke Access', 'Cancel');
+                $form = Ot_Form_Template::delete('revokeAccess', 'Revoke Access', 'Cancel');
                 
                 if ($this->_request->isPost() && $form->isValid($_POST)) {
                     $st->removeToken($existingAccessToken->token);
                     
-                    $this->_helper
-                         ->flashMessenger
-                         ->addMessage('Token has been removed. '
-                          . $thisConsumer->name
-                          . ' no longer has access to your account.');
+                    $this->_helper->flashMessenge->addMessage('Token has been removed. '
+                        . $thisConsumer->name
+                        . ' no longer has access to your account.');
                     
-                    $this->_helper
-                         ->redirector
-                         ->gotoRoute(array(), 'account', true);
+                    $this->_helper->redirector->gotoRoute(array(), 'account', true);
                 }
                 
                 $this->view->form = $form;
@@ -729,7 +698,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $identity = Zend_Auth::getInstance()->getIdentity();
 
         $account = new Ot_Account();
-        
+
         $thisAccount = $account->getAccount($identity->username,
             $identity->realm);
         if (is_null($thisAccount)) {
@@ -745,57 +714,63 @@ class Ot_AccountController extends Zend_Controller_Action
         }
         
         $form = new Zend_Form();
-        $form->setAttrib('id', 'changePassword')
-             ->setDecorators(array(
+        $form->setAttrib('id', 'changePassword')->setDecorators(
+            array(
                 'FormElements',
                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
                 'Form',
-        ));
+            )
+        );
                          
-        $oldPassword = $form->createElement('password', 'oldPassword',
-            array('label' => 'ot-account-changePassword:form:oldPassword'));
+        $oldPassword = $form->createElement(
+            'password',
+            'oldPassword',
+            array('label' => 'ot-account-changePassword:form:oldPassword')
+        );
         $oldPassword->setRequired(true)
                     ->addValidator('StringLength', false, array(5, 20))
                     ->addFilter('StringTrim')
                     ->addFilter('StripTags');   
                     
-        $newPassword = $form->createElement('password', 'newPassword',
-            array('label' => 'ot-account-changePassword:form:newPassword'));
+        $newPassword = $form->createElement(
+            'password',
+            'newPassword',
+            array('label' => 'ot-account-changePassword:form:newPassword')
+        );
         $newPassword->setRequired(true)
                     ->addValidator('StringLength', false, array(5, 20))
                     ->addFilter('StringTrim')
-                    ->addFilter('StripTags'); 
+                    ->addFilter('StripTags');
                      
-        $newPasswordConf = $form->createElement('password', 'newPasswordConf',
-            array('label' => 'ot-account-changePassword:form:newPasswordConf'));
+        $newPasswordConf = $form->createElement(
+            'password',
+            'newPasswordConf',
+            array('label' => 'ot-account-changePassword:form:newPasswordConf')
+        );
         $newPasswordConf->setRequired(true)
                         ->addValidator('StringLength', false, array(5, 20))
                         ->addFilter('StringTrim')
-                        ->addFilter('StripTags')
-                        ;    
-                        
-        $submit = $form->createElement('submit', 'changeButton',
-            array('label' => 'ot-account-changePassword:form:submit'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
-        
-        $cancel = $form->createElement('button', 'cancel',
-            array('label' => 'form-button-cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
-                                        
+                        ->addFilter('StripTags');
 
-        $form->addElements(array($oldPassword, $newPassword, $newPasswordConf))
-             ->setElementDecorators(array(
+        $submit = $form->createElement(
+            'submit',
+            'changeButton',
+            array('label' => 'ot-account-changePassword:form:submit')
+        );
+        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
+
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
+
+        $form->addElements(array($oldPassword, $newPassword, $newPasswordConf))->setElementDecorators(
+            array(
                 'ViewHelper',
-                'Errors',      
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                array('Label', array('tag' => 'span')),      
-             ))
-             ->addElements(array($submit, $cancel));         
+                'Errors',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                array('Label', array('tag' => 'span')),
+            )
+        )->addElements(array($submit, $cancel));         
 
         $messages = array();
         if ($this->_request->isPost()) {
@@ -828,8 +803,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         'attributeId'   => $thisAccount->accountId,
                     );
                         
-                    $this->_helper->log(Zend_Log::INFO, 'User changed Password',
-                        $loggerOptions);  
+                    $this->_helper->log(Zend_Log::INFO, 'User changed Password', $loggerOptions);  
                         
                     $this->_helper
                          ->redirector
@@ -840,8 +814,9 @@ class Ot_AccountController extends Zend_Controller_Action
             }
         } 
         
-        $this->view->headScript()->appendFile($this->view->baseUrl()
-              . '/public/scripts/ot/jquery.plugin.passStrength.js');
+        $this->view->headScript()->appendFile(
+            $this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.passStrength.js'
+        );
         $this->view->messages = $messages;
         $this->_helper->pageTitle('ot-account-changePassword:title');
         $this->view->form  = $form;

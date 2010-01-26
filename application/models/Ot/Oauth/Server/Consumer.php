@@ -141,13 +141,13 @@ class Ot_Oauth_Server_Consumer extends Ot_Db_Table
     public function form($values = array())
     {
         $form = new Zend_Form();
-        $form->setAttrib('id', 'consumerForm')
-             ->setAttrib('enctype', 'multipart/form-data')
-             ->setDecorators(array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
-             ));
+        $form->setAttrib('id', 'consumerForm')->setAttrib('enctype', 'multipart/form-data')->setDecorators(
+            array(
+                'FormElements',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                'Form',
+            )
+        );
              
         $image = $form->createElement('file', 'image', array('label' => 'Application Icon:'));
         $image->addValidator('Count', false, 1)     // ensure only 1 file
@@ -182,42 +182,33 @@ class Ot_Oauth_Server_Consumer extends Ot_Db_Table
               ->setValue((isset($values['callbackUrl']) ? $values['callbackUrl'] : ''));      
 
         $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
 
         $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
         $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
+        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
         
         $form->addElements(array($image, $name, $description, $website, $callbackUrl));
 
-        $form->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                  array('Label', array('tag' => 'span')),
-              ))
-             ->addElements(array($submit, $cancel));
+        $form->setElementDecorators(
+            array(
+                'ViewHelper',
+                'Errors',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                array('Label', array('tag' => 'span')),
+            )
+        )->addElements(array($submit, $cancel));
                 
         
         $image->addPrefixPath('Ot_Form_Decorator', 'Ot/Form/Decorator', 'decorator');
         $image->addDecorator('File');
-               $image->addDecorator('Imageupload', 
-                       array(
-                               'id'        => 'applicationIconImage',
-                               'src'       => $values['imagePath'],
-                       ));
+        $image->addDecorator('Imageupload', array('id' => 'applicationIconImage', 'src' => $values['imagePath']));
 
         if (isset($values['consumerId'])) {
 
             $consumerId = $form->createElement('hidden', 'consumerId');
             $consumerId->setValue($values['consumerId']);
-            $consumerId->setDecorators(array(
-                array('ViewHelper', array('helper' => 'formHidden'))
-            ));
+            $consumerId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
 
             $form->addElement($consumerId);
         }

@@ -67,11 +67,13 @@ class Ot_Auth_Adapter extends Ot_Db_Table
     {
         $form = new Zend_Form();
         $form->setAttrib('id', 'authAdapterForm')
-             ->setDecorators(array(
-                 'FormElements',
-                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                 'Form',
-             ));
+             ->setDecorators(
+                 array(
+                     'FormElements',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     'Form',
+                 )
+             );
              
         $name = $form->createElement('text', 'name', array('label' => 'Name:'));
         $name->setRequired(true)
@@ -90,25 +92,22 @@ class Ot_Auth_Adapter extends Ot_Db_Table
                     ->setValue((isset($values['description']) ? $values['description'] : ''));
 
         $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
 
         $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
         $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
+        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
 
         $form->addElements(array($name, $description));
 
-        $form->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                  array('Label', array('tag' => 'span')),
-              ))
-             ->addElements(array($submit, $cancel));
+        $form->setElementDecorators(
+            array(
+                'ViewHelper',
+                'Errors',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                array('Label', array('tag' => 'span')),
+            )
+        )->addElements(array($submit, $cancel));
 
         return $form;        
     }

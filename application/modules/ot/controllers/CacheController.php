@@ -28,8 +28,8 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_CacheController extends Zend_Controller_Action  
-{      
+class Ot_CacheController extends Zend_Controller_Action
+{
     /**
      * Shows the cache management index page
      */
@@ -37,13 +37,9 @@ class Ot_CacheController extends Zend_Controller_Action
     {
         $messages = array();
                 
-        $this->view->acl = array(
-            'clearCache' => $this->_helper->hasAccess('clear')
-        );
+        $this->view->acl = array('clearCache' => $this->_helper->hasAccess('clear'));
 
-        $this->view->messages = array_merge($this->_helper
-                                                 ->flashMessenger
-                                                 ->getMessages(), $messages);
+        $this->view->messages = array_merge($this->_helper->flashMessenger->getMessages(), $messages);
         $this->_helper->pageTitle('ot-cache-index:title');
     }
     
@@ -58,17 +54,12 @@ class Ot_CacheController extends Zend_Controller_Action
         $cache = Zend_Registry::get('cache');
         $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
         
-        $logOptions = array(
-            'attributeName' => 'appConfig',
-            'attributeId'   => '0',
-        );
+        $logOptions = array('attributeName' => 'appConfig', 'attributeId' => '0');
             
         $this->_helper->log(Zend_Log::INFO, 'Cache was cleared', $logOptions);
         
         $this->_helper->flashMessenger->addMessage('msg-info-cacheCleared');
         
-        $this->_helper
-             ->redirector
-             ->gotoRoute(array('controller' => 'cache'), 'ot', true);
+        $this->_helper->redirector->gotoRoute(array('controller' => 'cache'), 'ot', true);
     }
 }

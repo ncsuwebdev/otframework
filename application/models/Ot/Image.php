@@ -16,7 +16,7 @@
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
- * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
+ * @license    http://itdapps.ncsu.edu/bsd.txt BSD License
  * @version    SVN: $Id: $
  */
 
@@ -28,7 +28,7 @@
  *             Information Technology
  *
  */
-class Ot_Image extends Ot_Db_Table 
+class Ot_Image extends Ot_Db_Table
 {
     /**
      * Database table name
@@ -59,12 +59,13 @@ class Ot_Image extends Ot_Db_Table
         $width = $size[0];
         $height = $size[1];
 
-        // get the ratio needed
+        // Get the ratio needed
         $xRatio = $maxWidth / $width;
         $yRatio = $maxHeight / $height;
 
-        // if image already meets criteria, load current values in
-        // if not, use ratios to load new size info
+        /* If image already meets criteria, load current values in
+         * if not, use ratios to load new size info
+         */
         if (($width <= $maxWidth) && ($height <= $maxHeight) ) {
             $tnWidth = $width;
             $tnHeight = $height;
@@ -76,17 +77,17 @@ class Ot_Image extends Ot_Db_Table
             $tnHeight = $maxHeight;
         }
 
-        // set up canvas
+        // Set up canvas
         $dst = imagecreatetruecolor($tnWidth, $tnHeight);
         
-        // read image
+        // Read image
         switch ($size['mime']) {
             
-            case 'image/jpeg':     // jpg
+            case 'image/jpeg':
                 $src = imagecreatefromjpeg($image);
                 break;
                 
-            case 'image/png':     // png
+            case 'image/png':
                 $src = imagecreatefrompng($image);
                 
                 $transparency = imagecolortransparent($dst);
@@ -109,30 +110,28 @@ class Ot_Image extends Ot_Db_Table
                 break;*/
                 
             default:
-                throw new Exception("Image type not supported (must be png or jpeg)");
+                throw new Ot_Exception('model-image-resizeImage:typeNotSupported');
                 return;
-            }
-
-        
+        }
                 
-        // copy resized image to new canvas
-        imagecopyresampled ($dst, $src, 0, 0, 0, 0, $tnWidth, $tnHeight, $width, $height);
+        // Copy resized image to new canvas
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $tnWidth, $tnHeight, $width, $height);
 
         switch ($size['mime']) {
-            case 'image/jpeg':     // jpg
+            case 'image/jpeg':
                 if (!imagejpeg($dst, $image, 100)) {
-                   throw new Exception('Image not created');
+                   throw new Ot_Exception('model-image-resizeImage:imageNotCreated');
                 }
                 break;
-            case 'image/png':     // png
+            case 'image/png':
                 
                 if (!imagepng($dst, $image)) {
-                    throw new Exception('Image not created');
+                    throw new Ot_Exception('model-image-resizeImage:imageNotCreated');
                 }
                 break;          
         }
         
-        // clear out the resources
+        // Clear out the resources
         imagedestroy($src);
         imagedestroy($dst);
     }

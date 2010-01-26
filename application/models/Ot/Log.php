@@ -15,15 +15,15 @@
  * @package    Ot_Log
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
- * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
+ * @license    http://itdapps.ncsu.edu/bsd.txt BSD License
  * @version    SVN: $Id: $
  */
 
 /**
- * Model to do all interaction for logs.  Logs are entered into the database using
- * Zend_Log with a database adapter.  Stored in the logs are priority, message,
- * userId, subscriptionId, and timestamp.  We want to extract these logs for the
- * purpose of tracking a users history.  Logs are not entered, updated, or deleted
+ * Model to do all interaction for logs. Logs are entered into the database using
+ * Zend_Log with a database adapter. Stored in the logs are priority, message,
+ * userId, subscriptionId, and timestamp. We want to extract these logs for the
+ * purpose of tracking a users history. Logs are not entered, updated, or deleted
  * through this model, it is simple for read-only purposes.
  *
  * @package    Ot_Log
@@ -32,7 +32,7 @@
  *             Information Technology
  *
  */
-class Ot_Log extends Ot_Db_Table 
+class Ot_Log extends Ot_Db_Table
 {
     /**
      * Database table name

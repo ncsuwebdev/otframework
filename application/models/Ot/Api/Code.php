@@ -29,7 +29,7 @@
  *             Information Technology
  *
  */
-class Ot_Api_Code extends Ot_Db_Table 
+class Ot_Api_Code extends Ot_Db_Table
 {
     /**
      * Database table name

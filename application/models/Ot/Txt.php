@@ -30,7 +30,7 @@
  *
  */
 final class Ot_Txt
-{    
+{   
     protected static $_carrierList = array(
         'alltel' => array(
             'display' => 'Alltel',

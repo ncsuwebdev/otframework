@@ -29,7 +29,8 @@
  *             Information Technology
  *
  */
-class Ot_Cron_Status extends Ot_Db_Table {
+class Ot_Cron_Status extends Ot_Db_Table
+{
 
     /**
      * Name of the table in the database

@@ -16,12 +16,12 @@
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
- * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
+ * @license    http://itdapps.ncsu.edu/bsd.txt BSD License
  * @version    SVN: $Id: $
  */
 
 /**
- * Model to do deal with the navigation
+ * Model to do deal with the navigation.
  *
  * @package    Ot_Nav
  * @category   Model
@@ -72,11 +72,12 @@ class Ot_Nav extends Ot_Db_Table
     /**
      * Returns the nav html string
      * 
-     * @var $navData The array of the nav data
+     * @var $navData  The array of the nav data
      * @var addTitles Whether or not to add the module:controller:action string
      *                in the title attribute
      */
-    public function generateHtml($navData, $addTitles = false) {
+    public function generateHtml($navData, $addTitles = false)
+    {
         $str = '';        
         foreach ($navData['children'] as $c) {
             if ($c['show']) {

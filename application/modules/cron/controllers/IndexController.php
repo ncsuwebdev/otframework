@@ -29,8 +29,8 @@
  * @category   Controller
  * @copyright  Copyright (c) 2007 NC State University Information Technology Division
  */
-class Cron_IndexController extends Zend_Controller_Action 
-{    
+class Cron_IndexController extends Zend_Controller_Action
+{
     /**
      * Unix timestamp of the date the cron job was last run.
      *
@@ -63,7 +63,6 @@ class Cron_IndexController extends Zend_Controller_Action
         
         parent::init();
     }
-
     
     /**
      * Cron job to process the email queue
@@ -98,5 +97,4 @@ class Cron_IndexController extends Zend_Controller_Action
             $this->_helper->log(Zend_Log::INFO, 'Mail Sent', $logOptions);
         }       
     }
-
 }

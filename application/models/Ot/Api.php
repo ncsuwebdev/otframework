@@ -21,7 +21,7 @@
  */
 
 /**
- * Handles API functionality for the application
+ * Handles API functionality for the application.
  *
  * @package    Ot_Api
  * @category   Model
@@ -29,7 +29,7 @@
  *             Information Technology
  * 
  */
-class Ot_Api 
+class Ot_Api
 {
     /**
      * available functions that can be called remotely

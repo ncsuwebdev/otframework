@@ -28,12 +28,17 @@ ot-account-edit:title;Edit Account
 ot-account-edit:header;Make any desired changes to your user data.
 ot-account-delete:title;Delete User
 ot-account-delete:header;You have selected to delete the user <b>%1$s</b> who logs in via <b>%2$s</b>.
+ot-account-delete:accountDeleted;Account was deleted
 ot-account-changePassword:title;Change My Password
 ot-account-changePassword:header;You may change your own password by filling in the fields below. If this is the first time logging into the system, you must change your password to proceed. Fill in the following fields to change your password.
 ot-account-changePassword:form:oldPassword;Old Password:
 ot-account-changePassword:form:newPassword;New Password:
 ot-account-changePassword:form:newPasswordConf;New Password Confirm:
 ot-account-changePassword:form:submit;Change My Password
+ot-account-revokeConnection:title;Revoke Application Access
+ot-account-revokeConnection:consumerIdNotSet;The consumerId is not set in the query string.
+ot-account-revokeConnection:consumerIdNotExists;The consumer associated with your request token no longer exists
+ot-account-revokeConnection:noAccessToken:You do not have an existing access token for this consumer
 
 ot-api-index:title;API Documentation
 ot-api-index:method;Method
@@ -122,6 +127,11 @@ model-account-password;Password
 model-account-passwordConf;Confirm Password
 model-account-role;Access Role
 model-account-timezone;Timezone
+
+model-image-resizeImage:typeNotSupported;Image type not supported (must be png or jpeg)
+model-image-resizeImage:imageNotCreated;Image not created
+
+model-trigger-action:noHelpersDefined;No helpers are defined in the application config file.
 
 msg-error-otExceptionAccess:title;You do not have access
 msg-error-otExceptionData:title;Error accessing data

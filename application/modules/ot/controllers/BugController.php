@@ -28,8 +28,8 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_BugController extends Zend_Controller_Action 
-{    
+class Ot_BugController extends Zend_Controller_Action
+{
     /**
      * shows all open bugs
      *
@@ -175,20 +175,21 @@ class Ot_BugController extends Zend_Controller_Action
                     'attributeId'   => $bugId,
                 );
                     
-                $this->_helper
-                     ->log(Zend_Log::INFO, 'Bug was added', $logOptions);
-                $this->_helper
-                     ->flashMessenger
-                     ->addMessage('msg-info-bugSubmitted');
+                $this->_helper->log(Zend_Log::INFO, 'Bug was added', $logOptions);
+                $this->_helper->flashMessenger->addMessage('msg-info-bugSubmitted');
         
-                    $this->_helper->redirector->gotoRoute(array(
+                $this->_helper->redirector->gotoRoute(
+                    array(
                         'controller' => 'bug',
                         'action' => 'details',
-                        'bugId' => $bugId
-                    ), 'ot', true);
-                } else {
-                    $messages[] = 'msg-error-formError';
-                }
+                        'bugId' => $bugId,
+                    ),
+                    'ot',
+                    true
+                );
+            } else {
+                $messages[] = 'msg-error-formError';
+            }
         }
         
         $this->view->messages = $messages;
@@ -272,13 +273,15 @@ class Ot_BugController extends Zend_Controller_Action
                 $this->_helper
                      ->flashMessenger->addMessage('msg-info-bugUpdated');
                 
-                $this->_helper
-                     ->redirector
-                     ->gotoRoute(array(
+                $this->_helper->redirector->gotoRoute(
+                    array(
                         'controller' => 'bug',
                         'action' => 'details',
-                        'bugId' => $get->bugId),
-                      'ot', true);
+                        'bugId' => $get->bugId
+                    ),
+                    'ot',
+                    true
+                );
             } else {
                 $messages[] = 'msg-error-formError';
             }

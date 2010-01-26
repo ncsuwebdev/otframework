@@ -40,12 +40,10 @@ class Ot_LogController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-log-index:title');  
         $this->view
              ->headScript()
-             ->appendFile($this->view->baseUrl()
-              . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
+             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
         $this->view
              ->headLink()
-             ->appendStylesheet($this->view->baseUrl()
-              . '/public/css/ot/jquery.plugin.flexigrid.css'); 
+             ->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css'); 
         
         if ($this->_request->isXmlHttpRequest()) {
                 
@@ -81,8 +79,7 @@ class Ot_LogController extends Zend_Controller_Action
                 $where = $log->getAdapter()->quoteInto($qtype . ' = ?', $query);
             }
                             
-            $logs = $log->fetchAll($where, $sortname . ' ' . $sortorder, $rp,
-                $page * $rp);
+            $logs = $log->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
                             
             $response = array(
                 'page' => $page + 1,
@@ -93,8 +90,7 @@ class Ot_LogController extends Zend_Controller_Action
             $config = Zend_Registry::get('config');
                     
             $account = new Ot_Account();
-            $accounts = $account->fetchAll(null,
-                array('firstName', 'lastName'));
+            $accounts = $account->fetchAll(null, array('firstName', 'lastName'));
             
             foreach ($accounts as $a) {
                 $accountMap[$a->accountId] = $a->firstName . ' ' . $a->lastName;
@@ -138,14 +134,18 @@ class Ot_LogController extends Zend_Controller_Action
             $log = new Ot_Log();
             $log->delete(true);
                         
-                $this->_helper->log(Zend_Log::INFO, 'Logs were cleared.');
+            $this->_helper->log(Zend_Log::INFO, 'Logs were cleared.');
 
             $this->_helper->flashMessenger->addMessage('msg-info-logsCleared');
             
-            $this->_helper->redirector->gotoRoute(array(
-                'controller' => 'log',
-                'action' => 'index',
-            ), 'ot', true);
+            $this->_helper->redirector->gotoRoute(
+                array(
+                    'controller' => 'log',
+                    'action' => 'index',
+                ),
+                'ot',
+                true
+            );
         }
         
         $this->_helper->pageTitle('ot-log-clear:title');

@@ -39,14 +39,14 @@ class Ot_Custom
      * @var array
      */
     protected $_types = array(
-       'text',
-       'textarea',
-       'radio',
-       'checkbox',
-       'multicheckbox',
-       'multiselect',
-       'select',
-       'ranking',
+        'text',
+        'textarea',
+        'radio',
+        'checkbox',
+        'multicheckbox',
+        'multiselect',
+        'select',
+        'ranking',
     );
     
     /**
@@ -55,12 +55,12 @@ class Ot_Custom
      * @var array
      */
     protected $_rankingOptions = array(
-       'N/A' => 'N/A',
-       '1' => '1',
-       '2' => '2', 
-       '3' => '3', 
-       '4' => '4', 
-       '5' => '5',
+        'N/A' => 'N/A',
+        '1' => '1',
+        '2' => '2', 
+        '3' => '3', 
+        '4' => '4', 
+        '5' => '5',
     );
     
     /**
@@ -222,7 +222,8 @@ class Ot_Custom
         return $elm;        
     }
     
-    protected function _renderHtmlElement($attribute, $value = null) {
+    protected function _renderHtmlElement($attribute, $value = null)
+    {
         $opts = array();
                 
         if ($attribute['required']) {
@@ -310,7 +311,7 @@ class Ot_Custom
         }
         
         foreach ($data as $key => $value) {
-            if(is_array($value)) { 
+            if (is_array($value)) { 
                 $value = serialize($value);
             }
             
@@ -431,9 +432,9 @@ class Ot_Custom
                     break;  
             }
             $temp = array(
-                 'attribute'  => $a,
-                 'value'      => $value,
-                 'formRender' => '',
+                'attribute'  => $a,
+                'value'      => $value,
+                'formRender' => '',
             );
             
             $temp['formRender'] = $this->renderFormElement($tempA, $renderType, $value);

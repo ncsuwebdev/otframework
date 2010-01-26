@@ -27,8 +27,8 @@
  * @copyright  Copyright (c) 2007 NC State University Information Technology Division
  *
  */
-class Ot_Email_Queue extends Ot_Db_Table {
-
+class Ot_Email_Queue extends Ot_Db_Table
+{
 
     /**
      * Name of the table in the database
@@ -50,7 +50,8 @@ class Ot_Email_Queue extends Ot_Db_Table {
      * @param array $data
      * @return results from insert
      */
-    public function queueEmail($data) {
+    public function queueEmail($data)
+    {
 
         $data['queueDt']        = time();
         $data['zendMailObject'] = serialize($data['zendMailObject']);

@@ -28,8 +28,8 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_BackupController extends Zend_Controller_Action  
-{         
+class Ot_BackupController extends Zend_Controller_Action
+{
     /**
      * Shows the backup index page
      */
@@ -59,7 +59,8 @@ class Ot_BackupController extends Zend_Controller_Action
                     }
 
                     try {
-                        // this call sends it to the browser too 
+                        
+                        // This call sends it to the browser too 
                         $backup->getBackup($db, $tableName, $type);
                     } catch (Exception $e) {
                         throw $e;
@@ -70,9 +71,8 @@ class Ot_BackupController extends Zend_Controller_Action
                         'attributeId'   => $tableName,
                     );
                     
-                    $this->_helper->log(Zend_Log::INFO,
-                        'Backup of database table ' . $tableName
-                        . ' was downloaded', $logOptions);
+                    $message = 'Backup of database table ' . $tableName . ' was downloaded';
+                    $this->_helper->log(Zend_Log::INFO, $message, $logOptions);
                 }
         }
         
@@ -94,7 +94,8 @@ class Ot_BackupController extends Zend_Controller_Action
             $db = Zend_Db_Table::getDefaultAdapter();
             
             try {
-                // this call sends it to the browser too                 
+                
+                // This call sends it to the browser too                 
                 $backup->getBackup($db, '', 'sqlAll');
             } catch (Exception $e) {
                 throw $e;
@@ -108,8 +109,7 @@ class Ot_BackupController extends Zend_Controller_Action
                 'attributeId'   => 'allTables',
             );
                 
-            $this->_helper->log(Zend_Log::INFO,
-                'Backup of entire database was downloaded', $logOptions);
+            $this->_helper->log(Zend_Log::INFO, 'Backup of entire database was downloaded', $logOptions);
         } else {
             throw new Ot_Exception();
         }

@@ -28,8 +28,8 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class IndexController extends Zend_Controller_Action 
-{   
+class IndexController extends Zend_Controller_Action
+{
           
     /**
      * shows the homepage

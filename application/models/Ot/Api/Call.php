@@ -16,7 +16,7 @@
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
- * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
+ * @license    http://itdapps.ncsu.edu/bsd.txt BSD License
  * @version    SVN: $Id: $
  */
 
@@ -85,4 +85,3 @@ class Ot_Api_Call
         return $this->_attr;
     }
 }
-?>

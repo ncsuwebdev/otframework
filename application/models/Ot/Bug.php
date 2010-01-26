@@ -21,7 +21,7 @@
  */
 
 /**
- * Model to do deal with bug reports
+ * Model to do deal with bug reports.
  *
  * @package    Ot_Bug
  * @category   Model
@@ -191,12 +191,13 @@ class Ot_Bug extends Ot_Db_Table
     public function form($values = array())
     {
         $form = new Zend_Form();
-        $form->setAttrib('id', 'bugForm')
-             ->setDecorators(array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
-             ));
+        $form->setAttrib('id', 'bugForm')->setDecorators(
+            array(
+                'FormElements',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                'Form',
+            )
+        );
              
         $title = $form->createElement('text', 'title', array('label' => 'Title:'));
         $title->setRequired(true)
@@ -238,15 +239,11 @@ class Ot_Bug extends Ot_Db_Table
         }
 
         $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
-        $submit->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formSubmit'))
-        ));
+        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
 
         $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
         $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formButton'))
-        ));
+        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
 
         $form->addElement($title);
         
@@ -256,21 +253,20 @@ class Ot_Bug extends Ot_Db_Table
         
         $form->addElements(array($reproducibility, $severity, $priority, $description));
 
-        $form->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                  array('Label', array('tag' => 'span')),
-             ))
-             ->addElements(array($submit, $cancel));
+        $form->setElementDecorators(
+            array(
+                'ViewHelper',
+                'Errors',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                array('Label', array('tag' => 'span')),
+            )
+        )->addElements(array($submit, $cancel));
 
         if (isset($values['bugId'])) {
 
             $bugId = $form->createElement('hidden', 'bugId');
             $bugId->setValue($values['bugId']);
-            $bugId->setDecorators(array(
-                array('ViewHelper', array('helper' => 'formHidden'))
-            ));
+            $bugId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
 
             $form->addElement($bugId);
         }

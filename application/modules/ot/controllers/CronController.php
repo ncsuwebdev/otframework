@@ -28,7 +28,7 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_CronController extends Zend_Controller_Action 
+class Ot_CronController extends Zend_Controller_Action
 {
     /**
      * shows all the cron jobs
@@ -45,8 +45,7 @@ class Ot_CronController extends Zend_Controller_Action
             
         $config = Zend_Registry::get('config');
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index',
-            'cron_index', $config->user->defaultRole->val);
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'cron_index', $config->user->defaultRole->val);
         
         $role = new Ot_Role();
         $this->view->defaultRole = $role->find($config->user->defaultRole->val);
@@ -78,10 +77,7 @@ class Ot_CronController extends Zend_Controller_Action
             $cj = $cs->find($get->name);
     
             if (is_null($cj)) {
-                $cj = array(
-                    'status' => 'disabled',
-                    'name'   => $get->name
-                    );
+                $cj = array('status' => 'disabled', 'name'   => $get->name);
     
                 $status = 'disabled';
             } else {
@@ -94,56 +90,40 @@ class Ot_CronController extends Zend_Controller_Action
         }        
         
         $form = new Zend_Form();
-        $form->setAction('?name=' . $get->name)
-             ->setMethod('post')
-             ->setAttrib('id', 'toggleCronJob');
+        $form->setAction('?name=' . $get->name)->setMethod('post')->setAttrib('id', 'toggleCronJob');
        
         $hidden = $form->createElement('hidden', 'status');
         $hidden->setValue(($status == 'enabled') ? 'disable' : 'enable');
         $hidden->clearDecorators();
-        $hidden->addDecorators(array(
-            array('ViewHelper')
-        ));
+        $hidden->addDecorators(array(array('ViewHelper')));
                
-        $submit = $form->createElement('submit', 'submitButton',
-            array('label' => 'form-button-yes'));
-        $submit->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formSubmit'))
-        ));
+        $submit = $form->createElement('submit', 'submitButton', array('label' => 'form-button-yes'));
+        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
                  
-        $cancel = $form->createElement('button', 'cancel',
-            array('label' => 'form-button-cancel'));
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
         $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formButton'))
-        ));
+        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
                         
-        $form->addElements(array($hidden))
-             ->setElementDecorators(array(
-                  'ViewHelper',
-                  'Errors',      
-                  array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                  array('Label', array('tag' => 'span')),      
-              ))
-             ->addElements(array($submit, $cancel));
+        $form->addElements(array($hidden))->setElementDecorators(
+            array(
+                'ViewHelper',
+                'Errors',      
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+                array('Label', array('tag' => 'span')),      
+            )
+        )->addElements(array($submit, $cancel));
         
         if ($this->_request->isPost() && $form->isValid($_POST)) {
+            
             $status = ($form->getValue('status') == 'enable') ? 'enabled' : 'disabled';
 
             $cs->setCronStatus($get->name, $status);
 
-            $logOptions = array(
-                        'attributeName' => 'cronName',
-                        'attributeId'   => $get->name,
-            );
+            $logOptions = array('attributeName' => 'cronName', 'attributeId' => $get->name);
                     
-            $this->_helper
-                 ->log(Zend_Log::INFO, 'cron was set to ' . $status,
-                    $logOptions);
+            $this->_helper->log(Zend_Log::INFO, 'cron was set to ' . $status, $logOptions);
                         
-            $this->_helper
-                 ->redirector
-                 ->gotoRoute(array('controller' => 'cron'), 'ot', true);
+            $this->_helper->redirector->gotoRoute(array('controller' => 'cron'), 'ot', true);
         }
         
         if ($get->name == 'all') {
