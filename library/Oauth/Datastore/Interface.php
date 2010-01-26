@@ -29,16 +29,16 @@
  *             Information Technology
  */
 interface Oauth_Datastore_Interface
-{	
-	public function lookupToken($consumer, $tokenType, $token);
-	
-	public function lookupConsumer($consumerKey);
-	
-	public function lookupNonce($consumer, $token, $nonce, $timestamp);
-	
-	public function newToken($consumer, $type = "request");
-	
-	public function newRequestToken($consumer);
-	
-	public function newAccessToken($token, $consumer);
+{
+    public function lookupToken($consumer, $tokenType, $token);
+    
+    public function lookupConsumer($consumerKey);
+    
+    public function lookupNonce($consumer, $token, $nonce, $timestamp);
+    
+    public function newToken($consumer, $type = "request");
+    
+    public function newRequestToken($consumer);
+    
+    public function newAccessToken($token, $consumer);
 }

@@ -93,8 +93,12 @@ class Ot_Auth_Adapter_Wrap implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapt
         }
         
         if (strtolower($username) == 'guest') {
-        	$this->autoLogout();
-        	return new Zend_Auth_Result(false, new stdClass(), array('Guest access is not allowed for this application'));
+            $this->autoLogout();
+            return new Zend_Auth_Result(
+               false,
+               new stdClass(),
+               array('Guest access is not allowed for this application')
+            );
         }
 
         $class = new stdClass();
@@ -102,68 +106,70 @@ class Ot_Auth_Adapter_Wrap implements Zend_Auth_Adapter_Interface, Ot_Auth_Adapt
         $class->realm    = 'wrap';
         
         return new Zend_Auth_Result(true, $class, array());
-	}
+    }
 
-	/**
-	 * Gets the current URL
-	 *
-	 * @return string
-	 */
+    /**
+     * Gets the current URL
+     *
+     * @return string
+     */
     protected function _getURL()
     {
         $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
 
-        $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")) . $s;
+        $protocol = substr(
+            strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")
+        ) . $s;
 
         $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
 
         return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];
     }
 
-	/**
-	 * Setup this adapter to autoLogin
-	 *
-	 * @return boolean
-	 */
-	public static function autoLogin()
-	{
-	    return true;
-	}
+    /**
+     * Setup this adapter to autoLogin
+     *
+     * @return boolean
+     */
+    public static function autoLogin()
+    {
+        return true;
+    }
 
-	/**
-	 * Logs the user out by removing all the WRAP cookies that are created.
-	 *
-	 */
-	public static function autoLogout()
-	{
-		
+    /**
+     * Logs the user out by removing all the WRAP cookies that are created.
+     *
+     */
+    public static function autoLogout()
+    {
+        
         foreach (array_keys($_COOKIE) as $name) {
-            if (preg_match('/^WRAP.*/',$name)) {
+            if (preg_match('/^WRAP.*/', $name)) {
 
-                // set the expiration date to one hour ago
+                // Set the expiration date to one hour ago
                 setcookie($name, "", time() - 3600, "/", "ncsu.edu");
             }
         }
-	}
+    }
 
-	/**
-	 * Flag to tell the app where the authenticaiton is managed
-	 *
-	 * @return boolean
-	 */
-	public static function manageLocally()
-	{
-	    return false;
-	}
-	
-	/**
-	 * flag to tell the app whether a user can sign up or not
-	 *
-	 * @return boolean
-	 */
-	public static function allowUserSignUp()
-	{
-		return false;
-	}
+    /**
+     * Flag to tell the app where the authenticaiton is managed
+     *
+     * @return boolean
+     */
+    public static function manageLocally()
+    {
+        return false;
+    }
+    
+    /**
+     * flag to tell the app whether a user can sign up or not
+     *
+     * @return boolean
+     */
+    public static function allowUserSignUp()
+    {
+        return false;
+    }
 
 }

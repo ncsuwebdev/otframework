@@ -30,32 +30,32 @@
  */
 class Ot_Action_Helper_HasAccess extends Zend_Controller_Action_Helper_Abstract
 {
-	protected $_config;
-	protected $_identity;
-	
-	public function init()
-	{
-		$this->_config = Zend_Registry::get('config');
-		$this->_identity = Zend_Auth::getInstance()->getIdentity();
-		
-		parent::init();
-	}
-	
+    protected $_config;
+    protected $_identity;
+    
+    public function init()
+    {
+        $this->_config = Zend_Registry::get('config');
+        $this->_identity = Zend_Auth::getInstance()->getIdentity();
+        
+        parent::init();
+    }
+    
     public function hasAccess($privilege, $resource = null, $role = null)
     {
-    	$acl = Zend_Registry::get('acl');
-    	
-    	if (is_null($role)) {
-        	$role = (empty($this->_identity->role))
-        	      ? (string)$this->_config->user->defaultRole->val
-        	      : $this->_identity->role;
-    	}
-    	
-    	if (is_null($resource)) {
-        	$resource = strtolower($this->getRequest()->module . '_' . $this->getRequest()->controller);  
-    	}
+        $acl = Zend_Registry::get('acl');
+        
+        if (is_null($role)) {
+            $role = (empty($this->_identity->role))
+                  ? (string)$this->_config->user->defaultRole->val
+                  : $this->_identity->role;
+        }
+        
+        if (is_null($resource)) {
+            $resource = strtolower($this->getRequest()->module . '_' . $this->getRequest()->controller);  
+        }
 
-    	return $acl->isAllowed($role, $resource, $privilege);
+        return $acl->isAllowed($role, $resource, $privilege);
     }
     
     public function direct($privilege, $resource = null, $role = null)

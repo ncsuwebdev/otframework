@@ -30,5 +30,5 @@
  */
 class Ot_Exception_Input extends Ot_Exception
 {
-	protected $_title = 'msg-error-otExceptionInput:title';
+    protected $_title = 'msg-error-otExceptionInput:title';
 }

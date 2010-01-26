@@ -29,7 +29,7 @@
  *             Information Technology
  *
  */
-class Ot_Oauth_Client 
+class Ot_Oauth_Client
 {
     
     /**
@@ -239,8 +239,13 @@ class Ot_Oauth_Client
             
         $consumer = new Oauth_Consumer($this->_consumerKey, $this->_consumerSecret, null);
             
-        $req = Oauth_Request::fromConsumerAndToken($consumer, $this->_requestToken, 'GET',
-                   $this->_accessTokenUrl, $params);
+        $req = Oauth_Request::fromConsumerAndToken(
+            $consumer,
+            $this->_requestToken,
+            'GET',
+            $this->_accessTokenUrl,
+            $params
+        );
         $req->signRequest($sigMethod, $consumer, $this->_requestToken);
         
         $this->_client->setUri($req->toUrl());

@@ -52,8 +52,7 @@ class Ot_Oauth_Client_Token extends Ot_Db_Table
                . ' AND '
                . $dba->quoteInto('consumerId = ?', $consumerId)
                . ' AND '
-               . $dba->quoteInto('tokenType = ?', $tokenType)
-               ;
+               . $dba->quoteInto('tokenType = ?', $tokenType);
                
         $result = $this->fetchAll($where, null, 1);
 
@@ -85,8 +84,7 @@ class Ot_Oauth_Client_Token extends Ot_Db_Table
         
         $where = $dba->quoteInto('accountId = ?', $accountId)
                . ' AND '
-               . $dba->quoteInto('tokenType = ?', $tokenType)
-               ;
+               . $dba->quoteInto('tokenType = ?', $tokenType);
                
         return $this->fetchAll($where);
     }
@@ -101,18 +99,17 @@ class Ot_Oauth_Client_Token extends Ot_Db_Table
         
         $where = $this->getAdapter()->quoteInto('accountId = ?', $accountId)
                . ' AND '
-               . $this->getAdapter()->quoteInto('consumerId = ?', $consumerId)
-               ;
+               . $this->getAdapter()->quoteInto('consumerId = ?', $consumerId);
                
         $this->delete($where);
         
         $data = array(
-                    'accountId'   => $accountId,
-                    'consumerId'  => $consumerId,
-                    'token'       => $token,
-                    'tokenSecret' => $tokenSecret,
-                    'tokenType'   => $tokenType,
-                );
+            'accountId'   => $accountId,
+            'consumerId'  => $consumerId,
+            'token'       => $token,
+            'tokenSecret' => $tokenSecret,
+            'tokenType'   => $tokenType,
+        );
                 
         return $this->insert($data);    
     }
@@ -126,12 +123,12 @@ class Ot_Oauth_Client_Token extends Ot_Db_Table
                . $dba->quoteInto('consumerId = ?', $consumerId);
         
         $data = array(
-                    'accountId'   => $accountId,
-                    'consumerId'  => $consumerId,
-                    'token'       => $token,
-                    'tokenSecret' => $tokenSecret,
-                    'tokenType'   => 'access',
-                );
+            'accountId'   => $accountId,
+            'consumerId'  => $consumerId,
+            'token'       => $token,
+            'tokenSecret' => $tokenSecret,
+            'tokenType'   => 'access',
+        );
                 
         return $this->update($data, $where);    
     }

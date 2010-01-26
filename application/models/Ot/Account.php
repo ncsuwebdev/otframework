@@ -106,17 +106,12 @@ class Ot_Account extends Ot_Db_Table
         $acl    = Zend_Registry::get('acl');
         
         $form = new Zend_Form();
-        $form->setAttrib('id', 'account')
-             ->setDecorators(
-                 array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
-                 )
+        $form->setAttrib('id', 'account')->setDecorators(
+            array('FormElements', array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')), 'Form')
         );
 
         $authAdapter = new Ot_Auth_Adapter;
-        $adapters = $authAdapter->fetchAll(null, 'displayOrder');
+        $adapters    = $authAdapter->fetchAll(null, 'displayOrder');
         
         // Realm Select box
         $realmSelect = $form->createElement('select', 'realm', array('label' => 'Login Method'));
@@ -165,8 +160,11 @@ class Ot_Account extends Ot_Db_Table
                  ->addFilter('StripTags');   
 
         // Password confirmation field
-        $passwordConf = $form->createElement('password',
-            'passwordConf', array('label' => 'model-account-passwordConf'));
+        $passwordConf = $form->createElement(
+            'password',
+            'passwordConf',
+            array('label' => 'model-account-passwordConf')
+        );
         $passwordConf->setRequired(true)
                      ->addValidator('StringLength', false, array($this->_minPasswordLength, $this->_maxPasswordLength))
                      ->addFilter('StringTrim')
@@ -181,8 +179,13 @@ class Ot_Account extends Ot_Db_Table
         
         $timezone = $form->createElement('select', 'timezone', array('label' => 'model-account-timezone'));
         $timezone->addMultiOptions(Ot_Timezone::getTimezoneList());
-        $timezone->setValue((isset($default['timezone'])
-            && $default['timezone'] != '') ? $default['timezone'] : date_default_timezone_get()); 
+        $timezone->setValue(
+            (
+                isset($default['timezone'])
+                && $default['timezone'] != ''
+            )
+            ? $default['timezone'] : date_default_timezone_get()
+        ); 
         
         // Role select box
         $roleSelect = $form->createElement('select', 'role', array('label' => 'model-account-role'));
@@ -243,14 +246,18 @@ class Ot_Account extends Ot_Db_Table
         }
                 
         $submit = $form->createElement('submit', 'submit', array('label' => 'form-button-save'));
-        $submit->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formSubmit'))
-        ));
+        $submit->setDecorators(
+            array(
+                array('ViewHelper', array('helper' => 'formSubmit'))
+            )
+        );
         
         $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
-        $cancel->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formButton'))
-        ));
+        $cancel->setDecorators(
+            array(
+                array('ViewHelper', array('helper' => 'formButton'))
+            )
+        );
                         
         $form->setElementDecorators(
             array(
@@ -264,9 +271,11 @@ class Ot_Account extends Ot_Db_Table
         if (isset($default['accountId'])) {
             $accountId = $form->createElement('hidden', 'accountId');
             $accountId->setValue($default['accountId']);
-            $accountId->setDecorators(array(
-                array('ViewHelper', array('helper' => 'formHidden'))
-            )); 
+            $accountId->setDecorators(
+                array(
+                    array('ViewHelper', array('helper' => 'formHidden'))
+                )
+            ); 
             
             $form->addElement($accountId);
         }     

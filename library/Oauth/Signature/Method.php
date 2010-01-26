@@ -30,8 +30,9 @@
  */
 class Oauth_Signature_Method
 {
-	public function checkSignature(&$request, $consumer, $token, $signature) {
-		$built = $this->buildSignature($request, $consumer, $token);
-		return $built == $signature;
-	}
+    public function checkSignature(&$request, $consumer, $token, $signature)
+    {
+        $built = $this->buildSignature($request, $consumer, $token);
+        return $built == $signature;
+    }
 }

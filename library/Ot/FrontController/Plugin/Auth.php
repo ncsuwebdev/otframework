@@ -91,7 +91,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             $authAdapter = new Ot_Auth_Adapter;
             $adapter = $authAdapter->find($auth->getIdentity()->realm);
             $className = (string)$adapter->class;
-        	
+            
             // We check to see if the adapter allows auto logging in, if it does we do it
             if (call_user_func(array($className, 'autoLogin'))) {
 
@@ -107,27 +107,29 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             }     
             
             $thisAccount = $account->getAccount($auth->getIdentity()->username, $auth->getIdentity()->realm);
-        	
-        	if (is_null($thisAccount)) {
-        		$auth->clearIdentity();
-        		
-        		$request->setModuleName($this->_noAuth['module']);
-        		$request->setControllerName($this->_noAuth['controller']);
-       			$request->setActionName($this->_noAuth['action']); 
-       			
-       			return;
-        	}               	
-        	
-        	if (!$acl->hasRole($thisAccount->role)) {
-        		$thisAccount->role = (string)$config->user->defaultRole->val;
-        	}
-       			
-        	$auth->getStorage()->write($thisAccount);
-        	
-        	date_default_timezone_set((isset($account->timezone) && $account->timezone != '')
-        	                           ? $account->timezone : date_default_timezone_get());
-        		
-        	$role = $thisAccount->role;
+            
+            if (is_null($thisAccount)) {
+                $auth->clearIdentity();
+                
+                $request->setModuleName($this->_noAuth['module']);
+                $request->setControllerName($this->_noAuth['controller']);
+                   $request->setActionName($this->_noAuth['action']); 
+                   
+                   return;
+            }                   
+            
+            if (!$acl->hasRole($thisAccount->role)) {
+                $thisAccount->role = (string)$config->user->defaultRole->val;
+            }
+                   
+            $auth->getStorage()->write($thisAccount);
+            
+            date_default_timezone_set(
+                (isset($account->timezone) && $account->timezone != '')
+                ? $account->timezone : date_default_timezone_get()
+            );
+                
+            $role = $thisAccount->role;
         }
         
         if ($role == '' || !$acl->hasRole($role)) {
@@ -156,30 +158,30 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         if ($auth->hasIdentity() && $config->user->requiredAccountFields->val != '') {
             
             if (!($request->getModuleName() == 'ot'
-        	    && $request->getControllerName() == 'login'
-        	    && $request->getActionName() == 'logout')) {
-	            
-        		$required = explode(',', $config->user->requiredAccountFields->val);
-        		
-        		$valid = true;
-        		foreach ($required as $r) {
-        			if (isset($thisAccount->$r) && empty($thisAccount->$r)) {
-        				$valid = false;
-        				break;
-        			}
-        		}
-        		
-	            if (!$valid) {
-	            	            	
-	                $module     = $this->_noAccount['module'];
-	                $controller = $this->_noAccount['controller'];
-	                $action     = $this->_noAccount['action'];
-	                
-	                if (!$request->isXmlHttpRequest()) {
-	                   $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);    
-	                }         
-	            }
-        	}
+                && $request->getControllerName() == 'login'
+                && $request->getActionName() == 'logout')) {
+                
+                $required = explode(',', $config->user->requiredAccountFields->val);
+                
+                $valid = true;
+                foreach ($required as $r) {
+                    if (isset($thisAccount->$r) && empty($thisAccount->$r)) {
+                        $valid = false;
+                        break;
+                    }
+                }
+                
+                if (!$valid) {
+                                    
+                    $module     = $this->_noAccount['module'];
+                    $controller = $this->_noAccount['controller'];
+                    $action     = $this->_noAccount['action'];
+                    
+                    if (!$request->isXmlHttpRequest()) {
+                       $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);    
+                    }         
+                }
+            }
         }
         
         $request->setModuleName($module);

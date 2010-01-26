@@ -30,18 +30,18 @@
  */
 class Ot_Version
 {
-	/**
-	 * Release Version
-	 *
-	 * @var string
-	 */
-	const VERSION = '2.3.4';
-	
-	public function getVersions()
-	{
-		return array(
-			'OTFramework'   => self::VERSION,
-			'ZendFramework' => Zend_Version::VERSION,
-		);
-	}
+    /**
+     * Release Version
+     *
+     * @var string
+     */
+    const VERSION = '2.3.4';
+    
+    public function getVersions()
+    {
+        return array(
+            'OTFramework'   => self::VERSION,
+            'ZendFramework' => Zend_Version::VERSION,
+        );
+    }
 }

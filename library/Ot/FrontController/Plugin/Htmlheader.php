@@ -84,13 +84,13 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
     public function postDispatch(Zend_Controller_Request_Abstract $request)
     {
         $view = Zend_Layout::getMvcInstance()->getView();
-            	
+                
         $baseUrl = $view->baseUrl();
         
         $css        = array();
         $javascript = array();
         
-        // check application directories and append to existing array
+        // Check application directories and append to existing array
         $javascript = $this->_autoload($baseUrl, '/public/scripts', 'js', $request, $javascript);   
         $css        = $this->_autoload($baseUrl, '/public/css', 'css', $request, $css);
         
@@ -118,22 +118,22 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
             
             $autoload = $path . '.' . $extension;
         
-	        if (is_file(APPLICATION_PATH . '/../' . $directory . '/' . $autoload)) {
-	            
-	             $file = $baseUrl . str_replace('./', $baseUrl . '/', $directory . '/' . $autoload);	             
-	        	
-	             if (is_array($existing)) {
-	                array_push($existing, $file);        
-	             } else {
-	                if ($existing != '') {
-	                    $existing = array($existing, $file);
-	                } else {
-	                    $existing = array($file);
-	                }
-	             }
-	        }
+            if (is_file(APPLICATION_PATH . '/../' . $directory . '/' . $autoload)) {
+                
+                 $file = $baseUrl . str_replace('./', $baseUrl . '/', $directory . '/' . $autoload);                 
+                
+                 if (is_array($existing)) {
+                    array_push($existing, $file);        
+                 } else {
+                    if ($existing != '') {
+                        $existing = array($existing, $file);
+                    } else {
+                        $existing = array($file);
+                    }
+                 }
+            }
         }
         
-        return $existing;     	
+        return $existing;         
     }
 }

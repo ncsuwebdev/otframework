@@ -310,9 +310,9 @@ class Ot_CustomController extends Zend_Controller_Action
             $options = array();
             if (isset($_POST['option'])) {
                 foreach ($_POST['option'] as $o) {
-                        if ($o != '') {
-                            $options[] = $filter->filter($o);
-                        }
+                    if ($o != '') {
+                        $options[] = $filter->filter($o);
+                    }
                 }
             }
 
@@ -364,9 +364,9 @@ class Ot_CustomController extends Zend_Controller_Action
                     'controller' => 'custom',
                     'action' => 'details',
                     'objectId' => $attribute['objectId']
-                  ),
-                  'ot',
-                  true
+                ),
+                'ot',
+                true
             );
         }
 

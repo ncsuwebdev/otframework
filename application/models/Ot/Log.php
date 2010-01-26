@@ -39,7 +39,7 @@ class Ot_Log extends Ot_Db_Table
      *
      * @var string
      */
-    public $_name = 'tbl_ot_log';
+    protected $_name = 'tbl_ot_log';
 
     /**
      * Primary key for the database

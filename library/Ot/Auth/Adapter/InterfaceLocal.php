@@ -32,60 +32,60 @@
  */
 interface Ot_Auth_Adapter_InterfaceLocal
 {
-	/**
-	 * Tells the application whenter the user has an account or not
-	 *
-	 * @param int $userId
-	 * @return boolean
-	 */
+    /**
+     * Tells the application whenter the user has an account or not
+     *
+     * @param int $userId
+     * @return boolean
+     */
     public function hasAccount($userId);
 
-	/**
-	 * Gets a user by ID from the system
-	 *
-	 * @param int $userId
-	 * @return array with user_id, password, and email
-	 */
+    /**
+     * Gets a user by ID from the system
+     *
+     * @param int $userId
+     * @return array with user_id, password, and email
+     */
     public function getUser($userId);
 
-	/**
-	 * Adds an account to the system
-	 *
-	 * @param int    $userId
-	 * @param string $password
-	 * @param string $email
-	 */
+    /**
+     * Adds an account to the system
+     *
+     * @param int    $userId
+     * @param string $password
+     * @param string $email
+     */
     public function addAccount($userId, $password);
 
-	/**
-	 * Edits an account in the system
-	 *
-	 * @param int    $userId
-	 * @param string $password
-	 * @param string $email
-	 */
+    /**
+     * Edits an account in the system
+     *
+     * @param int    $userId
+     * @param string $password
+     * @param string $email
+     */
     public function editAccount($userId, $password);
 
-	/**
-	 * Deletes an account from the system
-	 *
-	 * @param int $userId
-	 */
+    /**
+     * Deletes an account from the system
+     *
+     * @param int $userId
+     */
     public function deleteAccount($userId);
 
     /**
-	 * Resets a users password and emails them the new pass
-	 *
-	 * @param int $userId
-	 */
+     * Resets a users password and emails them the new pass
+     *
+     * @param int $userId
+     */
     public function resetPassword($userId);
 
-	/**
-	 * Encrypts the password
-	 *
-	 * @param string $password
-	 * @return string encypted password
-	 */
+    /**
+     * Encrypts the password
+     *
+     * @param string $password
+     * @return string encypted password
+     */
     public function encryptPassword($password);
 
 }

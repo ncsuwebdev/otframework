@@ -28,27 +28,27 @@
  * @copyright Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-class Ot_Form_Decorator_Imageupload extends Zend_Form_Decorator_Abstract 
+class Ot_Form_Decorator_Imageupload extends Zend_Form_Decorator_Abstract
 {
-	public function render($content)
-	{
-	    
-		$output = '<img id="' 
-		        . $this->getOption('id') 
-		        . '" src="' 
-		        . $this->getOption('src') 
-		        . '" alt="'
-		        . $this->getOption('alt')
-		        . '" style="display:block'
-		        . '" />';
-		
-		$content = explode('<input', $content);
-		
-		// this has already been rendered so we don't need it
-		unset($content[3]);
-		
-    	$ret = $content[0] . $output . '<input ' . $content[1] . '<input ' . $content[2];
-    	
-    	return $ret;
-	}
+    public function render($content)
+    {
+        
+        $output = '<img id="' 
+                . $this->getOption('id') 
+                . '" src="' 
+                . $this->getOption('src') 
+                . '" alt="'
+                . $this->getOption('alt')
+                . '" style="display:block'
+                . '" />';
+        
+        $content = explode('<input', $content);
+        
+        // this has already been rendered so we don't need it
+        unset($content[3]);
+        
+        $ret = $content[0] . $output . '<input ' . $content[1] . '<input ' . $content[2];
+        
+        return $ret;
+    }
 }

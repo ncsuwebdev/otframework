@@ -61,10 +61,7 @@ class Ot_ConfigController extends Zend_Controller_Action
         }
         
         if (!is_writable($overrideFile)) {
-            throw new Ot_Exception_Data(
-                $this->view->translate('msg-error-configFileNotWritable',
-                $overrideFile)
-            );
+            throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $overrideFile));
         }
                 
         $get = Zend_Registry::get('getFilter');
@@ -76,10 +73,10 @@ class Ot_ConfigController extends Zend_Controller_Action
         $form = new Zend_Form();
         $form->setAttrib('id', 'configEditForm')->setDecorators(
             array(
-                 'FormElements',
-                 array('HtmlTag', array('tag'   => 'div', 'class' => 'zend_form')),
-                 'Form',
-             )
+                'FormElements',
+                array('HtmlTag', array('tag'   => 'div', 'class' => 'zend_form')),
+                'Form',
+            )
         );
         
         if ($get->key == 'timezone') {
@@ -170,7 +167,7 @@ class Ot_ConfigController extends Zend_Controller_Action
                         
                     $this->_helper->log(Zend_Log::INFO, $logMessage, $logOptions);   
                                                  
-                    }
+                }
                 
                 $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-configUpdated', $get->key));
                 

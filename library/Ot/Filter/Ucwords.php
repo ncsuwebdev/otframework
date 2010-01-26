@@ -50,6 +50,6 @@ class Ot_Filter_Ucwords implements Zend_Filter_Interface
      */
     public function filter($value)
     {
-		return ucwords($value);
+        return ucwords($value);
     }
 }

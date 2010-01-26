@@ -29,14 +29,12 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_OauthclientController extends Zend_Controller_Action  
-{  
+class Ot_OauthclientController extends Zend_Controller_Action
+{
 
     public function indexAction()
     {
-        $req = new Zend_Session_Namespace(
-            Zend_Registry::get('siteUrl') . '_request'
-        );
+        $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
         $req->requestedFromUrl = $_SERVER['HTTP_REFERER'];
         
         $get = Zend_Registry::get('getFilter');
@@ -90,11 +88,11 @@ class Ot_OauthclientController extends Zend_Controller_Action
         
         $get = Zend_Registry::get('getFilter');
         
-        if (!isset($get->oauth_token)) {
+        if (!isset($get->oauthToken)) {
             throw new Ot_Exception_Input('You were not authorized');
         }
         
-        $token = $get->oauth_token;
+        $token = $get->oauthToken;
         
         $otOauthToken = new Ot_Oauth_Client_Token();
         $requestToken = $otOauthToken->getToken($token);
@@ -119,10 +117,7 @@ class Ot_OauthclientController extends Zend_Controller_Action
                    
         $oAuthClient = new Ot_Oauth_Client($options);
         
-        $oAuthClient->setRequestToken(
-            $requestToken->token,
-            $requestToken->tokenSecret
-        );
+        $oAuthClient->setRequestToken($requestToken->token, $requestToken->tokenSecret);
         
         $accessToken = $oAuthClient->getAccessToken();
         
@@ -133,9 +128,7 @@ class Ot_OauthclientController extends Zend_Controller_Action
             $accessToken->secret
         );
         
-        $req = new Zend_Session_Namespace(
-            end_Registry::get('siteUrl') . '_request'
-        );
+        $req = new Zend_Session_Namespace(end_Registry::get('siteUrl') . '_request');
         $this->_helper->redirector->gotoUrl($req->requestedFromUrl);
     }
 }

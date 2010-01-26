@@ -671,19 +671,19 @@ class FirePHP {
       unset($meta['line']);
     }
 
-  	$this->setHeader('X-Wf-Protocol-1','http://meta.wildfirehq.org/Protocol/JsonStream/0.2');
-  	$this->setHeader('X-Wf-1-Plugin-1','http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/'.self::VERSION);
+      $this->setHeader('X-Wf-Protocol-1','http://meta.wildfirehq.org/Protocol/JsonStream/0.2');
+      $this->setHeader('X-Wf-1-Plugin-1','http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/'.self::VERSION);
  
     $structure_index = 1;
     if($Type==self::DUMP) {
       $structure_index = 2;
-    	$this->setHeader('X-Wf-1-Structure-2','http://meta.firephp.org/Wildfire/Structure/FirePHP/Dump/0.1');
+        $this->setHeader('X-Wf-1-Structure-2','http://meta.firephp.org/Wildfire/Structure/FirePHP/Dump/0.1');
     } else {
-    	$this->setHeader('X-Wf-1-Structure-1','http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');
+        $this->setHeader('X-Wf-1-Structure-1','http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');
     }
   
     if($Type==self::DUMP) {
-    	$msg = '{"'.$Label.'":'.$this->jsonEncode($Object, $skipFinalObjectEncode).'}';
+        $msg = '{"'.$Label.'":'.$this->jsonEncode($Object, $skipFinalObjectEncode).'}';
     } else {
       $msg_meta = array('Type'=>$Type);
       if($Label!==null) {
@@ -695,7 +695,7 @@ class FirePHP {
       if(isset($meta['line'])) {
         $msg_meta['Line'] = $meta['line'];
       }
-    	$msg = '['.$this->jsonEncode($msg_meta).','.$this->jsonEncode($Object, $skipFinalObjectEncode).']';
+        $msg = '['.$this->jsonEncode($msg_meta).','.$this->jsonEncode($Object, $skipFinalObjectEncode).']';
     }
     
     $parts = explode("\n",chunk_split($msg, 5000, "\n"));
@@ -724,7 +724,7 @@ class FirePHP {
         }
     }
 
-  	$this->setHeader('X-Wf-1-Index',$this->messageIndex-1);
+      $this->setHeader('X-Wf-1-Index',$this->messageIndex-1);
 
     return true;
   }

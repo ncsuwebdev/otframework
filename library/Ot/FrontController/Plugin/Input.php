@@ -49,6 +49,6 @@ class Ot_FrontController_Plugin_Input extends Zend_Controller_Plugin_Abstract
         $postFilter = new Zend_Filter_Input($filterOptions, array(), $_POST);
         
         Zend_Registry::set('getFilter', $getFilter);
-        Zend_Registry::set('postFilter', $postFilter);	        
+        Zend_Registry::set('postFilter', $postFilter);        
     }
 }

@@ -30,22 +30,22 @@
  */
 class Ot_Action_Helper_Log extends Zend_Controller_Action_Helper_Abstract
 {
-	protected $_logger;
-	
-	public function init()
-	{
-		$this->_logger = Zend_Registry::get('logger');
-		
-		parent::init();
-	}
-	
+    protected $_logger;
+    
+    public function init()
+    {
+        $this->_logger = Zend_Registry::get('logger');
+        
+        parent::init();
+    }
+    
     public function log($priority, $action, $options = array())
     {
- 		foreach ($options as $key => $value) {
-			$this->_logger->setEventItem($key, $value);
-		}
-		
-		$this->_logger->log($action, $priority);
+        foreach ($options as $key => $value) {
+            $this->_logger->setEventItem($key, $value);
+        }
+        
+        $this->_logger->log($action, $priority);
     }
 
     public function direct($priority, $action, $options = array())

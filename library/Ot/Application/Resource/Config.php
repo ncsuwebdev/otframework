@@ -30,7 +30,7 @@
  */
 
 class Ot_Application_Resource_Config extends Zend_Application_Resource_ResourceAbstract
-{      
+{
     public function init()
     {
         $cache = null;

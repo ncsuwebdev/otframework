@@ -30,5 +30,4 @@
  */
 class Internal_Api extends Ot_Api
 {
-
 }

@@ -30,17 +30,19 @@
  */
 class Oauth_Consumer
 {
-	public $key;
-	public $secret;
-	public $callbackUrl;
-	
-	function __construct($key, $secret, $callbackUrl=NULL) {
-		$this->key = $key;
-		$this->secret = $secret;
-		$this->callbackUrl = $callbackUrl;
-	}
-	
-	function __toString() {
-		return "OAuth_Consumer[key=$this->key,secret=$this->secret]";
-	}
+    public $key;
+    public $secret;
+    public $callbackUrl;
+    
+    function __construct($key, $secret, $callbackUrl=NULL)
+    {
+        $this->key         = $key;
+        $this->secret      = $secret;
+        $this->callbackUrl = $callbackUrl;
+    }
+    
+    function __toString()
+    {
+        return "OAuth_Consumer[key=$this->key,secret=$this->secret]";
+    }
 }

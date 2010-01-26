@@ -30,7 +30,7 @@
  */
 
 class Ot_Application_Resource_Keymanagerdb extends Zend_Application_Resource_ResourceAbstract
-{   
+{
     protected $_key = null;
     
     public function setKey($key)
@@ -40,12 +40,13 @@ class Ot_Application_Resource_Keymanagerdb extends Zend_Application_Resource_Res
     
     public function init()
     {
-    	if (!is_null($this->_key) && $this->_key) {
+        if (!is_null($this->_key) && $this->_key) {
             require_once $_SERVER['KEY_MANAGER2_PATH'];
             
             $km = new KeyManager();
                 
             if ($km->isKey($this->_key)) {
+                
                 $key = $km->getKey($this->_key);
                 
                 $dbConfig = array(
@@ -55,7 +56,7 @@ class Ot_Application_Resource_Keymanagerdb extends Zend_Application_Resource_Res
                     'host'     => $key->host,
                     'port'     => $key->port,
                     'dbname'   => $key->dbname
-                    );  
+                );  
         
                 $db = Zend_Db::factory($dbConfig['adapter'], $dbConfig);
                 Zend_Db_Table::setDefaultAdapter($db);

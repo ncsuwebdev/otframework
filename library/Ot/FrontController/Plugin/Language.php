@@ -31,37 +31,37 @@
 class Ot_FrontController_Plugin_Language extends Zend_Controller_Plugin_Abstract
 {
 
-	public function routeShutdown(Zend_Controller_Request_Abstract $request)
+    public function routeShutdown(Zend_Controller_Request_Abstract $request)
     {
-		$locale = new Zend_Locale();
-		
-		$options = array(
-			'scan' => Zend_Translate::LOCALE_FILENAME,
-			'clear' => false,
-		    'disableNotices' => true
-		);
-		
-		$config = Zend_Registry::get('config');
-							
-		Zend_Translate::setCache(Zend_Registry::get('cache'));
-		
-		if (isset($_COOKIE['language_select'])) {
-			$language = $_COOKIE['language_select'];
-		} else {
-			$language = $config->user->language->val;
-		}
-		
-		$translate = new Zend_Translate('csv', APPLICATION_PATH . '/languages', 'auto', $options);
-		$translate->addTranslation(APPLICATION_PATH . '/../overrides/languages');
-		
-		if (!$translate->isAvailable($language)) {
-			throw new Exception('Language ' . $language . ' is not available');
-		}
-								
-		$locale->setLocale($language);
-		$translate->setLocale($locale);
-		
-		Zend_Registry::set('Zend_Locale', $locale);
-		Zend_Registry::set('Zend_Translate', $translate);
-	}
+        $locale = new Zend_Locale();
+        
+        $options = array(
+            'scan' => Zend_Translate::LOCALE_FILENAME,
+            'clear' => false,
+            'disableNotices' => true
+        );
+        
+        $config = Zend_Registry::get('config');
+                            
+        Zend_Translate::setCache(Zend_Registry::get('cache'));
+        
+        if (isset($_COOKIE['language_select'])) {
+            $language = $_COOKIE['language_select'];
+        } else {
+            $language = $config->user->language->val;
+        }
+        
+        $translate = new Zend_Translate('csv', APPLICATION_PATH . '/languages', 'auto', $options);
+        $translate->addTranslation(APPLICATION_PATH . '/../overrides/languages');
+        
+        if (!$translate->isAvailable($language)) {
+            throw new Exception('Language ' . $language . ' is not available');
+        }
+                                
+        $locale->setLocale($language);
+        $translate->setLocale($locale);
+        
+        Zend_Registry::set('Zend_Locale', $locale);
+        Zend_Registry::set('Zend_Translate', $translate);
+    }
 }

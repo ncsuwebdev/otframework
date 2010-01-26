@@ -28,9 +28,10 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-interface Ot_Plugin_Interface {
+interface Ot_Plugin_Interface
+{
     
-	/**
+    /**
      * Subform to add a new trigger
      *
      * @return Zend_Form element

@@ -83,18 +83,18 @@ class Ot_Trigger_Action extends Ot_Db_Table
                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
                 'Form',
             )
-         );
+        );
 
-         if (!isset($values['triggerActionId'])) {
+        if (!isset($values['triggerActionId'])) {
             $helper = $form->createElement('select', 'helper', array('label' => 'Action:'));
             $helper->addMultiOptions($helperTypes)
                    ->setValue((isset($values['helper'])) ? $values['helper'] : '');
-         } else {
+        } else {
             $helper = $form->createElement('text', 'helper', array('label' => 'Action:'));
             $helper->setAttrib('size', '40')
                    ->setAttrib('readonly', true)
                    ->setValue($values['helper']);
-         }
+        }
 
         if (!isset($values['triggerId']) && !isset($values['triggerActionId'])) {
             throw new Ot_Exception_Data('You must provide a triggerId');

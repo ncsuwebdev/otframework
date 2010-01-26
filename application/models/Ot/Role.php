@@ -36,7 +36,7 @@ class Ot_Role extends Ot_Db_Table
      *
      * @var string
      */
-    public $_name = 'tbl_ot_role';
+    protected $_name = 'tbl_ot_role';
 
     /**
      * Primary key for the database

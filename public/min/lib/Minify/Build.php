@@ -76,7 +76,7 @@ class Minify_Build {
         return "{$uri}{$sep}{$this->lastModified}";
     }
 
-	/**
+    /**
      * Create a build object
      * 
      * @param array $sources array of Minify_Source objects and/or file paths

@@ -63,7 +63,7 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
                 }
             } else {
                 $response = $this->getResponse();
-        	    $response->setBody($view->render('maintenanceHeader.phtml') . $response->getBody());
+                $response->setBody($view->render('maintenanceHeader.phtml') . $response->getBody());
             }
         }
     }

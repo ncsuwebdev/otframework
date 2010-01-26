@@ -44,12 +44,12 @@ interface Ot_Auth_Adapter_Interface
      */
     public static function autoLogout();
 
-	/**
-	 * Flag to tell the app where the authenticaiton is managed.  If set to true,
-	 * the application will use its oww interface to interact with the adapter.
-	 *
-	 * @return boolean
-	 */
+    /**
+     * Flag to tell the app where the authenticaiton is managed.  If set to true,
+     * the application will use its oww interface to interact with the adapter.
+     *
+     * @return boolean
+     */
     public static function manageLocally();
     
     /**

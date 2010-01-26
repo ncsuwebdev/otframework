@@ -56,7 +56,7 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
         $role = (empty($identity->role)) ? (string)$config->user->defaultRole->val : $identity->role;
                       
         foreach ($tabs as $tab) {
-        	
+            
             $tabResource = $tab->module . '_' . (($tab->controller == '') ? 'index' : $tab->controller);
             
             $tabData = array();
@@ -69,11 +69,13 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
             $tabData['target']     = (preg_match('/^http/i', $tabData['link'])) ? '_blank' : '_self';
             $tabData['parent']     = $tab->parent;
             $tabData['id']         = $tab->id;
-            $tabData['allowed']    = $acl->isAllowed($role, $tabResource,
-                                        ($tab->action == '') ? 'index' : $tab->action);
             $tabData['show']       = $tabData['allowed'];
-
-			$viewTabs[$tabData['id']] = $tabData;                
+            $tabData['allowed']    = $acl->isAllowed(
+                $role, $tabResource,
+                ($tab->action == '') ? 'index' : $tab->action
+            );
+            
+            $viewTabs[$tabData['id']] = $tabData;
         }
                 
         $this->_treeNodes = $viewTabs;
@@ -94,17 +96,17 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
         $children = $this->_getChildren($node['id']);
 
         foreach ($children as $key => $child) {
-        	
-        	$kids = $this->_buildTree($child);
-        	
-        	$keepers = array();
-        	foreach ($kids as $k) {
-        		if ($k['show']) {
-        			$children[$key]['show'] = true;
-        			$keepers[] = $k;
-        		}
-        	}
-        	
+            
+            $kids = $this->_buildTree($child);
+            
+            $keepers = array();
+            foreach ($kids as $k) {
+                if ($k['show']) {
+                    $children[$key]['show'] = true;
+                    $keepers[] = $k;
+                }
+            }
+            
             $children[$key]['children'] = $keepers;
         }
                     
@@ -143,9 +145,9 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
      */
     protected function _makeLink($baseUrl, $link, $target)
     {   
-    	if ($link == '') {
-    		return '';	
-    	} elseif ($target == "_self") {
+        if ($link == '') {
+            return '';    
+        } elseif ($target == "_self") {
             return $baseUrl . '/' . $link;
         } else {
             return (preg_match('/^http/', $link))

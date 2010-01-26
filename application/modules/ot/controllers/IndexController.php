@@ -28,7 +28,7 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_IndexController extends Zend_Controller_Action 
+class Ot_IndexController extends Zend_Controller_Action
 {
     /**
      * shows the homepage
@@ -39,10 +39,11 @@ class Ot_IndexController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-index-index:title');
         
         $config = Zend_Registry::get('config');
+        
         $this->view->appVersion = $config->app->version;
-        $this->view->appTitle = $config->user->appTitle->val;
-        $this->view->otVersion = Ot_Version::VERSION;
-        $this->view->zfVersion = Zend_Version::VERSION;        
+        $this->view->appTitle   = $config->user->appTitle->val;
+        $this->view->otVersion  = Ot_Version::VERSION;
+        $this->view->zfVersion  = Zend_Version::VERSION;        
        
         /* The jQuery and jQueryUi library versions are acquired by the
          * javascript for this controller and inserted into the page that way.

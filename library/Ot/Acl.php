@@ -41,11 +41,15 @@ class Ot_Acl extends Zend_Acl
         if ($scope == 'application') {
             $controllers = Zend_Controller_Front::getInstance()->getControllerDirectory();
     
-            // gets all controllers to get the actions in them
+            // Gets all controllers to get the actions in them
             foreach ($controllers as $key => $value) {
                 foreach (new DirectoryIterator($value) as $file) {
                     if (preg_match('/controller\.php/i', $file)) {
-                        $this->add(new Zend_Acl_Resource($key . '_' . strtolower(preg_replace('/controller\.php/i', '', $file))));
+                        $this->add(
+                            new Zend_Acl_Resource(
+                                $key . '_' . strtolower(preg_replace('/controller\.php/i', '', $file))
+                            )
+                        );
                     }
                 }
             }
@@ -257,12 +261,10 @@ class Ot_Acl extends Zend_Acl
                     if ($key == 'default') {
                         $classname = preg_replace('/\.php/i', '', $file);
                     } else {
-                        $classname = ucwords(strtolower($key)) . '_' .
-                            preg_replace('/\.php/i', '', $file);
+                        $classname = ucwords(strtolower($key)) . '_' . preg_replace('/\.php/i', '', $file);
                     }
 
-                    $controllerName = preg_replace('/^[^_]*\_/', '',
-                        preg_replace('/controller/i', '', $classname));
+                    $controllerName = preg_replace('/^[^_]*\_/', '', preg_replace('/controller/i', '', $classname));
 
                     $controllerName = $filter->filter($controllerName);
 
@@ -291,9 +293,13 @@ class Ot_Acl extends Zend_Acl
                         }
 
                         // Checks to see if the inheriting role allows the rource
-                        if (in_array('*', array_keys($allows)) || (isset($allows[$resource]) && $allows[$resource] == '*')) {
+                        if (in_array('*', array_keys($allows))
+                            || (isset($allows[$resource]) && $allows[$resource] == '*')
+                        ) {
 
-                            // checks to see that even though the inheriting role allows the resource that the role in question doesnt specifically deny it
+                            /* Checks to see that even though the inheriting role allows the resource that the role in
+                             * question doesnt specifically deny it.
+                             */
                             if (!(isset($denys[$resource]) && $denys[$resource] == '*')) {
                                 $result[$key][$controllerName]['all']['access'] = true;
                                 if (isset($iAllows[$resource]) && $iAllows[$resource] == '*') {
@@ -314,7 +320,8 @@ class Ot_Acl extends Zend_Acl
                     $class = new ReflectionClass($classname);
                     $methods = $class->getMethods();
 
-                    $result[$key][$controllerName]['description'] = $this->_getDescriptionFromCommentBlock($class->getDocComment());
+                    $holdingVar1 = $this->_getDescriptionFromCommentBlock($class->getDocComment());
+                    $result[$key][$controllerName]['description'] = $holdingVar1;
                     if (!isset($result[$key][$controllerName]['part'])) {
                         $result[$key][$controllerName]['part'] = array();
                     }
@@ -326,12 +333,14 @@ class Ot_Acl extends Zend_Acl
                             $action = $filter->filter(preg_replace('/action/i', '', $m->name));
 
                             if ($role != '') {
-                                $result[$key][$controllerName]['part'][$action]['access'] = $this->isAllowed($role['roleId'], $resource, $action);
+                                $holdingVar2 = $this->isAllowed($role['roleId'], $resource, $action);
+                                $result[$key][$controllerName]['part'][$action]['access'] = $holdingVar2;
                             } else {
                                 $result[$key][$controllerName]['part'][$action]['access'] = false;
                             }
 
-                            $result[$key][$controllerName]['part'][$action]['description'] = $this->_getDescriptionFromCommentBlock($m->getDocComment());
+                            $holdingVar3 = $this->_getDescriptionFromCommentBlock($m->getDocComment());
+                            $result[$key][$controllerName]['part'][$action]['description'] = $holdingVar3;
 
                             $noInheritance = (isset($role['inheritRoleId']) && $role['inheritRoleId'] == 0);
                             $inherit = (isset($role['inheritRoleId'])) ? $role['inheritRoleId'] : '';
@@ -353,16 +362,22 @@ class Ot_Acl extends Zend_Acl
                                 }
 
                                 if ($result[$key][$controllerName]['part'][$action]['access'] == false) {
-                                    if (in_array($resource . '_' . $action, $iDenys) && $result[$key][$controllerName]['part'][$action]['inheritRoleId'] == 0) {
+                                    if (in_array($resource . '_' . $action, $iDenys)
+                                        && $result[$key][$controllerName]['part'][$action]['inheritRoleId'] == 0
+                                    ) {
                                         $result[$key][$controllerName]['part'][$action]['inheritRoleId'] = $inherit;
                                     }
                                 } else {
-                                    if (in_array($resource . '_' . $action, $iAllows) && $result[$key][$controllerName]['part'][$action]['inheritRoleId'] == 0) {
+                                    if (in_array($resource . '_' . $action, $iAllows)
+                                        && $result[$key][$controllerName]['part'][$action]['inheritRoleId'] == 0
+                                    ) {
                                         $result[$key][$controllerName]['part'][$action]['inheritRoleId'] = $inherit;
                                     }
                                 }
 
-                                if (isset($roles[$inherit]['inheritRoleId']) && $roles[$inherit]['inheritRoleId'] != 0) {
+                                if (isset($roles[$inherit]['inheritRoleId'])
+                                    && $roles[$inherit]['inheritRoleId'] != 0
+                                ) {
                                     $inherit = $roles[$inherit]['inheritRoleId'];
                                 } else {
                                     $noInheritance = true;

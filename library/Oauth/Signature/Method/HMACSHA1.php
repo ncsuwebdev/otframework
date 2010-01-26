@@ -30,22 +30,20 @@
  */
 class Oauth_Signature_Method_HMACSHA1 extends Oauth_Signature_Method
 {
-	
+    
     public function getName()
     {
-		return "HMAC-SHA1";
-	}
-	
-	public function buildSignature($request, $consumer, $token)
-	{ 
-		$baseString = $request->getSignatureBaseString();
-		$request->baseString = $baseString;
-		
-		$keyParts = array ($consumer->secret, ($token) ? $token->secret : "" );
-				
-		$keyParts = Oauth_Util::urlencodeRfc3986($keyParts);
-		$key = implode('&', $keyParts);
-		
-		return base64_encode(hash_hmac('sha1', $baseString, $key, true));
-	}
+        return "HMAC-SHA1";
+    }
+    
+    public function buildSignature($request, $consumer, $token)
+    { 
+        $baseString = $request->getSignatureBaseString();
+        $request->baseString = $baseString;
+        $keyParts = array ($consumer->secret, ($token) ? $token->secret : "" );
+        $keyParts = Oauth_Util::urlencodeRfc3986($keyParts);
+        $key = implode('&', $keyParts);
+        
+        return base64_encode(hash_hmac('sha1', $baseString, $key, true));
+    }
 }

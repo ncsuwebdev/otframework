@@ -30,14 +30,14 @@
  */
 class Ot_Oauth_Server extends Oauth_Server
 {
-	public function __construct($dataStore = null)
-	{
-		if (is_null($dataStore)) {
-			$dataStore = new Ot_Oauth_Datastore();
-		}
-		
-		parent::__construct($dataStore);
-		
-		$this->addSignatureMethod(new Oauth_Signature_Method_HMACSHA1());
-	}
+    public function __construct($dataStore = null)
+    {
+        if (is_null($dataStore)) {
+            $dataStore = new Ot_Oauth_Datastore();
+        }
+        
+        parent::__construct($dataStore);
+        
+        $this->addSignatureMethod(new Oauth_Signature_Method_HMACSHA1());
+    }
 }

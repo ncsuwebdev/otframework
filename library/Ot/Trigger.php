@@ -30,7 +30,7 @@
  *
  */
 class Ot_Trigger
-{    
+{
     /**
      * The variables to be replaced in the email
      *
@@ -58,7 +58,7 @@ class Ot_Trigger
      */
     public function setVariables(array $data)
     {
-    	$this->_vars = array_merge($this->_vars, $data);
+        $this->_vars = array_merge($this->_vars, $data);
     }
     
     /**
@@ -68,21 +68,21 @@ class Ot_Trigger
      */
     public function dispatch($triggerId)
     {
-    	$action = new Ot_Trigger_Action();
-    	$actions = $action->getActionsForTrigger($triggerId);
-    	
+        $action = new Ot_Trigger_Action();
+        $actions = $action->getActionsForTrigger($triggerId);
+        
         foreach ($actions as $a) {
-        	$helper = new $a->helper;
-        	
-        	$data = $helper->get($a->triggerActionId);
-        	
-        	foreach ($data as &$d) {
-        		foreach ($this->_vars as $key => $value) {
-        			$d = str_replace("[[$key]]", $value, $d);
-        		}
-        	}
-        	
-        	$helper->dispatch($data);
+            $helper = new $a->helper;
+            
+            $data = $helper->get($a->triggerActionId);
+            
+            foreach ($data as &$d) {
+                foreach ($this->_vars as $key => $value) {
+                    $d = str_replace("[[$key]]", $value, $d);
+                }
+            }
+            
+            $helper->dispatch($data);
         }
     }
 }

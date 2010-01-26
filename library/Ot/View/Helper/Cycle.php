@@ -1,5 +1,4 @@
 <?php
-
 /**
  * LICENSE
  *
@@ -34,31 +33,31 @@
 class Ot_View_Helper_Cycle extends Zend_View_Helper_Abstract
 {
 
-	/**
-	 * The values to cycle through
-	 *
-	 * @var array
-	 */
-	protected $_values = array();
-	
-	/**
-	 * The current index in the array to display
-	 *
-	 * @var int
-	 */
-	protected $_currentIndex = 0;
-	
-	/**
-	 * Takes any number of arguments and echoes the value in the array of values
-	 * at the current index. The values are set the first time the function
-	 * is called.
-	 *
-	 * @param mixed Any number of arguments to use as cycle values
-	 */
+    /**
+     * The values to cycle through
+     *
+     * @var array
+     */
+    protected $_values = array();
+    
+    /**
+     * The current index in the array to display
+     *
+     * @var int
+     */
+    protected $_currentIndex = 0;
+    
+    /**
+     * Takes any number of arguments and echoes the value in the array of values
+     * at the current index. The values are set the first time the function
+     * is called.
+     *
+     * @param mixed Any number of arguments to use as cycle values
+     */
     public function cycle()
     {
         if (empty($this->_values)) {
-        	$this->_values = func_get_args();
+            $this->_values = func_get_args();
         }
         
         echo $this->_values[$this->_currentIndex];
@@ -66,7 +65,7 @@ class Ot_View_Helper_Cycle extends Zend_View_Helper_Abstract
         $this->_currentIndex++;
         
         if ($this->_currentIndex == count($this->_values)) {
-        	$this->_currentIndex = 0;
+            $this->_currentIndex = 0;
         }
     }
 }

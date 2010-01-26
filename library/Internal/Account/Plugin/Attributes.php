@@ -68,8 +68,7 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
         
         $select = $dba->select();
 
-        $select->from($this->_name)
-               ->where('accountId = ?', $data['accountId']);
+        $select->from($this->_name)->where('accountId = ?', $data['accountId']);
 
         $result = $dba->fetchAll($select);
 
@@ -95,8 +94,7 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
         
         $select = $dba->select();
 
-        $select->from($this->_name)
-               ->where('accountId = ?', $id);
+        $select->from($this->_name)->where('accountId = ?', $id);
 
         $result = $dba->fetchAll($select);
 
@@ -117,7 +115,8 @@ class Internal_Account_Plugin_Attributes implements Ot_Plugin_Interface
     }
     
     public function dispatch($data)
-    {}
+    {
+    }
     
     protected function _getForm($data = array())
     {        

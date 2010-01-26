@@ -21,8 +21,6 @@
  */
 
 /**
- * 
- *
  * @package    Ot_View_Helper_CalculateTextColor
  * @category   Library
  * @copyright  Copyright (c) 2007 NC State University Office of      
@@ -37,7 +35,8 @@ class Ot_View_Helper_CalculateTextColor extends Zend_View_Helper_Abstract
      *
      * @param string $color The hex value to get the text display color for
      */
-    public function calculateTextColor($color) {
+    public function calculateTextColor($color)
+    {
         
         if (empty($color) || strlen($color) < 6) {
             return '#000000';
@@ -46,8 +45,8 @@ class Ot_View_Helper_CalculateTextColor extends Zend_View_Helper_Abstract
         $color =  (substr($color, 0, 1) == "#") ? substr($color, 1, 7) : $color;
     
         $r = hexdec(substr($color, 0, 2));
-        $g = hexdec(substr($color, 2,2));
-        $b = hexdec(substr($color, 4,2)); 
+        $g = hexdec(substr($color, 2, 2));
+        $b = hexdec(substr($color, 4, 2)); 
         
         $hsl = $this->_rgbToHsl(array($r, $g, $b));
         
@@ -72,25 +71,22 @@ class Ot_View_Helper_CalculateTextColor extends Zend_View_Helper_Abstract
         
         $l = ($clrMax + $clrMin) / 510;
         
-        if (0 == $deltaMax){
+        if (0 == $deltaMax) {
             $h = 0;
             $s = 0;
-        }
-        else{
-            if (0.5 > $l){
+        } else {
+            
+            if (0.5 > $l) {
                 $s = $deltaMax / ($clrMax + $clrMin);
-            }
-            else{
+            } else {
                 $s = $deltaMax / (510 - $clrMax - $clrMin);
             }
     
             if ($clrMax == $clrR) {
                 $h = ($clrG - $clrB) / (6.0 * $deltaMax);
-            }
-            else if ($clrMax == $clrG) {
+            } else if ($clrMax == $clrG) {
                 $h = 1/3 + ($clrB - $clrR) / (6.0 * $deltaMax);
-            }
-            else {
+            } else {
                 $h = 2 / 3 + ($clrR - $clrG) / (6.0 * $deltaMax);
             }
     

@@ -30,7 +30,7 @@
  */
 
 class Ot_Application_Resource_Cache extends Zend_Application_Resource_ResourceAbstract
-{   
+{
     protected $_caching = false;
     
     public function setCaching($caching)

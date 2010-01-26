@@ -68,10 +68,10 @@ class Ot_Filter_Mac implements Zend_Filter_Interface
     public function filter($value)
     {
         $matches = array();
-		preg_match_all('/([0-9a-fA-F]{2})[^0-9^a-f^A-F]*/', $value, $matches);
+        preg_match_all('/([0-9a-fA-F]{2})[^0-9^a-f^A-F]*/', $value, $matches);
 
-		$macArray = $matches[1];
+        $macArray = $matches[1];
 
-		return strtoupper(implode($this->_delimiter, $macArray));
+        return strtoupper(implode($this->_delimiter, $macArray));
     }
 }

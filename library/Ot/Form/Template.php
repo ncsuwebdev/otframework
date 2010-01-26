@@ -30,33 +30,29 @@
  */
 class Ot_Form_Template
 {
-	/**
-	 * Creates a generic delete form
-	 *
-	 * @param string $formId
-	 * @param string $deleteLabel
-	 * @param string $cancelLabel
-	 * @return Zend_Form object
-	 */
-	public static function delete($formId = null, $deleteLabel = 'form-button-delete',
-	   $cancelLabel = 'form-button-cancel')
-	{
+    /**
+     * Creates a generic delete form
+     *
+     * @param string $formId
+     * @param string $deleteLabel
+     * @param string $cancelLabel
+     * @return Zend_Form object
+     */
+    public static function delete($formId = null, $deleteLabel = 'form-button-delete',
+       $cancelLabel = 'form-button-cancel')
+    {
         $form = new Zend_Form();
         $form->setAttrib('id', $formId);
         
         $submit = $form->createElement('submit', 'deleteButton', array('label' => $deleteLabel));
-        $submit->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formSubmit'))
-                 ));
+        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
         
         $cancel = $form->createElement('button', 'cancel', array('label' => $cancelLabel));
         $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-                   array('ViewHelper', array('helper' => 'formButton'))
-                ));
+        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
                              
         $form->addElements(array($submit, $cancel));  
 
         return $form;
-	}
+    }
 }

@@ -35,7 +35,7 @@ class Ot_Image extends Ot_Db_Table
      *
      * @var string
      */
-    public $_name = 'tbl_ot_image';
+    protected $_name = 'tbl_ot_image';
 
     /**
      * Primary key for the database
@@ -93,8 +93,8 @@ class Ot_Image extends Ot_Db_Table
                 $transparency = imagecolortransparent($dst);
                 
                 if ($transparency >= 0) {
-                    $t_color = imagecolorsforindex($dst, $transparency);
-                    $transparency = imagecolorallocate($dst, $t_color['red'], $t_color['green'], $t_color['blue']);
+                    $tcolor = imagecolorsforindex($dst, $transparency);
+                    $transparency = imagecolorallocate($dst, $tcolor['red'], $tcolor['green'], $tcolor['blue']);
                     image_fill($dst, 0, 0, $transparency);
                     imagecolortransparent($dst, $transparency);
                 } else {

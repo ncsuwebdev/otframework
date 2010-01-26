@@ -36,7 +36,7 @@ class Ot_Api_Code extends Ot_Db_Table
      *
      * @var string
      */
-    public $_name = 'tbl_ot_api_code';
+    protected $_name = 'tbl_ot_api_code';
 
     /**
      * Primary key for the database

@@ -30,12 +30,12 @@
  */
 
 class Ot_Application_Resource_Theme extends Zend_Application_Resource_ResourceAbstract
-{      
+{
     public function init()
     {
         $bootstrap = $this->getBootstrap();
-        $layout = $bootstrap->getResource('layout');
-        $view = $layout->getView();
+        $layout    = $bootstrap->getResource('layout');
+        $view      = $layout->getView();
         
         $config = Zend_Registry::get('config');
         $view->config = $config;
@@ -46,6 +46,7 @@ class Ot_Application_Resource_Theme extends Zend_Application_Resource_ResourceAb
         $otBasePath = APPLICATION_PATH . "/../public/themes/ot";
         
         if (!is_dir($appBasePath . "/" . $theme)) {
+            
             if (!is_dir($otBasePath . '/' . $theme)) {
                 $theme = 'default';
             }
@@ -60,12 +61,8 @@ class Ot_Application_Resource_Theme extends Zend_Application_Resource_ResourceAb
               
         $view->applicationThemePath = str_replace(APPLICATION_PATH . "/../public/", "", $themePath);
 
-        $view->addScriptPath(array(
-                                $themePath . '/views/scripts/'
-                            ))
-             ->addHelperPath(array(
-                                $themePath . '/views/helpers/'
-                            ));
+        $view->addScriptPath(array($themePath . '/views/scripts/'))
+             ->addHelperPath(array($themePath . '/views/helpers/'));
                                     
     }
 }

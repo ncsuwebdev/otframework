@@ -30,7 +30,7 @@
  */
 
 class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceAbstract
-{   
+{
     protected $_useLog = null;
     
     public function setUseLog($val)
@@ -51,7 +51,7 @@ class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceA
         // Setup logger
         if (!is_null($this->_useLog) && $this->_useLog) {
             $adapter = Zend_Db_Table::getDefaultAdapter();
-            $writer = new Zend_Log_Writer_Db($adapter, $tbl);
+            $writer  = new Zend_Log_Writer_Db($adapter, $tbl);
         } else {
             $writer = new Zend_Log_Writer_Null();
         }
@@ -62,7 +62,10 @@ class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceA
 
         $logger->setEventItem('sid', session_id());
         $logger->setEventItem('timestamp', time());
-        $logger->setEventItem('request', str_replace(Zend_Controller_Front::getInstance()->getBaseUrl(), '', $_SERVER['REQUEST_URI']));
+        $logger->setEventItem(
+            'request',
+            str_replace(Zend_Controller_Front::getInstance()->getBaseUrl(), '', $_SERVER['REQUEST_URI'])
+        );
 
         $auth = Zend_Auth::getInstance();
 

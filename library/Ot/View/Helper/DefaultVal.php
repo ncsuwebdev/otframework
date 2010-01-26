@@ -30,7 +30,7 @@
  */
 
 class Ot_View_Helper_DefaultVal extends Zend_View_Helper_Abstract
-{   
+{
     /**
      * Checks if the passed $val is empty or not.  If it is not,
      * it returns the $val.  If it is, it returns the translation

@@ -45,15 +45,15 @@ class Ot_Validate_Phone implements Zend_Validate_Interface
      */
     public function isValid($value, $userAreaCode = true)
     {
-    	$pattern1 = "/^[ ]*[(]{0,1}[ ]*[0-9]{3,3}[ ]*[)]{0,1}[-]{0,1}[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/";
-    	$pattern2 = "/^[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/";
+        $pattern1 = "/^[ ]*[(]{0,1}[ ]*[0-9]{3,3}[ ]*[)]{0,1}[-]{0,1}[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/";
+        $pattern2 = "/^[ ]*[0-9]{3,3}[ ]*[-]{0,1}[ ]*[0-9]{4,4}[ ]*$/";
 
-    	if(preg_match($pattern1, $value) || (preg_match($pattern2, $value) && !$userAreaCode)){
-    		return true;
-    	}
+        if (preg_match($pattern1, $value) || (preg_match($pattern2, $value) && !$userAreaCode)) {
+            return true;
+        }
 
-    	$this->_messages[] = "The format of the phone number is not valid.";
-    	return false;
+        $this->_messages[] = "The format of the phone number is not valid.";
+        return false;
     }
 
     /**

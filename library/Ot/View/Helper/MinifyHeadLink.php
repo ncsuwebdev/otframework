@@ -30,11 +30,6 @@
  *             Information Technology
  */
 
-/**
- * Minifies the stylesheets added via the minifyHeadLink helper using 
- * minify (http://code.google.com/p/minify/)
- *
- */
 class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
 {
     
@@ -80,11 +75,13 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
         return $link;
     }
     
-    public function getMinUrl() {
+    public function getMinUrl()
+    {
         return $this->getBaseUrl() . '/min/';
     }
     
-    public function getBaseUrl(){
+    public function getBaseUrl()
+    {
         return Zend_Controller_Front::getInstance()->getBaseUrl();
     }
 }

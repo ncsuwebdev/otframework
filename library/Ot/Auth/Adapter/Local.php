@@ -65,12 +65,12 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
      */
     public function __construct($username = '', $password = '')
     {
-    	$config = Zend_Registry::get('config');
-    	
-    	if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
-			$this->_name = $config->app->tablePrefix . $this->_name;
-		}
-		
+        $config = Zend_Registry::get('config');
+        
+        if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
+            $this->_name = $config->app->tablePrefix . $this->_name;
+        }
+        
         $this->_username = $username;
         $this->_password = $password;
     }
@@ -82,16 +82,16 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
      */
     public function authenticate()
     {
-		$account = new Ot_Account();
+        $account = new Ot_Account();
 
-		$result = $account->getAccount($this->_username, 'local');
+        $result = $account->getAccount($this->_username, 'local');
 
         if (is_null($result)) {
             return new Zend_Auth_Result(false, null, array('User "' . $this->_username . '" account was not found.'));
         }
         
         if (md5($this->_password) != $result->password) {
-        	return new Zend_Auth_Result(false, null, array('The password you entered was invalid.'));
+            return new Zend_Auth_Result(false, null, array('The password you entered was invalid.'));
         }
 
         $class = new stdClass();
@@ -99,45 +99,45 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
         $class->realm    = 'local';
         
         return new Zend_Auth_Result(true, $class, array());
-	}
+    }
 
-	/**
-	 * Sets the autologin to false so that it uses native login mechanism
-	 *
-	 * @return boolean
-	 */
-	public static function autoLogin()
-	{
-	    return false;
-	}
+    /**
+     * Sets the autologin to false so that it uses native login mechanism
+     *
+     * @return boolean
+     */
+    public static function autoLogin()
+    {
+        return false;
+    }
 
-	/**
-	 * Does nothing on logout since Zend_Auth handles it all
-	 *
-	 */
-	public static function autoLogout()
-	{
-	    Zend_Auth::getInstance()->clearIdentity();
-	}
+    /**
+     * Does nothing on logout since Zend_Auth handles it all
+     *
+     */
+    public static function autoLogout()
+    {
+        Zend_Auth::getInstance()->clearIdentity();
+    }
 
-	/**
-	 * Flag to tell the app where the authenticaiton is managed
-	 *
-	 * @return boolean
-	 */
-	public static function manageLocally()
-	{
-	    return true;
-	}
+    /**
+     * Flag to tell the app where the authenticaiton is managed
+     *
+     * @return boolean
+     */
+    public static function manageLocally()
+    {
+        return true;
+    }
 
     /**
      * flag to tell the app whether a user can sign up or not
      *
      * @return boolean
-     */	
+     */    
     public static function allowUserSignUp()
     {
         return true;
-    }	
+    }    
 
 }

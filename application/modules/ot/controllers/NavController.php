@@ -83,10 +83,8 @@ class Ot_NavController extends Zend_Controller_Action
         $this->view->siteUrl = Zend_Registry::get('siteUrl');
         $this->view
              ->headScript()
-             ->appendFile($this->view->baseUrl()
-              . '/public/scripts/ot/jquery.plugin.jtree.js')
-             ->appendFile($this->view->baseUrl()
-              . '/public/scripts/ot/jquery.plugin.json.js');
+             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.jtree.js')
+             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
                                  
         $nav = new Ot_Nav();
         $this->view->editNavTreeHtml = $nav->generateHtml(
@@ -240,27 +238,21 @@ class Ot_NavController extends Zend_Controller_Action
             try {
                 $this->_acl->get($a['module'] . "_" . $a['controller']);
             } catch (Exception $e) {
-                throw new Exception($this->view
-                                         ->translate(
-                                            'msg-error-notValidResource',
-                                            array(
-                                                $a['module'],
-                                                $a['controller']
-                                            )
-                                         )
+                throw new Exception(
+                    $this->view->translate('msg-error-notValidResource', array($a['module'], $a['controller']))
                 );
             }
             
             $tab = array(
-                    'id'         => $a['id'],
-                    'parent'     => $a['parent'],
-                    'display'    => $a['display'],
-                    'module'     => $this->_filter->filter($a['module']),
-                    'controller' => $this->_filter->filter($a['controller']),
-                    'action'     => $this->_filter->filter($a['action']),
-                    'link'       => $a['link'],
-                    'target'     => $a['target']
-                   );
+                'id'         => $a['id'],
+                'parent'     => $a['parent'],
+                'display'    => $a['display'],
+                'module'     => $this->_filter->filter($a['module']),
+                'controller' => $this->_filter->filter($a['controller']),
+                'action'     => $this->_filter->filter($a['action']),
+                'link'       => $a['link'],
+                'target'     => $a['target'],
+            );
                    
             $this->_otNav->insert($tab);
         }

@@ -28,28 +28,28 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Oauth_Signature_Method_PLAINTEXT extends Oauth_Signature_Method 
+class Oauth_Signature_Method_PLAINTEXT extends Oauth_Signature_Method
 {
-	
+    
     public function getName()
+    {
+        return "PLAINTEXT";
+    }
+    
+    public function buildSignature($request, $consumer, $token)
     { 
-		return "PLAINTEXT";
-	}
-	
-	public function buildSignature($request, $consumer, $token)
-	{ 
-		$sig = array (Oauth_Util::urlencodeRfc3986($consumer->secret));
-		
-		if ($token) {
-			array_push($sig, Oauth_Util::urlencodeRfc3986($token->secret));
-		} else {
-			array_push($sig, '');
-		}
-		
-		$raw = implode("&", $sig);
-		// for debug purposes
-		$request->baseString = $raw;
-		
-		return Oauth_Util::urlencodeRfc3986($raw);
-	}
+        $sig = array (Oauth_Util::urlencodeRfc3986($consumer->secret));
+        
+        if ($token) {
+            array_push($sig, Oauth_Util::urlencodeRfc3986($token->secret));
+        } else {
+            array_push($sig, '');
+        }
+        
+        $raw = implode("&", $sig);
+        // for debug purposes
+        $request->baseString = $raw;
+        
+        return Oauth_Util::urlencodeRfc3986($raw);
+    }
 }

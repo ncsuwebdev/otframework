@@ -28,23 +28,22 @@
  * @copyright Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-class Ot_Exception extends Exception 
+class Ot_Exception extends Exception
 {
-	/**
-	 * Title of the exception
-	 *
-	 * @var string
-	 */
-	protected $_title = '';
-	
-	/**
-	 * Gets the exception title
-	 *
-	 * @return unknown
-	 */
-	public function getTitle()
-	{
-				
-		return $this->_title;
-	}
+    /**
+     * Title of the exception
+     *
+     * @var string
+     */
+    protected $_title = '';
+    
+    /**
+     * Gets the exception title
+     *
+     * @return unknown
+     */
+    public function getTitle()
+    {
+        return $this->_title;
+    }
 }

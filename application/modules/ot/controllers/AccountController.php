@@ -678,9 +678,11 @@ class Ot_AccountController extends Zend_Controller_Action
                 if ($this->_request->isPost() && $form->isValid($_POST)) {
                     $st->removeToken($existingAccessToken->token);
                     
-                    $this->_helper->flashMessenge->addMessage('Token has been removed. '
+                    $this->_helper->flashMessenge->addMessage(
+                        'Token has been removed. '
                         . $thisConsumer->name
-                        . ' no longer has access to your account.');
+                        . ' no longer has access to your account.'
+                    );
                     
                     $this->_helper->redirector->gotoRoute(array(), 'account', true);
                 }
@@ -699,8 +701,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $account = new Ot_Account();
 
-        $thisAccount = $account->getAccount($identity->username,
-            $identity->realm);
+        $thisAccount = $account->getAccount($identity->username, $identity->realm);
         if (is_null($thisAccount)) {
             throw new Ot_Exception_Data('msg-error-noAccount');
         }
@@ -770,7 +771,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
                 array('Label', array('tag' => 'span')),
             )
-        )->addElements(array($submit, $cancel));         
+        )->addElements(array($submit, $cancel));
 
         $messages = array();
         if ($this->_request->isPost()) {
@@ -794,20 +795,16 @@ class Ot_AccountController extends Zend_Controller_Action
                         
                     $account->update($data, null);
                             
-                    $this->_helper
-                         ->flashMessenger
-                         ->addMessage('msg-info-passwordChanged');
+                    $this->_helper->flashMessenger->addMessage('msg-info-passwordChanged');
                         
-                        $loggerOptions = array(
+                    $loggerOptions = array(
                         'attributeName' => 'accountId',
                         'attributeId'   => $thisAccount->accountId,
                     );
                         
                     $this->_helper->log(Zend_Log::INFO, 'User changed Password', $loggerOptions);  
                         
-                    $this->_helper
-                         ->redirector
-                         ->gotoRoute(array(), 'account', true);
+                    $this->_helper->redirector->gotoRoute(array(), 'account', true);
                 }
             } else {
                 $messages[] = 'msg-error-invalidForm';
@@ -827,12 +824,14 @@ class Ot_AccountController extends Zend_Controller_Action
      *
      */
     public function changeUserRoleAction()
-    {}
+    {
+    }
     
     /**
      * Allows a user to edit all user accounts in the system
      *
      */
     public function editAllAccountsAction()
-    {}
+    {
+    }
 }

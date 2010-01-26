@@ -43,7 +43,8 @@ class Ot_FrontController_Plugin_DebugMode extends Zend_Controller_Plugin_Abstrac
         
         if (isset($_COOKIE[$debugModeCookieName])
             && (!$request->isXmlHttpRequest()
-            && !$viewRenderer->getNeverRender())) {
+            && !$viewRenderer->getNeverRender())
+        ) {
             
             $view->headScript()->appendFile($view->baseUrl() . '/public/scripts/ot/jquery.cookie.js');
             $view->headScript()->appendFile($view->baseUrl() . '/public/scripts/ot/debug.js');
@@ -53,10 +54,10 @@ class Ot_FrontController_Plugin_DebugMode extends Zend_Controller_Plugin_Abstrac
             $debugInfo = array();
             
             $debugInfo['database'] = array(
-                                        'host' => $db['host'],
-                                        'dbname' => $db['dbname'],
-                                        'username' => $db['username']
-                                     );
+                'host'     => $db['host'],
+                'dbname'   => $db['dbname'],
+                'username' => $db['username'],
+            );
             
             $view->debugInfo = $debugInfo;
             

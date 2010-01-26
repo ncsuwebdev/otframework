@@ -28,5 +28,6 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Oauth_Exception extends Exception 
-{}
+class Oauth_Exception extends Exception
+{
+}

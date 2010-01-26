@@ -31,5 +31,5 @@
  */
 class Ot_Exception_Data extends Ot_Exception
 {
-	protected $_title = 'msg-error-otExceptionData:title';
+    protected $_title = 'msg-error-otExceptionData:title';
 }

@@ -214,13 +214,12 @@ class Ot_Backup
         
         $tableList = $this->_getTables();
         
-        $form->setAttrib('id', 'downloadDbTableForm')
-             ->setDecorators(
-                 array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
-             )
+        $form->setAttrib('id', 'downloadDbTableForm')->setDecorators(
+            array(
+                'FormElements',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                'Form',
+            )
         );
                        
         $tableName = $form->createElement('select', 'tableName', array('label' => 'Select A Table:'));
@@ -236,13 +235,12 @@ class Ot_Backup
             $submitSql->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
         }
                         
-        $form->addElements(array($tableName))
-             ->setElementDecorators(
-                 array(
-                     'ViewHelper',
-                     'Errors',      
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                     array('Label', array('tag' => 'span')),      
+        $form->addElements(array($tableName))->setElementDecorators(
+            array(
+                'ViewHelper',
+                'Errors',      
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+                array('Label', array('tag' => 'span')),      
             )
         )->addElements(array($submitCsv));
              
