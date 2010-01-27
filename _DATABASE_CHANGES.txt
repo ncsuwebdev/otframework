@@ -1,3 +1,5 @@
 2.3.5
 ----------------------
 ALTER TABLE `ot_tbl_ot_custom_attribute_value` CHANGE `value` `value` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL
+
+add multicheckbox and multiselect types to the enum for ot_tbl_ot_custom_attribute
