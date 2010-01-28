@@ -66,7 +66,7 @@ abstract class MpmSchema
         if ($totalTables > 1) {
             echo '  Removing:', "\n";
 		    foreach ($tables as $table) {
-		        if ($table != $db_config->prefix . 'mpm_migrations') {
+		        if ($table != $db_config->migrationTable) {
             		echo '        ', $table, "\n";
 		            $this->dbObj->exec('DROP TABLE IF EXISTS `' . $table . '`');
                 }
@@ -88,17 +88,17 @@ abstract class MpmSchema
     {
         $db_config = $GLOBALS['db_config'];
 		echo 'Clearing out existing migration data... ';
-        $this->dbObj->exec('TRUNCATE TABLE `' . $db_config->prefix . 'mpm_migrations`');
+        $this->dbObj->exec('TRUNCATE TABLE `' . $db_config->migrationTable . '`');
 		echo 'done.', "\n\n", 'Rebuilding migration data... ';
         MpmListHelper::mergeFilesWithDb();
         echo 'done.', "\n";
         if ($this->initialMigrationTimestamp != null) {
             echo "\n", 'Updating initial migration timestamp to ', $this->initialMigrationTimestamp, '... ';
-            $result = MpmDbHelper::doSingleRowSelect('SELECT COUNT(*) AS total FROM `' . $db_config->prefix . 'mpm_migrations` WHERE `timestamp` = "'.$this->initialMigrationTimestamp.'"', $this->dbObj);
+            $result = MpmDbHelper::doSingleRowSelect('SELECT COUNT(*) AS total FROM `' . $db_config->migrationTable . '` WHERE `timestamp` = "'.$this->initialMigrationTimestamp.'"', $this->dbObj);
             if ($result->total == 1) {
-                $this->dbObj->exec('UPDATE `' . $db_config->prefix . 'mpm_migrations` SET `is_current` = 0');
-                $this->dbObj->exec('UPDATE `' . $db_config->prefix . 'mpm_migrations` SET `is_current` = 1 WHERE `timestamp` = "'.$this->initialMigrationTimestamp.'"');
-                $this->dbObj->exec('UPDATE `' . $db_config->prefix . 'mpm_migrations` SET `active` = 1 WHERE `timestamp` <= "'.$this->initialMigrationTimestamp.'"');
+                $this->dbObj->exec('UPDATE `' . $db_config->migrationTable . '` SET `is_current` = 0');
+                $this->dbObj->exec('UPDATE `' . $db_config->migrationTable . '` SET `is_current` = 1 WHERE `timestamp` = "'.$this->initialMigrationTimestamp.'"');
+                $this->dbObj->exec('UPDATE `' . $db_config->migrationTable . '` SET `active` = 1 WHERE `timestamp` <= "'.$this->initialMigrationTimestamp.'"');
             }
             echo 'done.', "\n";
         }

@@ -13,10 +13,14 @@
 /**********************************
  * USER SETABLE VARIABLES
  **********************************/
+
+// Path to the application config folder where application.ini and config.xml live
 $configFilePath = dirname(__FILE__) . '/application/configs';
 
+// Path to where the database migration files live
 $pathToMigrateFiles = dirname(__FILE__) . '/db';
 
+// Possible environments that you can choose from
 $possibleEnvironments = array(
     'production',
     'staging',
@@ -24,6 +28,9 @@ $possibleEnvironments = array(
     'nonproduction',
     'testing',
 );
+
+// Name of the table where the migration versions are stored (minus the table prefix)
+$migrationTableName = 'tbl_mpm_migration';
 
 /**************** DO NOT EDIT BELOW THIS LINE *******************/
 
@@ -43,7 +50,6 @@ $argv = array_merge($argv);
 
 $db_config = (object) array();
 $db_config->db_path = $pathToMigrateFiles;
-$db_config->method = 1;
 
 require_once 'Zend/Config/Ini.php';
 $applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', $environment);
@@ -85,7 +91,7 @@ if (isset($applicationIni->resources->keymanagerdb->key) && $applicationIni->res
 require_once 'Zend/Config/Xml.php';
 $configXml = new Zend_Config_Xml($configFilePath . '/config.xml', 'production');
 
-$db_config->prefix = $configXml->app->tablePrefix;
+$db_config->migrationTable = $configXml->app->tablePrefix . $migrationTableName;
 
 /** 
  * Define the full path to this file.

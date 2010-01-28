@@ -27,7 +27,7 @@ class MpmListHelper
     static function getTotalMigrations()
     {
         $db_config = $GLOBALS['db_config'];
-        $sql = "SELECT COUNT(*) AS total FROM " . $db_config->prefix . "`mpm_migrations`";
+        $sql = "SELECT COUNT(*) AS total FROM `" . $db_config->migrationTable . "`";
         $obj = MpmDbHelper::doSingleRowSelect($sql);
         return $obj->total;
     }
@@ -46,7 +46,7 @@ class MpmListHelper
     {
         $db_config = $GLOBALS['db_config'];
         $list = array();
-        $sql = "SELECT * FROM " . $db_config->prefix . "`mpm_migrations` ORDER BY `timestamp`";
+        $sql = "SELECT * FROM `" . $db_config->migrationTable . "` ORDER BY `timestamp`";
         if ($total > 0)
         {
             $sql .= " LIMIT $startIdx,$total";
@@ -69,7 +69,7 @@ class MpmListHelper
      *
      * @return void
      */
-    static function mergeFilesWithDb()
+    public static function mergeFilesWithDb()
     {
         $db_config = $GLOBALS['db_config'];
         $files = MpmListHelper::getListOfFiles();
@@ -77,40 +77,39 @@ class MpmListHelper
         $db_list = MpmListHelper::getFullList(0, $total_migrations);
         $file_timestamps = MpmListHelper::getTimestampArray($files);
 
-            if (count($files) > 0) {
-                $pdo = MpmDbHelper::getPdoObj();
-                $pdo->beginTransaction();
-                try {
-                    foreach ($files as $file) {
-                        $sql = "INSERT IGNORE INTO " . $db_config->prefix . "`mpm_migrations` ( `timestamp`, `active`, `is_current` ) VALUES ( '{$file->timestamp}', 0, 0 )";
+        if (count($files) > 0) {
+            $pdo = MpmDbHelper::getPdoObj();
+            $pdo->beginTransaction();
+            try {
+                foreach ($files as $file) {
+                    $sql = "INSERT IGNORE INTO `" . $db_config->migrationTable . "` ( `timestamp`, `active`, `is_current` ) VALUES ( '{$file->timestamp}', 0, 0 )";
+                    $pdo->exec($sql);
+                }
+            } catch (Exception $e) {
+                $pdo->rollback();
+                echo "\n\nError: " . $e->getMessage();
+                echo "\n\n";
+                exit;
+            }
+            $pdo->commit();
+        }
+        
+        if (count($db_list)) {
+            $pdo->beginTransaction();
+            try {
+                foreach ($db_list as $obj) {
+                    if (!in_array($obj->timestamp, $file_timestamps) && $obj->active == 0) {
+                        $sql = "DELETE FROM `" . $db_config->migrationTable . "` WHERE `id` = '{$obj->id}'";
                         $pdo->exec($sql);
                     }
-                } catch (Exception $e) {
-                    $pdo->rollback();
-                    echo "\n\nError: " . $e->getMessage();
-                    echo "\n\n";
-                    exit;
                 }
-                $pdo->commit();
+            } catch (Exception $e) {
+                $pdo->rollback();
+                echo "\n\nError: " . $e->getMessage();
+                echo "\n\n";
+                exit;
             }
-            
-            if (count($db_list)) {
-                $pdo->beginTransaction();
-                try {
-                    foreach ($db_list as $obj) {
-                        if (!in_array($obj->timestamp, $file_timestamps) && $obj->active == 0) {
-                            $sql = "DELETE FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '{$obj->id}'";
-                            $pdo->exec($sql);
-                        }
-                    }
-                } catch (Exception $e) {
-                    $pdo->rollback();
-                    echo "\n\nError: " . $e->getMessage();
-                    echo "\n\n";
-                    exit;
-                }
-                $pdo->commit();
-            }
+            $pdo->commit();
         }
     }
     
@@ -119,7 +118,7 @@ class MpmListHelper
      *
      * @return array
      */
-    static function getTimestampArray($obj_array)
+    public static function getTimestampArray($obj_array)
     {
         $timestamp_array = array();
         foreach ($obj_array as $obj)
@@ -201,13 +200,13 @@ class MpmListHelper
 	    $db_config = $GLOBALS['db_config'];
 		if ($direction == 'down')
 		{
-			$sql = "SELECT * FROM " . $db_config->prefix . "`mpm_migrations` WHERE `timestamp` <= '$latestTimestamp' AND `active` = 1";
-			$countSql = "SELECT COUNT(*) as total FROM " . $db_config->prefix . "`mpm_migrations` WHERE `timestamp` <= '$latestTimestamp' AND `active` = 1";
+			$sql = "SELECT * FROM `" . $db_config->migrationTable . "` WHERE `timestamp` <= '$latestTimestamp' AND `active` = 1";
+			$countSql = "SELECT COUNT(*) as total FROM `" . $db_config->migrationTable . "` WHERE `timestamp` <= '$latestTimestamp' AND `active` = 1";
 		}
 		else
 		{
-			$sql = "SELECT * FROM " . $db_config->prefix . "`mpm_migrations` WHERE `timestamp` >= '$latestTimestamp' AND `active` = 1";
-			$countSql = "SELECT COUNT(*) as total FROM " . $db_config->prefix . "`mpm_migrations` WHERE `timestamp` >= '$latestTimestamp' AND `active` = 1";
+			$sql = "SELECT * FROM `" . $db_config->migrationTable . "` WHERE `timestamp` >= '$latestTimestamp' AND `active` = 1";
+			$countSql = "SELECT COUNT(*) as total FROM `" . $db_config->migrationTable . "` WHERE `timestamp` >= '$latestTimestamp' AND `active` = 1";
 		}
 		$list = array();
 		$countObj = MpmDbHelper::doSingleRowSelect($countSql);

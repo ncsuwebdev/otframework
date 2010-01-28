@@ -185,7 +185,7 @@ class MpmDbHelper
 	{
 	    $tables = MpmDbHelper::getTables();
 	    $db_config = $GLOBALS['db_config'];
-		if (count($tables) == 0 || !in_array($db_config->prefix . 'mpm_migrations', $tables))
+		if (count($tables) == 0 || !in_array($db_config->migrationTable, $tables))
 	    {
 	        return false;
 	    }

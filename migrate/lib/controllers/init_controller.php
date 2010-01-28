@@ -42,8 +42,8 @@ class MpmInitController extends MpmController
 				echo "Migrations table not found.\n";
 				echo "Creating migrations table... ";
 				
-				$sql1 = "CREATE TABLE IF NOT EXISTS " . $db_config->prefix . "`mpm_migrations` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `timestamp` DATETIME NOT NULL, `active` TINYINT(1) NOT NULL DEFAULT 0, `is_current` TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY ( `id` ) ) ENGINE=InnoDB";
-				$sql2 = "CREATE UNIQUE INDEX `TIMESTAMP_INDEX` ON " . $db_config->prefix . "`mpm_migrations` ( `timestamp` )";
+				$sql1 = "CREATE TABLE IF NOT EXISTS `" . $db_config->migrationTable . "` ( `id` INT(11) NOT NULL AUTO_INCREMENT, `timestamp` DATETIME NOT NULL, `active` TINYINT(1) NOT NULL DEFAULT 0, `is_current` TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY ( `id` ) ) ENGINE=InnoDB";
+				$sql2 = "CREATE UNIQUE INDEX `TIMESTAMP_INDEX` ON `" . $db_config->migrationTable . "` ( `timestamp` )";
 				
 				$pdo = MpmDbHelper::getDbObj();
 				$pdo->beginTransaction();
@@ -55,7 +55,7 @@ class MpmInitController extends MpmController
 				catch (Exception $e)
 				{
 					$pdo->rollback();
-					echo "Failure!\n\n" . 'Unable to create required ' . $db_config->prefix . 'mpm_migrations table:' . $e->getMessage();
+					echo "Failure!\n\n" . 'Unable to create required ' . $db_config->migrationTable . ' table:' . $e->getMessage();
 					echo "\n\n";
 					exit;
 				}
