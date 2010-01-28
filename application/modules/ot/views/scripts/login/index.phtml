@@ -5,13 +5,12 @@
 	<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
         <?php $counter = 0; ?>
         <?php foreach ($this->loginForms as $key => $f): ?>
-                <li class="ui-state-default ui-corner-top"><a href="#tabs-<?php echo $key; ?>"><span><?php echo $f['name']; ?></span></a></li>
-                <?php if ($key == $this->realm) $tabSelectedIndex = $counter; ?>
-                <?php $counter++; ?>
+            <li class="ui-state-default ui-corner-top"><a href="#tabs-<?php echo $key; ?>"><span><?php echo $f['name']; ?></span></a></li>
+            <?php if ($key == $this->realm) $tabSelectedIndex = $counter; ?>
+            <?php $counter++; ?>
         <?php endforeach; ?>
 	</ul>
     <input type="hidden" id="tabSelectedIndex" value="<?php echo $tabSelectedIndex; ?>" />
-
     <?php foreach ($this->loginForms as $key => $f): ?>
     <div id="tabs-<?php echo $key; ?>" class="ui-tabs-panel ui-widget-content ui-corner-bottom"> 
      	<div class="description">

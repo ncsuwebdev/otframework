@@ -19,6 +19,21 @@ ot-account-index:connectionHeader;Connections can be made between this applicati
 ot-account-index:remote;External Application Access
 ot-account-index:remoteHeader;If you would like another application to access this application's data, you will need to individually grant them this access. 
 ot-account-index:consumerHasAccessButton;Revoke Access
+ot-account-index:account;Account
+ot-account-index:connectionsTo;Connections to %1$s
+ot-account-index:none;None
+ot-account-index;interact;%1$s is setup to interact with your account on %2$s.
+ot-account-index:authorizedOn;You are authorized on %1$s.
+ot-account-index:revokeAccess;To revoke access, you must do this from 
+ot-account-index;notAuthorized;You are not authorized on %1$s.
+ot-account-index:authorizeAccess;Authorize Access
+ot-account-index:serviceDescription;Service Description
+ot-account-index:developers;Developers!
+ot-account-index:canSetup;You can setup your application to interact with %1$s.
+ot-account-index:viewApiDocumentation;View API Documentation
+ot-account-index:accessTokenGenerated;Access token generated on %1$s.
+ot-account-index:noConnectionsMade;No connections have been made on your behalf.
+
 ot-account-all:title;Manage Users
 ot-account-all:linkNewAccount;Add New Account
 ot-account-all:header;Here you can add users and grant them roles.  Roles are defined by the application administrator.
@@ -39,6 +54,7 @@ ot-account-revokeConnection:title;Revoke Application Access
 ot-account-revokeConnection:consumerIdNotSet;The consumerId is not set in the query string.
 ot-account-revokeConnection:consumerIdNotExists;The consumer associated with your request token no longer exists
 ot-account-revokeConnection:noAccessToken:You do not have an existing access token for this consumer
+ot-account-revokeconnection:tokenRemoved:Token has been removed. %1$s no longer has access to your account.
 
 ot-api-index:title;API Documentation
 ot-api-index:method;Method
@@ -56,13 +72,29 @@ ot-auth-index:status;Status
 ot-auth-index:enable;Enable
 ot-auth-index:disable;Disable
 ot-auth-index:edit;Edit
+
 ot-auth-toggle:title;Toggle Authentication Adapter
 ot-auth-toggle:header;Are you sure you want to %1$s the "%2$s" adapter?.
+ot-auth-toggle:keyNotSet;The authentication adapter key is not set in the query string.
+ot-auth-toggle:noAdapter;No authentication adapter exists with the given key.
+ot-auth-toggle:mustBeOneAdapter;There must be one authentication adapter enabled at all times.
+
+ot-auth-edit:valueNotFound;Value for key not found in query string.
+ot-auth-edit:noAdapter;No authentication adapter exists with the given key.
+ot-auth-edit:problemSubmitting;There was a problem submitting the form
+ot-auth-edit:title;Edit Authentication Adapter
 
 ot-oauth-add:title;Register Application for Remote Access
 ot-oauth-add:header;This page allows you to register your application to use this application's API.
+ot-oauth-add:successfullyRegistered;Your application was successfully registered.
+ot-oauth-add:problemSubmitting;There was a problem submitting your form.
 ot-oauth-delete:title;Remove Application from Remote Access
 ot-oauth-delete:header;You have selected to remove <b>%1$s</b> as a registered application from this system.  All access tokens for this application will be removed, and no more access will be granted to %1$s.
+ot-oauth-delete:consumerIdNotSet;The consumerId not set in query string.
+ot-oauth-delete:consumerNotFound;The consumer was not found.
+ot-oauth-delete:notAllowedtoEdit;You are not allowed to edit other users applications.
+ot-oauth-delete:deleteLabel;Delete Application
+ot-oauth-delete:applicationRemoved;Your application was successfully removed.
 ot-oauth-details:back;Back to Applications
 ot-oauth-details:consumerEditButton;Edit Application
 ot-oauth-details:consumerRegenerateButton;Reset Consumer Key/Secret
@@ -76,18 +108,33 @@ ot-oauth-details:consumerSecret;Consumer Secret
 ot-oauth-details:requestTokenUrl;Request Token URL
 ot-oauth-details:accessTokenUrl;Access Token URL
 ot-oauth-details:authorizeUrl;Authorize URL
-ot-oauth-details:encryptionNotice;We only support hmac-sha1 signatures.  We do not support the plaintext signature method.
+ot-oauth-details:encryptionNotice;We only support hmac-sha1 signatures. We do not support the plaintext signature method.
+ot-oauth-details:consumerIdNotSet;The consumerId not set in query string.
+ot-oauth-details:consumerNotFound;Consumer not found.
+ot-oauth-details:notAllowedToEdit;You are not allowed to edit other users applications.
+ot-oauth-details:activeUsers;There are %1$s active users.
+ot-oauth-details:activeUser;There is 1 active user.
 ot-oauth-edit:title;Edit Consumer Application's Details
 ot-oauth-edit:header;Change the details of the consumer application below.
+ot-oauth-edit:consumerIdNotSet;The consumerId is not set in the query string.
+ot-oauth-edit:consumerNotfound;Consumer not found.
+ot-oauth-edit:notAllowedToEdit;You are not allowed to edit other users applications.
+ot-oauth-edit:successfullyModified;Your application was successfully modified.
+ot-oauth-edit:problemSubmitting;There was a problem submitting your form.
 ot-oauth-generateToken:title;Manually create a connection
 ot-oauth-generateToken:header;If your application does not require each user to register access to this application, you can create a single access token and use that in your application.  Beware that any API access to this application will be done so under <b>your</b> username, so make sure your application doesn't need user-level access granted.<br /><br />Because you are registering your application manually, some methods that rely on the logged-in-user's credentials will not work as you may expect.  Remember that on every request, you are the logged-in-user.<br /><br />If you are sure that you would like to setup your application this way, you can generate an access token and a token secret.  These keys will only be displayed once, so please record these keys as you will need them when sending API requests to this application.
 ot-oauth-generateToken:alert;Alert
 ot-oauth-generateToken:alertPost;Record these tokens as this is the only time you will see them!
 ot-oauth-generateToken:alertPre;Read carefully before proceeding!
-ot-oauth-generateToken:headerSubmit;Here are your access token/secret combination.  Using this, in addition to the Consumer Key/Secret will allow your application to have remote access to this application
+ot-oauth-generateToken:headerSubmit;Here are your access token/secret combination. Using this, in addition to the Consumer Key/Secret will allow your application to have remote access to this application
 ot-oauth-generateToken:accessToken;Access Token
 ot-oauth-generateToken:accessSecret;Token Secret
 ot-oauth-generateToken:back;Back to %1$s Details
+ot-oauth-generateToken:consumerIdNotSet;The consumerId not set in query string.
+ot-oauth-generateToken:consumerNotFound;The consumer was not found.
+ot-oauth-generateToken:notAllowedToEdit;You are not allowed to edit other users applications.
+ot-oauth-generateToken:alreadyHaveToken;You already have an existing access token for this consumer. Remove that token to create a new one.
+ot-oauth-generateToken:generateButton;Generate Access Token/Secret
 ot-oauth-index:title;Applications using %1$s
 ot-oauth-index:header;If you are a developer and would like your application to access this application, you will need to register your application here.<br /><Br />This application uses OAuth to manage its remote access.  Once you register, you will be given a Consumer Key/Secret which you will use to access our data.  If you are new to OAuth or would like to set your application up to access our API, you can find out more from the <a href="http://oauth.net">OAuth Website</a>.
 ot-oauth-index:addButton;Register an Application
@@ -101,6 +148,14 @@ ot-oauth-allConsumers:applicationListText;The following applications have been r
 ot-oauth-allConsumers:noApplications;No applications have been setup to access this application's data remotely.
 ot-oauth-regenerateConsumerKeys:title;Reset Consumer Key/Secret
 ot-oauth-regenerateConsumerKeys:header;You have selected to reset the consumer secret/key for <b>%1$s</b>. This will require you to update the secret/key in your application before it will be allowed to communicate with this app.
+ot-oauth-regenerateConsumerKeys:consumerIdNotSet;The consumerId is not set in the query string.
+ot-oauth-regenerateConsumerKeys:notAllowedToEdit;You are not allowed to edit other users applications.
+ot-oauth-regenerateConsumerKeys:resetButton;Reset Consumer Key/Secret
+ot-oauth-regenerateConsumerKeys:consumerKeyReset;The consumer key and secret was reset for your application. Please update your application to allow access.
+
+ot-oauthclient-index:noIdGiven;No consumer ID was given.
+ot-oauthclient-callback:notAuthorized;You were not authorized.
+ot-oauthclient-callback:tokensDontMatch;Tokens do not match!
 
 ot-oauthserver-authorize:title;Authorize Consumer
 ot-oauthserver-authorize:header;The application <b>%1$s</b> would like to have access to this application on your behalf.  If you agree to allowing %1$s access, click the button below authorizing it access.
@@ -230,7 +285,7 @@ ot-acl-delete:header;You have selected to delete the role <b>%1$s</b>.
 ot-acl-delete:accountRoleChange;There are currently users who are assigned this role.  They will be put into the default role of <b>%1$s</b>.
 
 ot-backup-index:title;Backup Admin
-ot-backup-index:header;<p>Select the table you would like to download.</p>
+ot-backup-index:header;Select the table you would like to download.
 ot-backup-index:downloadAllSql;Click Here to Download All Tables as SQL
 
 ot-bug-index:title;Bug Reports
@@ -295,6 +350,9 @@ ot-cron-index:runNow;Run Now
 ot-cron-index:cannotRun;Cannot run a disabled job
 ot-cron-index:neverRun;Job has never run
 ot-cron-index:noJobsFound;No Cron Jobs Found.
+ot-cron-index:noAccess;The deafult role (%1$s) does not have access to cron_index. CRON jobs will not run correctly until access is granted to the default role (%1$s).
+ot-cron-index:editAcl;Click here to edit the ACL.
+
 ot-cron-toggle:title;Toggle Cron Job Status
 ot-cron-toggle:header;Are you sure you want to <b>%1$s</b> <b>%2$s</b>?
 ot-cron-toggle:displayName;all cron jobs
@@ -373,6 +431,7 @@ ot-log-clear:title;Clear Logs
 ot-log-clear:header;You have selected to clear the logs.
 ot-log-index:title;Action Logs
 ot-log-index:header;The following are the action logs recorded.
+ot-log-index:clearLogs;Clear Logs
 
 ot-maintenance-index:title;Maintenance Mode Admin
 ot-maintenance-index:notMaintenance;This application is not in maintenance mode.
@@ -502,6 +561,7 @@ ot-login-index:password;Password:
 ot-login-index:login;Login
 ot-login-index:signUp;Sign-Up Now
 ot-login-index:linkForgot;I Forgot my Password...
+ot-login-index:noAdaptersEnabled;No authentication adapters are enabled. Please contact an administrator.
 ot-login-forgot:linkReset;Reset My Password
 ot-login-forgot:title;Forgot My Password
 ot-login-forgot:header;If you have forgotten your password, enter your username below and we can send a reset request to the email address we have on file for you.
@@ -514,6 +574,7 @@ ot-login-signup:title;Sign-up for an Account
 ot-login-signup:header;You can create a new account here. If you already have an account for %1$s, you can  
 ot-login-signup:clickHere;click here to log in.
 ot-login-signup:enterId;Enter your requested user ID below, as well as your email address.
+ot-login-signup:realmNotFound;Realm %1$s not found.
 ot-login-login:header;Please log in to access your account. 
 ot-login-login:userId;User ID:
 ot-login-login:password;Password:

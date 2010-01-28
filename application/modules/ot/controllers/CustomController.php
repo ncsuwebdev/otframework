@@ -45,10 +45,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $objects = array();
         foreach ($config->app->customFieldObjects as $key => $value) {
 
-            $objects[] = array(
-               'objectId' => $key,
-               'description' => $value,
-            );
+            $objects[] = array('objectId' => $key, 'description' => $value);
         }
 
         $this->view->objects = $objects;
@@ -105,18 +102,13 @@ class Ot_CustomController extends Zend_Controller_Action
             $post = Zend_Registry::get('postFilter');
             
             if (!isset($post->objectId)) {
-                $ret = array('rc' => 0,
-                    'msg' => $this->view->translate('msg-error-objectIdNotSet'),
-                );
+                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-objectIdNotSet'));
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             }
             
             if (!isset($post->attributeIds)) {
-                $ret = array(
-                    'rc' => 0,
-                    'msg' => $this->view->translate('msg-error-attributeIdsNotSet'),
-                );
+                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-attributeIdsNotSet'));
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             }
@@ -136,18 +128,12 @@ class Ot_CustomController extends Zend_Controller_Action
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             } catch (Exception $e) {
-                    $ret = array(
-                        'rc' => 0,
-                        'msg' => $this->view->translate('msg-error-orderNotSaved', $e->getMessage()),
-                    );
+                $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-orderNotSaved', $e->getMessage()));
                 echo Zend_Json_Encoder::encode($ret);
                 return;
             }
 
-            $logOptions = array(
-                'attributeName' => 'objectId',
-                'attributeId'   => $objectId,
-            );
+            $logOptions = array('attributeName' => 'objectId', 'attributeId' => $objectId);
                     
             $this->_helper->log(Zend_Log::INFO, $objectId . ' had attributes reordered', $logOptions);
         }
@@ -351,9 +337,9 @@ class Ot_CustomController extends Zend_Controller_Action
 
             $attr->update($data, null);
 
-            $logOptions = array('attributeName' => 'nodeAddtributeId', 'attributeId'   => $data['attributeId']);
+            $logOptions = array('attributeName' => 'nodeAddtributeId', 'attributeId' => $data['attributeId']);
                     
-            $this->_helper->log(Zend_Log::INFO, 'Attribute ' . $data['label'] . ' modified', $logOptions);
+            $this->_helper->log(Zend_Log::INFO, 'Attribute ' . $data['label'] . ' was modified.', $logOptions);
             
             $this->_helper
                  ->flashMessenger
@@ -443,6 +429,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $this->view->attribute         = $attribute;
         $this->view->objectId          = $attribute['objectId'];
         $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
+        
         $this->_helper->pageTitle('ot-custom-delete:title', $attribute['objectId']);
     }
 }

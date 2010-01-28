@@ -74,9 +74,7 @@ class Ot_NavController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->acl = array(
-                        'save' => $this->_helper->hasAccess('save')
-                     );
+        $this->acl = array('save' => $this->_helper->hasAccess('save'));
         
         $this->_helper->pageTitle('ot-nav-index:title');;
         
@@ -87,10 +85,7 @@ class Ot_NavController extends Zend_Controller_Action
              ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
                                  
         $nav = new Ot_Nav();
-        $this->view->editNavTreeHtml = $nav->generateHtml(
-            Zend_Registry::get('navArray'),
-            true
-        );
+        $this->view->editNavTreeHtml = $nav->generateHtml(Zend_Registry::get('navArray'), true);
     }
 
     
@@ -188,21 +183,11 @@ class Ot_NavController extends Zend_Controller_Action
             $cache = Zend_Registry::get('cache');
             $cache->remove('configObject');
             
-            $logOptions = array(
-                       'attributeName' => 'navigation',
-                       'attributeId'   => 'modified',
-            );
+            $logOptions = array('attributeName' => 'navigation', 'attributeId' => 'modified');
                     
-            $this->_helper->log(
-                Zend_Log::INFO,
-                'Navigation structure modified',
-                $logOptions
-            );
+            $this->_helper->log(Zend_Log::INFO, 'Navigation structure modified', $logOptions);
     
-            $retData = array(
-                'rc' => '1',
-                'msg' => $this->view->translate('msg-info-savedNav')
-            );
+            $retData = array('rc' => '1', 'msg' => $this->view->translate('msg-info-savedNav'));
             echo Zend_Json_Encoder::encode($retData);
             return;
         }
@@ -221,9 +206,8 @@ class Ot_NavController extends Zend_Controller_Action
         $a['module']     = (isset($permissions[0]) ? $permissions[0] : '');
         $a['controller'] = (isset($permissions[1]) ? $permissions[1] : '');
         $a['action']     = (isset($permissions[2]) ? $permissions[2] : '');
-        
-        $a['parent'] = $parent;
-        $a['id']     = $this->_idCounter++;
+        $a['parent']     = $parent;
+        $a['id']         = $this->_idCounter++;
        
         if ($a['id'] != 0) {
         

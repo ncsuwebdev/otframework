@@ -1,7 +1,6 @@
 <div id="adminSemesterIndex">
     <?php echo $this->translate('ot-bug-index:header'); ?>
     <br /><br />
-
     <?php if ($this->acl['add']) : ?>
     <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'add'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-bug-index:linkNew'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
     <br /><br />

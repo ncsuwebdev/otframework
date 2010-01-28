@@ -48,14 +48,14 @@ class Ot_LoginController extends Zend_Controller_Action
         $authRealm->setExpirationHops(1);
 
         if (Zend_Auth::getInstance()->hasIdentity()) {
-                $this->_redirect('/');
+            $this->_redirect('/');
         }
 
         $authAdapter = new Ot_Auth_Adapter;
         $adapters = $authAdapter->getEnabledAdapters();
         
         if ($adapters->count() == 0) {
-            throw new Ot_Exception_Data('No authentication adapters are enabled. Please contact an administrator.');
+            throw new Ot_Exception_Data('ot-login-index:noAdaptersEnabled');
         }
         
         $loginForms = array();
@@ -221,10 +221,7 @@ class Ot_LoginController extends Zend_Controller_Action
                 } else {
                     $role = $thisAccount->role;
                     
-                    $data = array(
-                            'accountId' => $thisAccount->accountId,
-                            'lastLogin' => time(),
-                    );
+                    $data = array('accountId' => $thisAccount->accountId, 'lastLogin' => time());
                     
                     $account->update($data, null);
                 }
@@ -590,9 +587,12 @@ class Ot_LoginController extends Zend_Controller_Action
         
         $otAuthAdapter = new Ot_Auth_Adapter();
         $thisAdapter   = $otAuthAdapter->find($realm);
-        
+
         if (is_null($thisAdapter)) {
-            throw new Ot_Exception_Data('Realm ' . $realm . ' not found');
+
+            throw new Ot_Exception_Data(
+                $this->view->translate('ot-login-signup:realmNotFound', array('<b>' . $realm . '</b>'))
+            );
         }
         
         $authAdapter = new $thisAdapter->class();
@@ -683,7 +683,9 @@ class Ot_LoginController extends Zend_Controller_Action
                             'attributeId' => $accountData['accountId'],
                         );
                         
-                        $this->_helper->log(Zend_Log::INFO, 'User Successfully signed up', $loggerOptions);
+                        $this->_helper->log(
+                            Zend_Log::INFO, 'User ' . $accountData['username'] . ' created an account.', $loggerOptions
+                        );
                             
                         $et = new Ot_Trigger();
                         $et->setVariables($accountData);

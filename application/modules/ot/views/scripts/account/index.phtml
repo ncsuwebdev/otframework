@@ -9,11 +9,11 @@
 
 <div id="oauth">
 	<ul>
-		<li><a href="#tabs-data"><span>Account</span></a></li>
+		<li><a href="#tabs-data"><span><?php echo $this->translate('ot-account-index:account'); ?></span></a></li>
 		<?php foreach ($this->consumers as $c): ?>
 		<li><a href="#tabs-<?php echo $c['consumerId']; ?>"><span><?php echo $c['name']; ?></span></a></li>
 		<?php endforeach; ?>
-        <li><a href="#tabs-connections"><span>Connections to <?php echo $this->config->user->appTitle->val; ?></span></a></li>
+        <li><a href="#tabs-connections"><span><?php echo $this->translate('ot-account-index:connectionsTo', array($this->config->user->appTitle->val)); ?></span></a></li>
 	</ul>
 	<div id="tabs-data">
 	<?php echo $this->translate('ot-account-index:userDataHeader'); ?>
@@ -72,7 +72,7 @@
 		            <label><?php echo ucwords($key); ?>:</label></td>
 		            <td>
                     <?php if (empty($attr)) : ?> 
-                          None
+                          <?php echo $this->translate('ot-account-index:none'); ?>
                     <?php elseif (is_array($attr)): ?>
                           <?php echo implode(', ', $attr); ?>
                     <?php else : ?>
@@ -86,28 +86,28 @@
 	</div>
 	<?php foreach ($this->consumers as $c): ?>
 	<div id="tabs-<?php echo $c['consumerId']; ?>">
-		<?php echo $this->config->user->appTitle->val; ?> is setup to interact with your account on <b><?php echo $c['name']; ?></b>.
+		<?php echo $this->translate('ot-account-index;interact', array($this->config->user->appTitle->val, '<b>' . $c['name'] . '</b>')); ?>
 		<?php if ($c['authorized']): ?>
 			<div class="access authorized">
-				<span>You are authorized on <?php echo $c['name']; ?>.</span>
-				To revoke access, you must do this from 
+				<span><?php echo $this->translate('ot-account-index:authorizedOn', array($c['name'])); ?></span>
+				<?php echo $this->translate('ot-account-index:revokeAccess'); ?> 
 				<?php if ($c['website'] == ''): ?>
-				<?php echo $c['name']; ?>
+				    <?php echo $c['name']; ?>.
 				<?php else: ?>
-				<a href="<?php echo $c['website']; ?>"><?php echo $c['name']; ?></a>
+				    <a href="<?php echo $c['website']; ?>"><?php echo $c['name']; ?></a>.
 				<?php endif; ?>
 			</div>			
 		<?php else: ?>
 			<div class="access notAuthorized">
-				<span>You are not authorized on <?php echo $c['name']; ?>.</span>
+				<span><?php echo $this->tramslate('ot-account-index;notAuthorized', array($c['name'])); ?></span>
 				<?php if ($this->acl['grantAccess']): ?>
-				<a href="<?php echo $this->url(array('controller' => 'oauthclient', 'consumerId' => $c['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
-				    Authorize Access
-				<span class="ui-icon ui-icon-key"></span></a>
+				    <a href="<?php echo $this->url(array('controller' => 'oauthclient', 'consumerId' => $c['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
+				    <?php echo $this->translate('ot-account-index:authorizeAccess'); ?>
+				    <span class="ui-icon ui-icon-key"></span></a>
 				<?php endif; ?>
 			</div>		
 		<?php endif; ?>
-		<h2>Service Description</h2>
+		<h2><?php echo $this->translate('ot-account-index:serviceDescription'); ?></h2>
 		<div class="description">
 			<?php echo nl2br($c['description']); ?>
 		</div>
@@ -116,16 +116,16 @@
     <div id="tabs-connections"> 
 		<?php if ($this->acl['oauth'] || $this->acl['apiDocs']) : ?>
             <div id="developers">
-    			<span>Developers!</span>
+    			<span><?php echo $this->translate('ot-account-index:developers'); ?></span>
                 <?php if ($this->acl['oauth']) : ?>
-    			     You can setup your application to interact with <b><?php echo $this->config->user->appTitle->val; ?></b>
-    			     <a href="<?php echo $this->url(array(), 'oauth', true); ?>">here</a>.
-                     <br />
+                    <?php echo $this->translate('ot-account-index:canSetup', array('<b>' . $this->config->user->appTitle->val) . '</b>'); ?>
+    			    <a href="<?php echo $this->url(array(), 'oauth', true); ?>">here</a>.
+                    <br />
                 <?php endif; ?>
                 <?php if ($this->acl['apiDocs']) : ?>
                     <br />
                     <div style="text-align: center">
-                        <a href="<?php echo $this->url(array(), 'api', true); ?>" class="ui-state-default ui-corner-all linkButton">View API Documentation<span class="ui-icon ui-icon-gear"></span></a>
+                        <a href="<?php echo $this->url(array(), 'api', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:viewApiDocumentation'); ?><span class="ui-icon ui-icon-gear"></span></a>
                     </div>
                 <?php endif; ?>
     		</div>
@@ -156,13 +156,13 @@
 				<?php echo nl2br($t['consumer']['description']); ?>
 			</div>	
 			<div class="accessToken">
-				Access token generated on <?php echo $this->dateFormat($t['requestDt'], $this->config->user->dateTimeFormat->val); ?>
+				<?php echo $this->translate('ot-account-index:accessTokenGenerated', array ($this->dateFormat($t['requestDt'], $this->config->user->dateTimeFormat->val))); ?>
 			</div>
 			<div class="ui-helper-clearfix"></div>
 		</div>
 		<?php endforeach; ?>
 	<?php else: ?>
-	<b>No connections have been made on your behalf.</b>
+	<b><?php echo $this->translate('ot-account-index:noConnectionsMade'); ?></b>
 	<?php endif; ?>
     </div>
 </div>

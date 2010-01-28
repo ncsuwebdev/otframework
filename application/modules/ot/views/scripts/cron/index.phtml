@@ -1,10 +1,10 @@
 <?php if (!$this->guestHasAccess) : ?>
     <div class="ui-widget ui-state-highlight ui-corner-all">
         <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-        The deafult role (<?php echo $this->defaultRole->name; ?>) does not have access to cron_index. CRON jobs will not run correctly until access is granted to the default role (<?php echo $this->defaultRole->name; ?>).
+        <?php echo $this->translate('ot-cron-index:noAccess', array($this->defaultRole->name))?>
         <?php if ($this->acl['acl']) : ?>
         <br />
-        <a href="<?php echo $this->baseUrl(); ?>/ot/acl">Click here to edit the ACL</a> 
+        <a href="<?php echo $this->baseUrl(); ?>/ot/acl"><?php echo $this->translate('ot-cron-index:editAcl'); ?></a> 
         <?php endif; ?>
     </div>
     <br />

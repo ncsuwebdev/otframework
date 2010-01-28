@@ -31,7 +31,7 @@
 class Ot_IndexController extends Zend_Controller_Action
 {
     /**
-     * shows the homepage
+     * Shows the homepage
      *
      */
     public function indexAction()

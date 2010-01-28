@@ -1,25 +1,24 @@
 <?php echo $this->translate("ot-trigger-index:header"); ?>
 <br /><br />
-    
-    <table class="list">
-        <tbody>
-            <tr class="ui-widget-header">
-                <th width="250"><?php echo $this->translate("ot-trigger-index:name"); ?></th>
-                <th width="350"><?php echo $this->translate("ot-trigger-table:description"); ?></th>
-            </tr>
-            <?php foreach($this->triggers as $t): ?>
-            <tr>
-                <td>
-                    <?php if ($this->acl['details']):?>
-                    <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $t->name), 'ot', true); ?>">
-                    <?php endif; ?>
-                    <?php echo $t->name; ?>
-                    <?php if ($this->acl['details']):?>
-                    </a>
-                    <?php endif; ?>
-                </td>
-                <td><?php echo $t->description; ?></td>                
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+<table class="list">
+    <tbody>
+        <tr class="ui-widget-header">
+            <th width="250"><?php echo $this->translate("ot-trigger-index:name"); ?></th>
+            <th width="350"><?php echo $this->translate("ot-trigger-table:description"); ?></th>
+        </tr>
+        <?php foreach($this->triggers as $t): ?>
+        <tr>
+            <td>
+                <?php if ($this->acl['details']):?>
+                <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $t->name), 'ot', true); ?>">
+                <?php endif; ?>
+                <?php echo $t->name; ?>
+                <?php if ($this->acl['details']):?>
+                </a>
+                <?php endif; ?>
+            </td>
+            <td><?php echo $t->description; ?></td>                
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

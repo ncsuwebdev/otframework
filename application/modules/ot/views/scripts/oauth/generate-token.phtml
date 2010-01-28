@@ -6,16 +6,12 @@
 </div>
 <?php echo $this->translate('ot-oauth-generateToken:headerSubmit'); ?>
 <br /><br />
-
 <div class="access"><?php echo $this->translate('ot-oauth-generateToken:accessToken'); ?></div>
 <div class="key"><?php echo $this->accessToken['oauth_token']; ?></div>
-
 <div class="access"><?php echo $this->translate('ot-oauth-generateToken:tokenSecret'); ?></div>
 <div class="key"><?php echo $this->accessToken['oauth_token_secret']; ?></div>
-
 <br /><br />
 <a href="<?php echo $this->url(array('action' => 'details', 'consumerId' => $this->consumer->consumerId), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-oauth-generateToken:back', $this->consumer->name); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
-
 <?php else: ?>
 <div class="ui-state-error ui-corner-all"> 
 	<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 

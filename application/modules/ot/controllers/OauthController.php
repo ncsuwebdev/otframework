@@ -76,7 +76,7 @@ class Ot_OauthController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->consumerId)) {
-            throw new Ot_Exception_Input('consumerId not set in query string.');
+            throw new Ot_Exception_Input('ot-oauth-details:consumerIdNotSet');
         }
         
         if (isset($get->all)) {
@@ -87,14 +87,13 @@ class Ot_OauthController extends Zend_Controller_Action
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
-            throw new Ot_Exception_Data('consumer not found.');
+            throw new Ot_Exception_Data('ot-oauth-details:consumerNotFound');
         }
         
-        if ($thisConsumer->registeredAccountId
-            != Zend_Auth::getInstance()->getIdentity()->accountId
+        if ($thisConsumer->registeredAccountId != Zend_Auth::getInstance()->getIdentity()->accountId
             && !$this->_helper->hasAccess('allConsumers')
         ) {
-                throw new Ot_Exception_Access('You are not allowed to edit other users applications.');
+                throw new Ot_Exception_Access('ot-oauth-details:notAllowedToEdit');
         }
         
         $this->view->consumer = $thisConsumer;
@@ -149,7 +148,7 @@ class Ot_OauthController extends Zend_Controller_Action
                     
                 $consumerId = $consumer->insert($data);
                 
-                $this->_helper->flashMessenger->addMessage('Your application was successfully registered.');
+                $this->_helper->flashMessenger->addMessage('ot-oauth-add:successfullyRegistered');
                 
                 $this->_helper->redirector->gotoRoute(
                     array('action' => 'details','consumerId' => $consumerId),
@@ -158,7 +157,7 @@ class Ot_OauthController extends Zend_Controller_Action
                 );
                 
             } else {
-                $messages[] = 'There was a problem submitting your form.';
+                $messages[] = $this->view->translate('ot-oauth-add:problemSubmitting');
             }
         }
         
@@ -177,21 +176,20 @@ class Ot_OauthController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->consumerId)) {
-            throw new Ot_Exception_Input('ConsumerId not set in query string.');
+            throw new Ot_Exception_Input('ot-oauth-edit:consumerIdNotSet');
         }
         
         $consumer = new Ot_Oauth_Server_Consumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
-            throw new Ot_Exception_Data('Consumer not found.');
+            throw new Ot_Exception_Data('ot-oauth-edit:consumerNotfound');
         }
         
-        if ($thisConsumer->registeredAccountId
-            != Zend_Auth::getInstance()->getIdentity()->accountId
+        if ($thisConsumer->registeredAccountId != Zend_Auth::getInstance()->getIdentity()->accountId
             && !$this->_helper->hasAccess('allConsumers')
         ) {
-            throw new Ot_Exception_Access('You are not allowed to edit other users applications.');
+            throw new Ot_Exception_Access('ot-oauth-edit:notAllowedToEdit');
         }
         
         $form = $consumer->form(
@@ -200,6 +198,7 @@ class Ot_OauthController extends Zend_Controller_Action
         
         $messages = array();
         if ($this->_request->isPost()) {
+            
             if ($form->isValid($_POST)) {
                 $data = array(
                     'consumerId'  => $thisConsumer->consumerId,
@@ -219,9 +218,7 @@ class Ot_OauthController extends Zend_Controller_Action
                 
                     $iData = array('source' => file_get_contents(trim($form->image->getFileName())));
 
-                    if (isset($thisConsumer->imageId)
-                        && $thisConsumer->imageId != 0
-                    ) {
+                    if (isset($thisConsumer->imageId) && $thisConsumer->imageId != 0) {
                         $image->deleteImage($thisConsumer->imageId);
                     }
                                     
@@ -230,9 +227,9 @@ class Ot_OauthController extends Zend_Controller_Action
                         
                 $consumer->update($data, null);
                 
-                $this->_helper->flashMessenger->addMessage('Your application was successfully modified.');
+                $this->_helper->flashMessenger->addMessage('ot-oauth-edit:successfullyModified');
             } else {
-                $messages[] = 'There was a problem submitting your form.';
+                $messages[] = 'ot-oauth-edit:problemSubmitting';
             }
         }
         
@@ -247,29 +244,28 @@ class Ot_OauthController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->consumerId)) {
-            throw new Ot_Exception_Input('consumerId not set in query string.');
+            throw new Ot_Exception_Input('ot-oauth-delete:consumerIdNotSet');
         }
         
         $consumer = new Ot_Oauth_Server_Consumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
-            throw new Ot_Exception_Data('consumer not found.');
+            throw new Ot_Exception_Data('ot-oauth-delete:consumerNotFound');
         }
         
-        if ($thisConsumer->registeredAccountId
-            != Zend_Auth::getInstance()->getIdentity()->accountId
+        if ($thisConsumer->registeredAccountId != Zend_Auth::getInstance()->getIdentity()->accountId
             && !$this->_helper->hasAccess('allConsumers')
         ) {
-            throw new Ot_Exception_Access('You are not allowed to edit other users applications.');
+            throw new Ot_Exception_Access('ot-oauth-delete:notAllowedtoEdit');
         }
         
-        $form = Ot_Form_Template::delete('deleteConsumer', 'Delete Application');
+        $form = Ot_Form_Template::delete('deleteConsumer', 'ot-oauth-delete:deleteLabel');
         
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             $consumer->deleteConsumer($thisConsumer->consumerId);
                                     
-            $this->_helper->flashMessenger->addMessage('Your application was successfully removed.');
+            $this->_helper->flashMessenger->addMessage('ot-oauth-delete:applicationRemoved');
             
             $this->_helper->redirector->gotoRoute(array(), 'oauth', true);
         }
@@ -283,22 +279,21 @@ class Ot_OauthController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->consumerId)) {
-            throw new Ot_Exception_Input('consumerId not set in query string.');
+            throw new Ot_Exception_Input('ot-oauth-generateToken:consumerIdNotSet');
         }
         
         $consumer = new Ot_Oauth_Server_Consumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
-            throw new Ot_Exception_Data('consumer not found.');
+            throw new Ot_Exception_Data('ot-oauth-generateToken:consumerNotFound');
         }
         
-        if ($thisConsumer->registeredAccountId
-            != Zend_Auth::getInstance()->getIdentity()->accountId
+        if ($thisConsumer->registeredAccountId != Zend_Auth::getInstance()->getIdentity()->accountId
             && !$this->_helper->hasAccess('allConsumers')
         ) {
                 
-            throw new Ot_Exception_Access('You are not allowed to edit other users applications.');
+            throw new Ot_Exception_Access('ot-oauth-generateToken:notAllowedToEdit');
         }
         
         $this->view->consumer = $thisConsumer;
@@ -311,17 +306,12 @@ class Ot_OauthController extends Zend_Controller_Action
         );
         
         if (!is_null($existingAccessToken)) {
-            throw new Ot_Exception_Data(
-                'You already have an existing access token for this consumer. Remove that token to create a new one.'
-            );
+            throw new Ot_Exception_Data('ot-oauth-generateToken:alreadyHaveToken');
         }        
                         
         $this->_helper->pageTitle('ot-oauth-generateToken:title');
         
-        $form = Ot_Form_Template::delete(
-            'genereateToken',
-            'Generate Access Token/Secret'
-        );
+        $form = Ot_Form_Template::delete('genereateToken', 'ot-oauth-generateToken:generateButton');
         
         $this->view->form = $form;
         
@@ -366,7 +356,7 @@ class Ot_OauthController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->consumerId)) {
-            throw new Ot_Exception_Input('consumerId not set in query string.');
+            throw new Ot_Exception_Input('ot-oauth-regenerateConsumerKeys:consumerIdNotSet');
         }
         
         $consumer = new Ot_Oauth_Server_Consumer();
@@ -376,31 +366,22 @@ class Ot_OauthController extends Zend_Controller_Action
             throw new Ot_Exception_Data('consumer not found.');
         }
         
-        if ($thisConsumer->registeredAccountId
-            != Zend_Auth::getInstance()->getIdentity()->accountId
-            && !$this->_helper->hasAccess('allConsumers')) {
-            throw new Ot_Exception_Access('You are not allowed to edit other users applications.');
+        if ($thisConsumer->registeredAccountId != Zend_Auth::getInstance()->getIdentity()->accountId
+            && !$this->_helper->hasAccess('allConsumers')
+        ) {
+            throw new Ot_Exception_Access('ot-oauth-regenerateConsumerKeys:notAllowedToEdit');
         }
         
-        $form = Ot_Form_Template::delete(
-            'resetKeySecret',
-            'Reset Consumer Key/Secret'
-        );
+        $form = Ot_Form_Template::delete('resetKeySecret', 'ot-oauth-regenerateConsumerKeys:resetButton');
         
         if ($this->_request->isPost() && $form->isValid($_POST)) {
                 
             $consumer->resetConsumerKeySecret($thisConsumer->consumerId);
             
-            $this->_helper->flashMessenger->addMessage(
-                'The consumer key and secret was reset for your application.
-                Please update your application to allow access.'
-            );
+            $this->_helper->flashMessenger->addMessage('ot-oauth-regenerateConsumerKeys:consumerKeyReset');
             
             $this->_helper->redirector->gotoRoute(
-                array(
-                    'action'     => 'details',
-                    'consumerId' => $thisConsumer->consumerId,
-                ),
+                array('action' => 'details','consumerId' => $thisConsumer->consumerId),
                 'oauth',
                 true
             );

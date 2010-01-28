@@ -14,9 +14,7 @@
 	            </tr>
             </tbody>
         </table>
-
         <br /><br />
-
         <table class="form">
             <tr>
                 <td width="130"><label><?php echo $this->translate("ot-custom-form:label"); ?></label></td>
@@ -30,25 +28,23 @@
                             <option<?php echo ($key == $this->attribute['type']) ? ' selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
                         <?php endforeach; ?>
                     </select>
-
-
-                <div id="opt"<?php if ($this->attribute['type'] == 'select' || $this->attribute['type'] == 'radio') { echo ' style="display: block;"'; } ?>>
-                    <?php foreach ($this->attribute['options'] as $o) : ?>
-                        <input type="checkbox" value="<?php echo $o; ?>" name="opt_delete[]" /> <?php echo $this->translate("ot-custom-edit:delete", $o); ?><br />
-                    <?php endforeach; ?>
-                    <br /><br />
-                    <?php echo $this->translate("ot-custom-edit:addOptions"); ?>
-                    <table class="form" id="options">
-                        <tbody>
-	                        <tr id="optionRow">
-	                            <td width="50"><label for="option[]"><?php echo $this->translate("ot-custom-form:option"); ?></label></td>
-	                            <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
-	                        </tr>
-                        </tbody>
-                    </table>
-                    <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate("ot-custom-form:linkAddRow"); ?></a>
-                    <a id="removeRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-minusthick"></span><?php echo $this->translate("ot-custom-form:linkRemoveRow"); ?></a>
-                </div>
+                    <div id="opt"<?php if ($this->attribute['type'] == 'select' || $this->attribute['type'] == 'radio') { echo ' style="display: block;"'; } ?>>
+                        <?php foreach ($this->attribute['options'] as $o) : ?>
+                            <input type="checkbox" value="<?php echo $o; ?>" name="opt_delete[]" /> <?php echo $this->translate("ot-custom-edit:delete", $o); ?><br />
+                        <?php endforeach; ?>
+                        <br /><br />
+                        <?php echo $this->translate("ot-custom-edit:addOptions"); ?>
+                        <table class="form" id="options">
+                            <tbody>
+    	                        <tr id="optionRow">
+    	                            <td width="50"><label for="option[]"><?php echo $this->translate("ot-custom-form:option"); ?></label></td>
+    	                            <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
+    	                        </tr>
+                            </tbody>
+                        </table>
+                        <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate("ot-custom-form:linkAddRow"); ?></a>
+                        <a id="removeRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-minusthick"></span><?php echo $this->translate("ot-custom-form:linkRemoveRow"); ?></a>
+                    </div>
                 </td>
             </tr>
             <tr>

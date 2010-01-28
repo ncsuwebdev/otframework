@@ -17,41 +17,41 @@
 	<div class="website"><a href="<?php echo $this->consumer->website; ?>"><?php echo $this->consumer->website; ?></a></div>
 	<?php endif; ?>
 	<div class="description"><?php echo nl2br($this->consumer->description); ?></div>
-	<div class="usage"><?php echo $this->usage; ?> Active User<?php if ($this->usage != 1) { echo "s"; } ?></div>
+	<div class="usage">
+    	<?php if ($this->usage != 1): ?>
+    	   <?php echo $this->translate('ot-oauth-details:activeUsers', array($this->usage)); ?>
+    	<?php else: ?>
+    	   <?php echo $this->translate('ot-oauth-details:activeUser'); ?>
+    	<?php endif; ?>
+	</div>
 </div>
 <div class="ui-helper-clearfix"></div>
 <div class="options">
 	<a href="<?php echo $this->url(array('action' => 'regenerate-consumer-keys', 'consumerId' => $this->consumer->consumerId), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton">
-	    <?php echo $this->translate('ot-oauth-details:consumerRegenerateButton'); ?>
+	   <?php echo $this->translate('ot-oauth-details:consumerRegenerateButton'); ?>
 	<span class="ui-icon ui-icon-refresh"></span></a>
 	<a href="<?php echo $this->url(array('action' => 'generate-token', 'consumerId' => $this->consumer->consumerId), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton">
-	    <?php echo $this->translate('ot-oauth-details:generateTokenButton'); ?>
+	   <?php echo $this->translate('ot-oauth-details:generateTokenButton'); ?>
 	<span class="ui-icon ui-icon-plusthick"></span></a>		
 	<a href="<?php echo $this->url(array('action' => 'delete', 'consumerId' => $this->consumer->consumerId), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton">
-	    <?php echo $this->translate('ot-oauth-details:consumerDeleteButton'); ?>
+	   <?php echo $this->translate('ot-oauth-details:consumerDeleteButton'); ?>
 	<span class="ui-icon ui-icon-minusthick"></span></a>	
 	<a href="<?php echo $this->url(array('action' => 'edit', 'consumerId' => $this->consumer->consumerId), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton">
-	    <?php echo $this->translate('ot-oauth-details:consumerEditButton'); ?>
+	   <?php echo $this->translate('ot-oauth-details:consumerEditButton'); ?>
 	<span class="ui-icon ui-icon-pencil"></span></a>
 </div>	
-
 <?php if ($this->consumer->callbackUrl != ''): ?>
 <div class="access"><?php echo $this->translate('ot-oauth-details:callbackUrl'); ?></div>
 <div class="key"><?php echo $this->consumer->callbackUrl; ?></div>
 <?php endif; ?>
 <div class="access"><?php echo $this->translate('ot-oauth-details:consumerKey'); ?></div>
 <div class="key"><?php echo $this->consumer->consumerKey; ?></div>
-
 <div class="access"><?php echo $this->translate('ot-oauth-details:consumerSecret'); ?></div>
 <div class="key"><?php echo $this->consumer->consumerSecret; ?></div>
-
 <div class="access"><?php echo $this->translate('ot-oauth-details:requestTokenUrl'); ?></div>
 <div class="key"><?php echo Zend_Registry::get('siteUrl'); ?>/oauth/server/request-token</div>
-
 <div class="access"><?php echo $this->translate('ot-oauth-details:accessTokenUrl'); ?></div>
 <div class="key"><?php echo Zend_Registry::get('siteUrl'); ?>/oauth/server/access-token</div>
-
 <div class="access"><?php echo $this->translate('ot-oauth-details:authorizeUrl'); ?></div>
 <div class="key"><?php echo Zend_Registry::get('siteUrl'); ?>/oauth/server/authorize</div>
-
 <div id="signature"><?php echo $this->translate('ot-oauth-details:encryptionNotice'); ?></div>

@@ -77,7 +77,7 @@ class Ot_CronController extends Zend_Controller_Action
             $cj = $cs->find($get->name);
     
             if (is_null($cj)) {
-                $cj = array('status' => 'disabled', 'name'   => $get->name);
+                $cj = array('status' => 'disabled', 'name' => $get->name);
     
                 $status = 'disabled';
             } else {
@@ -134,7 +134,7 @@ class Ot_CronController extends Zend_Controller_Action
 
         $this->view->status = ($status == 'enabled') ? 'disable' : 'enable';
         $this->_helper->pageTitle('ot-cron-toggle:title');
-        $this->view->form   = $form;
+        $this->view->form = $form;
     }
     
     /*

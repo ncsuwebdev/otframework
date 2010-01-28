@@ -21,7 +21,7 @@
  */
 
 /**
- * remote access controller
+ * Remote access controller
  *
  * @package    
  * @subpackage Oauth_ClientController
@@ -40,7 +40,7 @@ class Ot_OauthclientController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->consumerId)) {
-            throw new Ot_Exception_Input('No consumer ID was given');
+            throw new Ot_Exception_Input('ot-oauthclient-index:noIdGiven');
         }
         
         $consumerId = $get->consumerId;
@@ -89,7 +89,7 @@ class Ot_OauthclientController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->oauthToken)) {
-            throw new Ot_Exception_Input('You were not authorized');
+            throw new Ot_Exception_Input('ot-oauthclient-callback:notAuthorized');
         }
         
         $token = $get->oauthToken;
@@ -98,7 +98,7 @@ class Ot_OauthclientController extends Zend_Controller_Action
         $requestToken = $otOauthToken->getToken($token);
         
         if ($requestToken->token != $token) {
-            throw new Ot_Exception_Access('Tokens do not match!');
+            throw new Ot_Exception_Access('ot-oauthclient-callback:tokensDontMatch');
         }
         
         $consumerId = $requestToken->consumerId;

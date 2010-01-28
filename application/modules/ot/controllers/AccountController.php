@@ -60,8 +60,7 @@ class Ot_AccountController extends Zend_Controller_Action
         
         $userData = array();
         
-        $userData['accountId'] = Zend_Auth::getInstance()->getIdentity()
-                                                         ->accountId;
+        $userData['accountId'] = Zend_Auth::getInstance()->getIdentity()->accountId;
         if ($get->accountId && $this->_helper->hasAccess('editAllAccounts')) {
             $userData['accountId'] = $get->accountId;
         }
@@ -102,20 +101,14 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->acl = array(
             'edit'            => $this->_helper->hasAccess('edit'),
             'delete'          => ($this->_helper->hasAccess('delete')
-                && $this->_userData['accountId']
-                != Zend_Auth::getInstance()->getIdentity()->accountId),
+                && $this->_userData['accountId'] != Zend_Auth::getInstance()->getIdentity()->accountId),
             'changePassword'  => $this->_authAdapter->manageLocally()
-                && $this->_userData['accountId']
-                == Zend_Auth::getInstance()->getIdentity()->accountId
+                && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId
                 && $this->_helper->hasAccess('change-password'),
-            'grantAccess'     => ($this->_helper
-                                       ->hasAccess('index', 'ot_oauthclient')
-                && $this->_userData['accountId']
-                == Zend_Auth::getInstance()->getIdentity()->accountId),
-            'revokeAccess'    => ($this->_helper
-                                       ->hasAccess('revoke', 'ot_oauthserver')
-                && $this->_userData['accountId']
-                == Zend_Auth::getInstance()->getIdentity()->accountId),
+            'grantAccess'     => ($this->_helper->hasAccess('index', 'ot_oauthclient')
+                && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
+            'revokeAccess'    => ($this->_helper->hasAccess('revoke', 'ot_oauthserver')
+                && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
             'oauth'           => $this->_helper->hasAccess('index', 'ot_oauth'),
             'apiDocs'         => $this->_helper->hasAccess('index', 'ot_api')
         );
@@ -170,11 +163,11 @@ class Ot_AccountController extends Zend_Controller_Action
             
             $consumerMap = array();
             foreach ($consumers as $c) {
-                    $consumerMap[$c['consumerId']] = $c;
+                $consumerMap[$c['consumerId']] = $c;
             }
             
             foreach ($tokens as &$t) {
-                    $t['consumer'] = $consumerMap[$t['consumerId']];
+                $t['consumer'] = $consumerMap[$t['consumerId']];
             }
             unset($t);
         }
@@ -241,10 +234,8 @@ class Ot_AccountController extends Zend_Controller_Action
             $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'asc';
             $rp        = (isset($filter->rp)) ? $filter->rp : 15;
             $page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
-            $qtype     = (isset($filter->query)
-                         && !empty($filter->query)) ? $filter->qtype : null;
-            $query     = (isset($filter->query)
-                         && !empty($filter->query)) ? $filter->query : null;
+            $qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
+            $query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
             
             $acl = Zend_Registry::get('acl');
             $roles = $acl->getAvailableRoles();
@@ -261,8 +252,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     }
                 }
                     
-                $where = $account->getAdapter()
-                                 ->quoteInto($qtype . ' = ?', $query);
+                $where = $account->getAdapter()->quoteInto($qtype . ' = ?', $query);
             }
 
             
@@ -395,9 +385,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 if (count($messages) == 0) {
                     $dba->commit();
                     
-                    $this->_helper
-                         ->flashMessenger
-                         ->addMessage('msg-info-accountCreated');
+                    $this->_helper->flashMessenger->addMessage('msg-info-accountCreated');
                     
                     $trigger = new Ot_Trigger();
                     $trigger->setVariables($accountData);
@@ -483,8 +471,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 
                 $thisAccount = $account->getAccount($data['username'], $data['realm']);
                 
-                if (!is_null($thisAccount)
-                    && $thisAccount->accountId != $data['accountId']) {
+                if (!is_null($thisAccount) && $thisAccount->accountId != $data['accountId']) {
                     $messages[] = 'msg-error-accountTaken';
                 } else {
             
@@ -502,9 +489,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         
                         $subform = $acctPlugin->editSubForm($this->_userData['accountId']);
                         
-                        $data = array(
-                            'accountId' => $this->_userData['accountId']
-                        );
+                        $data = array('accountId' => $this->_userData['accountId']);
                         
                         foreach ($subform->getElements() as $e) {
                             $data[$e->getName()] = $form->getValue($e->getName());
@@ -578,8 +563,7 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function deleteAction()
     {   
-        if ($this->_userData['accountId']
-            == Zend_Auth::getInstance()->getIdentity()->accountId) {
+        if ($this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
             throw new Ot_Exception_Access('msg-error-accountAccessDelete');
         }
         
@@ -679,9 +663,8 @@ class Ot_AccountController extends Zend_Controller_Action
                     $st->removeToken($existingAccessToken->token);
                     
                     $this->_helper->flashMessenge->addMessage(
-                        'Token has been removed. '
-                        . $thisConsumer->name
-                        . ' no longer has access to your account.'
+                        //'Token has been removed. ' . $thisConsumer->name . ' no longer has access to your account.'
+                        $this->view->translate('ot-account-revokeConnection:tokenremoved', array($thisConsumer->name))
                     );
                     
                     $this->_helper->redirector->gotoRoute(array(), 'account', true);

@@ -62,6 +62,7 @@ class Ot_BackupController extends Zend_Controller_Action
                         
                         // This call sends it to the browser too 
                         $backup->getBackup($db, $tableName, $type);
+                        
                     } catch (Exception $e) {
                         throw $e;
                     }

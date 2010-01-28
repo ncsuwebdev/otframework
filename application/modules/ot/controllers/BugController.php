@@ -125,14 +125,12 @@ class Ot_BugController extends Zend_Controller_Action
             $this->_helper->log(Zend_Log::INFO, 'Bug was deleted', $logOptions);
             $this->_helper->flashMessenger->addMessage('msg-info-bugDeleted');
             
-            $this->_helper
-                 ->redirector
-                 ->gotoRoute(array('controller' => 'bug'), 'ot', true);
+            $this->_helper->redirector->gotoRoute(array('controller' => 'bug'), 'ot', true);
             
         }
         
         $this->_helper->pageTitle('ot-bug-delete:title');
-        $this->view->form     = $form;        
+        $this->view->form = $form;        
     }
 
     /**
@@ -161,8 +159,7 @@ class Ot_BugController extends Zend_Controller_Action
                     'submitDt'        => $time,
                     'status'          => 'new',
                     'text'            => array(
-                        'accountId' => Zend_Auth::getInstance()->getIdentity()
-                                                               ->accountId,
+                        'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
                         'postDt'    => $time,
                         'text'      => $form->getValue('description'),
                         ),
@@ -237,12 +234,12 @@ class Ot_BugController extends Zend_Controller_Action
             if ($form->isValid($_POST)) {
                     
                 $data = array(
-                    'bugId'             => $get->bugId,
-                    'title'             => $form->getValue('title'),
-                    'reproducibility'   => $form->getValue('reproducibility'),
-                    'severity'          => $form->getValue('severity'),
-                    'priority'          => $form->getValue('priority'),
-                    'status'            => $form->getValue('status'),
+                    'bugId'           => $get->bugId,
+                    'title'           => $form->getValue('title'),
+                    'reproducibility' => $form->getValue('reproducibility'),
+                    'severity'        => $form->getValue('severity'),
+                    'priority'        => $form->getValue('priority'),
+                    'status'          => $form->getValue('status'),
                 );
     
                 $thisBug = $bug->find($data['bugId']);
@@ -255,8 +252,7 @@ class Ot_BugController extends Zend_Controller_Action
                     $data['text'] = array(
                         'bugId'     => $get->bugId,
                         'postDt'    => time(),
-                        'accountId' => Zend_Auth::getInstance()->getIdentity()
-                                                               ->accountId,
+                        'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
                         'text'      => $form->getValue('description'),
                     );
                 }
@@ -268,17 +264,11 @@ class Ot_BugController extends Zend_Controller_Action
                     'attributeId'   => $get->bugId,
                 );
                 
-                $this->_helper
-                     ->log(Zend_Log::INFO, 'Bug was modified', $logOptions);
-                $this->_helper
-                     ->flashMessenger->addMessage('msg-info-bugUpdated');
+                $this->_helper->log(Zend_Log::INFO, 'Bug was modified', $logOptions);
+                $this->_helper->flashMessenger->addMessage('msg-info-bugUpdated');
                 
                 $this->_helper->redirector->gotoRoute(
-                    array(
-                        'controller' => 'bug',
-                        'action' => 'details',
-                        'bugId' => $get->bugId
-                    ),
+                    array('controller' => 'bug', 'action' => 'details', 'bugId' => $get->bugId),
                     'ot',
                     true
                 );

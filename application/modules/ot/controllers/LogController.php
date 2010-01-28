@@ -138,14 +138,7 @@ class Ot_LogController extends Zend_Controller_Action
 
             $this->_helper->flashMessenger->addMessage('msg-info-logsCleared');
             
-            $this->_helper->redirector->gotoRoute(
-                array(
-                    'controller' => 'log',
-                    'action' => 'index',
-                ),
-                'ot',
-                true
-            );
+            $this->_helper->redirector->gotoRoute(array('controller' => 'log', 'action' => 'index'), 'ot', true);
         }
         
         $this->_helper->pageTitle('ot-log-clear:title');
