@@ -1,44 +1,24 @@
 #!/usr/local/zend/bin/php
 <?php
-/**
- * This file is the main script which should be run on the command line in order to perform database migrations.
- * If you want to use this script like so:  ./migrate.php -- you will need to give it executable permissions (chmod +x migrate.php) and ensure the top line of this script points to the actual location of your PHP binary.
- *
- * @package    mysql_php_migrations
- * @subpackage Globals
- * @license    http://www.opensource.org/licenses/bsd-license.php  The New BSD License
- * @link       http://code.google.com/p/mysql-php-migrations/
- */
-
-/**********************************
- * USER SETABLE VARIABLES
- **********************************/
-
 // Path to the application config folder where application.ini and config.xml live
 $configFilePath = dirname(__FILE__) . '/application/configs';
 
 // Path to where the database migration files live
 $pathToMigrateFiles = dirname(__FILE__) . '/db';
 
-// Possible environments that you can choose from
-$possibleEnvironments = array(
-    'production',
-    'staging',
-    'development',
-    'nonproduction',
-    'testing',
-);
 
-// Name of the table where the migration versions are stored (minus the table prefix)
-$migrationTableName = 'tbl_mpm_migration';
-
-/**************** DO NOT EDIT BELOW THIS LINE *******************/
 
 // we want to see any errors
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-set_include_path(dirname(__FILE__) . '/library' . PATH_SEPARATOR . get_include_path());
+set_include_path(dirname(__FILE__) . '/library' . PATH_SEPARATOR . dirname(__FILE__) . '/application/models' . PATH_SEPARATOR . get_include_path());
+
+require_once 'Zend/Loader/Autoloader.php';
+$loader = Zend_Loader_Autoloader::getInstance();
+$loader->setFallbackAutoloader(true);
+
+$arguments = Ot_Migrate_Cli::validateArgs();
 
 if (!isset($argv[1]) || !in_array($argv[1], $possibleEnvironments)) {
     die('Second argument must be one of the following values: (' . implode($possibleEnvironments, ', ') . ')');
