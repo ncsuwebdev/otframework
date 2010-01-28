@@ -1,5 +1,5 @@
 <?php
-class Db_002_setup implements Ot_Migrate_Migration_Interface
+class Db_002_setup extends Ot_Migrate_Migration_Abstract
 {
     public function up($dba)
     {

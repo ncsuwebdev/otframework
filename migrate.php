@@ -102,8 +102,10 @@ if (($opts->cmd == 'up' || $opts->cmd == 'down') && !isset($opts->version)) {
     Ot_Migrate_Cli::error('Version must be specified');
 }
 
+$tablePrefix = 'ot_';
+
 try {
-    $migration = new Ot_Migrate($dbConfig, $pathToMigrateFiles);
+    $migration = new Ot_Migrate($dbConfig, $pathToMigrateFiles, $tablePrefix);
     $result = $migration->migrate($opts->cmd, $opts->version);
 } catch (Exception $e) {
     Ot_Migrate_Cli::error($e->getMessage());

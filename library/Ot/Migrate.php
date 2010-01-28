@@ -35,11 +35,16 @@ class Ot_Migrate
     protected $_messages = array();
     
     /**
+     * The database table prefix to be used
+     */
+    protected $_tablePrefix = '';
+    
+    /**
      * Constructor, which initializes the DB connection, available migrations, and applied migrations
      * 
      * @param array $dbConfig
      */
-    public function __construct(array $dbConfig, $pathToMigrations)
+    public function __construct(array $dbConfig, $pathToMigrations, $tablePrefix = '')
     {
         $this->_db = Zend_Db::factory($dbConfig['adapter'], array(
             'host'     => $dbConfig['host'],
@@ -50,11 +55,13 @@ class Ot_Migrate
         
         Zend_Db_Table::setDefaultAdapter($this->_db);
         
+        $this->_tablePrefix = $tablePrefix;
+        
         $this->_migrationsPath = $pathToMigrations;
         
         $this->_availableMigrations = $this->_getAvailableMigrations();
         
-        $migrations = new Ot_Migrations();
+        $migrations = new Ot_Migrations($this->_tablePrefix);
         $this->_messages[] = "Creating migration table if it doesn't exist.";
         $migrations->createTable(); // create the migrations table if it's needed
         
@@ -82,7 +89,7 @@ class Ot_Migrate
     {
         $returnMessages = array(); 
         
-        $migrations = new Ot_Migrations();      
+        $migrations = new Ot_Migrations($this->_tablePrefix);      
         
         $migrationsIdsNotApplied = array_diff(array_keys($this->_availableMigrations), $this->_appliedMigrations);
         
@@ -104,10 +111,10 @@ class Ot_Migrate
         foreach ($migrationsToApply as $m) {
             require_once $this->_migrationsPath . '/' . $m;
             $classname = 'Db_' . substr($m, 0, -4); //strip out the .php extension
-            $migrationClass = new $classname;
+            $migrationClass = new $classname(array('tablePrefix' => $this->_tablePrefix));
 
             try {
-                $migrationClass->up($this->_db);
+                $migrationClass->up($this->_db, $this->_tablePrefix);
             } catch (Exception $e) {
                 $this->_db->rollback();
                 throw new Exception('Error applying migration ' . $m . '. ' . $e->getMessage());
@@ -133,7 +140,7 @@ class Ot_Migrate
      */
     public function down($targetMigration)
     {
-        $migrationsModel = new Ot_Migrations();        
+        $migrationsModel = new Ot_Migrations($this->_tablePrefix);        
         
         end($this->_appliedMigrations);
         $highestExecutedMigration = current($this->_appliedMigrations);
@@ -158,7 +165,7 @@ class Ot_Migrate
         $migrationsToApply = array_reverse($migrationsToApply);
         
         if (empty($migrationsToApply)) {
-            return 'No migrations to apply';
+            $this->_messages[] = 'No migrations to apply';
         }
         
         $this->_db->beginTransaction();
@@ -166,10 +173,10 @@ class Ot_Migrate
         foreach ($migrationsToApply as $m) {
             require_once $this->_migrationsPath . '/' . $m;
             $classname = 'Db_' . substr($m, 0, -4); //strip out the .php extension
-            $migrationClass = new $classname;
+            $migrationClass = new $classname(array('tablePrefix' => $this->_tablePrefix));
 
             try {
-                $migrationClass->down($this->_db);
+                $migrationClass->down($this->_db, $this->_tablePrefix);
             } catch (Exception $e) {
                 $this->_db->rollback();
                 throw new Exception('Error applying migration ' . $m . '. ' . $e->getMessage());
@@ -208,7 +215,7 @@ class Ot_Migrate
      */
     public function rebuild($targetMigration = null)
     {
-        $migrations = new Ot_Migrations();
+        $migrations = new Ot_Migrations($this->_tablePrefix);
         
         $this->_messages[] = 'Dropping all tables';
         

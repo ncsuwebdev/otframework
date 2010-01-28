@@ -1,9 +1,19 @@
 <?php
-class Ot_Migrations extends Ot_Db_Table
+class Ot_Migrations extends Zend_Db_Table
 {
     protected $_primary = 'migrationId';
     
     protected $_name = 'tbl_ot_migrations';
+    
+    protected $_tablePrefix = '';
+    
+    public function __construct($tablePrefix)
+    {
+        $this->_name = $tablePrefix . $this->_name;
+        $this->_tablePrefix = $tablePrefix;
+        
+        parent::__construct();
+    }
     
     public function getHighestAppliedMigration()
     {
@@ -54,10 +64,8 @@ class Ot_Migrations extends Ot_Db_Table
         $tables = $db->listTables();
         $tableList = array();
         
-        $config = Zend_Registry::get('config');
-        
         foreach ($tables as $t) {
-            if (preg_match('/^' . $config->app->tablePrefix . '/i', $t)) {
+            if (preg_match('/^' . $this->_tablePrefix . '/i', $t)) {
                 $tableList[$t] = $t;
             }
         }
