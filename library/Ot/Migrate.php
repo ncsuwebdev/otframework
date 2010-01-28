@@ -133,6 +133,59 @@ class Ot_Migrate
      */
     public function down($targetMigration)
     {
+        $migrationsModel = new Ot_Migrations();        
+        
+        end($this->_appliedMigrations);
+        $highestExecutedMigration = current($this->_appliedMigrations);
+        reset($this->_appliedMigrations);
+
+        if (!isset($this->_availableMigrations[$targetMigration])) {
+            throw new Exception('The requested migration ' . $targetMigration . ' was not found.');
+        }
+        
+        if ((int)$highestExecutedMigration <= (int)$targetMigration) {
+            throw new Exception('The database is only migrated to migration ' . $highestExecutedMigration . ', which is before the requested migration ' . $targetMigration);
+        }
+        
+        $migrationsToApply = array();
+        
+        foreach ($this->_appliedMigrations as $a) {
+            if ((int)$a > (int)$targetMigration && isset($this->_availableMigrations[$a])) {
+                $migrationsToApply[] = $this->_availableMigrations[$a];
+            }
+        }
+        
+        $migrationsToApply = array_reverse($migrationsToApply);
+        
+        if (empty($migrationsToApply)) {
+            return 'No migrations to apply';
+        }
+        
+        $this->_db->beginTransaction();
+        
+        foreach ($migrationsToApply as $m) {
+            require_once $this->_migrationsPath . '/' . $m;
+            $classname = 'Db_' . substr($m, 0, -4); //strip out the .php extension
+            $migrationClass = new $classname;
+
+            try {
+                $migrationClass->down($this->_db);
+            } catch (Exception $e) {
+                $this->_db->rollback();
+                throw new Exception('Error applying migration ' . $m . '. ' . $e->getMessage());
+            }
+            
+            try {
+                $migrationsModel->removeMigration($this->_getMigrationIdFromFilename($m));
+            } catch (Exception $e) {
+                $this->_db->rollback();
+                throw new Exception('Migration ' . $m . ' was successful, but adding record to migrations table failed. ' . $e->getMessage());
+            }
+            
+            $this->_messages[] = 'Migration down to ' . $m . ' was successful.';
+        }
+        
+        $this->_db->commit();   
     }
     
     /**

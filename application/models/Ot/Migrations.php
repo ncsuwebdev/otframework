@@ -25,6 +25,10 @@ class Ot_Migrations extends Ot_Db_Table
     public function addMigration($migrationId) {
         return $this->insert(array('migrationId' => $migrationId));
     }
+
+    public function removeMigration($migrationId) {
+        return $this->delete($this->getAdapter()->quoteInto('migrationId = ?', $migrationId));
+    }    
     
     public function createTable()
     {
@@ -59,5 +63,5 @@ class Ot_Migrations extends Ot_Db_Table
         }
         
         return $tableList;
-    }
+    }    
 }
