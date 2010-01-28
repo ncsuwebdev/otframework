@@ -33,7 +33,7 @@ $possibleCommands = array(
 
 $opts = new Zend_Console_Getopt(
     array(
-        'cmd|c'           => 'Command to execute (' . implode($possibleCommands, ', ') . ')',
+        'cmd|c=s'         => 'Command to execute (' . implode($possibleCommands, ', ') . ')',
         'environment|e=s' => 'Environment to migrate (' . implode($possibleEnvironments, ', ') . ')',
         'version|v=s'     => 'Version to migrate to',
     )
@@ -98,16 +98,17 @@ if (isset($applicationIni->resources->keymanagerdb->key) && $applicationIni->res
 $configXml = new Zend_Config_Xml($configFilePath . '/config.xml', 'production');
 Zend_Registry::set('config', $configXml);
 
-$migration = new Ot_Migrate($dbConfig);
-
 if (($opts->cmd == 'up' || $opts->cmd == 'down') && !isset($opts->version)) {
     Ot_Migrate_Cli::error('Version must be specified');
 }
 
 try {
-    $migration->migrate($opts->cmd, $opts->version);
+    $migration = new Ot_Migrate($dbConfig, $pathToMigrateFiles);
+    $result = $migration->migrate($opts->cmd, $opts->version);
 } catch (Exception $e) {
     Ot_Migrate_Cli::error($e->getMessage());
 }
+
+Ot_Migrate_Cli::status($result);
 
 exit;

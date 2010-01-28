@@ -13,4 +13,18 @@ class Ot_Migrate_Cli
            
         exit;
     }
+    
+    public static function status($message)
+    {
+        
+        echo "\n\n"
+           . "================================================\n"
+           . "Migrations Complete!\n"
+           . "================================================\n\n"
+           . (is_array($message) ? implode($message, "\n") : $message) 
+           . "\n\n"
+           ;
+           
+        exit;
+    }
 }

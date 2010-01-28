@@ -1,7 +1,7 @@
 <?php
 interface Ot_Migrate_Migration_Interface
 {
-    public function up($pdo);
+    public function up($dba);
     
-    public function down($pdo);
+    public function down($dba);
 }

@@ -37,11 +37,13 @@ class Ot_Migrate
     public function __construct(array $dbConfig, $pathToMigrations)
     {
         $this->_db = Zend_Db::factory($dbConfig['adapter'], array(
-            'host'     => $dbConfig['hostname'],
+            'host'     => $dbConfig['host'],
             'username' => $dbConfig['username'],
             'password' => $dbConfig['password'],
-            'dbname'   =>  $dbConfig['dbName']
+            'dbname'   =>  $dbConfig['dbname']
         ));
+        
+        Zend_Db_Table::setDefaultAdapter($this->_db);
         
         $this->_migrationsPath = $pathToMigrations;
         
@@ -56,7 +58,17 @@ class Ot_Migrate
          * 
          * CREATE TABLE `otframework`.`ot_tbl_ot_migrations` (`migrationId` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, UNIQUE (`migrationId`)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
          */
-        
+    }
+    
+    /**
+     * Runs the given command (method) passed from the commandline
+     * 
+     * @param string The method to run
+     * @param string The version to migrate to, if applicable
+     */
+    public function migrate($method, $version)
+    {
+        return $this->$method($version);
     }
     
     /**
@@ -66,22 +78,27 @@ class Ot_Migrate
      */
     public function up($targetMigration)
     {
-        $migrations = new Ot_Migrations();
+        $migrations = new Ot_Migrations();        
         
         $migrationsIdsNotApplied = array_diff(array_keys($this->_availableMigrations), $this->_appliedMigrations);
         
         $migrationsToApply = array();
+        
         foreach ($migrationsIdsNotApplied as $migrationId) {
             if ($migrationId <= $targetMigration) {
                 $migrationsToApply[] = $this->_availableMigrations[$migrationId];   
             }
         }
         
+        if (empty($migrationsToApply)) {
+            return 'No migrations to apply';
+        }
+        
         $this->_db->beginTransaction();
         
         foreach ($migrationsToApply as $m) {
-            require_once($this->_migrationsPath . '/' . $m);
-            $classname = substr($m, 0, -4); //strip out the .php extension
+            require_once $this->_migrationsPath . '/' . $m;
+            $classname = 'Db_' . substr($m, 0, -4); //strip out the .php extension
             $migrationClass = new $classname;
 
             try {
@@ -118,8 +135,10 @@ class Ot_Migrate
      */
     public function latest()
     {
-        $highestAvailableMigration = $this->_availableMigrations[count($this->_availableMigrations) - 1];
-        $this->up($highestAvailableMigration);
+        end($this->_availableMigrations);
+        $highestAvailableMigration = current($this->_availableMigrations);
+        reset($this->_availableMigrations);
+        return $this->up($highestAvailableMigration);
     }
     
     /**
@@ -144,11 +163,15 @@ class Ot_Migrate
         
         foreach ($files as $filename) {
             
-            if (substr($filename, 0, -4) == '.php' && $filename != '.' && $filename != '..' && !is_dir($filename)) {
+            if (substr($filename, -4) == '.php' && $filename != '.' && $filename != '..' && !is_dir($filename)) {
             
                 $id = $this->_getMigrationIdFromFilename($filename);
                 $availableMigrations[$id] = $filename;
             }
+        }
+        
+        if (empty($availableMigrations)) {
+            throw new Exception('No available migrations found');
         }
         
         return $availableMigrations;

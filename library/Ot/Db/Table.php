@@ -39,8 +39,10 @@ class Ot_Db_Table extends Zend_Db_Table
         }
         
         // cache the meta data for tables so it doesn't have to get it ever time a table is instantiated
-        $cache = Zend_Registry::get('cache');
-        Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
+        if (Zend_Registry::isRegistered('cache')) {
+            $cache = Zend_Registry::get('cache');
+            Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
+        }
         
         parent::__construct();
     }

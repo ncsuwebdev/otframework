@@ -12,7 +12,14 @@ class Ot_Migrations extends Ot_Db_Table
     
     public function getAppliedMigrations()
     {
-        return $this->fetchAll(null, 'migrationId ASC')->toArray();
+        $migrationIds = $this->fetchAll(null, 'migrationId ASC');
+        
+        $retVal = array();
+        foreach ($migrationIds as $i) {
+            $retVal[] = $i->migrationId;
+        }
+        
+        return $retVal;
     }
     
     public function addMigration($migrationId) {
