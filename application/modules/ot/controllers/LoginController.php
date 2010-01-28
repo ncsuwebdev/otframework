@@ -235,7 +235,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     'attributeId'   => $thisAccount->accountId,
                 );
                 
-                $this->_helper->log(Zend_Log::INFO, 'User Logged In', $loggerOptions);            
+                $this->_helper->log(Zend_Log::INFO, 'User ' . $username . ' logged in.', $loggerOptions);            
                                 
                 if (isset($req->uri) && $req->uri != '') {
                     $uri = $req->uri;
@@ -361,7 +361,7 @@ class Ot_LoginController extends Zend_Controller_Action
                                 
                     $loggerOptions = array('attributeName' => 'accountId', 'attributeId' => $userAccount->accountId);
                     
-                    $this->_helper->log(Zend_Log::INFO, 'User sent password reset request', $loggerOptions);
+                    $this->_helper->log(Zend_Log::INFO, 'User ' . $username->getValue() . ' sent a password reset request.', $loggerOptions);
                     
                     $et = new Ot_Trigger();
                     $et->setVariables($userAccount->toArray());

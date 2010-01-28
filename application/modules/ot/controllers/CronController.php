@@ -121,7 +121,7 @@ class Ot_CronController extends Zend_Controller_Action
 
             $logOptions = array('attributeName' => 'cronName', 'attributeId' => $get->name);
                     
-            $this->_helper->log(Zend_Log::INFO, 'cron was set to ' . $status, $logOptions);
+            $this->_helper->log(Zend_Log::INFO, 'Cronjob ' . $get->name . ' was set to ' . $status . '.', $logOptions);
                         
             $this->_helper->redirector->gotoRoute(array('controller' => 'cron'), 'ot', true);
         }
