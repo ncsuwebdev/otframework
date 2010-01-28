@@ -69,11 +69,11 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
             $tabData['target']     = (preg_match('/^http/i', $tabData['link'])) ? '_blank' : '_self';
             $tabData['parent']     = $tab->parent;
             $tabData['id']         = $tab->id;
-            $tabData['show']       = $tabData['allowed'];
             $tabData['allowed']    = $acl->isAllowed(
                 $role, $tabResource,
                 ($tab->action == '') ? 'index' : $tab->action
             );
+            $tabData['show']       = $tabData['allowed'];
             
             $viewTabs[$tabData['id']] = $tabData;
         }
