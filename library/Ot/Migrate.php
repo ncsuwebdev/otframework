@@ -30,6 +30,11 @@ class Ot_Migrate
     protected $_migrationsPath = '';
     
     /**
+     * Messages array that will be returned to the CLI driver
+     */
+    protected $_messages = array();
+    
+    /**
      * Constructor, which initializes the DB connection, available migrations, and applied migrations
      * 
      * @param array $dbConfig
@@ -50,14 +55,10 @@ class Ot_Migrate
         $this->_availableMigrations = $this->_getAvailableMigrations();
         
         $migrations = new Ot_Migrations();
+        $this->_messages[] = "Creating migration table if it doesn't exist.";
+        $migrations->createTable(); // create the migrations table if it's needed
         
         $this->_appliedMigrations = $migrations->getAppliedMigrations();
-        
-        /**
-         * To create table
-         * 
-         * CREATE TABLE `otframework`.`ot_tbl_ot_migrations` (`migrationId` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, UNIQUE (`migrationId`)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;
-         */
     }
     
     /**
@@ -68,7 +69,8 @@ class Ot_Migrate
      */
     public function migrate($method, $version)
     {
-        return $this->$method($version);
+        $this->$method($version);
+        return $this->_messages;
     }
     
     /**
@@ -78,7 +80,9 @@ class Ot_Migrate
      */
     public function up($targetMigration)
     {
-        $migrations = new Ot_Migrations();        
+        $returnMessages = array(); 
+        
+        $migrations = new Ot_Migrations();      
         
         $migrationsIdsNotApplied = array_diff(array_keys($this->_availableMigrations), $this->_appliedMigrations);
         
@@ -91,7 +95,8 @@ class Ot_Migrate
         }
         
         if (empty($migrationsToApply)) {
-            return 'No migrations to apply';
+            $this->_messages[] = 'No migrations to apply';
+            return;
         }
         
         $this->_db->beginTransaction();
@@ -114,6 +119,8 @@ class Ot_Migrate
                 $this->_db->rollback();
                 throw new Exception('Migration ' . $m . ' was successful, but adding record to migrations table failed. ' . $e->getMessage());
             }
+            
+            $this->_messages[] = 'Applied ' . $m;
         }
         
         $this->_db->commit();
@@ -126,7 +133,6 @@ class Ot_Migrate
      */
     public function down($targetMigration)
     {
-        
     }
     
     /**
@@ -149,7 +155,32 @@ class Ot_Migrate
      */
     public function rebuild($targetMigration = null)
     {
+        $migrations = new Ot_Migrations();
         
+        $this->_messages[] = 'Dropping all tables';
+        
+        try {
+            $migrations->dropAllTables();
+        } catch (Exception $e) {
+            throw new Exception('Dropping all the tables failed. ' . $e->getMessage());
+        }
+        
+        $this->_messages[] = 'All tables dropped.';
+        
+        $this->_messages[] = "Recreating migration table.";
+        $migrations->createTable(); // create the migrations table
+        
+        // reset the applied migrations array.  it should be empty, but we'll
+        // check the db just to make sure
+        $this->_appliedMigrations = $migrations->getAppliedMigrations();
+              
+        if (is_null($targetMigration)) {
+            $this->_messages[] = 'Rebuilding database to latest version.';
+            return $this->latest();
+        } else {
+            $this->_messages[] = 'Rebuilding database to version ' . $targetMigration . '.';
+            return $this->up($targetMigration);
+        }
     }
         
     /**

@@ -25,4 +25,39 @@ class Ot_Migrations extends Ot_Db_Table
     public function addMigration($migrationId) {
         return $this->insert(array('migrationId' => $migrationId));
     }
+    
+    public function createTable()
+    {
+        $this->getAdapter()->query("CREATE TABLE IF NOT EXISTS `" . $this->_name . "` (`migrationId` VARCHAR( 16 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, UNIQUE (`migrationId`)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;");
+    }
+    
+    public function dropAllTables()
+    {
+        $tableList = $this->_getTables();
+        
+        foreach ($tableList as &$table) {        
+            $table = '`' . $table . '`';
+        }
+        
+        $tableString = implode(', ', $tableList);
+        $this->getAdapter()->query('DROP TABLE ' . $tableString);
+    }
+    
+    protected function _getTables()
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        
+        $tables = $db->listTables();
+        $tableList = array();
+        
+        $config = Zend_Registry::get('config');
+        
+        foreach ($tables as $t) {
+            if (preg_match('/^' . $config->app->tablePrefix . '/i', $t)) {
+                $tableList[$t] = $t;
+            }
+        }
+        
+        return $tableList;
+    }
 }
