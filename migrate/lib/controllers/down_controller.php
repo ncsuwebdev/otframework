@@ -115,5 +115,3 @@ class MpmDownController extends MpmController
 	}
 	
 }
-
-?>

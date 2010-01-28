@@ -63,20 +63,15 @@ abstract class MpmSchema
         $totalTables = count($tables);
         $displayTotal = $totalTables > 1 ? $totalTables - 1 : 0;
 		echo 'found '.$displayTotal.'.';
-        if ($totalTables > 1)
-        {
+        if ($totalTables > 1) {
             echo '  Removing:', "\n";
-		    foreach ($tables as $table)
-		    {
-		        if ($table != $db_config->prefix . 'mpm_migrations')
-		        {
+		    foreach ($tables as $table) {
+		        if ($table != $db_config->prefix . 'mpm_migrations') {
             		echo '        ', $table, "\n";
 		            $this->dbObj->exec('DROP TABLE IF EXISTS `' . $table . '`');
                 }
 		    }
-		}
-		else
-		{
+		} else {
 		    echo '  No tables need to be removed.', "\n";
 		}
     }
@@ -97,12 +92,10 @@ abstract class MpmSchema
 		echo 'done.', "\n\n", 'Rebuilding migration data... ';
         MpmListHelper::mergeFilesWithDb();
         echo 'done.', "\n";
-        if ($this->initialMigrationTimestamp != null)
-        {
+        if ($this->initialMigrationTimestamp != null) {
             echo "\n", 'Updating initial migration timestamp to ', $this->initialMigrationTimestamp, '... ';
             $result = MpmDbHelper::doSingleRowSelect('SELECT COUNT(*) AS total FROM `' . $db_config->prefix . 'mpm_migrations` WHERE `timestamp` = "'.$this->initialMigrationTimestamp.'"', $this->dbObj);
-            if ($result->total == 1)
-            {
+            if ($result->total == 1) {
                 $this->dbObj->exec('UPDATE `' . $db_config->prefix . 'mpm_migrations` SET `is_current` = 0');
                 $this->dbObj->exec('UPDATE `' . $db_config->prefix . 'mpm_migrations` SET `is_current` = 1 WHERE `timestamp` = "'.$this->initialMigrationTimestamp.'"');
                 $this->dbObj->exec('UPDATE `' . $db_config->prefix . 'mpm_migrations` SET `active` = 1 WHERE `timestamp` <= "'.$this->initialMigrationTimestamp.'"');

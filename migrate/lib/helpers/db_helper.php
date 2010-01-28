@@ -32,66 +32,16 @@ class MpmDbHelper
      */
     static public function getDbObj()
     {
-		switch (MpmDbHelper::getMethod())
-		{
-		    case MPM_METHOD_PDO:
-        	    return MpmDbHelper::getPdoObj();
-            case MPM_METHOD_MYSQLI:
-                return MpmDbHelper::getMysqliObj();
-            default:
-                throw new Exception('Unknown database connection method defined in database configuration.');
-		}
-    }
-    
-    /**
-     * Returns a PDO object with connection in place.
-     *
-     * @throws MpmDatabaseConnectionException if unable to connect to the database
-     *
-     * @return PDO
-     */
-    static public function getPdoObj()
-    {
-		$pdo_settings = array
-		(
-			PDO::ATTR_PERSISTENT => true,
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-			PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
-		);
+        $pdo_settings = array
+        (
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+        );
         $db_config = $GLOBALS['db_config'];
-		return new PDO("mysql:host={$db_config->host};port={$db_config->port};dbname={$db_config->name}", $db_config->user, $db_config->pass, $pdo_settings);
+        return new PDO("mysql:host={$db_config->host};port={$db_config->port};dbname={$db_config->name}", $db_config->user, $db_config->pass, $pdo_settings);
     }
-    
-    /**
-     * Returns an ExceptionalMysqli object with connection in place.
-     *
-     * @throws MpmDatabaseConnectionException if unable to connect to the database
-     *
-     * @return ExceptionalMysqli
-     */
-    static public function getMysqliObj()
-    {
-        $db_config = $GLOBALS['db_config'];
-        return new ExceptionalMysqli($db_config->host, $db_config->user, $db_config->pass, $db_config->name, $db_config->port);
-    }
-    
-    /**
-     * Returns the correct database connection method as set in the database configuration file.
-     *
-     * @throws Exception if database configuration file is missing
-     *
-     * @return int
-     */
-    static public function getMethod()
-    {
-		if (!isset($GLOBALS['db_config']))
-		{
-			throw new Exception('Missing database configuration.');
-		}
-		$db_config = $GLOBALS['db_config'];
-		return $db_config->method;
-    }
-    
+   
     /**
      * Performs a query; $sql should be a SELECT query that returns exactly 1 row of data; returns an object that contains the row
      *
@@ -113,19 +63,11 @@ class MpmDbHelper
             {
                 $db = MpmDbHelper::getDbObj();
             }
-            switch (MpmDbHelper::getMethod())
-            {
-                case MPM_METHOD_PDO:
-                    $stmt = $db->query($sql);
-                    $obj = $stmt->fetch(PDO::FETCH_OBJ);
-                    return $obj;
-                case MPM_METHOD_MYSQLI:
-                    $stmt = $db->query($sql);
-                    $obj = $stmt->fetch_object();
-                    return $obj;
-                default:
-                    throw new Exception('Unknown method defined in database configuration.');
-            }
+
+            $stmt = $db->query($sql);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
+            return $obj;
+            
         }
         catch (Exception $e)
         {
@@ -152,25 +94,13 @@ class MpmDbHelper
         {
             $db = MpmDbHelper::getDbObj();
             $results = array();
-            switch (MpmDbHelper::getMethod())
-            {
-                case MPM_METHOD_PDO:
-                    $stmt = $db->query($sql);
-                    while ($obj = $stmt->fetch(PDO::FETCH_OBJ))
-                    {
-                        $results[] = $obj;
-                    }
-                    return $results;
-                case MPM_METHOD_MYSQLI:
-                    $stmt = $db->query($sql);
-                    while($obj = $stmt->fetch_object())
-                    {
-                        $results[] = $obj;
-                    }
-                    return $results;
-                default:
-                    throw new Exception('Unknown method defined in database configuration.');
+
+            $stmt = $db->query($sql);
+            while ($obj = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $results[] = $obj;
             }
+            
+            return $results;
         }
         catch (Exception $e)
         {
@@ -198,60 +128,35 @@ class MpmDbHelper
     static public function test()
     {
         $problems = array();
-        if (!file_exists(MPM_PATH . '/config/db_config.php'))
-        {
+        if (!file_exists(MPM_PATH . '/config/db_config.php')) {
             $problems[] = 'You have not yet run the init command.  You must run this command before you can use any other commands.';
-        }
-        else
-        {
-            switch (MpmDbHelper::getMethod())
-            {
-                case MPM_METHOD_PDO:
-                    if (!class_exists('PDO'))
-                    {
-                        $problems[] = 'It does not appear that the PDO extension is installed.';
-                    }
-                    $drivers = PDO::getAvailableDrivers();
-                    if (!in_array('mysql', $drivers))
-                    {
-                        $problems[] = 'It appears that the mysql driver for PDO is not installed.';
-                    }
-                    if (count($problems) == 0)
-                    {
-                        try
-                        {
-                            $pdo = MpmDbHelper::getPdoObj();
-                        }
-                        catch (Exception $e)
-                        {
-                            $problems[] = 'Unable to connect to the database: ' . $e->getMessage();
-                        }
-                    }
-                    break;
-                case MPM_METHOD_MYSQLI:
-                    if (!class_exists('mysqli'))
-                    {
-                        $problems[] = "It does not appear that the mysqli extension is installed.";
-                    }
-                    if (count($problems) == 0)
-                    {
-                        try
-                        {
-                            $mysqli = MpmDbHelper::getMysqliObj();
-                        }
-                        catch (Exception $e)
-                        {
-                            $problems[] = "Unable to connect to the database: " . $e->getMessage();
-                        }
-                    }
-                    break;
+        } else {
+            if (!class_exists('PDO')) {
+                $problems[] = 'It does not appear that the PDO extension is installed.';
             }
-            if (!MpmDbHelper::checkForDbTable())
-            {
+            
+            $drivers = PDO::getAvailableDrivers();
+            
+            if (!in_array('mysql', $drivers)) {
+                $problems[] = 'It appears that the mysql driver for PDO is not installed.';
+            }
+            
+            if (count($problems) == 0) {
+                try
+                {
+                    $pdo = MpmDbHelper::getDbObj();
+                }
+                catch (Exception $e)
+                {
+                    $problems[] = 'Unable to connect to the database: ' . $e->getMessage();
+                }
+            }
+            
+            if (!MpmDbHelper::checkForDbTable()) {
                 $problems[] = 'Migrations table not found in your database.  Re-run the init command.';
             }
-            if (count($problems) > 0)
-            {
+            
+            if (count($problems) > 0) {
                 $obj = MpmCommandLineWriter::getInstance();
                 $obj->addText("It appears there are some problems:");
                 $obj->addText("\n");
@@ -303,35 +208,13 @@ class MpmDbHelper
 	    }
    		$sql = "SHOW TABLES";
     	$tables = array();
-		switch (MpmDbHelper::getMethod())
-		{
-		    case MPM_METHOD_PDO:
-        	    try
-        	    {
-            		foreach ($dbObj->query($sql) as $row)
-            		{
-            			$tables[] = $row[0];
-            		}
-        	    }
-        	    catch (Exception $e)
-        	    {
-        	    }
-        	    break;
-        	case MPM_METHOD_MYSQLI:
-			    try
-			    {
-				    $result = $dbObj->query($sql);
-				    while ($row = $result->fetch_array())
-				    {
-					    $tables[] = $row[0];
-				    }
-			    }
-			    catch (Exception $e)
-			    {
-			    }
-			    break;
-		}
+        try {
+    		foreach ($dbObj->query($sql) as $row)
+    		{
+    			$tables[] = $row[0];
+    		}
+        } catch (Exception $e) {}
+        
 		return $tables;
 	}
-
 }

@@ -57,13 +57,5 @@ abstract class MpmController
 	 *
 	 * @return void
 	 */
-	abstract public function doAction();
-	
-	/**
-	 * Displays the help page for this controller.
-	 * 
-	 * @return void
-	 */
-	abstract public function displayHelp();
-	
+	abstract public function doAction();	
 }

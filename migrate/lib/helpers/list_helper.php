@@ -76,22 +76,16 @@ class MpmListHelper
         $total_migrations = MpmListHelper::getTotalMigrations();
         $db_list = MpmListHelper::getFullList(0, $total_migrations);
         $file_timestamps = MpmListHelper::getTimestampArray($files);
-        if (MpmDbHelper::getMethod() == MPM_METHOD_PDO)
-        {
-            if (count($files) > 0)
-            {
+
+            if (count($files) > 0) {
                 $pdo = MpmDbHelper::getPdoObj();
                 $pdo->beginTransaction();
-                try
-                {
-                    foreach ($files as $file)
-                    {
+                try {
+                    foreach ($files as $file) {
                         $sql = "INSERT IGNORE INTO " . $db_config->prefix . "`mpm_migrations` ( `timestamp`, `active`, `is_current` ) VALUES ( '{$file->timestamp}', 0, 0 )";
                         $pdo->exec($sql);
                     }
-                }
-                catch (Exception $e)
-                {
+                } catch (Exception $e) {
                     $pdo->rollback();
                     echo "\n\nError: " . $e->getMessage();
                     echo "\n\n";
@@ -99,22 +93,17 @@ class MpmListHelper
                 }
                 $pdo->commit();
             }
-            if (count($db_list))
-            {
+            
+            if (count($db_list)) {
                 $pdo->beginTransaction();
-                try
-                {
-                    foreach ($db_list as $obj)
-                    {
-                        if (!in_array($obj->timestamp, $file_timestamps) && $obj->active == 0)
-                        {
+                try {
+                    foreach ($db_list as $obj) {
+                        if (!in_array($obj->timestamp, $file_timestamps) && $obj->active == 0) {
                             $sql = "DELETE FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '{$obj->id}'";
                             $pdo->exec($sql);
                         }
                     }
-                }
-                catch (Exception $e)
-                {
+                } catch (Exception $e) {
                     $pdo->rollback();
                     echo "\n\nError: " . $e->getMessage();
                     echo "\n\n";
@@ -122,65 +111,6 @@ class MpmListHelper
                 }
                 $pdo->commit();
             }
-        }
-        else
-        {
-            $mysqli = MpmDbHelper::getMysqliObj();
-            $mysqli->autocommit(false);
-            
-            if (count($files) > 0)
-            {
-                try
-                {
-                    $stmt = $mysqli->prepare('INSERT IGNORE INTO ' . $db_config->prefix . '`mpm_migrations` ( `timestamp`, `active`, `is_current` ) VALUES ( ?, 0, 0 )');
-                    foreach ($files as $file)
-                    {
-                        $stmt->bind_param('s', $file->timestamp);
-                        $result = $stmt->execute();
-                        if ($result === false)
-                        {
-                            throw new Exception('Unable to execute query to update file list.');
-                        }
-                    }
-                }
-                catch (Exception $e)
-                {
-                    $mysqli->rollback();
-                    $mysqli->close();
-                    echo "\n\nError:", $e->getMessage(), "\n\n";
-                    exit;
-                }
-                $mysqli->commit();
-            }
-            if (count($db_list))
-            {
-                try
-                {
-                    $stmt = $mysqli->prepare('DELETE FROM ' . $db_config->prefix . '`mpm_migrations` WHERE `id` = ?');
-                    foreach ($db_list as $obj)
-                    {
-                        if (!in_array($obj->timestamp, $file_timestamps) && $obj->active == 0)
-                        {
-                            $stmt->bind_param('i', $obj->id);
-                            $result = $stmt->execute();
-                            if ($result === false)
-                            {
-                                throw new Exception('Unable to execute query to remove stale files from the list.');
-                            }
-                        }
-                    }
-                }
-                catch (Exception $e)
-                {
-                    $mysqli->rollback();
-                    $mysqli->close();
-                    echo "\n\nError: " . $e->getMessage();
-                    echo "\n\n";
-                    exit;
-                }
-                $mysqli->commit();
-            }
-            $mysqli->close();
         }
     }
     

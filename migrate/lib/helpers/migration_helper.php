@@ -33,13 +33,10 @@ class MpmMigrationHelper
         $sql2 = "UPDATE " . $db_config->prefix . "`mpm_migrations` SET `is_current` = '1' WHERE `id` = {$id}";
         $obj = MpmDbHelper::getDbObj();
         $obj->beginTransaction();
-        try
-        {
+        try { 
 	        $obj->exec($sql1);
 	        $obj->exec($sql2);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
 	        $obj->rollback();
 	        echo "\n\tQuery failed!";
 	        echo "\n\t--- " . $e->getMessage();
@@ -72,8 +69,7 @@ class MpmMigrationHelper
 		$classname = 'Migration_' . str_replace('.php', '', $filename);
 		
 	    // make sure the file exists; if it doesn't, skip it but display a message
-	    if (!file_exists(MPM_DB_PATH . $filename))
-	    {
+	    if (!file_exists(MPM_DB_PATH . $filename)) {
 	        echo "\n\tMigration " . $obj->timestamp . ' (ID '.$obj->id.') skipped - file missing.';
 	        return;
 	    }
@@ -82,43 +78,31 @@ class MpmMigrationHelper
 		echo "\n\tPerforming " . strtoupper($method) . " migration " . $obj->timestamp . ' (ID '.$obj->id.')... ';
 		require_once(MPM_DB_PATH . $filename);
 		$migration = new $classname();
-        if ($migration instanceof MpmMigration) // need PDO object
-        {
-            $dbObj = MpmDbHelper::getPdoObj();
+        if ($migration instanceof MpmMigration) {// need PDO object
+            $dbObj = MpmDbHelper::getDbObj();
         }
-        else
-        {
-            $dbObj = MpmDbHelper::getMysqliObj();
-        }
+        
    		$dbObj->beginTransaction();
-		if ($method == 'down')
-		{
+		if ($method == 'down') {
 			$active = 0;
-		}
-		else
-		{
+		} else {
 			$active = 1;
-		}
-		try
-		{
+		} 
+		
+		try {
 			$migration->$method($dbObj);
 			$sql = "UPDATE " . $db_config->prefix . "`mpm_migrations` SET `active` = '$active' WHERE `id` = {$obj->id}";
 			$dbObj->exec($sql);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$dbObj->rollback();
 			echo "failed!";
 			echo "\n";
 		    $clw = MpmCommandLineWriter::getInstance();
     		$clw->writeLine($e->getMessage(), 12);
-			if (!$forced)
-			{
+			if (!$forced) {
         		echo "\n\n";
 			    exit;
-			}
-			else
-			{
+			} else {
 			    return;
 		    }
 		}
@@ -141,35 +125,18 @@ class MpmMigrationHelper
 	    $db_config = $GLOBALS['db_config'];
 	    // Resolution to Issue #1 - PDO::rowCount is not reliable
 	    $sql1 = "SELECT COUNT(*) as total FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
-        $sql2 = "SELECT `timestamp` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
+	    $sql2 = "SELECT `timestamp` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
 		$dbObj = MpmDbHelper::getDbObj();
-		switch (MpmDbHelper::getMethod())
-		{
-		    case MPM_METHOD_PDO:
-		        $stmt = $dbObj->query($sql1);
-		        if ($stmt->fetchColumn() == 0)
-		        {
-		            return false;
-		        }
-	            unset($stmt);
-		        $stmt = $dbObj->query($sql2);
-		        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-		        $latest = $row['timestamp'];
-		        break;
-            case MPM_METHOD_MYSQLI:
-                $result = $dbObj->query($sql1);
-                $row = $result->fetch_object();
-                if ($row->total == 0)
-                {
-                    return false;
-                }
-                $result->close();
-                unset($result);
-                $result = $dbObj->query($sql2);
-                $row = $result->fetch_object();
-                $latest = $row->timestamp;
-                break;
-		}
+
+		$stmt = $dbObj->query($sql1);
+        if ($stmt->fetchColumn() == 0) {
+            return false;
+        }
+        unset($stmt);
+        $stmt = $dbObj->query($sql2);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $latest = $row['timestamp'];
+
 		return $latest;
 	}
 	
@@ -193,50 +160,23 @@ class MpmMigrationHelper
 	    $db_config = $GLOBALS['db_config'];
 	    $list = array();
 	    $timestamp = MpmMigrationHelper::getTimestampFromId($toId);
-	    if ($direction == 'up')
-	    {
+	    if ($direction == 'up') {
 	        $sql = "SELECT `id`, `timestamp` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `active` = 0 AND `timestamp` <= '$timestamp' ORDER BY `timestamp`";
-	    }
-	    else
-	    {
+	    } else {
 	        $sql = "SELECT `id`, `timestamp` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `active` = 1 AND `timestamp` > '$timestamp' ORDER BY `timestamp` DESC";
 	    }
-        switch(MpmDbHelper::getMethod())
-        {
-            case MPM_METHOD_PDO:
-                try
-                {
-            		$pdo = MpmDbHelper::getPdoObj();
-                    $stmt = $pdo->query($sql);
-                    while ($obj = $stmt->fetch(PDO::FETCH_OBJ))
-                    {
-                        $list[$obj->id] = $obj;
-                    }
-                }
-                catch (Exception $e)
-                {
-                    echo "\n\nError: " . $e->getMessage() . "\n\n";
-                    exit;
-                }
-                break;
-            case MPM_METHOD_MYSQLI:
-                try
-                {
-                    $mysqli = MpmDbHelper::getMysqliObj();
-                    $results = $mysqli->query($sql);
-                    while ($row = $results->fetch_object())
-                    {
-                        $list[$row->id] = $row;
-                    }
-                }
-                catch (Exception $e)
-                {
-                    echo "\n\nError: " . $e->getMessage() . "\n\n";
-                    exit;
-                }
-                break;
-            
+	    
+        try {
+    		$pdo = MpmDbHelper::getDbObj();
+            $stmt = $pdo->query($sql);
+            while ($obj = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $list[$obj->id] = $obj;
+            }
+        } catch (Exception $e) {
+            echo "\n\nError: " . $e->getMessage() . "\n\n";
+            exit;
         }
+
         return $list;
 	}
 
@@ -257,53 +197,21 @@ class MpmMigrationHelper
     {
         $db_config = $GLOBALS['db_config'];
         
-        try
-        {
-	        switch (MpmDbHelper::getMethod())
-	        {
-	            case MPM_METHOD_PDO:
-            	    // Resolution to Issue #1 - PDO::rowCount is not reliable
-               	    $pdo = MpmDbHelper::getPdoObj();
-            	    $sql = "SELECT COUNT(*) FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '$id'";
-            	    $stmt = $pdo->query($sql);
-            	    if ($stmt->fetchColumn() == 1)
-            	    {
-            	        unset($stmt);
-                	    $sql = "SELECT `timestamp` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '$id'";
-                	    $stmt = $pdo->query($sql);
-            	        $result = $stmt->fetch(PDO::FETCH_OBJ);
-            	        $timestamp = $result->timestamp;
-                    }
-                    else
-                    {
-                        $timestamp = false;
-                    }
-                    break;
-                case MPM_METHOD_MYSQLI:
-               	    $mysqli = MpmDbHelper::getMysqliObj();
-            	    $sql = "SELECT COUNT(*) as total FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '$id'";
-            	    $stmt = $mysqli->query($sql);
-            	    $row = $stmt->fetch_object();
-            	    if ($row->total == 1)
-            	    {
-            	        $stmt->close();
-            	        unset($stmt);
-                	    $sql = "SELECT `timestamp` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '$id'";
-                	    $stmt = $mysqli->query($sql);
-            	        $result = $stmt->fetch_object();
-            	        $timestamp = $result->timestamp;
-            	        $stmt->close();
-            	        $mysqli->close();
-                    }
-                    else
-                    {
-                        $timestamp = false;
-                    }
-                    break;
-	        }
-	    }
-        catch (Exception $e)
-        {
+        try {
+    	    // Resolution to Issue #1 - PDO::rowCount is not reliable
+       	    $pdo = MpmDbHelper::getDbObj();
+    	    $sql = "SELECT COUNT(*) FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '$id'";
+    	    $stmt = $pdo->query($sql);
+    	    if ($stmt->fetchColumn() == 1) {
+    	        unset($stmt);
+        	    $sql = "SELECT `timestamp` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '$id'";
+        	    $stmt = $pdo->query($sql);
+    	        $result = $stmt->fetch(PDO::FETCH_OBJ);
+    	        $timestamp = $result->timestamp;
+            } else {
+                $timestamp = false;
+            }
+	    } catch (Exception $e) {
             echo "\n\nERROR: " . $e->getMessage() . "\n\n";
             exit;
         }
@@ -323,48 +231,21 @@ class MpmMigrationHelper
 	static public function getCurrentMigrationNumber()
 	{
 	    $db_config = $GLOBALS['db_config'];
-	    
-	    try
-	    {
-            switch (MpmDbHelper::getMethod())
-            {
-                case MPM_METHOD_PDO:
-		            $pdo = MpmDbHelper::getDbObj();
-	                // Resolution to Issue #1 - PDO::rowCount is not reliable
-	                $sql = "SELECT COUNT(*) FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
-		            $stmt = $pdo->query($sql);
-		            if ($stmt->fetchColumn() == 0)
-		            {
-		                return false;
-		            }
-	                $sql = "SELECT `id` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
-	                unset($stmt);
-		            $stmt = $pdo->query($sql);
-		            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-		            $latest = $row['id'];
-		            break;
-                case MPM_METHOD_MYSQLI:
-		            $mysqli = MpmDbHelper::getDbObj();
-	                $sql = "SELECT COUNT(*) as total FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
-            	    $stmt = $mysqli->query($sql);
-            	    $row = $stmt->fetch_object();
-            	    if ($row->total == 0)
-		            {
-		                return false;
-		            }
-	                $stmt->close();
-	                unset($stmt);
-	                $sql = "SELECT `id` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
-		            $stmt = $mysqli->query($sql);
-		            $row = $stmt->fetch_object();
-		            $latest = $row->id;
-		            $stmt->close();
-		            $mysqli->close();
-		            break;
-            }	    
-	    }
-	    catch (Exception $e)
-	    {
+	     
+	    try {
+            $pdo = MpmDbHelper::getDbObj();
+            // Resolution to Issue #1 - PDO::rowCount is not reliable
+            $sql = "SELECT COUNT(*) FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
+            $stmt = $pdo->query($sql);
+            if ($stmt->fetchColumn() == 0) {
+                return false;
+            }
+            $sql = "SELECT `id` FROM " . $db_config->prefix . "`mpm_migrations` WHERE `is_current` = 1";
+            unset($stmt);
+            $stmt = $pdo->query($sql);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $latest = $row['id'];
+	    } catch (Exception $e) {
             echo "\n\nERROR: " . $e->getMessage() . "\n\n";
             exit;
 	    }
@@ -385,28 +266,13 @@ class MpmMigrationHelper
 	{
 	    $db_config = $GLOBALS['db_config'];
 	    
-	    try
-	    {
-	        switch (MpmDbHelper::getMethod())
-	        {
-	            case MPM_METHOD_PDO:
-			        $pdo = MpmDbHelper::getDbObj();
-            	    // Resolution to Issue #1 - PDO::rowCount is not reliable
-			        $sql = "SELECT COUNT(id) FROM " . $db_config->prefix . "`mpm_migrations`";
-			        $stmt = $pdo->query($sql);
-			        $count = $stmt->fetchColumn();
-	                break;
-	            case MPM_METHOD_MYSQLI:
-			        $mysqli = MpmDbHelper::getDbObj();
-			        $sql = "SELECT COUNT(id) AS total FROM " . $db_config->prefix . "`mpm_migrations`";
-			        $stmt = $mysqli->query($sql);
-			        $row = $stmt->fetch_object();
-			        $count = $row->total;
-	                break;
-	        }
-	    }
-	    catch (Exception $e)
-	    {
+	    try {
+	        $pdo = MpmDbHelper::getDbObj();
+    	    // Resolution to Issue #1 - PDO::rowCount is not reliable
+	        $sql = "SELECT COUNT(id) FROM " . $db_config->prefix . "`mpm_migrations`";
+	        $stmt = $pdo->query($sql);
+	        $count = $stmt->fetchColumn();
+	    } catch (Exception $e) {
             echo "\n\nERROR: " . $e->getMessage() . "\n\n";
             exit;
 	    }
@@ -428,26 +294,12 @@ class MpmMigrationHelper
 	    $db_config = $GLOBALS['db_config'];
         
 	    $sql = "SELECT `id` FROM " . $db_config->prefix . "`mpm_migrations` ORDER BY `timestamp` DESC LIMIT 0,1";
-	    try
-	    {
-	        switch(MpmDbHelper::getMethod())
-	        {
-	            case MPM_METHOD_PDO:
-	                $pdo = MpmDbHelper::getDbObj();
-		            $stmt = $pdo->query($sql);
-		            $result = $stmt->fetch(PDO::FETCH_OBJ);
-		            $to_id = $result->id;
-	                break;
-	            case MPM_METHOD_MYSQLI:
-	                $mysqli = MpmDbHelper::getDbObj();
-		            $stmt = $mysqli->query($sql);
-		            $result = $stmt->fetch_object();
-		            $to_id = $result->id;
-	                break;
-	        }
-	    }
-	    catch (Exception $e)
-	    {
+	    try {
+            $pdo = MpmDbHelper::getDbObj();
+            $stmt = $pdo->query($sql);
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+            $to_id = $result->id;
+	    } catch (Exception $e) {
             echo "\n\nERROR: " . $e->getMessage() . "\n\n";
             exit;
 	    }
@@ -472,32 +324,14 @@ class MpmMigrationHelper
         
 	    $sql = "SELECT COUNT(*) as total FROM " . $db_config->prefix . "`mpm_migrations` WHERE `id` = '$id'";
         $return = false;
-	    try
-	    {
-	        switch(MpmDbHelper::getMethod())
-	        {
-	            case MPM_METHOD_PDO:
-	                $pdo = MpmDbHelper::getDbObj();
-		            $stmt = $pdo->query($sql);
-		            $result = $stmt->fetch(PDO::FETCH_OBJ);
-		            if ($result->total > 0)
-		            {
-		                $return = true;
-		            }
-	                break;
-	            case MPM_METHOD_MYSQLI:
-	                $mysqli = MpmDbHelper::getDbObj();
-		            $stmt = $mysqli->query($sql);
-		            $result = $stmt->fetch_object();
-		            if ($result->total > 0)
-		            {
-		                $return = true;
-		            }
-	                break;
-	        }
-	    }
-	    catch (Exception $e)
-	    {
+	    try {
+            $pdo = MpmDbHelper::getDbObj();
+            $stmt = $pdo->query($sql);
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+            if ($result->total > 0) {
+                $return = true;
+            }
+	    } catch (Exception $e) {
             echo "\n\nERROR: " . $e->getMessage() . "\n\n";
             exit;
 	    }
@@ -524,22 +358,10 @@ class MpmMigrationHelper
 		$obj = null;
 	    try
 	    {
-	        switch(MpmDbHelper::getMethod())
-	        {
-	            case MPM_METHOD_PDO:
-	                $pdo = MpmDbHelper::getDbObj();
-		            $stmt = $pdo->query($sql);
-		            $obj = $stmt->fetch(PDO::FETCH_OBJ);
-	                break;
-	            case MPM_METHOD_MYSQLI:
-	                $mysqli = MpmDbHelper::getDbObj();
-		            $stmt = $mysqli->query($sql);
-		            $obj = $stmt->fetch_object();
-	                break;
-	        }
-	    }
-	    catch (Exception $e)
-	    {
+            $pdo = MpmDbHelper::getDbObj();
+            $stmt = $pdo->query($sql);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
+	    } catch (Exception $e) {
             echo "\n\nERROR: " . $e->getMessage() . "\n\n";
             exit;
 	    }
