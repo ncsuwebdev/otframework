@@ -6,8 +6,6 @@ $configFilePath = dirname(__FILE__) . '/application/configs';
 // Path to where the database migration files live
 $pathToMigrateFiles = dirname(__FILE__) . '/db';
 
-
-
 // we want to see any errors
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -18,25 +16,48 @@ require_once 'Zend/Loader/Autoloader.php';
 $loader = Zend_Loader_Autoloader::getInstance();
 $loader->setFallbackAutoloader(true);
 
-$arguments = Ot_Migrate_Cli::validateArgs();
+$possibleEnvironments = array(
+    'production',
+    'staging',
+    'development',
+    'nonproduction',
+    'testing',
+);
 
-if (!isset($argv[1]) || !in_array($argv[1], $possibleEnvironments)) {
-    die('Second argument must be one of the following values: (' . implode($possibleEnvironments, ', ') . ')');
+$possibleCommands = array(
+    'up',
+    'down',
+    'latest',
+    'rebuild'
+);
+
+$opts = new Zend_Console_Getopt(
+    array(
+        'cmd|c'           => 'Command to execute (' . implode($possibleCommands, ', ') . ')',
+        'environment|e=s' => 'Environment to migrate (' . implode($possibleEnvironments, ', ') . ')',
+        'version|v=s'     => 'Version to migrate to',
+    )
+);
+
+try {
+    $opts->parse();
+} catch (Exception $e) {
+    Ot_Migrate_Cli::error($e->getUsageMessage());
 }
 
-$environment = $argv[1];
-unset($argv[1]);
-$argv = array_merge($argv);
+if (!isset($opts->environment) || !in_array($opts->environment, $possibleEnvironments)) {
+    Ot_Migrate_Cli::error('Environment not sepecified or not available');
+}
 
-$db_config = (object) array();
-$db_config->db_path = $pathToMigrateFiles;
+if (!isset($opts->cmd) || !in_array($opts->cmd, $possibleCommands)) {
+    Ot_Migrate_Cli::error('Command not sepecified or not available');
+}
 
-require_once 'Zend/Config/Ini.php';
-$applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', $environment);
+$applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', $opts->environment);
 
 if (isset($applicationIni->resources->keymanagerdb->key) && $applicationIni->resources->keymanagerdb->key) {
     if (!isset($_SERVER['KEY_MANAGER2_PATH'])) {
-        die('KEY_MANAGER2_PATH is not set as a server variable.  Cannot load config information.');
+        Ot_Migrate_Cli::error('KEY_MANAGER2_PATH is not set as a server variable.  Cannot load config information.');
     }
     
     require_once $_SERVER['KEY_MANAGER2_PATH'];
@@ -47,48 +68,46 @@ if (isset($applicationIni->resources->keymanagerdb->key) && $applicationIni->res
         
         $key = $km->getKey($applicationIni->resources->keymanagerdb->key);
         
-        $db_config->host = $key->host;
-        $db_config->port = $key->port;
-        $db_config->user = $key->username;
-        $db_config->pass = $key->password;
-        $db_config->name = $key->dbname; 
+        $dbConfig = array(
+            'adapter'  => 'PDO_MYSQL',
+            'username' => $key->username,
+            'password' => $key->password,
+            'host'     => $key->host,
+            'port'     => $key->port,
+            'dbname'   => $key->dbname
+        );  
 
     } else {
-        die('KeyManager could not find the key: ' . $applicationIni->resources->keymanagerdb->key);
+        Ot_Migrate_Cli::error('KeyManager could not find the key: ' . $applicationIni->resources->keymanagerdb->key);
     }
 } else {
     if (!isset($applicationIni->resources->db)) {
-        die('DB resources not found in application.ini');
+        Ot_Migrate_Cli::error('DB resources not found in application.ini');
     }
     
-    $db_config->host = $applicationIni->resources->db->params->host;
-    $db_config->port = $applicationIni->resources->db->params->port;
-    $db_config->user = $applicationIni->resources->db->params->username;
-    $db_config->pass = $applicationIni->resources->db->params->password;
-    $db_config->name = $applicationIni->resources->db->params->dbname; 
+    $dbConfig = array(
+        'adapter'  => $applicationIni->resources->db->adapter,
+        'username' => $applicationIni->resources->db->params->username,
+        'password' => $applicationIni->resources->db->params->password,
+        'host'     => $applicationIni->resources->db->params->host,
+        'port'     => $applicationIni->resources->db->params->port,
+        'dbname'   => $applicationIni->resources->db->params->dbname
+    );
 }
 
-require_once 'Zend/Config/Xml.php';
 $configXml = new Zend_Config_Xml($configFilePath . '/config.xml', 'production');
+Zend_Registry::set('config', $configXml);
 
-$db_config->migrationTable = $configXml->app->tablePrefix . $migrationTableName;
+$migration = new Ot_Migrate($dbConfig);
 
-/** 
- * Define the full path to this file.
- */
-define('MPM_PATH', dirname(__FILE__) . '/migrate');
+if (($opts->cmd == 'up' || $opts->cmd == 'down') && !isset($opts->version)) {
+    Ot_Migrate_Cli::error('Version must be specified');
+}
 
-/**
- * Version Number - for reference
- */
-define('MPM_VERSION', '2.0.1');
+try {
+    $migration->migrate($opts->cmd, $opts->version);
+} catch (Exception $e) {
+    Ot_Migrate_Cli::error($e->getMessage());
+}
 
-/**
- * Include the init script.
- */
-require_once(MPM_PATH . '/lib/init.php');
-
-// get the proper controller, do the action, and exit the script
-$obj = MpmControllerFactory::getInstance($argv);
-$obj->doAction();
 exit;
