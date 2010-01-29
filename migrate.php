@@ -1,4 +1,3 @@
-#!/usr/local/zend/bin/php
 <?php
 // Path to the application config folder where application.ini and config.xml live
 $configFilePath = dirname(__FILE__) . '/application/configs';
