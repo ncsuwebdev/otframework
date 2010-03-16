@@ -1,10 +1,13 @@
 <?php
 
 /**
- * Corresponds to version 2.3.5 of the OT Framework
+ * Corresponds to version 2.4.0 of the OT Framework
+ *
+ * Modifies the tbl_ot_custom_attribute and tbl_ot_custom_attribute_value tables
+ * to support multiselect and multicheckbox types 
  *
  */
-class Db_002_otframework_custom_attributes_enhancements implements Ot_Migrate_Migration_Interface
+class Db_002_otframework_custom_attributes_enhancements extends Ot_Migrate_Migration_Abstract
 {
     public function up($dba)
     {

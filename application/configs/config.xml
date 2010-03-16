@@ -2,7 +2,7 @@
 <configData>
   <production>
     <app>
-      <version>2.3.2</version>
+      <version>2.4.0</version>
       <theme>default</theme>
       <tablePrefix>ot_</tablePrefix>
       <loginOptions>
@@ -59,6 +59,7 @@
       <dateFormat description="" val="%m/%d/%Y"/>
       <dayFormat description="" val="%d"/>
       <timeFormat description="" val="%I:%M %p"/>
+      <minutesToKeepUserActivity description="" val="10"/>
       <showTrackbackOnErrors description="Whether or not to show the trackback of the error" val="1"/>
     </user>
     <triggers>

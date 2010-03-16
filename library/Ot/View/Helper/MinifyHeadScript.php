@@ -61,7 +61,13 @@ class Ot_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript
         
         $item = new stdClass();
         $item->type = 'text/javascript';
-        $item->attributes['src'] = $this->getMinUrl() . '?b=' . $baseUrl . '&f=' . implode(',', $scripts);
+        
+        if ($baseUrl == '') {
+            $item->attributes['src'] = $this->getMinUrl() . '?f=' . implode(',', $scripts);
+        } else {
+            $item->attributes['src'] = $this->getMinUrl() . '?b=' . $baseUrl . '&f=' . implode(',', $scripts);
+        }
+        
         $scriptTag = $this->itemToString($item, '', '', '');
         
         return $scriptTag;

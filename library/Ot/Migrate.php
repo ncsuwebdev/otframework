@@ -64,6 +64,7 @@ class Ot_Migrate
         $migrations = new Ot_Migrations($this->_tablePrefix);
         $this->_messages[] = "Creating migration table if it doesn't exist.";
         $migrations->createTable(); // create the migrations table if it's needed
+        $this->_messages[] = "Migration table created successfully if it needed to be.";
         
         $this->_appliedMigrations = $migrations->getAppliedMigrations();
     }
@@ -81,13 +82,72 @@ class Ot_Migrate
     }
     
     /**
+     * Just creates the migration table and doesn't run any migration scripts.
+     * We really only need to just return true since the constructor will create
+     * the table for us if it doesn't exist.
+     */
+    public function createtable()
+    {
+        return $this->_messages;
+    }
+    
+    /**
+     * This method is used to start from a specific version rather than from 001.
+     * So if your database is already at 001 and you want to run the migrations 
+     * from 002 up to the latest, this will insert the migration ids from 001 up 
+     * to the version passed in.  You can only use this method if the migrations
+     * table is empty.  This doesn't actually apply the migrations.
+     * 
+     * @param $latestVersion The version the migration system should think it's at.
+     */
+    public function setlatestversion($latestVersion)
+    {
+        $migrations = new Ot_Migrations($this->_tablePrefix);
+        
+        if (count($this->_appliedMigrations) > 0) {
+            $this->_messages[] = 'You can only run this method on an empty migrations table';
+            return;
+        }     
+        
+        $migrationsIdsNotApplied = array_diff(array_keys($this->_availableMigrations), $this->_appliedMigrations);
+        
+        $migrationsToApply = array();
+        
+        foreach ($migrationsIdsNotApplied as $migrationId) {
+            if ($migrationId <= $latestVersion) {
+                $migrationsToApply[] = $this->_availableMigrations[$migrationId];   
+            }
+        }
+        
+        if (empty($migrationsToApply)) {
+            $this->_messages[] = 'No migrations to apply';
+            return;
+        }
+        
+        $this->_db->beginTransaction();
+        
+        foreach ($migrationsToApply as $m) {
+           
+            try {
+                $migrations->addMigration($this->_getMigrationIdFromFilename($m));
+            } catch (Exception $e) {
+                $this->_db->rollback();
+                throw new Exception('Adding migration record to migration table for version ' . $m . ' failed. ' . $e->getMessage());
+            }
+            
+            $this->_messages[] = 'Added migration record to migration table for version ' . $m;
+        }
+        
+        $this->_db->commit();
+    }
+    
+    /**
      * Migrates the database from its existing migration version to the $targetMigration
      * 
      * @param $targetMigration
      */
     public function up($targetMigration)
     {
-        $returnMessages = array(); 
         
         $migrations = new Ot_Migrations($this->_tablePrefix);      
         
@@ -109,6 +169,7 @@ class Ot_Migrate
         $this->_db->beginTransaction();
         
         foreach ($migrationsToApply as $m) {
+            
             require_once $this->_migrationsPath . '/' . $m;
             $classname = 'Db_' . substr($m, 0, -4); //strip out the .php extension
             $migrationClass = new $classname(array('tablePrefix' => $this->_tablePrefix));
@@ -275,6 +336,7 @@ class Ot_Migrate
      * @return string The id of the migration
      */
     protected function _getMigrationIdFromFilename($filename) {
+        
         $parts = explode('_', $filename);
         return $parts[0];
     }

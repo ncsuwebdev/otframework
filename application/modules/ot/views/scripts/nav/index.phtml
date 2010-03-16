@@ -35,7 +35,11 @@
 <a href="#" id="saveNavButton" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo $this->translate("ot-nav-index:linkSave"); ?></a>
 &nbsp;
 <a href="#" id="addElementButton" class="ui-state-default ui-corner-all navElementModal linkButton"><?php echo $this->translate("ot-nav-index:linkAdd"); ?><span class="ui-icon ui-icon-newwin"></span></a>
+&nbsp;
+<a href="#" id="undoMoveButton" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-nav-index:undoMove"); ?><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></a>
 <br /><br />
+<span id="undoMessage"><?php echo $this->translate('ot-nav-index:undoMoveMessage'); ?></span>
+<br /><br /> 
 <div id="navEditorContainer">
 <ul id="masterList">
     <?php echo $this->editNavTreeHtml; ?>

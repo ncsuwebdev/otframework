@@ -81,7 +81,6 @@ class Ot_NavController extends Zend_Controller_Action
         $this->view->siteUrl = Zend_Registry::get('siteUrl');
         $this->view
              ->headScript()
-             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.jtree.js')
              ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
                                  
         $nav = new Ot_Nav();
@@ -217,6 +216,10 @@ class Ot_NavController extends Zend_Controller_Action
     
             if ($a['controller'] == '') {
                 $a['controller'] = 'index';
+            }
+            
+            if ($a['target'] == '') {
+                $a['target'] = "_self";
             }
             
             try {

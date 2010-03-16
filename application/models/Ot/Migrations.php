@@ -38,7 +38,7 @@ class Ot_Migrations extends Zend_Db_Table
 
     public function removeMigration($migrationId) {
         return $this->delete($this->getAdapter()->quoteInto('migrationId = ?', $migrationId));
-    }    
+    }
     
     public function createTable()
     {

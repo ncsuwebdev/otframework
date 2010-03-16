@@ -5,7 +5,7 @@
  * 
  */
 
-class Db_001_otframework_initial_setup implements Ot_Migrate_Migration_Interface
+class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
 {
     public function up($dba)
     {

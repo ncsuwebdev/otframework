@@ -64,7 +64,12 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
             $item = new stdClass();
             $item->rel = 'stylesheet';
             $item->type = 'text/css';
-            $item->href = $this->getMinUrl() . '?b=' . $baseUrl . '&f=' . implode(',', $styles);
+            
+            if ($baseUrl == '') {            
+                $item->href = $this->getMinUrl() . '?f=' . implode(',', $styles);
+            } else {
+                $item->href = $this->getMinUrl() . '?b=' . $baseUrl . '&f=' . implode(',', $styles);
+            }
             $item->media = $media;
             $item->conditionalStylesheet = false;
             $items[] = $this->itemToString($item);

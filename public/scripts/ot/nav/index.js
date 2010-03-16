@@ -14,11 +14,15 @@ $('document').ready(function() {
     baseUrl = $('#baseUrl').val();
     saveUrl = baseUrl + "/ot/nav/save";
     
+    // setup the li so we have all information we need to edit it and such
+    // also add the control buttons to each one (the move handle, edit, and delete)
     $('ul#masterList li').each(function() {
+    	
         var newId = "navEditor_" + $(this).attr('id');
         $(this).attr('id', newId);
         
-        var link = $(this).children('a:not(.controlButton)').attr('href');
+        var a    = $(this).children('a:not(.controlButton)');
+        var link = a.attr('href');
         var linkTarget = $(this).children('a').attr('target').toLowerCase();
             
         if (linkTarget == "_self") {
@@ -28,13 +32,41 @@ $('document').ready(function() {
             } else {
                 link = link.substring(1, link.length);
             }
-            $(this).children('a:not(.controlButton)').attr('href', link);
+                        
+            a.attr('href', link);
         }    
+        
+        if ($(this).children('ul').children().length != 0) {
+        	$(this).addClass('liOpen');
+    	}
+        
         addControlButtons($(this));
     });
     
-	initTree('ul#masterList');
+    // add a place to drop above each li
+    $('ul#masterList li').prepend('<div class="dropzone"></div>');
+    
+    // add the expander arrows for the ones that are collapsable
+    addExpanders();
 	
+	// add the live events to watch for edit and delete buttons
+	setupLiveEvents();
+
+	/// setup handlers for undo support
+	$('#undoMoveButton').click(sitemapHistory.restoreState);
+    $(document).bind('keypress', function(e) {
+    	
+        if ((e.ctrlKey || e.metaKey) && (e.which == 122 || e.which == 26)) {
+            sitemapHistory.restoreState();
+    	}
+    });
+	
+	$('ul#masterList').disableSelection();
+	
+	// set up the sortable stuff
+	initDragDrop();
+	
+	// show or hide the prefix for external links
 	$('#externalLink').click(function() {
 		if ($('#externalLink:checked').val() != null) {
 			$('#linkPrefix').hide();
@@ -43,6 +75,8 @@ $('document').ready(function() {
 		}
 	});
 	
+	// this stuff all handles the conditional drop down stuff to let you select
+	// the module, controller, and action for the permissions for a menu item
 	$('#moduleBox').change(function() {
 		
 		if ($(this).val() == "") {
@@ -76,6 +110,7 @@ $('document').ready(function() {
 		});
 	});
 	
+	// does the stuff to save the nav to the database
 	$('#saveNavButton').click(function() {
 		
 		var dataArray = serialize($('ul#masterList'));
@@ -90,6 +125,8 @@ $('document').ready(function() {
 			  }, "json");
 	});
 	
+	// grabs the modules, controllers, and actions, available from the ACL to
+	// populate the corresponding boxes in the edit/add window
 	$.getJSON(baseUrl + "/ot/nav/get-resources", 
 	    function(data) {
     		resources = data;
@@ -99,6 +136,7 @@ $('document').ready(function() {
     	});
     });
 	
+	// the modal dialog for adding and editing a menu item
 	$("#navElementDialog").dialog({ 
         modal: true, 
         autoOpen: false,
@@ -146,19 +184,17 @@ $('document').ready(function() {
         		if (currentElementId == "") {
 	        		      			
         			var newLi = $('<li id="newElement' + newElementIdCounter + '" name="' + display + '"><a title="' + module + ':' + controller + ':' + action + '" href="' + link + '" target="' + linkTarget + '">' + display + '</a></li>');
-
+        			
 	        		$('ul#masterList').prepend(newLi);
 	        		
 	        		addControlButtons(newLi);     	    
+	        	    newLi.prepend('<div class="dropzone"></div>');
+	        	    addExpanders();
+	        	    
 	        	    newElementIdCounter++;
 	        	    
-	        	    var clone = $('ul#masterList').clone();
-	        	    
-	        	    $('ul#masterList').remove();
-	        	    
-	        	    $('#navEditorContainer').append(clone);
-	        	    
-	        	    initTree('ul#masterList');
+	        	    // refresh the sortable so that the new element can be sorted too
+	        		initDragDrop();	        		
 	        	    
         		} else {
         			
@@ -191,13 +227,85 @@ $('document').ready(function() {
     });
 });
 
-function serialize (items) 
-{
+function initDragDrop() {
+	
+	$('ul#masterList li').draggable({
+	    handle: ' > span.moveHandle',
+	    opacity: .8,
+	    addClasses: false,
+	    helper: 'clone',
+	    zIndex: 100,
+	    start: function(e, ui) {
+        	sitemapHistory.saveState(this);
+    	}
+	});
+	
+	$('ul#masterList li a, ul#masterList div.dropzone').droppable({
+	    accept: 'ul#masterList li',
+	    tolerance: 'pointer',
+	    drop: function(e, ui) {
+	        
+			var li = $(this).parent();
+			
+	        //if we're dropping this on an element and it's the first child, we'll need a ul to drop into.
+			if (li.children('ul').length == 0 && !$(this).hasClass('dropzone')) {
+	        	li.append('<ul>');
+	        }
+	        
+	        //ui.draggable is our reference to the item that's been dragged.
+	        if ($(this).hasClass('dropzone')) {
+	        	li.before(ui.draggable);
+	        }
+	        else {
+	        	li.addClass('liOpen')
+	        	  .removeClass('liClosed')
+	        	  .children('ul').append(ui.draggable);
+	        }
+	        
+	        $('#masterList li.liOpen').not(':has(li:not(.ui-draggable-dragging))').removeClass('liOpen');
+	        
+	        addExpanders();
+	        
+	        //reset our background colours.
+	        li.find('a,.dropzone').css({ backgroundColor: '', borderColor: '' });
+	        li.find('.dropzone').css({ backgroundColor: '', borderColor: '' });
+	        
+	        sitemapHistory.commit();
+	    },
+	    over: function() {
+	        $(this).filter('a').css({ backgroundColor: '#ccc' });
+	        $(this).filter('.dropzone').css({ borderColor: '#aaa' });
+	    },
+	    out: function() {
+	        $(this).filter('a').css({ backgroundColor: '' });
+	        $(this).filter('.dropzone').css({ borderColor: '' });
+	    }
+	});
+}
+
+function addExpanders() {
+	$('a.expander').remove();
+	
+	$('ul:empty').remove();
+	
+    $('#masterList li').each(function() {
+    	if ($(this).children('ul').length != 0) {
+    		var tmpA = $('<a>').addClass('expander').addClass('controlButton');
+    		$(this).prepend(tmpA);
+    	}
+    });
+}
+
+/**
+ * A custom function to serialize the menu in a way that we can use on the backend to 
+ * correctly add the permissions and such.
+ */
+function serialize (items) {
 	var serial = [];
 	var i = 0;
 	items.children('li').each(function() {
 		
-		var linkTarget = ($(this).children('target')) ? $(this).children('a:not(.controlButton)').attr('target') : '_self';
+		var linkTarget = ($(this).children('target').legnth != 0) ? $(this).children('a:not(.controlButton)').attr('target') : '_self';
 		linkTarget = linkTarget.toLowerCase();
 		
 	    var link = $(this).children('a:not(.controlButton)').attr('href');
@@ -205,10 +313,10 @@ function serialize (items)
 	    	    
 		serial[i] = {
 			display:     $(this).attr('name'),
-			permissions: ($(this).children('a:not(.controlButton)')) ? $(this).children('a:not(.controlButton)').attr('title') : '',
+			permissions: ($(this).children('a:not(.controlButton)').length != 0) ? $(this).children('a:not(.controlButton)').attr('title') : '',
 			link:        link,
 			target:      linkTarget,
-			children:    ($(this).children('ul')) ? serialize($(this).children('ul')) : []
+			children:    ($(this).children('ul').length != 0) ? serialize($(this).children('ul')) : []
 		};
 		i++;
 	});
@@ -216,11 +324,15 @@ function serialize (items)
 	return serial;
 }
 
+/**
+ * Adds the edit, delete, and move handle to an li
+ * @param el The element you want to add the buttons to
+ */
 function addControlButtons(el) {
 	
-	$(el).prepend('<a class="controlButton deleteElement ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick" title="Delete Element"></span></a>');
-	$(el).prepend('<a class="controlButton editElement ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil" title="Edit Element"></span></a>');
-	$(el).prepend('<span class="ui-icon ui-icon-arrow-4 moveHandle"></span>');
+	$(el).prepend('<a class="controlButton editElement ui-state-default" title="Edit">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>');
+	$(el).prepend('<a class="controlButton deleteElement ui-state-default" title="Delete">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>');
+	$(el).prepend('<span class="ui-icon ui-icon-arrowthick-2-n-s moveHandle"></span>');
 	
 	$('a.ui-state-default').hover(
 		function(){ $(this).addClass('ui-state-hover'); }, 
@@ -228,17 +340,23 @@ function addControlButtons(el) {
   	);
 }
 
-function initTree(el)
-{	
-	$('ul#masterList li').children('a').each(function() {
-		$(this).click(function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			return false;
-		});
+/**
+ * Sets up the live events for all current and future edit and delete buttons.
+ * We do it this way so we don't have to do add the click functionality to each
+ * individual one as it gets created. 
+ */
+function setupLiveEvents() {
+	
+	// Prevent any links from sending the user to that page.  We need this since
+	// we actually use the href as a property.
+	$('ul#masterList li a:not(.controlButton)').live('click', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		return false;
     });
 	
-	$('ul#masterList li').find('.deleteElement').click(function() {
+	// deletes an element and all it's children
+	$('ul#masterList li').find('.deleteElement').live('click', function() {
 		if (confirm("Are you sure you want to delete this element?  This action cannot be undone.")) {
 			$(this).parent().slideUp('normal', 
 				function() {
@@ -246,9 +364,18 @@ function initTree(el)
 				});
 		}
 	});
+	
+	$('a.expander').live('click', function() {
+		$(this).parent().toggleClass('liOpen').toggleClass('liClosed');
+		return false;
+	});
 
-	$('ul#masterList li').find('.editElement').click(function() {
+
+	// populates the modal dialog with the link's properties when you click edit
+	$('ul#masterList li').find('.editElement').live('click', function() {
+		
 		var el = $(this).parent();
+		
 		currentElementId = $(el).attr('id');
 
 		$('#displayBox').val($(el).attr('name'));
@@ -274,6 +401,32 @@ function initTree(el)
 		
 		$("#navElementDialog").dialog("open");		
 	});
-	
-	$(el).jTree();
 }
+
+var sitemapHistory = {
+    stack: new Array(),
+    temp: null,
+    //takes an element and saves it's position in the sitemap.
+    //note: doesn't commit the save until commit() is called!
+    //this is because we might decide to cancel the move
+    saveState: function(item) {
+        sitemapHistory.temp = { item: $(item), itemParent: $(item).parent(), itemAfter: $(item).prev() };
+    },
+    commit: function() {
+        if (sitemapHistory.temp != null) sitemapHistory.stack.push(sitemapHistory.temp);
+    },
+    //restores the state of the last moved item.
+    restoreState: function() {
+        var h = sitemapHistory.stack.pop();
+        if (h == null) return;
+        if (h.itemAfter.length > 0) {
+            h.itemAfter.after(h.item);
+        }
+        else {
+            h.itemParent.prepend(h.item);
+        }
+		//checks the classes on the lists
+		$('#masterList li.liOpen').not(':has(li)').removeClass('liOpen');
+		$('#masterList li:has(ul li):not(.liClosed)').addClass('liOpen');
+    }
+};
