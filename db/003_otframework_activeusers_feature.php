@@ -10,7 +10,7 @@ class Db_003_otframework_activeusers_feature extends Ot_Migrate_Migration_Abstra
 {
     public function up($dba)
     {
-        $query = "CREATE TABLE `otframework`.`" . $this->tablePrefix . "tbl_ot_active_user` (`accountId` INT UNSIGNED NOT NULL , `dt` INT UNSIGNED NOT NULL , PRIMARY KEY ( `accountId` )) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;";
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_active_user` (`accountId` INT UNSIGNED NOT NULL , `dt` INT UNSIGNED NOT NULL , PRIMARY KEY ( `accountId` )) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;";
         $dba->query($query);
     }
     
