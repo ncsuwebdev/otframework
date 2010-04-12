@@ -155,6 +155,10 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             }
         }
         
+        if ($request->isXmlHttpRequest()) {
+            return;
+        }        
+        
         if ($auth->hasIdentity() && $config->user->requiredAccountFields->val != '') {
             
             if (!($request->getModuleName() == 'ot'
@@ -178,7 +182,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                     $action     = $this->_noAccount['action'];
                     
                     if (!$request->isXmlHttpRequest()) {
-                       $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);    
+                       $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);
                     }         
                 }
             }
