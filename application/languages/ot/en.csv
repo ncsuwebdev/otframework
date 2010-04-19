@@ -22,10 +22,10 @@ ot-account-index:consumerHasAccessButton;Revoke Access
 ot-account-index:account;Account
 ot-account-index:connectionsTo;Connections to %1$s
 ot-account-index:none;None
-ot-account-index;interact;%1$s is setup to interact with your account on %2$s.
+ot-account-index:interact;%1$s is setup to interact with your account on %2$s.
 ot-account-index:authorizedOn;You are authorized on %1$s.
 ot-account-index:revokeAccess;To revoke access, you must do this from 
-ot-account-index;notAuthorized;You are not authorized on %1$s.
+ot-account-index:notAuthorized;You are not authorized on %1$s.
 ot-account-index:authorizeAccess;Authorize Access
 ot-account-index:serviceDescription;Service Description
 ot-account-index:developers;Developers!

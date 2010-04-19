@@ -37,6 +37,8 @@ class Ot_Application_Resource_Theme extends Zend_Application_Resource_ResourceAb
         $layout    = $bootstrap->getResource('layout');
         $view      = $layout->getView();
         
+        $bootstrap->bootstrap('config');
+        
         $config = Zend_Registry::get('config');
         $view->config = $config;
                             
