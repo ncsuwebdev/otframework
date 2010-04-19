@@ -33,11 +33,13 @@ class Ot_Application_Resource_Config extends Zend_Application_Resource_ResourceA
 {
     public function init()
     {
+        $this->getBootstrap()->bootstrap('cache');
+        
         $cache = null;
         
-        if (Zend_Registry::isRegistered('cache')) {
+        //if (Zend_Registry::isRegistered('cache')) {
             $cache = Zend_Registry::get('cache');
-        }
+        //}
 
         if (is_null($cache) || !$config = $cache->load('configObject')) {
             

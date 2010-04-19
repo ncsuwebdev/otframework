@@ -28,9 +28,8 @@
  * @copyright Copyright (c) 2007 NC State University Office of Information Technology
  *
  */
-
 class Ot_Application_Resource_Cache extends Zend_Application_Resource_ResourceAbstract
-{
+{   
     protected $_caching = false;
     
     public function setCaching($caching)
@@ -39,9 +38,11 @@ class Ot_Application_Resource_Cache extends Zend_Application_Resource_ResourceAb
     }
     
     public function init()
-    {
+    {        
+        $this->getBootstrap()->bootstrap('db');
+        
         $frontendOptions = array(
-            'lifetime'                => 21600, // cache lifetime of 6 hours
+            'lifetime'                => 86400, // cache lifetime of 24 hours
             'automatic_serialization' => true
         );
 
@@ -52,6 +53,8 @@ class Ot_Application_Resource_Cache extends Zend_Application_Resource_ResourceAb
         $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
         $cache->setOption('caching', $this->_caching);
         
-        Zend_Registry::set('cache', $cache);        
+        Zend_Db_Table::setDefaultMetadataCache($cache); 
+        
+        Zend_Registry::set('cache', $cache);
     }
 }

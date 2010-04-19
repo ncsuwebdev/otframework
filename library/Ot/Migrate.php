@@ -250,7 +250,7 @@ class Ot_Migrate
                 throw new Exception('Migration ' . $m . ' was successful, but adding record to migrations table failed. ' . $e->getMessage());
             }
             
-            $this->_messages[] = 'Migration down to ' . $m . ' was successful.';
+            $this->_messages[] = 'Down migration of ' . $m . ' was successful.';
         }
         
         $this->_db->commit();   

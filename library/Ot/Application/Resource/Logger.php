@@ -31,15 +31,17 @@
 
 class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceAbstract
 {
-    protected $_useLog = null;
+    protected $_useLog = false;
     
     public function setUseLog($val)
     {
-        $this->_useLog = $val;
+        $this->_useLog = (bool)$val;
     }
     
     public function init()
-    {            
+    {
+        $this->getBootstrap()->bootstrap(array('config', 'db'));
+        
         $tbl = 'tbl_ot_log';
         
         $config = Zend_Registry::get('config');
@@ -49,7 +51,7 @@ class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceA
         }
         
         // Setup logger
-        if (!is_null($this->_useLog) && $this->_useLog) {
+        if ($this->_useLog) {
             $adapter = Zend_Db_Table::getDefaultAdapter();
             $writer  = new Zend_Log_Writer_Db($adapter, $tbl);
         } else {
