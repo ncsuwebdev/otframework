@@ -67,10 +67,10 @@ class Ot_Role extends Ot_Db_Table
             
             $rule = new Ot_Role_Rule();
         
-            $roles = $this->fetchAll(null)->toArray();
+            $roles = $this->fetchAll(null, array('inheritRoleId ASC', 'roleId ASC'))->toArray();
             
             $where = $rule->getAdapter()->quoteInto('scope = ?', $scope);
-            $rules = $rule->fetchAll($where, 'roleId')->toArray();
+            $rules = $rule->fetchAll($where, 'roleId ASC')->toArray();
     
             $aclData = array();
     
