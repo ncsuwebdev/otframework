@@ -67,10 +67,10 @@ class Ot_Role extends Ot_Db_Table
             
             $rule = new Ot_Role_Rule();
         
-            $roles = $this->fetchAll(null)->toArray();
+            $roles = $this->fetchAll(null, array('inheritRoleId ASC', 'roleId ASC'))->toArray();
             
             $where = $rule->getAdapter()->quoteInto('scope = ?', $scope);
-            $rules = $rule->fetchAll($where, 'roleId')->toArray();
+            $rules = $rule->fetchAll($where, 'roleId ASC')->toArray();
     
             $aclData = array();
     
@@ -287,7 +287,16 @@ class Ot_Role extends Ot_Db_Table
 
         $inheritRoleId->addMultiOption(0, 'No Inheritance');
         foreach ($roles as $r) {
-            $inheritRoleId->addMultiOption($r['roleId'], $r['name']);
+            
+            if (isset($values['roleId'])) {
+                
+                if (!$acl->inheritsRole($r['roleId'], $values['roleId']) && $r['roleId'] != $values['roleId']) {
+                    $inheritRoleId->addMultiOption($r['roleId'], $r['name']);
+                }
+            } else {
+                $inheritRoleId->addMultiOption($r['roleId'], $r['name']);
+            }
+            
         }         
         
         $inheritRoleId->setValue((isset($values['inheritRoleId'])) ? $values['inheritRoleId'] : 0);
