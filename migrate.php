@@ -56,45 +56,18 @@ if (!isset($opts->cmd) || !in_array($opts->cmd, $possibleCommands)) {
 
 $applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', $opts->environment);
 
-if (isset($applicationIni->resources->keymanagerdb->key) && $applicationIni->resources->keymanagerdb->key) {
-    if (!isset($_SERVER['KEY_MANAGER2_PATH'])) {
-        Ot_Migrate_Cli::error('KEY_MANAGER2_PATH is not set as a server variable.  Cannot load config information.');
-    }
-    
-    require_once $_SERVER['KEY_MANAGER2_PATH'];
-            
-    $km = new KeyManager();
-        
-    if ($km->isKey($applicationIni->resources->keymanagerdb->key)) {
-        
-        $key = $km->getKey($applicationIni->resources->keymanagerdb->key);
-        
-        $dbConfig = array(
-            'adapter'  => 'PDO_MYSQL',
-            'username' => $key->username,
-            'password' => $key->password,
-            'host'     => $key->host,
-            'port'     => $key->port,
-            'dbname'   => $key->dbname
-        );  
-
-    } else {
-        Ot_Migrate_Cli::error('KeyManager could not find the key: ' . $applicationIni->resources->keymanagerdb->key);
-    }
-} else {
-    if (!isset($applicationIni->resources->db)) {
-        Ot_Migrate_Cli::error('DB resources not found in application.ini');
-    }
-    
-    $dbConfig = array(
-        'adapter'  => $applicationIni->resources->db->adapter,
-        'username' => $applicationIni->resources->db->params->username,
-        'password' => $applicationIni->resources->db->params->password,
-        'host'     => $applicationIni->resources->db->params->host,
-        'port'     => $applicationIni->resources->db->params->port,
-        'dbname'   => $applicationIni->resources->db->params->dbname
-    );
+if (!isset($applicationIni->resources->db)) {
+    Ot_Migrate_Cli::error('DB resources not found in application.ini');
 }
+
+$dbConfig = array(
+    'adapter'  => $applicationIni->resources->db->adapter,
+    'username' => $applicationIni->resources->db->params->username,
+    'password' => $applicationIni->resources->db->params->password,
+    'host'     => $applicationIni->resources->db->params->host,
+    'port'     => $applicationIni->resources->db->params->port,
+    'dbname'   => $applicationIni->resources->db->params->dbname
+);
 
 $configXml = new Zend_Config_Xml($configFilePath . '/config.xml', 'production');
 Zend_Registry::set('config', $configXml);
