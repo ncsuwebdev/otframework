@@ -44,12 +44,12 @@ class Ot_Application_Resource_Remedy extends Zend_Application_Resource_ResourceA
     
     public function setUsername($val)
     {
-        $this->_hostname = $val;
+        $this->_username = $val;
     }
     
     public function setPassword($val)
     {
-        $this->_hostname = $val;
+        $this->_password = $val;
     }
     
     public function init()

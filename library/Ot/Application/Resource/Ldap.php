@@ -49,7 +49,7 @@ class Ot_Application_Resource_Ldap extends Zend_Application_Resource_ResourceAbs
     
     public function setPassword($val)
     {
-        $this->_hostname = $val;
+        $this->_password = $val;
     }
     
     public function init()
