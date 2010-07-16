@@ -1,3 +1,5 @@
+<a href="<?php echo $this->url(array('controller' => 'api', 'action' => 'sample'), 'ot', true); ?>">View a code sample for how to use this API with PHP</a>
+
 <?php foreach ($this->api as $a) : ?>   
     <div class="docBlock">
         <p><b><?php echo $this->translate('ot-api-index:method'); ?>: </b><code><?php echo $a['method']; ?></code></p>

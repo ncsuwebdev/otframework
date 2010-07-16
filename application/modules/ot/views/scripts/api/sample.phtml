@@ -1,0 +1,79 @@
+<pre>
+
+// This is how to use the API's with an OT Framework application.  This code may
+// not work exactly the same way if you're trying to connect to some other API
+
+// You must first generate the consumer and access token keys in the app you want
+// to use.  Get those and then fill them in in the arrays below.
+
+// You must include paths to the Oauth client, the Oauth OT libraries as well 
+// as Zend Framework (1.9+). The OT Framework has all the Oauth libraries you need
+// already included.  But modify the set_inclue_path if you need to
+//set_include_path(get_include_path() . PATH_SEPARATOR . './library');
+
+require_once 'Zend/Loader/Autoloader.php';
+$loader = Zend_Loader_Autoloader::getInstance();
+$loader->setFallbackAutoloader(true);
+
+// the url to the api you want to use.
+$apiUrl = 'http://the-app-you-want-to-use/cyclone/ot/api/';
+
+// the type of api you want to call (xml, json, or soap) 
+$apiType = 'json';
+
+$options = array(
+    'requestTokenUrl' => 'http://the-app-you-want-to-use/ot/oauthserver/request-token', 
+    'authorizeUrl'    => 'http://the-app-you-want-to-use/ot/oauthserver/authorize', 
+    'accessTokenUrl'  => 'http://the-app-you-want-to-use/ot/oauthserver/access-token', 
+    'consumerKey'     => '', 
+    'consumerSecret'  => ''
+);
+
+$accessToken = array(
+    'token'       => '',
+    'tokenSecret' => ''
+);
+
+// the method you want to call
+$method = 'getVersions';
+
+// associative array of the params you want to pass to the method call
+$params = array();
+
+$oAuthClient = new Ot_Oauth_Client($options);
+$oAuthClient->setAccessToken($accessToken['token'], $accessToken['tokenSecret']);
+
+if ($apiType == 'soap') {
+
+    $request = $oAuthClient->prepareRequest($apiUrl . $apiType, 'POST');
+    
+    $soapConfig = array(
+           'location' => $apiUrl . 'soap',
+           'uri'      => 'soapservice',
+           'trace'    => 1,
+        );
+    
+    $client = new SoapClient(null, $soapConfig);
+    
+    $client->__setSoapHeaders(new SoapHeader('soapservice', 'SoapOauth', $request->toHeader()));
+    
+    $result = $client->__call($method, $params); 
+    
+} elseif ($apiType == 'xml') {
+    
+    $params = array_merge(array('method' => $method), $params);
+    $request = $oAuthClient->prepareRequest($apiUrl . $apiType, 'GET', $params);
+    
+    $result = $oAuthClient->sendApiRequest($request);
+    
+} else {
+    
+    $params = array_merge(array('method' => $method), $params);
+    $request = $oAuthClient->prepareRequest($apiUrl . $apiType, 'GET', $params);
+    
+    $result = $oAuthClient->sendApiRequest($request);
+}
+
+echo '&lt;pre&gt;';
+print_r($result);
+</pre>
