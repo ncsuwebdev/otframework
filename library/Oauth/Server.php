@@ -106,14 +106,14 @@ class Oauth_Server
      */
     private function getVersion(&$request)
     { 
-        $_version = $request->getParameter("oauth_version");
-        if (!$_version) {
-            $_version = 1.0;
+        $version = $request->getParameter("oauth_version");
+        if (!$version) {
+            $version = 1.0;
         }
-        if ($_version && $_version != $this->version) {
-            throw new Oauth_Exception("OAuth version '$_version' not supported");
+        if ($version && $version != $this->_version) {
+            throw new Oauth_Exception("OAuth version '$version' not supported");
         }
-        return $_version;
+        return $version;
     } 
     
     /**

@@ -118,7 +118,7 @@
             <div id="developers">
     			<span><?php echo $this->translate('ot-account-index:developers'); ?></span>
                 <?php if ($this->acl['oauth']) : ?>
-                    <?php echo $this->translate('ot-account-index:canSetup', array('<b>' . $this->config->user->appTitle->val) . '</b>'); ?>
+                    <?php echo $this->translate('ot-account-index:canSetup', '<b>' . $this->config->user->appTitle->val . '</b>'); ?>
     			    <a href="<?php echo $this->url(array(), 'oauth', true); ?>">here</a>.
                     <br />
                 <?php endif; ?>
@@ -144,7 +144,7 @@
 			</div>
 			<?php if ($this->acl['revokeAccess']): ?>
 			<div class="revoke">
-				<a href="<?php echo $this->url(array('controller' => 'oauthserver', 'action' => 'revoke', 'consumerId' => $t['consumerId']), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton">
+				<a href="<?php echo $this->url(array('controller' => 'oauthserver', 'action' => 'revoke', 'consumerId' => $t['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
 				    <?php echo $this->translate('ot-account-index:consumerHasAccessButton'); ?>
 				<span class="ui-icon ui-icon-minusthick"></span></a>			
 			</div>
