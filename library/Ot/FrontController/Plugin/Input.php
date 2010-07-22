@@ -38,6 +38,15 @@ class Ot_FrontController_Plugin_Input extends Zend_Controller_Plugin_Abstract
      */
     public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
     {
+
+        if (get_magic_quotes_gpc()) {
+        
+            $_POST = array_map(array($this, '_stripslashesDeep'), $_POST);
+            $_GET = array_map(array($this, '_stripslashesDeep'), $_GET);
+            $_COOKIE = array_map(array($this, '_stripslashesDeep'), $_COOKIE);
+            $_REQUEST = array_map(array($this, '_stripslashesDeep'), $_REQUEST);
+        }
+
         $filterOptions = array(
             '*' => array(
                 'StringTrim',
@@ -50,5 +59,14 @@ class Ot_FrontController_Plugin_Input extends Zend_Controller_Plugin_Abstract
         
         Zend_Registry::set('getFilter', $getFilter);
         Zend_Registry::set('postFilter', $postFilter);        
+    }
+    
+    private function _stripslashesDeep($value)
+    {
+        $value = is_array($value) ?
+                 array_map(array($this, '_stripslashesDeep'), $value) :
+                 stripslashes($value);
+
+        return $value;
     }
 }
