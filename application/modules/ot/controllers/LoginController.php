@@ -558,7 +558,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $auth->autoLogout();
         
         Zend_Auth::getInstance()->clearIdentity();
-                
+        
         $this->_helper->redirector->gotoRoute(array(), 'default', true);          
             
     } 

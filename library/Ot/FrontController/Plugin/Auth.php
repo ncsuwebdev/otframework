@@ -113,9 +113,9 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 
                 $request->setModuleName($this->_noAuth['module']);
                 $request->setControllerName($this->_noAuth['controller']);
-                   $request->setActionName($this->_noAuth['action']); 
+                $request->setActionName($this->_noAuth['action']); 
                    
-                   return;
+                return;
             }                   
             
             if (!$acl->hasRole($thisAccount->role)) {
@@ -136,7 +136,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             $role = (string)$config->user->defaultRole->val;
         }
         
-        $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
+        $requestUri = null;
         
         if (!$acl->isAllowed($role, $resource, $action)
             && !is_null($resource)
@@ -148,7 +148,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 $action     = $this->_noAuth['action'];
                 
                 if (!$request->isXmlHttpRequest()) {
-                    $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);
+                    $requestUri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);
                 }
             } else {
                 throw new Ot_Exception_Access('You do not have the proper credentials to access this page.');
@@ -182,10 +182,15 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                     $action     = $this->_noAccount['action'];
                     
                     if (!$request->isXmlHttpRequest()) {
-                       $req->uri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);
+                       $requestUri = str_replace($baseUrl, '', $_SERVER['REQUEST_URI']);
                     }         
                 }
             }
+        }
+        
+        if (!is_null($requestUri)) {
+            $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
+            $req->uri = $requestUri;
         }
         
         $request->setModuleName($module);
