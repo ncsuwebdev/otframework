@@ -47,6 +47,7 @@ class Ot_Custom
         'multiselect',
         'select',
         'ranking',
+        'description'
     );
     
     /**
@@ -143,7 +144,7 @@ class Ot_Custom
             case 'HTML':
                 return $this->_renderHtmlElement($attribute, $value);
             default:
-                return '';          
+                return '';
         }
     }
     
@@ -157,6 +158,11 @@ class Ot_Custom
         
         switch ($attribute['type']) {
             
+            case 'description':
+                $elm = new Ot_Form_Element_Description($name);
+                $opts = $this->convertOptionsToArray($attribute['options']);
+                $elm->setDescription(isset($opts[0]) ? $opts[0] : '');
+                break;
             case 'text':
                 $elm = new Zend_Form_Element_Text($name);
                 $elm->size = '20';
@@ -210,10 +216,13 @@ class Ot_Custom
         if (!is_null($value) && !empty($value)) {
             if (is_array($value)) {
                 $elm->setValue(array_keys($value));
+            } else if ($attribute['type'] == 'description') {
+              $elm->setValue(true);
             } else {
                 $elm->setValue($value);
             }
         }
+        
         $elm->setLabel($attribute['label'] . ":");
         
         if ($attribute['required']) {
@@ -242,6 +251,12 @@ class Ot_Custom
         
         switch ($attribute['type']) {
             
+            case 'description':
+                $formField = new Ot_Form_Element_Description($name);
+                $formField->setDescription($attribute['options'][0]);
+                $formField->setValue(true);
+                $formField = $formField->render();
+                break;
             case 'text':
                 $opts['size'] = '20';
                 $formField = $view->formText($name, $value, $opts);
@@ -381,7 +396,7 @@ class Ot_Custom
      * @param mixed $parentId
      * @return array
      */
-    public function getData($objectId, $parentId, $renderType = 'none')
+    public function getData($objectId, $parentId, $renderType = 'none', $getDescriptions = true)
     {
         $attributes = $this->getAttributesForObject($objectId);
         $nv = new Ot_Custom_Attribute_Value();
@@ -389,6 +404,12 @@ class Ot_Custom
         $ret = array();
 
         foreach ($attributes as $a) {
+
+            if ($getDescriptions == false) {
+                if ($a['type'] == 'description') {
+                    continue;
+                }    
+            }
             
             $dba = $nv->getAdapter();
             $where = $dba->quoteInto('objectId = ?', $objectId) . ' AND ' . 
@@ -429,8 +450,13 @@ class Ot_Custom
                 case 'select':
                 case 'radio':
                     $value = (isset($a['options'][$value])) ? $a['options'][$value] : '';
-                    break;  
+                    break;
             }
+            
+           if ($a['type'] == 'description') {
+               $value = isset($a['options'][0]) ? $a['options'][0] : '';    
+           }
+            
             $temp = array(
                 'attribute'  => $a,
                 'value'      => $value,

@@ -5,8 +5,11 @@ $('document').ready(function() {
 		if ($(this).val() == 'multiselect' || $(this).val() == 'multicheckbox' || $(this).val() == 'radio' || $(this).val() == 'select') {
 	        $('#opt').css('display', 'block');
 	        $('#opt').find('input').focus();
+	    } else if ($(this).val() == 'description') {
+	    	$('#descriptionInput').css('display', 'block');
 	    } else {
 	        $('#opt').css('display', 'none');
+	        $('#descriptionInput').css('display', 'none');
 	    }           
 	});
 	

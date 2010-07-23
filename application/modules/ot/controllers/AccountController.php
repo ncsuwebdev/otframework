@@ -140,7 +140,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->role = $thisRole->toArray();
         $custom = new Ot_Custom();
         
-        $data = $custom->getData('Ot_Profile', $this->_userData['accountId']);
+        $data = $custom->getData('Ot_Profile', $this->_userData['accountId'], 'none', false);
         foreach ($data as $d) {
             $attributes[$d['attribute']['label']] = $d['value'];
         }

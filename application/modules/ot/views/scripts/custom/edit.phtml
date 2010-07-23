@@ -28,6 +28,9 @@
                             <option<?php echo ($key == $this->attribute['type']) ? ' selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
                         <?php endforeach; ?>
                     </select>
+                    <div id="descriptionInput" style="display: none;">
+                           <textarea name="option[]"><?php echo isset($this->attribute['options'][0]) ? $this->attribute['options'][0] : ''; ?></textarea>
+                       </div>
                     <div id="opt"<?php if ($this->attribute['type'] == 'select' || $this->attribute['type'] == 'radio') { echo ' style="display: block;"'; } ?>>
                         <?php foreach ($this->attribute['options'] as $o) : ?>
                             <input type="checkbox" value="<?php echo $o; ?>" name="opt_delete[]" /> <?php echo $this->translate("ot-custom-edit:delete", $o); ?><br />

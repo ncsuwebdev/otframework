@@ -329,7 +329,7 @@ class Ot_CustomController extends Zend_Controller_Action
                'direction'   => $filter->filter($_POST['direction']),
             );
 
-            if (($data['type'] == 'select' || $data['type'] == 'radio') && is_array($attribute['options'])) {
+            if (($data['type'] == 'select' || $data['type'] == 'radio' || $data['type'] == 'description' || $data['type'] == 'multiselect' || $data['type'] == 'multicheckbox') && is_array($attribute['options'])) {
                 $data['options'] = $custom->convertOptionsToString($attribute['options']);
             } else {
                 $data['options'] = '';
