@@ -4,7 +4,7 @@
  * Adds support for the 'description' custom attribute
  *
  */
-class Db_004_otframework_add_customn_attribute_description_type extends Ot_Migrate_Migration_Abstract
+class Db_004_otframework_add_custom_attribute_description_type extends Ot_Migrate_Migration_Abstract
 {
     public function up($dba)
     {
