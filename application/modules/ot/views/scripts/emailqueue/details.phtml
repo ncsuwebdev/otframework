@@ -18,7 +18,7 @@
 	        </tr>
 	        <tr>
 	            <td><label><?php echo $this->translate("ot-emailqueue-details:sentDate"); ?></label></td>
-	            <td><?php echo ($this->email['status'] == 'sent') ? $this->formatDate($this->email['sentDt'], $this->config->dateTimeFormat->val) : $this->translate("ot-emailqueue-details:notSent"); ?></td>
+	            <td><?php echo ($this->email['status'] == 'sent') ? $this->dateFormat($this->email['sentDt'], $this->config->dateTimeFormat->val) : $this->translate("ot-emailqueue-details:notSent"); ?></td>
 	        </tr>
 	        <tr>
 	            <td><label><?php echo $this->translate("ot-emailqueue-details:affected"); ?></label></td>
