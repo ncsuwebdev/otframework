@@ -268,7 +268,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $config = Zend_Registry::get('config');
     
             $otAuth = new Ot_Auth_Adapter();        
-            $adapters = $otAuth->getEnabledAdapters();
+            $adapters = $otAuth->fetchAll();
             
             $realmMap = array();
             foreach ($adapters as $a) {
