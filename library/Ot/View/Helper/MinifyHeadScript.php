@@ -41,7 +41,7 @@ class Ot_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript
         return parent::headScript($mode, $spec, $placement, $attrs, $type);
     }
     
-    public function toString()
+    public function toString($indent = null)
     {
         $items = array();
         $scripts = array();

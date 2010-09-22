@@ -41,7 +41,7 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
         return parent::headlink($attributes, $placement);
     }
     
-    public function toString()
+    public function toString($indent = null)
     {
         $items = array();
         $stylesheets = array();

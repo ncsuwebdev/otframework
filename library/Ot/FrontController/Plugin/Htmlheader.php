@@ -39,7 +39,7 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         
         $themePath = $view->applicationThemePath;
                 
-        $themeConfig = new Zend_Config_Xml($themePath . '/config.xml', 'production', true);
+        $themeConfig = new Zend_Config_Xml(realpath(APPLICATION_PATH . '/../public/' . $view->applicationThemePath) . '/config.xml', 'production', true);
         
         $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
         $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
