@@ -29,7 +29,7 @@
                         <?php endforeach; ?>
                     </select>
                     <div id="descriptionInput" style="display: none;">
-                           <textarea name="option[]"><?php echo isset($this->attribute['options'][0]) ? $this->attribute['options'][0] : ''; ?></textarea>
+                           <textarea name="option[]"><?php if ($this->attribute['type'] == 'description') : ?><?php echo isset($this->attribute['options'][0]) ? $this->attribute['options'][0] : ''; ?><?php endif; ?></textarea>
                        </div>
                     <div id="opt"<?php if ($this->attribute['type'] == 'select' || $this->attribute['type'] == 'radio') { echo ' style="display: block;"'; } ?>>
                         <?php foreach ($this->attribute['options'] as $o) : ?>

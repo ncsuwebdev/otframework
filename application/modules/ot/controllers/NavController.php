@@ -101,7 +101,7 @@ class Ot_NavController extends Zend_Controller_Action
         $this->_helper->getStaticHelper('layout')->disableLayout();
         
         $aclResources = $this->_acl->getResources();
-                
+
         $resources = array();
         
         foreach ($aclResources as $module => $controllers) {
