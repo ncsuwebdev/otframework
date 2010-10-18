@@ -53,6 +53,23 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
         $this->getFrontController()->dispatch();
     }
-
     
+    /**
+     * logs you into admin account so that you won't get redirected to login page all the time
+     * 
+     **/
+	public function login()
+	{
+		$username = 'admin';
+        $password = 'admin';
+        $authAdapter = new Ot_Auth_Adapter;
+        $adapter     = $authAdapter->find('local');
+        $className   = (string)$adapter->class;
+        // Set up the authentication adapter
+        $authAdapter = new $className($username, $password);
+        $auth = Zend_Auth::getInstance();
+        // Attempt authentication, saving the result
+        $result = $auth->authenticate($authAdapter);
+	}
+	
 }
