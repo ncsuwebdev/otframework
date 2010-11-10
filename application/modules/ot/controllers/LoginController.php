@@ -360,7 +360,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     $cipher = constant((string)$config->app->loginOptions->passwordReset->cipher);
     
                     $code = bin2hex(mcrypt_encrypt($cipher, $key, $text, MCRYPT_MODE_CBC, $iv));
-var_dump($code);exit;
+//var_dump($code);exit;
                     $this->_helper->flashMessenger->addMessage('msg-info-passwordResetRequest');
                                 
                     $loggerOptions = array('attributeName' => 'accountId', 'attributeId' => $userAccount->accountId);
