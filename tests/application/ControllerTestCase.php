@@ -61,7 +61,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 	public function login()
 	{
 		$username = 'admin';
-        $password = 'admin';
+        $password = 'admin';//is putting a user's u+p in plaintext here ok to do?
         $authAdapter = new Ot_Auth_Adapter;
         $adapter     = $authAdapter->find('local');
         $className   = (string)$adapter->class;

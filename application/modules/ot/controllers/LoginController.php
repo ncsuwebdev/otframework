@@ -60,6 +60,8 @@ class Ot_LoginController extends Zend_Controller_Action
         
         $loginForms = array();
         
+        $realm = 'local';//set a default value for $realm, since it's required
+        
         foreach ($adapters as $adapter) {
             $form = new Zend_Form();
             $form->setAttrib('id', $adapter->class)->setDecorators(
@@ -111,11 +113,11 @@ class Ot_LoginController extends Zend_Controller_Action
                 $form->addElement($signupButton);
             }
             
-            $realm = $form->createElement('hidden', 'realm');
-            $realm->setValue($adapter->adapterKey);
-            $realm->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));        
+            $realmHidden = $form->createElement('hidden', 'realm');
+            $realmHidden->setValue($adapter->adapterKey);
+            $realmHidden->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));        
 
-            $form->addElement($realm);
+            $form->addElement($realmHidden);
 
             $loginForms[$adapter->adapterKey] = array(
                 'form'        => $form,
@@ -160,7 +162,9 @@ class Ot_LoginController extends Zend_Controller_Action
             if (isset($authRealm->realm) && !$this->_request->isPost()) {
                 $realm = $authRealm->realm;
             } else {
-                $realm = $form->getValue('realm');
+            	if($form->getValue('realm')) {
+                	$realm = $form->getValue('realm');
+            	}
             }
             
             $username = ($formUserId) ? $formUserId : $form->getValue('username');
@@ -289,7 +293,7 @@ class Ot_LoginController extends Zend_Controller_Action
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_helper->redirector->gotoRoute(array(), 'default', true);
             return;
-        }            
+        }
         
         if (!$filter->realm) {
             throw new Ot_Exception_Input('msg-error-realmNotFound');
@@ -344,10 +348,10 @@ class Ot_LoginController extends Zend_Controller_Action
             if ($form->isValid($_POST)) {   
 
                 $account = new Ot_Account();
-                
-                $userAccount = $account->getAccount($form->getValue('username'), $form->getValue('realm'));
-                
-                if (!is_null($userAccount)) {                        
+                $realm = $form->getValue('realm');
+                $userAccount = $account->getAccount($form->getValue('username'), 'local');//$form->getValue('realm'));
+                //var_dump($form->getValue('username'));exit;
+                if (!is_null($userAccount)) {             
                              
                     // Generate key
                     $text   = $userAccount->username . '@' . $userAccount->realm . '-' . time();
@@ -356,7 +360,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     $cipher = constant((string)$config->app->loginOptions->passwordReset->cipher);
     
                     $code = bin2hex(mcrypt_encrypt($cipher, $key, $text, MCRYPT_MODE_CBC, $iv));
-    
+var_dump($code);exit;
                     $this->_helper->flashMessenger->addMessage('msg-info-passwordResetRequest');
                                 
                     $loggerOptions = array('attributeName' => 'accountId', 'attributeId' => $userAccount->accountId);

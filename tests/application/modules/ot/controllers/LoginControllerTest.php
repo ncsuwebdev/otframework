@@ -13,34 +13,129 @@ class LoginControllerTest extends ControllerTestCase
     	$this->assertAction('index');
 	}
 	
-	public function testLoginFailsWhenGivenInvalidData()
+	public function wrongDataProvider()
 	{
+		return array(
+			array('', ''),
+			array('foobar', ''),
+			array('', 'foobar'),
+			array('foobar', 'foobar'),
+			array('admin', ''),
+			array(str_repeat('a', 10000), ''),
+			array('asdf', chr(254))
+		);
+	}
 	
-		$_POST['username'] = 'UserThatDoesntExist';
-		$_POST['password'] = 'PasswordThatDoesntExist';
-	
-		/*
-		$this->request->setMethod('POST');
-		$this->request->setPost(array(
-					'username' => 'UserThatDoesntExist',
-					'password' => 'AnInvalidPassword'
-				));*/
-		$this->dispatch('/ot/login');
+	/**
+	 * @dataProvider wrongDataProvider
+	 */
+	public function testLoginFailsWhenGivenInvalidData($username, $password)
+	{
+		$this->request
+             ->setMethod('POST')
+             ->setPost(array(
+                 'username' => $username,
+                 'password' => $password
+             ));
+        $this->dispatch('/ot/login');
+		
+		
 		$this->assertNotRedirect();
-		$this->assertQuery('form .errors');
+		$this->assertQuery('#systemMessages');
+	}
+	
+	/**
+	 * @dataProvider wrongDataProvider
+	 */
+	public function testLoginGivesErrorMessageWithMissingUsername($username, $password)
+	{
+		$this->request
+			->setMethod('POST')
+			->setPost(array(
+				'password'=> $password
+			));
+		$this->dispatch('ot/login');
+		
+		$this->assertNotRedirect();
+		$this->assertQuery('.errors');
+		
+	}
+	
+	/**
+	 * @dataProvider wrongDataProvider
+	 */
+	public function testLoginGivesErrorMessageWithMissingPassword($username, $password)
+	{
+		$this->request
+			->setMethod('POST')
+			->setPost(array(
+				'username' => $username
+			));
+		$this->dispatch('ot/login');
+		
+		$this->assertNotRedirect();
+		$this->assertQuery('.errors');
+	}
+	
+	public function testLoginGivesErrorMessagesWithMissingUsernameAndPassword() {
+		$this->request
+			->setMethod('POST')
+			->setPost(array('a'=>''));
+		$this->dispatch('ot/login');
+		
+		$this->assertNotRedirect();
+		$this->assertQueryCount('.errors', 2);
 	}
 	
 	public function testLoginIndexRedirectsToRootWhenLoggedIn()
 	{
 		$this->login();
-    	$this->dispatch('/ot/login');
+    	$this->dispatch('ot/login');
     	$this->assertRedirectTo('/');
 	}
     
+	/**
+	 * 
+	 */
+	public function testForgotActionInvalidUsername()
+	{
+		//$this->markTestSkipped();
+		$this->request
+			->setMethod('POST')
+			->setPost(array(
+				'username' => 'someUserThatDoesntExist'
+			));
+		$this->dispatch('ot/login/forgot/realm/local');
+		$this->assertQuery('#systemMessages');
+	}
+	
 	public function testForgotAction()
+	{
+		$this->dispatch('ot/login/forgot/realm/local');
+		$this->assertQueryCount('form#forgotPassword input', 3);
+	}
+	
+	public function testForgotActionValidUsername() {
+		$this->markTestSkipped('AHHHH! PHP native functions are breaking!');
+		//$this->markTestSkipped('Test skipped to prevent spamming your inbox.');
+		
+		//define('MCRYPT_RIJNDAEL_128', 'rijndael-128');
+		
+		$this->request
+			->setMethod('POST')
+			->setPost(array(
+				'username' => 'admin'
+			));
+		$this->dispatch('ot/login/forgot/realm/local');
+		
+		$this->assertRedirect();//To('login/index/realm/local');
+	}
+	
+	public function testForgotActionAlreadyLoggedIn()
 	{
 		$this->markTestIncomplete();
 	}
+	
 	
 	public function testForgotActionGivesMessageWhenUserDoesntExist()
 	{
