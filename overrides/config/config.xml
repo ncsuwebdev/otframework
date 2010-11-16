@@ -19,6 +19,10 @@
             <consumerKey>mxabStsvNh2vTSgOw05MNQ</consumerKey>
             <consumerSecret>aMKwT6sOqoJLS2HcRQ06CbDhXf8u9RKVdar5EytYkc</consumerSecret>
         </twitter>
+        <google>
+            <consumerKey>jurassic.unity.ncsu.edu</consumerKey>
+            <consumerSecret>+XnNqzNflO5ZpgRm44U6+Ks4</consumerSecret>
+        </google>
       </loginOptions>
     </app>
     <user>

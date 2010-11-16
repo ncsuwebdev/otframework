@@ -226,6 +226,11 @@ class Ot_LoginController extends Zend_Controller_Action
                         throw new Ot_Exception_Access('msg-error-createAccountNotAllowed');
                     }
                     
+                    echo "<pre>";
+                    print_r($identity);
+                    print_r($acctData);
+                    
+                    
                     $accountId = $account->insert($acctData);
                             
                     $role = $acctData['role'];

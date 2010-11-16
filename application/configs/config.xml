@@ -21,6 +21,10 @@
             <consumerKey></consumerKey>
             <consumerSecret></consumerSecret>
         </twitter>
+        <google>
+            <consumerKey></consumerKey>
+            <consumerSecret></consumerSecret>
+        </google>
       </loginOptions>
       <accountPlugin>Internal_Account_Plugin_Attributes</accountPlugin>
       <triggerPlugins>
