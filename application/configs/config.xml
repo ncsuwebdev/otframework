@@ -17,6 +17,10 @@
             <appId></appId>
             <secret></secret>
         </fbConnect>
+        <twitter>
+            <consumerKey></consumerKey>
+            <consumerSecret></consumerSecret>
+        </twitter>
       </loginOptions>
       <accountPlugin>Internal_Account_Plugin_Attributes</accountPlugin>
       <triggerPlugins>

@@ -219,7 +219,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     if (isset($identity->emailAddress)) {
                         $acctData['emailAddress'] = $identity->emailAddress;
                     }
-                    
+
                     if ($config->app->loginOptions->generateAccountOnLogin != 1) {
                         $auth->clearIdentity();
                         $authAdapter->autoLogout();

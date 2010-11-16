@@ -4,10 +4,21 @@
     <app>
       <theme>default</theme>
       <loginOptions>
+        <generateAccountOnLogin>1</generateAccountOnLogin>
+        <passwordReset>
+          <key>tl30fkvERtili</key>
+          <iv>39v09v90fef094gj</iv>
+          <cipher>MCRYPT_RIJNDAEL_128</cipher>
+          <numberMinutesKeyIsActive>30</numberMinutesKeyIsActive>
+        </passwordReset>      
         <fbConnect>
             <appId>107939379275422</appId>
             <secret>aa1ea20597dbf129cda944290158e085</secret>
         </fbConnect>
+        <twitter>
+            <consumerKey>mxabStsvNh2vTSgOw05MNQ</consumerKey>
+            <consumerSecret>aMKwT6sOqoJLS2HcRQ06CbDhXf8u9RKVdar5EytYkc</consumerSecret>
+        </twitter>
       </loginOptions>
     </app>
     <user>
