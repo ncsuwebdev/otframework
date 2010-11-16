@@ -25,6 +25,10 @@
             <consumerKey></consumerKey>
             <consumerSecret></consumerSecret>
         </google>
+        <yahoo>
+            <consumerKey></consumerKey>
+            <consumerSecret></consumerSecret>
+        </yahoo>
       </loginOptions>
       <accountPlugin>Internal_Account_Plugin_Attributes</accountPlugin>
       <triggerPlugins>

@@ -23,6 +23,10 @@
             <consumerKey>jurassic.unity.ncsu.edu</consumerKey>
             <consumerSecret>+XnNqzNflO5ZpgRm44U6+Ks4</consumerSecret>
         </google>
+        <yahoo>
+            <consumerKey>dj0yJmk9NzZiaUJPaFc1cmdIJmQ9WVdrOVYxTldhRWRQTlRRbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD0wMw--</consumerKey>
+            <consumerSecret>91e49ece5940d708bfbef2ec04eebfdabb8bc126</consumerSecret>
+        </yahoo>
       </loginOptions>
     </app>
     <user>
