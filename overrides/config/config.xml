@@ -3,6 +3,12 @@
   <production>
     <app>
       <theme>default</theme>
+      <loginOptions>
+        <fbConnect>
+            <appId>107939379275422</appId>
+            <secret>aa1ea20597dbf129cda944290158e085</secret>
+        </fbConnect>
+      </loginOptions>
     </app>
     <user>
       <language val="en"/>

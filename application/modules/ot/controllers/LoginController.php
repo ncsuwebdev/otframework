@@ -206,6 +206,20 @@ class Ot_LoginController extends Zend_Controller_Action
                         'lastLogin' => time(),
                     );
                             
+                    $identity = $auth->getIdentity();
+                    
+                    if (isset($identity->firstName)) {
+                        $acctData['firstName'] = $identity->firstName;
+                    }
+                    
+                    if (isset($identity->lastName)) {
+                        $acctData['lastName'] = $identity->lastName;
+                    }
+                    
+                    if (isset($identity->emailAddress)) {
+                        $acctData['emailAddress'] = $identity->emailAddress;
+                    }
+                    
                     if ($config->app->loginOptions->generateAccountOnLogin != 1) {
                         $auth->clearIdentity();
                         $authAdapter->autoLogout();
@@ -553,7 +567,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $config = Zend_Registry::get('config');
 
         $userId = Zend_Auth::getInstance()->getIdentity();
-        
+
         // Set up the auth adapter
         $authAdapter = new Ot_Auth_Adapter;
         $adapter     = $authAdapter->find($userId->realm);

@@ -13,6 +13,10 @@
           <cipher>MCRYPT_RIJNDAEL_128</cipher>
           <numberMinutesKeyIsActive>30</numberMinutesKeyIsActive>
         </passwordReset>
+        <fbConnect>
+            <appId></appId>
+            <secret></secret>
+        </fbConnect>
       </loginOptions>
       <accountPlugin>Internal_Account_Plugin_Attributes</accountPlugin>
       <triggerPlugins>
