@@ -9,7 +9,6 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
             APPLICATION_ENV,
             APPLICATION_PATH . '/configs/application.ini'
         );
-
         $this->bootstrap = array($this, 'appBootstrap');
         parent::setUp();
     }
@@ -22,6 +21,30 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
         $this->request->setPost(array());
         $this->request->setQuery(array());
+    }
+    
+    public function setupDatabase($xmlPath = 'dbtest.xml')
+    {
+    	
+    	$configFilePath = dirname(__FILE__) . '/../../application/configs';
+    	$applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', 'testing');
+    	
+    	
+    	$adapter = $applicationIni->resources->db->adapter;
+    	$params = array(
+			'username' => $applicationIni->resources->db->params->username,
+			'password' => $applicationIni->resources->db->params->password,
+			'host'     => $applicationIni->resources->db->params->host,
+			'port'     => $applicationIni->resources->db->params->port,
+			'dbname'   => $applicationIni->resources->db->params->dbname
+        );
+    	
+    	
+		$db = Zend_Db::factory($adapter, $params);
+		$connection = new Zend_Test_PHPUnit_Db_Connection($db, 'mysql');
+		$databaseTester = new Zend_Test_PHPUnit_Db_SimpleTester($connection);
+		$databaseFixture = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/' . $xmlPath);
+		$databaseTester->setupDatabase($databaseFixture);
     }
 
     public function appBootstrap()
