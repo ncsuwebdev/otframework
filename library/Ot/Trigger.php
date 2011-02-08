@@ -69,7 +69,7 @@ class Ot_Trigger
     public function dispatch($triggerId)
     {
         $action = new Ot_Trigger_Action();
-        $actions = $action->getActionsForTrigger($triggerId);
+        $actions = $action->getActionsForTrigger($triggerId, false);
         
         foreach ($actions as $a) {
             $helper = new $a->helper;
