@@ -23,8 +23,17 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $this->request->setQuery(array());
     }
     
+    
+    /**
+     * link to an xml file that will store a fake database that can easily
+     * and quickly have its contents refreshed for retesting
+     * the xml file must exist in tests/_files/
+     */
     public function setupDatabase($xmlPath = 'dbtest.xml')
     {
+    	// @todo: fix database integration from within the ControllerTestCase
+    	// currently doesn't work, so return early
+    	return;
     	
     	$configFilePath = dirname(__FILE__) . '/../../application/configs';
     	$applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', 'testing');

@@ -4,6 +4,7 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/AccountController.php';
 
 class AccountControllerTest extends ControllerTestCase
 {
+	
 	/*
 	public function setUp()
 	{
@@ -78,6 +79,7 @@ class AccountControllerTest extends ControllerTestCase
     public function testDeleteAction()
     {
         $this->markTestIncomplete();
+        // check db row count is one less
     }
     
     public function testRevokeConnectionAction()

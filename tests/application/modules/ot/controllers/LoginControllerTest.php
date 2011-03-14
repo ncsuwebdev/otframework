@@ -21,7 +21,7 @@ class LoginControllerTest extends ControllerTestCase
     	$this->assertAction('index');
 	}
 	
-	public function wrongDataProvider()
+	public function wrongLoginDataProvider()
 	{
 		return array(
 			array('', ''),
@@ -38,7 +38,7 @@ class LoginControllerTest extends ControllerTestCase
 	}
 	
 	/**
-	 * @dataProvider wrongDataProvider
+	 * @dataProvider wrongLoginDataProvider
 	 */
 	public function testLoginFailsWhenGivenInvalidData($username, $password)
 	{
@@ -56,7 +56,7 @@ class LoginControllerTest extends ControllerTestCase
 	}
 	
 	/**
-	 * @dataProvider wrongDataProvider
+	 * @dataProvider wrongLoginDataProvider
 	 */
 	public function testLoginGivesErrorMessageWithMissingUsername($username, $password)
 	{
@@ -73,7 +73,7 @@ class LoginControllerTest extends ControllerTestCase
 	}
 	
 	/**
-	 * @dataProvider wrongDataProvider
+	 * @dataProvider wrongLoginDataProvider
 	 */
 	public function testLoginGivesErrorMessageWithMissingPassword($username, $password)
 	{
@@ -129,7 +129,7 @@ class LoginControllerTest extends ControllerTestCase
 	
 	public function testForgotActionValidUsername() {
 		$this->markTestSkipped('AHHHH! PHP native functions are breaking!');
-		//$this->markTestSkipped('Test skipped to prevent spamming your inbox.');
+		$this->markTestSkipped('Test skipped to prevent spamming your inbox.');
 		
 		//define('MCRYPT_RIJNDAEL_128', 'rijndael-128');
 		
@@ -173,9 +173,64 @@ class LoginControllerTest extends ControllerTestCase
         $this->markTestIncomplete();
     }
     
-    public function testSignupAction()
+    public function testSignupIndexAction()
     {
-        $this->markTestIncomplete();
+    	$this->dispatch('ot/login/signup/realm/local');
+    	$this->assertQueryCount('form#account input', 8);
+		$this->assertQueryCount('form#account input[type="text"]', 4);
+		$this->assertQueryCount('form#account input[type="password"]', 2);
+		$this->assertQueryCount('form#account input[type="hidden"]', 1);
+		$this->assertQueryCount('form#account select', 1);
+		$this->assertQueryCount('form#account button', 1);
+		$this->assertQueryCount('.required', 6);
+    }
+    
+    public function wrongSignupDataProvider()
+    {
+    	return array(
+			/*  0 */ array('', '', '', '', '', '', '', '', 'everything blank'),
+			/*  1 */ array(' ',     'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'local', 'short username'),
+			/*  2 */ array('a',     'password', 'password',  'first', 'last', "           asdf@a.com\r\n\r\n",         'America/New_York', 'local', 'short username'),
+			/*  3 */ array('admin', 'pass',     'pass',      'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'local', 'password too short'),
+			/*  4 */ array('admin', 'password', 'different', 'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'local', 'different confirm password'),
+			/*  5 */ array('admin', 'password', 'password',  '',      'last', 'srgraham@ncsu.edu',         'America/New_York', 'local', 'no first name'),
+			/*  6 */ array('admin', 'password', 'password',  'first', '',     'srgraham@ncsu.edu',         'America/New_York', 'local', 'no last name'),
+			/*  7 */ array('admin', 'password', 'password',  'first', 'last', '',                          'America/New_York', 'local', 'no email'),
+			/*  8 */ array('admin', 'password', 'password',  'first', 'last', 'email',                     'America/New_York', 'local', 'invalid email address'),
+			/*  9 */ array('admin', 'password', 'password',  'first', 'last', "srgraham@ncsu.edu\r\n\r\n", 'America/New_York', 'local', 'invalid email'),
+			/* 10 */ array('admin', 'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         '\'"<>aaaa',        'local', 'invalid timezone'),
+			/* 11 */ array('admin', 'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', '',      'blank realm'),
+			/* 12 */ array('admin', 'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'hello', 'invalid realm'),
+			
+			//array('admin', 'password', 'password',  'first', 'last', 'email@address.com',         'America/New_York', 'local', 'message'),
+		);
+    }
+    
+    /**
+	 * @dataProvider wrongSignupDataProvider
+	 */
+    public function testSignupInvalidData($username, $password, $cPassword, $fName, $lName, $email, $timezone, $realm, $message)
+    {
+		$this->request
+			->setMethod('POST')
+			->setPost(
+				array(
+					'username'     => $username,
+					'password'     => $password,
+					'passwordConf' => $cPassword,
+					'firstName'    => $fName,
+					'lastName'     => $lName,
+					'emailAddress' => $email,
+					'timezone'     => $timezone, 
+					'realm'        => $realm,
+				)
+		);
+			
+		$this->dispatch('/ot/login/signup/realm/local');
+		
+		$this->assertNotRedirect();
+		$this->assertQuery('#systemMessages');
+		$this->assertQuery('.errors', $message);
     }
     
 }

@@ -657,10 +657,10 @@ class Ot_LoginController extends Zend_Controller_Action
                         $dba->beginTransaction();
                             
                         try {
-                                $accountData['accountId'] = $account->insert($accountData);
+                        	$accountData['accountId'] = $account->insert($accountData);
                         } catch (Exception $e) {
-                                $dba->rollback();
-                                throw $e;
+							$dba->rollback();
+							throw $e;
                         }
                                 
                         if (isset($config->app->accountPlugin)) {
@@ -688,7 +688,7 @@ class Ot_LoginController extends Zend_Controller_Action
                         $data = array();
                         foreach ($attributes as $a) {
                             $data[$a['attributeId']] = $form->getValue('custom_' . $a['attributeId']);
-                        }                   
+                        }
                     
                         try {
                             $custom->saveData('Ot_Profile', $accountData['accountId'], $data);
@@ -714,6 +714,8 @@ class Ot_LoginController extends Zend_Controller_Action
                         $et->setVariables($accountData);
                         
                         $et->password    = $form->getValue('password');
+                        
+                        // @todo - $config->app->authentication doesn't exist when testing in CLI
                         $et->loginMethod = $config->app->authentication->$realm->name;
                         
                         $et->dispatch('Login_Index_Signup');                            

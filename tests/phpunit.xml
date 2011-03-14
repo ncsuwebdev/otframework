@@ -16,4 +16,8 @@
         <log type="coverage-html" target="./log/coverage" charset="UTF-8" yui="true" highlight="false" lowUpperBound="35" highLowerBound="70"/>
         <log type="textdox-html" target="./log/testdox.html" />
     </logging>
+    <listeners>
+		<listener class="Test_Listener_DatabaseTransaction" file="application/Test_Listener_DatabaseTransaction.php">
+		</listener>
+	</listeners>
 </phpunit>
