@@ -55,6 +55,17 @@ class AccountControllerTest extends ControllerTestCase
     
     public function testAllAction()
     {
+    	$this->markTestIncomplete();
+    
+    }
+    
+    public function testAllActionJson()
+    {
+    	$this->login();
+    	$this->getRequest()
+    	    ->setHeader('X-Requested-With', 'XMLHttpRequest')
+    	    ->setQuery('format', 'json');
+        $this->dispatch('/ot/account/all/');
         $this->markTestIncomplete();
     }
     
@@ -66,7 +77,7 @@ class AccountControllerTest extends ControllerTestCase
     public function testEditAction()
     {
     	$this->login();
-    	$this->dispatch('/ot/account/edit/accountId/31');
+    	$this->dispatch('/ot/account/edit/accountId/1');
     	$this->assertQueryCount('form#account input[type="text"]', 3);
     	$this->assertQuery('form#account select');
     	$this->assertQuery('form#account input[type="hidden"]');
@@ -74,6 +85,13 @@ class AccountControllerTest extends ControllerTestCase
     	
     	
         $this->markTestIncomplete();
+    }
+    
+    public function textEditActionNonExistantAccount()
+    {
+    	$this->login();
+    	$this->dispatch('/ot/account/edit/accountId/9999999');
+    	$this->assertQuery('.ui-state-error');
     }
     
     public function testDeleteAction()
@@ -89,6 +107,9 @@ class AccountControllerTest extends ControllerTestCase
     
     public function testChangePasswordAction()
     {
+    	
+    	
+    	
         $this->markTestIncomplete();
     }
 
@@ -110,7 +131,6 @@ class AccountControllerTest extends ControllerTestCase
     	$accountInfo = $account->getAccount('admin', 'local')->toArray();
     	$this->assertArrayHasKey('username', $accountInfo);
     	$this->assertEquals('admin', $accountInfo['username']);
-    	//var_dump($accountInfo);
     }
     
     public function testGetAccountWithInvalidDataReturnsNull()
@@ -123,7 +143,6 @@ class AccountControllerTest extends ControllerTestCase
     public function testGeneratePassword()
     {
     	$account = new Ot_Account();
-    	
     	$this->assertRegExp('#^[0-9a-f]{7,20}$#', $account->generatePassword());
     }
     

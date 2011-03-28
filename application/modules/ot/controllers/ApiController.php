@@ -100,7 +100,8 @@ class Ot_ApiController extends Zend_Controller_Action
         $jsoncallback = "";
         
         if ($request->getParameter('jsoncallback') != '') {
-            $jsoncallback = $request->getParameter('jsoncallback');
+        	$htmlEntityFilter = new Zend_Filter_HtmlEntities();
+            $jsoncallback = $htmlEntityFilter->filter($request->getParameter('jsoncallback'));
         }
         
         $response = $server->handle($request->getParameters());

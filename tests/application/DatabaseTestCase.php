@@ -9,6 +9,11 @@ abstract class DatabaseTestCase extends Zend_Test_PHPUnit_DatabaseTestCase
     private $_dbMock;
     private $_application;
     
+    protected function getSetUpOperation()
+    {
+    	return PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT();
+    }
+    
     protected function setUp()
     {
     	$configFilePath = APPLICATION_PATH . '/configs';
@@ -42,9 +47,9 @@ abstract class DatabaseTestCase extends Zend_Test_PHPUnit_DatabaseTestCase
     
     /**
      * compares a database table to an xml file
-     * $xml = the path to the xml file. dir is tests/_files/
+     * $xmlFile = the path to the xml file. dir is tests/_files/
      * $table = the db table you're looking up
-     * $ignoredColumns = an array of columns to ignore
+     * $ignoredColumns = an array of columns to ignore (such as primary keys that could get different numbers)
      */
     public function dbXmlCompare($xmlFile, $table, $ignoredColumns)
     {
@@ -52,7 +57,6 @@ abstract class DatabaseTestCase extends Zend_Test_PHPUnit_DatabaseTestCase
     	$tablePrefix = $config->app->tablePrefix;
     	
     	$xmlSet = $this->getDataSet(TESTS_PATH . '/_files/' . $xmlFile);
-    	
     	$dbSetTable = $this->getConnection()->createDataSet();
     	
     	if($ignoredColumns) {

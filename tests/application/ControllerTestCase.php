@@ -104,4 +104,38 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $result = $auth->authenticate($authAdapter);
 	}
 	
+	/**
+	 * convert xml to assoc array
+	 */
+	public function xmlToArray($xmlStr)
+	{
+		$xmlObj = simplexml_load_string($xmlStr);
+		return $this->objectsIntoArray($xmlObj);
+		
+	}
+	
+	public function objectsIntoArray($arrObjData) {
+		$arrData = array();
+   
+	    // if input is object, convert into array
+	    if (is_object($arrObjData)) {
+	        $arrObjData = get_object_vars($arrObjData);
+	    }
+	   
+	    if (is_array($arrObjData)) {
+	        foreach ($arrObjData as $index => $value) {
+	            if (is_object($value) || is_array($value)) {
+	                $value = $this->objectsIntoArray($value); // recursive call
+	            }
+	            $arrData[$index] = $value;
+	        }
+	    }
+	    //$arrayRemove = array('@attributes' => '');
+	    //$arrData = array_diff_assoc($arrData, $arrayRemove);
+	    if(isset($arrData['@attributes'])) {
+	    	unset($arrData['@attributes']);
+	    }
+    	return $arrData;
+	}
+	
 }

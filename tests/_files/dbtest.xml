@@ -5,7 +5,7 @@
         <!-- Table ot_tbl_account_attributes -->
         <!-- Table ot_tbl_api_log -->
         <!-- Table ot_tbl_ot_account -->
-         <!-- <ot_tbl_ot_account
+        <ot_tbl_ot_account
 			username="admin"
 			realm="local"
 			password="21232f297a57a5a743894a0e4a801fc3"
@@ -14,10 +14,10 @@
 			firstName="Admin"
 			lastName="Mcadmin"
 			timezone="America/New_York"
-		/>-->
+		/>
         <!-- Table ot_tbl_ot_active_user -->
         <ot_tbl_ot_active_user
-            accountId="31"
+            accountId="1"
             dt="1291816312"
         />
         <!-- Table ot_tbl_ot_auth_adapter -->

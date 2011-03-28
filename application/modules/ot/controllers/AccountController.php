@@ -65,7 +65,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $userData['accountId'] = $get->accountId;
         }
                         
-        $account = new Ot_Account();        
+        $account = new Ot_Account(); 
         $thisAccount = $account->find($userData['accountId']);
         
         if (is_null($thisAccount)) {

@@ -127,9 +127,35 @@ class LoginControllerTest extends ControllerTestCase
 		$this->assertQueryCount('form#forgotPassword input', 3);
 	}
 	
+	
+	
+	
+    public function testSignupValid()
+    {
+    	$this->request
+    	     ->setMethod('POST')
+    	     ->setPost(
+    	     	array(
+    	     		'username'     => 'john',
+    	     		'password'     => 'admin',
+    	     		'passwordConf' => 'admin',
+    	     		'firstName'    => 'John',
+    	     		'lastName'     => 'Smith',
+    	     		'emailAddress' => 'a@a.com',
+    	     		'timezone'     => 'America/New_York',
+    	     		'realm'        => 'local',
+    	     	)
+    	     );
+    	     $this->dispatch('/ot/login/signup/realm/local');
+    	     $this->assertRedirectTo('login/index/realm/local');
+    }
+	
+	/**
+	 * @depends testSignupValid
+	 */
 	public function testForgotActionValidUsername() {
-		$this->markTestSkipped('AHHHH! PHP native functions are breaking!');
-		$this->markTestSkipped('Test skipped to prevent spamming your inbox.');
+		//$this->markTestSkipped('AHHHH! PHP native functions are breaking!');
+		//$this->markTestSkipped('Test skipped to prevent spamming your inbox.');
 		
 		//define('MCRYPT_RIJNDAEL_128', 'rijndael-128');
 		
@@ -206,8 +232,10 @@ class LoginControllerTest extends ControllerTestCase
 		);
     }
     
+    
     /**
 	 * @dataProvider wrongSignupDataProvider
+	 * @depends testSignupValid
 	 */
     public function testSignupInvalidData($username, $password, $cPassword, $fName, $lName, $email, $timezone, $realm, $message)
     {
