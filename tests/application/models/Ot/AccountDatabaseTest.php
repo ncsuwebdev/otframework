@@ -12,7 +12,7 @@ class AccountDatabaseTest extends DatabaseTestCase
         parent::setUp();
         $account = new Ot_Account();
         $this->_account = new Ot_Account();
-        var_dump($this->_account->fetchAll()->toArray());
+        //var_dump($this->_account->fetchAll()->toArray());
     }
     
     protected function tearDown()

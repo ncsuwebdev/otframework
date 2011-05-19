@@ -2,7 +2,7 @@
 require_once TESTS_PATH . '/application/ControllerTestCase.php';
 require_once APPLICATION_PATH . '/modules/default/controllers/IndexController.php';
 
-class IndexControllerTest extends ControllerTestCase
+class DefaultIndexControllerTest extends ControllerTestCase
 {
     public function testDefaultAction()
     {

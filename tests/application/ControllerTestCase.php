@@ -2,6 +2,7 @@
 class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 {
     public $application;
+    public $config;
 
     public function setUp()
     {
@@ -10,7 +11,16 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
             APPLICATION_PATH . '/configs/application.ini'
         );
         $this->bootstrap = array($this, 'appBootstrap');
+        
         parent::setUp();
+        
+        // CLI doesn't define some global variables, which ends up giving errors on
+        // library/Oauth/Request.php and possibly other places too
+		
+        $_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__) . '/../applcation';
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        
+        $this->config = Zend_Registry::get('config');
     }
 
     public function tearDown()
@@ -21,6 +31,15 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
         $this->request->setPost(array());
         $this->request->setQuery(array());
+        
+        // unset these for optimization (globals get saved which slow down tests, so clear
+        // them here to make it run faster for these globals we don't care about)
+        unset($_SERVER['DOCUMENT_ROOT']);
+        unset($_SERVER['HTTP_HOST']);
+        unset($_SERVER['REQUEST_METHOD']);
+        
+        $this->logout();
+        
     }
     
     
@@ -72,6 +91,13 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $json->suppressExit = true;
 
         $request = $this->getRequest();
+        
+        // fetch method into $_SERVER because CLI doesn't set it automatically
+        $_SERVER['REQUEST_METHOD'] = $request->getMethod();
+        if(!$_SERVER['REQUEST_METHOD']) {
+        	$_SERVER['REQUEST_METHOD'] = 'GET';
+        }
+        
         if (null !== $url) {
             $request->setRequestUri($url);
         }
@@ -92,9 +118,10 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
      **/
 	public function login()
 	{
+		// @todo - is there a better way to do this?
 		$username = 'admin';
-        $password = 'admin';//is putting a user's u+p in plaintext here ok to do?
-        $authAdapter = new Ot_Auth_Adapter;
+        $password = 'admin';
+        $authAdapter = new Ot_Auth_Adapter();
         $adapter     = $authAdapter->find('local');
         $className   = (string)$adapter->class;
         // Set up the authentication adapter
@@ -102,6 +129,22 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $auth = Zend_Auth::getInstance();
         // Attempt authentication, saving the result
         $result = $auth->authenticate($authAdapter);
+	}
+	
+	/**
+	 * logs you out
+	 */
+	public function logout()
+	{
+		//$config = Zend_Registry::get('config');
+        $userId = Zend_Auth::getInstance()->getIdentity();
+        // Set up the auth adapter
+        $authAdapter = new Ot_Auth_Adapter();
+        $adapter     = $authAdapter->find('local');
+        $className   = (string)$adapter->class;
+        $auth        = new $className();
+        $auth->autoLogout();
+        Zend_Auth::getInstance()->clearIdentity();    
 	}
 	
 	/**
@@ -136,6 +179,29 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 	    	unset($arrData['@attributes']);
 	    }
     	return $arrData;
+	}
+	
+	/**
+	 * Gets the default properties for a class. This bypasses protected and private protections
+	 * if $propertyName set, returns the value of the specified property
+	 * if $propertyName not set, returns all the properties
+	 */
+	public function getDefaultProperties($className, $propertyName)
+	{
+		$reflection = new ReflectionClass($className);
+		$defaults = $reflection->getDefaultProperties();
+		if(is_array($defaults)) {
+			if($propertyName) {
+				if(isset($defaults[$propertyName])) {
+					return $defaults[$propertyName];
+				} else {
+					//missing property!!
+					return NULL;
+				}
+			} else {
+				return $defaults;
+			}
+		}
 	}
 	
 }

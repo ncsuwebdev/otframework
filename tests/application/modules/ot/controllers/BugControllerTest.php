@@ -32,17 +32,59 @@ class BugControllerTest extends ControllerTestCase
 	
 	public function testIndexAction()
 	{
-		$this->markTestIncomplete();
+		// @todo - load some example table with default bugs in it to match against
 		$this->dispatch('ot/bug');
+		$this->assertResponseCode(200);
+		$this->assertNotRedirect();
 		$this->assertModule('ot');
         $this->assertController('bug');
         $this->assertAction('index');
 		$this->assertQueryCount('table.list tr.row1, table.list tr.row2', 2);
+		
+		$this->markTestIncomplete('load xml table to match against');
 	}
 	
-	public function testDetailsAction()
+	public function testDetailsActionWithExistingBug()
 	{
-		$this->markTestIncomplete();
+		// @todo - load db table with bug 1 in it to match against
+		$this->login();
+		$this->dispatch('ot/bug/details/bugId/1');
+		$this->assertResponseCode(200);
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+        $this->assertController('bug');
+        $this->assertAction('details');
+		//$this->assertQueryCount('table.list tr.row1, table.list tr.row2', 2);
+		
+		$this->markTestIncomplete('Needs to actually check info');
+	}
+	
+	/**
+	 * @expectedException Ot_Exception_Input
+	 */
+	public function testDetailsActionWithoutGetBugIdGivesException()
+	{
+		$this->login();
+		$this->dispatch('ot/bug/details');
+		$this->assertResponseCode(200);
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+    	$this->assertController('bug');
+    	$this->assertAction('details');
+	}
+	
+	/**
+	 * @expectedException Ot_Exception_Data
+	 */
+	public function testDetailsActionOnNonExistantBugIdGivesException()
+	{
+		$this->login();
+		$this->dispatch('ot/bug/details?bugId=-9999');
+		$this->assertResponseCode(200);
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+    	$this->assertController('bug');
+    	$this->assertAction('details');
 	}
 	
 	public function testDeleteAction()

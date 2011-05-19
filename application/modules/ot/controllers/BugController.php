@@ -36,6 +36,7 @@ class Ot_BugController extends Zend_Controller_Action
      */
     public function indexAction()
     {
+    	
         $bug = new Ot_Bug();
 
         $bugs = $bug->getBugs();
@@ -83,8 +84,9 @@ class Ot_BugController extends Zend_Controller_Action
         
         $otAccount = new Ot_Account();
         foreach ($text as &$t) {
-            $t['userInfo'] = $otAccount->find($t['accountId'])->toArray();
+            $t['userInfo'] = $otAccount->find($t['accountId']);//->toArray();
         }
+        var_dump($t['userInfo']);
         
         $this->view->text = $text;
 

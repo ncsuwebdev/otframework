@@ -48,8 +48,14 @@ class Ot_CacheController extends Zend_Controller_Action
      */
     public function clearAction()
     {
-        $this->_helper->viewRenderer->setNeverRender();
+    	$this->_helper->viewRenderer->setNeverRender();
         $this->_helper->layout->disableLayout();
+        
+    	$post = Zend_Registry::get('postFilter');
+    	if(!$post->clearCache) {
+    		$this->_helper->flashMessenger->addMessage('msg-info-cacheNotCleared');
+    		$this->_helper->redirector->gotoRoute(array('controller' => 'cache'), 'ot', true);
+    	}
 
         $cache = Zend_Registry::get('cache');
         $cache->clean(Zend_Cache::CLEANING_MODE_ALL);

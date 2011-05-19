@@ -63,7 +63,12 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
                 }
             } else {
                 $response = $this->getResponse();
-                $response->setBody($view->render('maintenanceHeader.phtml') . $response->getBody());
+                // there's no point in setting text here if it's a redirect
+                if($response->isRedirect()) {
+                	$response->setBody('');
+                } else {
+                	$response->setBody($view->render('maintenanceHeader.phtml') . $response->getBody());
+                }
             }
         }
     }

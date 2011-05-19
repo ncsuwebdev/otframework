@@ -542,6 +542,7 @@ msg-info-bugSubmitted;Bug was submitted successfully.
 msg-info-bugUpdated;Bug was saved successfully.
 msg-info-bugDeleted;Bug was deleted successfully.
 msg-info-cacheCleared;Cache was cleared successfully.
+msg-info-cacheNotCleared;Cache was not cleared. Please re-try submitting this form to clear cache.
 msg-info-configUpdated;The value for %1$s has been updated successfully!
 msg-info-newOrderSaved;New order was saved successfully.
 msg-info-attributeAdded;Attribute %1$s successfully added to %2$s.
@@ -601,7 +602,7 @@ msg-error-noKeyFound;No key found.
 msg-error-invalidKey;The key is not valid.
 msg-error-keyExpired;This key has expired. You need to generate another request to reset your password and try again.
 msg-error-passwordsNotMatch;The passwords you entered did not match.
-msg-error-authoNotAllowed;The authentication adapter for your account does not allow users to signup.
+msg-error-authNotAllowed;The authentication adapter for your account does not allow users to signup.
 msg-error-usernameTaken;This username is already taken.  Please choose another name and try again.
 
 msg-info-passwordResetRequest;A password reset request was sent to the email address on file.

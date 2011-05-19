@@ -28,6 +28,12 @@
  *             Information Technology
  *
  */
+
+// @todo - it looks like this saves the full binary in the database. That's bad.
+//         Save it to disk instead and add a column for file path.
+// @todo - does the resizeImage() even return anything? I don't see anything happening, especially
+//         figuring out the mime type so it can be saved to the database
+
 class Ot_Image extends Ot_Db_Table
 {
     /**

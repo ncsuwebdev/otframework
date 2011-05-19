@@ -4,41 +4,45 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/ApiController.php';
 
 class ApiControllerTest extends ControllerTestCase
 {
+	public function setUp()
+	{
+		parent::setUp();
+		$this->logout();
+	}
     
 	public function testIndexAction()
 	{
 		$this->dispatch('/ot/api');
 		
+		$this->assertResponseCode(200);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
     	$this->assertController('api');
     	$this->assertAction('index');
     	
-    	
-    	$this->markTestIncomplete();
+    	// nothing really to check here
 	}
 	
 	public function testSampleAction()
 	{
 		$this->dispatch('/ot/api/sample');
 		
+		$this->assertResponseCode(200);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
     	$this->assertController('api');
     	$this->assertAction('sample');
+    	
+    	// nothing more to check here
 	}
 	
 	public function testSoapAction()
 	{
 		// @todo - figure out ob_get_clean() error
-		$this->markTestSkipped('Always gives ob_get_clean() error');
+		// CLI + Zend Framework + Soap always gives ob_get_clean() error, so ignore this error
+		@$this->dispatch('/ot/api/soap');
 		
-		// CLI doesn't define some global variables, which ends up giving errors on library/Oauth/Request.php
-		$_SERVER['HTTP_HOST'] = 'localhost';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
-		
-		$this->dispatch('/ot/api/soap');
-		
+		$this->assertResponseCode(200);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
     	$this->assertController('api');
@@ -49,12 +53,9 @@ class ApiControllerTest extends ControllerTestCase
 	
 	public function testXmlAction()
 	{
-		// CLI doesn't define some global variables, which ends up giving errors on library/Oauth/Request.php
-		$_SERVER['HTTP_HOST'] = 'localhost';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
-		
 		$this->dispatch('/ot/api/xml');
 		
+		$this->assertResponseCode(200);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
     	$this->assertController('api');
@@ -66,12 +67,9 @@ class ApiControllerTest extends ControllerTestCase
 	
 	public function testXmlActionEmptyFails()
 	{
-		// CLI doesn't define some global variables, which ends up giving errors on library/Oauth/Request.php
-		$_SERVER['HTTP_HOST'] = 'localhost';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
-		
 		$this->dispatch('/ot/api/xml');
 		
+		$this->assertResponseCode(404);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
     	$this->assertController('api');
@@ -79,17 +77,41 @@ class ApiControllerTest extends ControllerTestCase
     	
     	$this->assertQueryContentContains('message', 'No Method Specified.');
     	$this->assertQueryContentContains('status', 'failed');
-    	
+	}
+	
+	public function testXmlGivesErrorOnInvalidData()
+	{
+		$this->dispatch('/ot/api/xml?method=GEORGE');
+		$this->assertResponseCode(404);
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+    	$this->assertController('api');
+    	$this->assertAction('xml');
+    	$this->assertQueryContentContains('message', "Unknown Method 'GEORGE'.");
+    	$this->assertQueryContentContains('status', 'failed');
+	}
+	
+	public function testXmlGivesErrorWithoutPermission()
+	{
+		$this->login();
+		$this->dispatch('/ot/api/xml?method=getMyAccount');
+				var_dump(headers_list(),'asdf');
+				var_dump($this->getResponse());
+		//$this->assertResponseCode(401);
+		$this->assertHeader('HTTP/1.1 401 Unauthorized');
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+    	$this->assertController('api');
+    	$this->assertAction('xml');
+    	$this->assertQueryContentContains('message', "Unknown Method 'GEORGE'.");
+    	$this->assertQueryContentContains('status', 'failed');
 	}
 	
 	public function testJsonAction()
 	{
-		// CLI doesn't define some global variables, which ends up giving errors on library/Oauth/Request.php
-		$_SERVER['HTTP_HOST'] = 'localhost';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
-		
 		$this->dispatch('/ot/api/json');
 		
+		$this->assertResponseCode(200);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
     	$this->assertController('api');
@@ -100,12 +122,10 @@ class ApiControllerTest extends ControllerTestCase
 	
 	public function testJsonActionXssInJsoncallback()
 	{
-		// CLI doesn't define some global variables, which ends up giving errors on library/Oauth/Request.php
-		$_SERVER['HTTP_HOST'] = 'localhost';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
 		
 		$this->dispatch('/ot/api/json?method=describe&jsoncallback=<script>alert(1);</script>');
 		
+		$this->assertResponseCode(200);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
     	$this->assertController('api');
@@ -116,15 +136,14 @@ class ApiControllerTest extends ControllerTestCase
     
     public function testJsonActionEmptyFails()
     {
-    	$_SERVER['HTTP_HOST'] = 'localhost';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
-    	$this->login();
     	$this->getRequest()
     	    ->setHeader('X-Requested-With', 'XMLHttpRequest')
     	    ->setQuery('format', 'json');
     	
         $this->dispatch('/ot/api/json/');
         
+        $this->assertResponseCode(200);
+        $this->assertNotRedirect();
         $this->assertModule('ot');
     	$this->assertController('api');
     	$this->assertAction('json');
@@ -140,36 +159,95 @@ class ApiControllerTest extends ControllerTestCase
 			)
         );
         $this->assertEquals($matchAgainst, $content);
-        
     }
     
-    public function testJsonErrorsOutputInJson()
+	public function testJsonGivesErrorWithoutPermission()
+	{
+		$this->dispatch('/ot/api/json?method=getMyAccount');
+		$this->assertResponseCode(401);
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+    	$this->assertController('api');
+    	$this->assertAction('json');
+    	$content = json_decode($this->response->outputBody(), true);
+        
+        $matchAgainst = array(
+			'rest' => array(
+				'response' => array(
+        			'message' => 'You do not have the proper signed credentials to remotely access this method.',
+        		),
+        		'status' => 'failed'
+			)
+        );
+        $this->assertEquals($matchAgainst, $content);
+	}
+    
+	public function testJsonGivesErrorOnInvalidData()
+	{
+		$this->dispatch('/ot/api/json?method=GEORGE');
+		$this->assertResponseCode(404);
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+    	$this->assertController('api');
+    	$this->assertAction('json');
+    	
+    	$content = json_decode($this->response->outputBody(), true);
+    	
+    	$matchAgainst = array(
+			'rest' => array(
+				'response' => array(
+        			'message' => "Unknown Method 'GEORGE'.",
+        		),
+        		'status' => 'failed'
+			)
+        );
+        $this->assertEquals($matchAgainst, $content);
+	}
+    
+    
+    public function testJsonErrorsOutputInJsonFormat()
     {
-    	$_SERVER['HTTP_HOST'] = 'localhost';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
+    	$this->markTestSkipped('phpunit bug causes failure due to header errors when testing this');
 		$this->getRequest()
     	    ->setHeader('X-Requested-With', 'XMLHttpRequest')
     	    ->setQuery('format', 'json');
     	$this->dispatch('/ot/api/json/?method=getMyAccount');
-    	var_dump(json_decode($this->response->outputBody()));
-    	var_dump(json_last_error());exit;
+    	
+    	$this->assertResponseCode(200);
+    	$this->assertNotRedirect();
+    	$this->assertModule('ot');
+    	$this->assertController('api');
+    	$this->assertAction('json');
+    	
+    	var_dump('outputBody' . json_decode($this->response->outputBody()));
+    	var_dump('err' . json_last_error());
     	
     	
     }
     
     public function testJsonAndXmlOutputEquivalentData()
     {
-    	
-    	$_SERVER['HTTP_HOST'] = 'localhost';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
 		
     	$this->dispatch('/ot/api/json/?method=describe');
+    	
+    	$this->assertResponseCode(200);
+    	$this->assertNotRedirect();
+    	$this->assertModule('ot');
+    	$this->assertController('api');
+    	$this->assertAction('json');
+    	
     	$jsonResponseObject = $this->response->outputBody();
     	
     	$this->_response = null;
     	// clear the response, so the xml that we grab next doesn't have json before it.
     	
     	$this->dispatch('/ot/api/xml/?method=describe');
+    	
+    	$this->assertResponseCode(200);
+    	$this->assertNotRedirect();
+    	$this->assertModule('ot');
+    	$this->assertController('api');
+    	$this->assertAction('xml');
     	
     	// this might make this test useless....:
     	$xmlResponseObject = Zend_Json::fromXml($this->response->outputBody());

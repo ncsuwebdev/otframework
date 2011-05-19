@@ -278,7 +278,7 @@ class Ot_Api
             preg_match('/@return[^\n]*/', $desc, $returnDoc);
             
             if (count($returnDoc) != 0) {
-                $returnDoc = preg_replace('/@return/', '', $returnDoc[0]);
+                $returnDoc = preg_replace('/@return\s*/', '', $returnDoc[0]);
             } else {
                 $returnDoc = '';
             }

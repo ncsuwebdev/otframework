@@ -8,5 +8,9 @@ class ErrorControllerTest extends ControllerTestCase
     {
         $this->markTestIncomplete();
     }
-
+	
+    public function testNotFoundSets404Header() {
+    	$this->dispatch('/aksdhglah');
+    	$this->assertResponseCode(404);
+    }
 }

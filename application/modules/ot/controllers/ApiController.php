@@ -71,7 +71,7 @@ class Ot_ApiController extends Zend_Controller_Action
         $request = Oauth_Request::fromRequest();
         
         if (!$access->validate($request, $this->_request->getParam('method'))) {
-            $access->raiseError($access->getMessage());
+            return $access->raiseError($access->getMessage(), Ot_Api_Access::API_XML);
         }
         
         $server = new Zend_Rest_Server();
@@ -89,7 +89,7 @@ class Ot_ApiController extends Zend_Controller_Action
         $request = Oauth_Request::fromRequest();
         
         if (!$access->validate($request, $this->_request->getParam('method'))) {
-            $access->raiseError($access->getMessage());
+            return $access->raiseError($access->getMessage(), Ot_Api_Access::API_JSON);
         }
                 
         $server = new Zend_Rest_Server();

@@ -79,7 +79,7 @@
                         <?php echo ucwords($action); ?>
                         </td>
                         <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:hasAccess') : $this->translate('ot-acl-form:noAccess'); ?></td>
-                        <td class="td3"><input type="checkbox" class="<?php echo $module . '_' . $controller; ?>_action" value="<?php echo (!empty($access['access'])) ? 'deny' : 'allow'; ?>" name="<?php echo $module . '[' . $controller . '][part][' . $action . ']'; ?>" id="<?php echo $module . '_' . $controller . '_part_' . $action; ?>" /> <?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:revokeAccess') : $this->translate('ot-acl-form:grantAccess'); ?></td>
+                        <td class="td3"><label><input type="checkbox" class="<?php echo $module . '_' . $controller; ?>_action" value="<?php echo (!empty($access['access'])) ? 'deny' : 'allow'; ?>" name="<?php echo $module . '[' . $controller . '][part][' . $action . ']'; ?>" id="<?php echo $module . '_' . $controller . '_part_' . $action; ?>" /> <?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:revokeAccess') : $this->translate('ot-acl-form:grantAccess'); ?></label></td>
                     </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
