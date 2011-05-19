@@ -116,7 +116,23 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 $request->setActionName($this->_noAuth['action']); 
                    
                 return;
-            }                   
+            }
+            
+            if(count($thisAccount->role) > 1) {
+	            $roles = array();
+	            
+	            // Get role names from the list of role Ids
+	            foreach ($thisAccount->role as $r) {
+	            	$roles[] = $acl->getRole($r['roleId']);
+	            }
+	            
+	            // Create a new role that inherits from all the returned roles
+				$thisAccount->role = new Zend_Acl_Role('hybrid');
+				
+				$acl->addRole($thisAccount->role, $roles); 
+            } else if (count($thisAccount->role) == 1) {
+            	$thisAccount->role = $thisAccount->role[0];
+            }
             
             if (!$acl->hasRole($thisAccount->role)) {
                 $thisAccount->role = (string)$config->user->defaultRole->val;

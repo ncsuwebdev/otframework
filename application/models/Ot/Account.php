@@ -55,6 +55,46 @@ class Ot_Account extends Ot_Db_Table
      */
     protected $_primary = 'accountId';
     
+    /**
+     * Formats the resultset returned by the database
+     * 
+     * @param unknown_type $data
+     */
+    private function _addExtraData(Zend_Db_Table_Row $data) {
+    	
+//    	$data = $data->toArray();
+    	
+    	$rolesDb = new Ot_Account_Roles();
+    	
+    	$where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $data->accountId);
+    	
+    	$roles = $rolesDb->fetchAll($where);
+    	
+    	$roleList = array();
+    	foreach ($roles as $r) {
+			$roleList[] = $r['roleId'];
+    	}
+    	
+    	$data->role = $roleList;
+		
+		return $data;   
+    }
+    
+   	public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
+   		
+   		try {
+   			$result = parent::fetchAll($where, $order, $count, $offset);
+   		} catch (Exception $e) {
+   			throw $e;
+   		}
+
+   		foreach ($result as $r) {
+   			$ret[] = $this->_addExtraData($r);
+   		}
+
+   		return $ret;
+   	}
+    
     public function getAccount($username, $realm)
     {
         $where = $this->getAdapter()->quoteInto('username = ?', $username)
@@ -63,12 +103,13 @@ class Ot_Account extends Ot_Db_Table
                
         $result = $this->fetchAll($where);
         
-        if ($result->count() != 1) {
+        if (count($result) != 1) {
             return null;
         }
-        
-        return $result->current();
+//        var_dump($result[0]); exit;
+        return $result[0];
     }
+    
     
     public function generatePassword()
     {

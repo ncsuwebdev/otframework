@@ -90,7 +90,7 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
             return new Zend_Auth_Result(false, null, array('User "' . $this->_username . '" account was not found.'));
         }
         
-        if (md5($this->_password) != $result->password) {
+        if (md5($this->_password) != $result['password']) {
             return new Zend_Auth_Result(false, null, array('The password you entered was invalid.'));
         }
 
