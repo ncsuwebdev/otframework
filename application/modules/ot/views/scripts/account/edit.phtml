@@ -1,3 +1,48 @@
 <?php echo $this->translate('ot-account-edit:header'); ?>
 <br /><br />
 <?php echo $this->form; ?>
+
+<?php foreach ($this->permissions as $module => $controllers): ?>
+	<table class="<?php echo ucwords($module);?> list accessTable">
+		<thead>
+			<tr class="ui-widget-header">
+				<td><?php echo ucwords($module);?></td>
+			</tr>
+		</thead>
+		<tbody>
+                <tr class="ui-widget-header">
+                    <td width="300"><b><?php echo ucwords($module); ?></b></td>
+                    <td width="120"><?php echo $this->translate('ot-acl-details:form:access'); ?></td>
+                </tr>
+                <?php foreach ($controllers as $controller => $actions) : ?>
+                <tr class="controller">
+                    <td title="<?php echo $actions['description']; ?>" class="td1 description">
+                    <?php echo ucwords($controller); ?>
+                    </td>
+                    <td class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+                    <?php if (!empty($actions['all']['access'])) : ?>
+                        <?php echo $this->translate('ot-acl-form:allAccess'); ?>
+                    <?php else: ?>
+                        <?php if (isset($actions['someaccess'])) : ?>
+                        <?php echo $this->translate('ot-acl-form:someAccess'); ?>
+                        <?php else: ?>
+                        <?php echo $this->translate('ot-acl-form:noAccess'); ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    </td>
+                </tr>
+                <?php if (isset($actions['part'])): ?>
+                    <?php foreach ($actions['part'] as $action => $access) : ?>
+                <tr class="action <?php echo $module . '_' . $controller; ?>" style="display: <?php echo (empty($actions['someaccess']) || !empty($actions['all']['access'])) ? 'none' : ''; ?>;">
+                    <td class="td1 description" title="<?php echo $access['description']; ?>">
+                    <img src="<?php echo $this->baseUrl(); ?>/images/ot/help.png" width="16" height="16" class="info" />
+                    <?php echo ucwords($action); ?>
+                    </td>
+                    <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:hasAccess') : $this->translate('ot-acl-form:noAccess'); ?></td>
+                </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php endforeach; ?>
+                </tbody>
+	</table>
+<?php endforeach; ?>

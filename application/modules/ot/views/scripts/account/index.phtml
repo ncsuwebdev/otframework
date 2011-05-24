@@ -44,7 +44,7 @@
 		        </tr>
 		        <tr>
 		            <td><label><?php echo $this->translate('model-account-role'); ?></label></td>
-		            <td><?php echo $this->role['name']; ?></td>
+		            <td><?php echo implode(', ', $this->roles); ?></td>
 		        </tr>
 		        <tr>
 		            <td>

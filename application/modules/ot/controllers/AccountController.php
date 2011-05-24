@@ -72,7 +72,7 @@ class Ot_AccountController extends Zend_Controller_Action
             throw new Ot_Exception_Data('msg-error-noAccount');
         }               
         
-        $userData = array_merge($userData, $thisAccount->toArray());
+        $userData = array_merge($userData, (array) $thisAccount);
       
         
         $authAdapter = new Ot_Auth_Adapter;
@@ -130,14 +130,27 @@ class Ot_AccountController extends Zend_Controller_Action
             $attributes = $acctPlugin->get($this->_userData['accountId']);
         }      
 
-        $role = new Ot_Role();
-        $thisRole = $role->find($this->_userData['role']);
+        $rolesDb = new Ot_Account_Roles();
+        $where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
+        $roleIds = $rolesDb->fetchAll($where)->toArray();
         
-        if (is_null($thisRole)) {
+    	if (count($roleIds) == 0) {
             throw new Ot_Exception_Data('Role id not found');
         }
         
-        $this->view->role = $thisRole->toArray();
+        foreach ($roleIds as &$r) {
+        	$r = $r['roleId'];
+        }
+                
+        $role = new Ot_Role();
+        $where = $role->getAdapter()->quoteInto('roleId IN (?)', $roleIds); 
+        $roles = $role->fetchAll($where)->toArray();
+	        
+	    foreach ($roles as &$r) {
+	     	$r = $r['name'];
+	    }
+        
+        $this->view->roles = $roles;
         $custom = new Ot_Custom();
         
         $data = $custom->getData('Ot_Profile', $this->_userData['accountId'], 'none', false);
@@ -261,7 +274,7 @@ class Ot_AccountController extends Zend_Controller_Action
                             
             $response = array(
                 'page' => $page + 1,
-                'total' => $account->fetchAll($where)->count(),
+                'total' => count($account->fetchAll($where)),
                 'rows'  => array(),
             );
             
@@ -274,21 +287,32 @@ class Ot_AccountController extends Zend_Controller_Action
             foreach ($adapters as $a) {
                 $realmMap[$a->adapterKey] = $a->name;
             }
-                    
-            foreach ($accounts as $a) {
-                $row = array(
-                    'id'   => $a->accountId,
-                    'cell' => array(
-                        $a->username,
-                        $a->firstName, 
-                        $a->lastName,
-                        $realmMap[$a->realm], 
-                        $roles[$a->role]['name'],                                       
-                    ),
-                );
-                
-                $response['rows'][] = $row;
+            
+			// TODO: fix bug on account/all page. Search results are not displaying correctly
+            if(count($accounts) > 0) {
+	            foreach ($accounts as $a) {
+	
+	            	$roleList = array();
+	            	
+	            	foreach ($a->role as $r) {
+	            		$roleList[] = $roles[$r]['name'];
+	            	}
+	            	
+	                $row = array(
+	                    'id'   => $a->accountId,
+	                    'cell' => array(
+	                        $a->username,
+	                        $a->firstName, 
+	                        $a->lastName,
+	                        $realmMap[$a->realm], 
+							implode(', ', $roleList)                                       
+	                    ),
+	                );
+	                
+	                $response['rows'][] = $row;
+	            }
             }
+            
             echo Zend_Json::encode($response);
             return;
         }
@@ -298,6 +322,7 @@ class Ot_AccountController extends Zend_Controller_Action
      * Adds a user to the system
      *
      */
+    // TODO: FIX THE FORM FOR MULTIPLE USERS
     public function addAction()
     {
         $account = new Ot_Account();
@@ -444,7 +469,40 @@ class Ot_AccountController extends Zend_Controller_Action
         $config = Zend_Registry::get('config');
 
         $form = $account->form($this->_userData);
-            
+        
+        $rolesDb = new Ot_Account_Roles();
+
+        $where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
+        
+        $result = $rolesDb->fetchAll($where);
+        
+        if(count($result) < 1) {
+        	throw new Ot_Exception_Data('No roles associated with this account');
+        }
+//        var_dump($result); exit;
+        $roles = array();
+        foreach ($result as $r) {
+        	$roles[] = $r->roleId;
+        }
+        
+        $hybridRole = new Zend_Acl_Role('hybrid');
+    	$acl = Zend_Registry::get('acl');
+    	
+    	$acl->addRole($hybridRole, $roles);
+    	
+    	$permissions = $acl->getResources('hybrid');
+    	
+	     foreach ($permissions as &$permission) {
+	            foreach ($permission as &$c) {
+	                $c['someAccess'] = false;
+	                foreach ($c['part'] as $p) {
+	                    if ($p['access']) {
+	                        $c['someaccess'] = true;
+	                    }
+	                }
+	            }
+	    }
+	    
         $messages = array();
 
         if ($this->_request->isPost()) {
@@ -552,8 +610,10 @@ class Ot_AccountController extends Zend_Controller_Action
             $messages[] = 'msg-info-requiredDataBeforeContinuing';
         }
         
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
         $this->view->messages = $messages;
         $this->view->form = $form;
+        $this->view->permissions = $permissions;
         $this->_helper->pageTitle('ot-account-edit:title');
     }
 
@@ -816,5 +876,47 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function editAllAccountsAction()
     {
+    }
+    
+    /**
+     * Compiles all the permissions for a given set of roles
+     * 
+     * @param unknown_type $roles
+     */
+    public function getPermissionsAction() {
+    	
+    	$this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $get = Zend_Registry::get('getFilter');
+
+        if (!isset($get->roles)) {
+        	echo Zend_Json_Encoder::encode('No Roles Value specified');
+        	return;
+        }
+        
+    	$hybridRole = new Zend_Acl_Role('hybrid');
+    	$acl = Zend_Registry::get('acl');
+    	
+    	$acl->addRole($hybridRole, $get->roles);
+    	
+    	$permissions = $acl->getResources('hybrid');
+    	
+	    foreach ($permissions as &$permission) {
+            foreach ($permission as &$c) {
+                $c['someAccess'] = false;
+                foreach ($c['part'] as $p) {
+                    if ($p['access']) {
+                        $c['someaccess'] = true;
+                    }
+                }
+            }
+        }
+        
+        $acl->removeRole('hybrid');
+        
+        echo Zend_Json_Encoder::encode($permissions);
+        return;
+        
     }
 }

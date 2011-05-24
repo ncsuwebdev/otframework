@@ -60,10 +60,12 @@ class Ot_Account extends Ot_Db_Table
      * 
      * @param unknown_type $data
      */
-    private function _addExtraData(Zend_Db_Table_Row $data) {
+    private function _addExtraData($data) {
     	
-//    	$data = $data->toArray();
-    	
+		if (get_Class($data) == 'Zend_Db_Table_Row') {
+    		$data = (object) $data->toArray();
+		}
+		
     	$rolesDb = new Ot_Account_Roles();
     	
     	$where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $data->accountId);
@@ -75,9 +77,9 @@ class Ot_Account extends Ot_Db_Table
 			$roleList[] = $r['roleId'];
     	}
     	
-    	$data->role = $roleList;
-		
-		return $data;   
+    	$data->role = $roleList; 
+
+    	return $data;   
     }
     
    	public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
@@ -88,13 +90,23 @@ class Ot_Account extends Ot_Db_Table
    			throw $e;
    		}
 
-   		foreach ($result as $r) {
-   			$ret[] = $this->_addExtraData($r);
-   		}
+   		if($result->count() > 0) {
+	   		foreach ($result as $r) {
+	   			$ret[] = $this->_addExtraData($r);
+	   		}
 
-   		return $ret;
+   			return $ret;
+   		} else {
+   			return null;
+   		}
    	}
-    
+   	
+   	public function find() {
+   		$result = parent::find(func_get_args());
+   		
+   		return $this->_addExtraData($result);
+   	}
+   	
     public function getAccount($username, $realm)
     {
         $where = $this->getAdapter()->quoteInto('username = ?', $username)
@@ -106,7 +118,6 @@ class Ot_Account extends Ot_Db_Table
         if (count($result) != 1) {
             return null;
         }
-//        var_dump($result[0]); exit;
         return $result[0];
     }
     
@@ -136,9 +147,24 @@ class Ot_Account extends Ot_Db_Table
     
     public function getAccountsForRole($roleId)
     {
-        $where = $this->getAdapter()->quoteInto('role = ?', $roleId);
+    	$rolesDb = new Ot_Account_Roles();
+    	
+        $where = $rolesDb->getAdapter()->quoteInto('role = ?', $roleId);
         
-        return $this->fetchAll($where);        
+        $roles = $rolesDb->fetchAll($where);
+        
+        $accountIds = array();
+        
+        foreach ($roles as $role) {
+        	$accountIds[] = $roles['accountId'];
+        }
+        
+        if(count($accountIds) > 0) {
+        	$where = $this->getAdapter()->quoteInto('accountId IN (?)', $accountIds);
+        	return $this->fetchAll($where);
+        } else {
+        	return null;
+        }
     }
     
     public function form($default = array(), $signup = false) 
@@ -201,11 +227,7 @@ class Ot_Account extends Ot_Db_Table
                  ->addFilter('StripTags');   
 
         // Password confirmation field
-        $passwordConf = $form->createElement(
-            'password',
-            'passwordConf',
-            array('label' => 'model-account-passwordConf')
-        );
+        $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'model-account-passwordConf'));
         $passwordConf->setRequired(true)
                      ->addValidator('StringLength', false, array($this->_minPasswordLength, $this->_maxPasswordLength))
                      ->addFilter('StringTrim')
@@ -229,14 +251,15 @@ class Ot_Account extends Ot_Db_Table
         ); 
         
         // Role select box
-        $roleSelect = $form->createElement('select', 'role', array('label' => 'model-account-role'));
+        $roleSelect = $form->createElement('multiCheckbox', 'roleSelect');
         $roleSelect->setRequired(true);
-        $roleSelect->addMultiOption('', '-- Choose Access Role --');
     
-        $roles = $acl->getAvailableRoles();     
+        $roles = $acl->getAvailableRoles();  
+           
         foreach ($roles as $r) {
             $roleSelect->addMultiOption($r['roleId'], $r['name']);
         }
+        
         $roleSelect->setValue((isset($default['role'])) ? $default['role'] : '');
         
         if ($signup) {
@@ -285,7 +308,7 @@ class Ot_Account extends Ot_Db_Table
         foreach ($attributes as $a) {
             $form->addElement($a['formRender']);
         }
-                
+        
         $submit = $form->createElement('submit', 'submit', array('label' => 'form-button-save'));
         $submit->setDecorators(
             array(
@@ -299,7 +322,7 @@ class Ot_Account extends Ot_Db_Table
                 array('ViewHelper', array('helper' => 'formButton'))
             )
         );
-                        
+        
         $form->setElementDecorators(
             array(
                 'ViewHelper',
@@ -308,6 +331,45 @@ class Ot_Account extends Ot_Db_Table
                 array('Label', array('tag' => 'span')),   
             )
         )->addElements(array($submit, $cancel));
+        
+        /*
+         * Groups the form elements into divs (general and access role)
+         */
+        $form->addDisplayGroup(array(
+        	'submit',
+        	'cancel'
+        ), 'buttons');
+        
+        $buttons = $form->getDisplayGroup('buttons');
+        $buttons->setDecorators(array(
+        	'FormElements',
+        	'Fieldset',
+        	array('HtmlTag', array('tag' => 'div', 'class' => 'buttons'))
+        ));
+        
+        $form->addDisplayGroup(array(
+            	'realm',
+            	'username',
+            	'firstName',
+            	'lastName',
+            	'emailAddress',
+            	'timezone'            	
+            ), 'general', array('legend' => 'General Information'));
+            
+        $general = $form->getDisplayGroup('general');
+        $general->setDecorators(array(
+	        'FormElements',
+	        'Fieldset',
+	       	array('HtmlTag', array('tag' => 'div', 'class' => 'general'))
+        ));
+        
+        $form->addDisplayGroup(array('roleSelect'), 'roles', array('legend' => 'User Access Roles'));
+        $role = $form->getDisplayGroup('roles');
+        $role->setDecorators(array(
+        	'FormElements',
+        	'Fieldset',
+        	array('HtmlTag', array('tag' => 'div', 'class' => 'accessRoles'))
+        ));
               
         if (isset($default['accountId'])) {
             $accountId = $form->createElement('hidden', 'accountId');

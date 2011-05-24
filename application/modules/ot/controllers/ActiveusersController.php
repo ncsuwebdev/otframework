@@ -43,7 +43,8 @@ class Ot_ActiveusersController extends Zend_Controller_Action
         $allActiveUsers = $activeUser->fetchAll(null, 'dt DESC')->toArray();
         
         foreach ($allActiveUsers as &$a) {
-            $a['accountInfo'] = $otAccount->find($a['accountId'])->toArray();
+            $a['accountInfo'] = (array) $otAccount->find($a['accountId']);
+            
         }
         
         $this->view->activeUsers = $allActiveUsers;
