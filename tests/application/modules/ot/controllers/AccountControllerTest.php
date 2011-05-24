@@ -24,6 +24,12 @@ class AccountControllerTest extends ControllerTestCase
 	}
 	*/
 	
+	public function setUp()
+	{
+		//$this->markTestSkipped('fix acl stuff');
+		parent::setUp();
+	}
+	
 	public function testInit()
 	{
 		$this->markTestIncomplete();
@@ -128,9 +134,9 @@ class AccountControllerTest extends ControllerTestCase
     public function testGetAccountWithValidDataReturnsUserArray()
     {
     	$account = new Ot_Account();
-    	$accountInfo = $account->getAccount('admin', 'local')->toArray();
-    	$this->assertArrayHasKey('username', $accountInfo);
-    	$this->assertEquals('admin', $accountInfo['username']);
+    	$accountInfo = $account->getAccount('admin', 'local');
+    	$this->assertObjectHasAttribute('username', $accountInfo);
+    	$this->assertEquals('admin', $accountInfo->username);
     }
     
     public function testGetAccountWithInvalidDataReturnsNull()

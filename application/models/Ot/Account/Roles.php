@@ -44,4 +44,5 @@ class Ot_Account_Roles extends Ot_Db_Table
      * @var string
      */
     protected $_primary = array('accountId', 'roleId');
+    
 }

@@ -434,7 +434,7 @@ class Ot_AclController extends Zend_Controller_Action
             throw new Ot_Exception_Data('msg-error-deleteDefaultRole');
         }
                 
-        $this->view->accountRoleChange = ($affectedAccounts->count() != 0);
+        $this->view->accountRoleChange = (count($affectedAccounts) != 0);
         $this->view->defaultRole = $availableRoles[$defaultRole]['name'];
                 
         $form = Ot_Form_Template::delete('deleteRole');
@@ -459,7 +459,6 @@ class Ot_AclController extends Zend_Controller_Action
             $role = new Ot_Role();
             
             $dba = $role->getAdapter();
-            
             $dba->beginTransaction();
             
             try {
@@ -469,15 +468,42 @@ class Ot_AclController extends Zend_Controller_Action
                 throw $e;
             }
             
-            foreach ($affectedAccounts as $a) {
-                $a->role = $defaultRole;
-                
-                try {
-                    $a->save();
-                } catch (Exception $e) {
-                    $dba->rollback();
-                    throw $e;
-                }
+            $accountRoles = new Ot_Account_Roles();
+            
+            // aList is an array of all the affected accountIds
+            $aList = array();
+            if (count($affectedAccounts) > 0) {
+	            foreach($affectedAccounts as $a) {
+	            	$aList[] = $a->accountId;
+	            }
+	            
+	            if(count($aList) > 0) {
+		            
+		            // get a list of all the accounts that still have a role after removing one so we can diff()
+		            // it to find the accounts that no longer have a role
+		            $accountRolesDba = $accountRoles->getAdapter();
+		            $where = $accountRolesDba->quoteInto('accountId IN(?)', $aList);
+	            
+	            	$affectedAccountsStillWithRoles = $accountRoles->fetchAll($where);
+	            
+		            $affectedAccountsStillWithRolesIds = array();
+		            foreach($affectedAccountsStillWithRoles as $a) {
+		            	$affectedAccountsStillWithRolesIds[] = $a->accountId;
+		            }
+		            
+		            // here's the list of accounts that don't have a role, so we have to add $defaultRole to them.
+		            $affectedAccountsWithNoRoles = array_diff($aList, $affectedAccountsStillWithRolesIds);
+		            
+		            foreach ($affectedAccountsWithNoRoles as $a) {
+		            	$accountRoles->insert(
+		            		array(
+		            			'accountId' => $a,
+		            			'roleId'    => $defaultRole,
+		            		)
+		            	);
+		            }
+		            
+	            }
             }
             
             $dba->commit();

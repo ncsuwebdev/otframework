@@ -83,10 +83,10 @@ class Ot_Account extends Ot_Db_Table
     }
     
    	public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
-   		
    		try {
    			$result = parent::fetchAll($where, $order, $count, $offset);
    		} catch (Exception $e) {
+   			//var_dump($where);exit;
    			throw $e;
    		}
 
@@ -105,6 +105,18 @@ class Ot_Account extends Ot_Db_Table
    		$result = parent::find(func_get_args());
    		
    		return $this->_addExtraData($result);
+   	}
+   	
+   	public function insert($data)
+   	{
+   		$roleId = $data['role'];
+   		$accountId = parent::insert($data);
+   		$accountRoles = new Ot_Account_Roles();
+   		$accountRoles->insert(array(
+   			'accountId' => $accountId,
+   			'roleId'    => $data['role'],
+   		));
+   		return $accountId;
    	}
    	
     public function getAccount($username, $realm)
@@ -138,7 +150,7 @@ class Ot_Account extends Ot_Db_Table
         $this->_messages[] = $where;
         $result = $this->fetchAll($where, null, 1);
         
-        if ($result->count() != 1) {
+        if (count($result) != 1) {
             throw new Exception('Code not found');
         }
         
@@ -149,14 +161,12 @@ class Ot_Account extends Ot_Db_Table
     {
     	$rolesDb = new Ot_Account_Roles();
     	
-        $where = $rolesDb->getAdapter()->quoteInto('role = ?', $roleId);
+        $where = $rolesDb->getAdapter()->quoteInto('roleId = ?', $roleId);
         
-        $roles = $rolesDb->fetchAll($where);
-        
+        $roles = $rolesDb->fetchAll($where)->toArray();
         $accountIds = array();
-        
         foreach ($roles as $role) {
-        	$accountIds[] = $roles['accountId'];
+        	$accountIds[] = $role['accountId'];
         }
         
         if(count($accountIds) > 0) {
@@ -254,8 +264,7 @@ class Ot_Account extends Ot_Db_Table
         $roleSelect = $form->createElement('multiCheckbox', 'roleSelect');
         $roleSelect->setRequired(true);
     
-        $roles = $acl->getAvailableRoles();  
-           
+        $roles = $acl->getAvailableRoles();
         foreach ($roles as $r) {
             $roleSelect->addMultiOption($r['roleId'], $r['name']);
         }
@@ -363,13 +372,15 @@ class Ot_Account extends Ot_Db_Table
 	       	array('HtmlTag', array('tag' => 'div', 'class' => 'general'))
         ));
         
-        $form->addDisplayGroup(array('roleSelect'), 'roles', array('legend' => 'User Access Roles'));
-        $role = $form->getDisplayGroup('roles');
-        $role->setDecorators(array(
-        	'FormElements',
-        	'Fieldset',
-        	array('HtmlTag', array('tag' => 'div', 'class' => 'accessRoles'))
-        ));
+        if(!$signup) {
+	        $form->addDisplayGroup(array('roleSelect'), 'roles', array('legend' => 'User Access Roles'));
+	        $role = $form->getDisplayGroup('roles');
+	        $role->setDecorators(array(
+	        	'FormElements',
+	        	'Fieldset',
+	        	array('HtmlTag', array('tag' => 'div', 'class' => 'accessRoles'))
+	        ));
+        }
               
         if (isset($default['accountId'])) {
             $accountId = $form->createElement('hidden', 'accountId');
