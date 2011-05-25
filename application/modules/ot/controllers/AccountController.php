@@ -479,30 +479,16 @@ class Ot_AccountController extends Zend_Controller_Action
         if(count($result) < 1) {
         	throw new Ot_Exception_Data('No roles associated with this account');
         }
-//        var_dump($result); exit;
-        $roles = array();
+        
+        $acl = Zend_Registry::get('acl');
+        
+        $resources = array();
         foreach ($result as $r) {
-        	$roles[] = $r->roleId;
+        	$resources[] = $acl->getResources($r->roleId);
         }
         
-        $hybridRole = new Zend_Acl_Role('hybrid');
-    	$acl = Zend_Registry::get('acl');
+        $permissions = $this->mergeResources($resources);
     	
-    	$acl->addRole($hybridRole, $roles);
-    	
-    	$permissions = $acl->getResources('hybrid');
-    	
-	     foreach ($permissions as &$permission) {
-	            foreach ($permission as &$c) {
-	                $c['someAccess'] = false;
-	                foreach ($c['part'] as $p) {
-	                    if ($p['access']) {
-	                        $c['someaccess'] = true;
-	                    }
-	                }
-	            }
-	    }
-	    
         $messages = array();
 
         if ($this->_request->isPost()) {
@@ -610,6 +596,8 @@ class Ot_AccountController extends Zend_Controller_Action
             $messages[] = 'msg-info-requiredDataBeforeContinuing';
         }
         
+		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
         $this->view->messages = $messages;
         $this->view->form = $form;
@@ -878,6 +866,39 @@ class Ot_AccountController extends Zend_Controller_Action
     {
     }
     
+    private function mergeResources($resources) {
+    	$permissions = array_pop($resources);
+
+    	foreach ($resources as $resource) {
+    		foreach ($resource as $module => $controllers) {
+    			foreach($controllers as $controller => $parts) {
+    				foreach($parts as $part => $rules) {
+						if(isset($rules['access'])) {
+							$permissions[$module][$controller][$part]['access'] = $rules['access'] || $permissions[$module][$controller][$part]['access'];
+						} else {
+							foreach($rules as $rule => $access) {
+								$permissions[$module][$controller][$part][$rule]['access'] = $access['access'] || $permissions[$module][$controller][$part][$rule]['access']; 
+							}
+						}
+    				}
+    			}
+    		}
+    	}
+    	
+    	foreach ($permissions as &$permission) {
+            foreach ($permission as &$c) {
+                $c['someAccess'] = false;
+                foreach ($c['part'] as $p) {
+                    if ($p['access']) {
+                        $c['someAccess'] = true;
+                    }
+                }
+            }
+	    }
+	    
+	    return $permissions;
+    }
+    
     /**
      * Compiles all the permissions for a given set of roles
      * 
@@ -895,25 +916,32 @@ class Ot_AccountController extends Zend_Controller_Action
         	return;
         }
         
-    	$hybridRole = new Zend_Acl_Role('hybrid');
+//    	$hybridRole = new Zend_Acl_Role('temp');
     	$acl = Zend_Registry::get('acl');
     	
-    	$acl->addRole($hybridRole, $get->roles);
     	
-    	$permissions = $acl->getResources('hybrid');
     	
-	    foreach ($permissions as &$permission) {
-            foreach ($permission as &$c) {
-                $c['someAccess'] = false;
-                foreach ($c['part'] as $p) {
-                    if ($p['access']) {
-                        $c['someaccess'] = true;
-                    }
-                }
-            }
-        }
+    	$resources = array();
+    	foreach($get->roles as $role) {
+    		$resources[] = $acl->getResources($role);
+    	}
+    	
+//    	$acl->addRole($hybridRole, $resources);
+    	
+    	$permissions = $this->mergeResources($resources);
+    	
+//	    foreach ($permissions as &$permission) {
+//            foreach ($permission as &$c) {
+//                $c['someAccess'] = false;
+//                foreach ($c['part'] as $p) {
+//                    if ($p['access']) {
+//                        $c['someaccess'] = true;
+//                    }
+//                }
+//            }
+//        }
         
-        $acl->removeRole('hybrid');
+//        $acl->removeRole(4);
         
         echo Zend_Json_Encoder::encode($permissions);
         return;

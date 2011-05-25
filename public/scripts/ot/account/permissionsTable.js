@@ -7,6 +7,7 @@ $('document').ready(function() {
 	});
 	
 	$.getJSON($('#baseUrl').val() + '/ot/account/get-permissions', {'roles' : roles}, function(data) {
+		console.log(data);
 		createTable(data);
 	});
 	

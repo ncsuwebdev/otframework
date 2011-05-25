@@ -15,7 +15,7 @@ div.accessRoles fieldset div.elm input[type="checkbox"] {
 	margin : 5px;
 }
 
-br {
+div.accessRoles br {
 	display : none;
 }
 
@@ -34,9 +34,46 @@ div.accessRoles {
 	width : 75%;
 }
 
-
 table.accessTable {
 	float : left;
-	width : 125px;
 	margin : 5px;
+	text-align : center;
+/*	width : 300px;*/
+}
+
+td{
+	width : 125px;
+}
+
+td.hidden {
+	margin : none;
+	background : none;
+}
+
+table.accessTable td.access {
+    background-image: url(../../../../images/ot/aclAccess.gif);
+    background-repeat: repeat-x;
+    color: #FFF;
+    font-weight: normal;
+    text-align: center;
+    background-color: #FAFAFA;
+}
+
+table.accessTable td.noAccess {
+	width : 125px;
+    background-image: url(../../../../images/ot/aclNoAccess.gif);
+    background-repeat: repeat-x;
+    color: #FFF;
+    font-weight: normal;
+    text-align: center;    
+    background-color: #FAFAFA;
+}
+
+table.accessTable td.someAccess {
+    background-image: url(../../../../images/ot/aclSomeAccess.gif);
+    background-repeat: repeat-x;
+    background-color: #FAFAFA;
+    color: #000;
+    font-weight: normal;
+    text-align: center;    
 }

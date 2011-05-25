@@ -38,6 +38,7 @@ class Ot_Acl extends Zend_Acl
      */
     public function __construct($scope = 'application')
     {
+    	
         if ($scope == 'application') {
             $controllers = Zend_Controller_Front::getInstance()->getControllerDirectory();
     
@@ -236,6 +237,8 @@ class Ot_Acl extends Zend_Acl
             
             $role = $roles[$roleId];
         }
+        
+        
 
         // Sets the denys for the role
         $denys = array();
