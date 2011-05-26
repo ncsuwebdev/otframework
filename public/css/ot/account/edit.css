@@ -50,7 +50,7 @@ td.hidden {
 	background : none;
 }
 
-table.accessTable td.access {
+td.access {
     background-image: url(../../../../images/ot/aclAccess.gif);
     background-repeat: repeat-x;
     color: #FFF;
@@ -59,7 +59,7 @@ table.accessTable td.access {
     background-color: #FAFAFA;
 }
 
-table.accessTable td.noAccess {
+td.noAccess {
 	width : 125px;
     background-image: url(../../../../images/ot/aclNoAccess.gif);
     background-repeat: repeat-x;
@@ -69,11 +69,28 @@ table.accessTable td.noAccess {
     background-color: #FAFAFA;
 }
 
-table.accessTable td.someAccess {
+td.someAccess {
     background-image: url(../../../../images/ot/aclSomeAccess.gif);
     background-repeat: repeat-x;
     background-color: #FAFAFA;
     color: #000;
     font-weight: normal;
     text-align: center;    
+}
+
+div.actions {
+	display : none;
+}
+
+td.controller {
+	font-weight : bold;
+}
+
+td.action {
+	font-size : 95%;
+	line-height : 1.05263;
+}
+
+td.controller.access, td.controller.someAccess {
+	cursor : pointer;
 }

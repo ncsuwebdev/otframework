@@ -12,25 +12,55 @@
 		<tbody>
         	<?php foreach ($controllers as $controller => $actions) : ?>
             	<tr class="controller">
-            		<td title="<?php echo $actions['description']; ?>" class="td1 description <?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someAccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+            		<td title="<?php echo $actions['description']; ?>" class="td1 description controller <?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someAccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
                 		<?php echo ucwords($controller); ?>
                 	</td>
-<!--                	<td style="/*margin : none; background : none; border : none;*/"></td>-->
             	</tr>
-            	<?php if (isset($actions['part'])): ?>
-            		<?php foreach ($actions['part'] as $action => $access) : ?>
-          				<?php  if(empty($access['access'])) continue;?>
-                		<tr class="action <?php echo $module . '_' . $controller; ?>">
-                    		<td class="td1 description" title="<?php echo $access['description']; ?>">
-<!--                    		<?php echo ucwords($action); ?>-->
-                    		</td>
-                    		<td title="<?php echo $access['description']; ?>" class="td1 description <?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo ucwords($action); ?></td>
-                		</tr>
-                	<?php endforeach; ?>
-            	<?php endif; ?>
-            <?php endforeach; ?>
+            	<?php endforeach; ?>
 		</tbody>
 	</table>
 <?php endforeach; ?>
 
 <div style="clear:both;" />
+
+<?php foreach ($this->permissions as $module => $controllers) :?>
+	<?php foreach ($controllers as $controller => $actions) : ?>
+		<?php if (!empty($actions['all']['access']) || !empty($actions['someAccess'])) :?>
+			<?php if (isset($actions['part'])) :?>
+				<div class="actions">
+					<table class="list">
+						<tr class="controller ui-widget-header"><td><?php echo $controller; ?></td></tr>
+						<?php foreach ($actions['part'] as $action => $access) :?>
+							<?php if(empty($access['access'])) continue;?>
+							<tr><td class="action access"><?php echo $action;?></td></tr>
+						<?php endforeach;?>
+					</table>
+				</div>
+			<?php endif;?>
+		<?php endif;?>
+	<?php endforeach;?>
+<?php endforeach;?>
+
+<!--<div class="actions">-->
+<!--	<table class="list">-->
+<!--		<tr class="controller ui-widget-header"><td>Controller</td></tr>-->
+<!--		<tr><td class="action access">Action</td></tr>-->
+<!--		<tr><td class="action noAccess">Action</td></tr>-->
+<!--		<tr><td class="action access">Action</td></tr>-->
+<!--		<tr><td class="action noAccess">Action</td></tr>-->
+<!--		<tr><td class="action access">Action</td></tr>-->
+<!--	</table>-->
+<!--</div>-->
+
+<!--<?php if (isset($actions['part'])): ?>
+            		<?php foreach ($actions['part'] as $action => $access) : ?>
+          				<?php  if(empty($access['access'])) continue;?>
+                		<tr class="<?php echo $module . '_' . $controller; ?>">
+                    		<td class="td1 description action" title="<?php echo $access['description']; ?>">
+                    		<?php echo ucwords($action); ?>
+                    		</td>
+                    		<td title="<?php echo $access['description']; ?>" class="td1 description <?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo ucwords($action); ?></td>
+                		</tr>
+                	<?php endforeach; ?>
+            	<?php endif; ?>
+            -->
