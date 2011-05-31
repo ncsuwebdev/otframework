@@ -38,7 +38,6 @@ table.accessTable {
 	float : left;
 	margin : 5px;
 	text-align : center;
-/*	width : 300px;*/
 }
 
 td{
@@ -103,6 +102,10 @@ td.controller {
 td.action {
 	font-size : 95%;
 	line-height : 1.05263;
+}
+
+td.action.noAccess {
+	display : none;
 }
 
 td.controller.access, td.controller.someAccess {
