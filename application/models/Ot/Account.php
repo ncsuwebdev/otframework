@@ -151,6 +151,13 @@ class Ot_Account extends Ot_Db_Table
    		return true;
    	}
    	
+   	public function delete($where)
+   	{
+   		parent::delete($where);
+   		$accountRoles = new Ot_Account_Roles();
+   		$accountRoles->delete($where);
+   	}
+   	
     public function getAccount($username, $realm)
     {
         $where = $this->getAdapter()->quoteInto('username = ?', $username)
