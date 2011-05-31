@@ -56,7 +56,7 @@ td.access {
     color: #FFF;
     font-weight: normal;
     text-align: center;
-    background-color: #FAFAFA;
+    background-color: #6b2;
 }
 
 td.noAccess {
@@ -66,13 +66,13 @@ td.noAccess {
     color: #FFF;
     font-weight: normal;
     text-align: center;    
-    background-color: #FAFAFA;
+    background-color: #b21;
 }
 
 td.someAccess {
     background-image: url(../../../../images/ot/aclSomeAccess.gif);
     background-repeat: repeat-x;
-    background-color: #FAFAFA;
+    background-color: #fb0;
     color: #000;
     font-weight: normal;
     text-align: center;    

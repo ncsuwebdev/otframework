@@ -365,6 +365,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     $messages[] = 'msg-error-accountTaken';
                 }
                 
+                
                 $accountData['password'] = $password;
                 
                 // Account plugin
@@ -488,6 +489,7 @@ class Ot_AccountController extends Zend_Controller_Action
         }
         
         $permissions = $this->mergeResources($resources);
+        //var_dump($permissions);
     	
         $messages = array();
 

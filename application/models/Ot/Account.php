@@ -107,7 +107,8 @@ class Ot_Account extends Ot_Db_Table
    		return $this->_addExtraData($result);
    	}
    	
-   	public function insert($data)
+   	
+   	public function insert(array $data)
    	{
    		$roleId = $data['role'];
    		$accountId = parent::insert($data);
@@ -198,7 +199,7 @@ class Ot_Account extends Ot_Db_Table
                 $adapter->name . (!$adapter->enabled ? ' (Disabled)' : '')
             );
         }
-        $realmSelect->setValue((isset($default['realm'])) ? $default['realm'] : '');         
+        $realmSelect->setValue((isset($default['realm'])) ? $default['realm'] : '');
         
         // Create and configure username element:
         $username = $form->createElement('text', 'username', array('label' => 'model-account-username'));

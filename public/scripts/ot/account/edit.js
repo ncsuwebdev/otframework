@@ -55,10 +55,11 @@ function Controller (module, name) {
 	
 	this.redraw = function() {
 		var newStatus = this.status;
-		$('td', this.$object).fadeOut(500, function(){
-			$(this).removeClass('access noAccess someAccess').addClass(newStatus);
-			$(this).fadeIn(500);
-		})
+		$('td', this.$object)
+			.fadeOut(500)
+			.removeClass('access noAccess someAccess')
+			.addClass(newStatus)
+			.fadeIn(500);
 	}
 	
 	this.addAction = function(action) {
