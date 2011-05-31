@@ -120,6 +120,37 @@ class Ot_Account extends Ot_Db_Table
    		return $accountId;
    	}
    	
+   	public function update($data, $where)
+   	{
+   		$rolesToAdd = (array)$data['roles'];
+   		unset($data['roles']);
+   		parent::update($data, $where);
+   		$accountRoles = new Ot_Account_Roles();
+   		$accountRolesDba = $accountRoles->getAdapter();
+   		//$accountRolesDba->beginTransaction();
+   		
+   		$accountId = $data['accountId'];
+   		
+   		if(isset($rolesToAdd)) {
+   			try {
+	   			$where = $accountRolesDba->quoteInto('accountId = ?', $accountId);
+	   			$accountRoles->delete($where);
+	   			foreach($rolesToAdd as $roleId) {
+	   				$d = array(
+	   					'accountId' => $accountId,
+	   					'roleId' => $roleId,
+	   				);
+	   				$accountRoles->insert($d);
+	   			}
+   			} catch(Exception $e) {
+   				//$accountRolesDba->rollback();
+   				throw $e;
+   			}
+   		}
+   		//$accountRolesDba->commit();
+   		return true;
+   	}
+   	
     public function getAccount($username, $realm)
     {
         $where = $this->getAdapter()->quoteInto('username = ?', $username)
