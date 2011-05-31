@@ -271,6 +271,8 @@ class Ot_Account extends Ot_Db_Table
         
         $roleSelect->setValue((isset($default['role'])) ? $default['role'] : '');
         
+        $roleSelect->setAttrib('class', 'roleSelect');
+        
         if ($signup) {
             $form->addElements(array($username, $password, $passwordConf, $firstName, $lastName, $email, $timezone));
         } else {

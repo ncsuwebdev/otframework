@@ -1,9 +1,11 @@
+<textarea id="permissionList" style="display: none;"><?php echo $this->permissionList; ?></textarea>
+
 <?php echo $this->translate('ot-account-edit:header'); ?>
 <br /><br />
 <?php echo $this->form; ?>
 
 <?php foreach ($this->permissions as $module => $controllers): ?>
-	<table class="<?php echo ucwords($module);?> list accessTable">
+	<table id = "<?php echo $module; ?>" class="<?php echo ucwords($module);?> list accessTable">
 		<thead>
 			<tr class="ui-widget-header">
 				<td><?php echo ucwords($module);?></td>
@@ -11,8 +13,8 @@
 		</thead>
 		<tbody>
         	<?php foreach ($controllers as $controller => $actions) : ?>
-            	<tr class="controller">
-            		<td title="<?php echo $actions['description']; ?>" class="td1 description controller <?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someAccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+            	<tr class="controller" id = "<?php echo $module . '-' . $controller; ?>">
+            		<td id="<?php echo $module . '-' . $controller;?> title="<?php echo $actions['description']; ?>" class="td1 description controller <?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someAccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
                 		<?php echo ucwords($controller); ?>
                 	</td>
             	</tr>
@@ -25,42 +27,19 @@
 
 <?php foreach ($this->permissions as $module => $controllers) :?>
 	<?php foreach ($controllers as $controller => $actions) : ?>
-		<?php if (!empty($actions['all']['access']) || !empty($actions['someAccess'])) :?>
+		<?php  //if (!empty($actions['all']['access']) || !empty($actions['someAccess'])) :?>
 			<?php if (isset($actions['part'])) :?>
-				<div class="actions">
-					<table class="list">
-						<tr class="controller ui-widget-header"><td><?php echo $controller; ?></td></tr>
-						<?php foreach ($actions['part'] as $action => $access) :?>
-							<?php if(empty($access['access'])) continue;?>
-							<tr><td class="action access"><?php echo $action;?></td></tr>
-						<?php endforeach;?>
-					</table>
+				<div id="wrapper-<?php echo $module . '-' . $controller ;?>" class="wrapper">
+					<div id="tooltip-<?php echo $module . '-' . $controller ;?>" class="actions">
+						<table class="list">
+							<tr class="controller ui-widget-header"><td><strong><?php echo ucwords($controller); ?></strong></td></tr>
+							<?php foreach ($actions['part'] as $action => $access) :?>						
+								<tr><td class="action description <?php echo $access['access'] ? 'access' : 'noAccess';?>" id="<?php echo $module . '-' . $controller . '-' . $action;?>" title="<?php echo $access['description']; ?>"><?php echo ucwords($action);?></td></tr>
+							<?php endforeach;?>
+						</table>
+					</div>
 				</div>
 			<?php endif;?>
-		<?php endif;?>
+		<?php // endif;?>
 	<?php endforeach;?>
 <?php endforeach;?>
-
-<!--<div class="actions">-->
-<!--	<table class="list">-->
-<!--		<tr class="controller ui-widget-header"><td>Controller</td></tr>-->
-<!--		<tr><td class="action access">Action</td></tr>-->
-<!--		<tr><td class="action noAccess">Action</td></tr>-->
-<!--		<tr><td class="action access">Action</td></tr>-->
-<!--		<tr><td class="action noAccess">Action</td></tr>-->
-<!--		<tr><td class="action access">Action</td></tr>-->
-<!--	</table>-->
-<!--</div>-->
-
-<!--<?php if (isset($actions['part'])): ?>
-            		<?php foreach ($actions['part'] as $action => $access) : ?>
-          				<?php  if(empty($access['access'])) continue;?>
-                		<tr class="<?php echo $module . '_' . $controller; ?>">
-                    		<td class="td1 description action" title="<?php echo $access['description']; ?>">
-                    		<?php echo ucwords($action); ?>
-                    		</td>
-                    		<td title="<?php echo $access['description']; ?>" class="td1 description <?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo ucwords($action); ?></td>
-                		</tr>
-                	<?php endforeach; ?>
-            	<?php endif; ?>
-            -->

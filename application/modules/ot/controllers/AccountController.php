@@ -603,6 +603,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->messages = $messages;
         $this->view->form = $form;
         $this->view->permissions = $permissions;
+        $this->view->permissionList = Zend_Json::encode($permissions);
         $this->_helper->pageTitle('ot-account-edit:title');
     }
 

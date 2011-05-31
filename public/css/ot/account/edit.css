@@ -79,7 +79,21 @@ td.someAccess {
 }
 
 div.actions {
+	padding : 5px;
+	background : #EEE;
+	border : none;
+	-moz-box-shadow: 4px 5px 15px #555;
+	-webkit-box-shadow: 4px 5px 15px #555;
+	box-shadow: 4px 5px 15px #555;
+	text-align : center;
+}
+
+div.wrapper {
 	display : none;
+}
+
+div.actions table {
+	margin : 0;
 }
 
 td.controller {
