@@ -55,10 +55,8 @@ function Controller (module, name) {
 	
 	this.redraw = function() {
 		var newStatus = this.status;
-		$('td', this.$object)
-			.fadeOut(500)
-			.removeClass('access noAccess someAccess')
-			.addClass(newStatus)
+		$('td', this.$object).fadeOut(500)
+			.removeClass('access noAccess someAccess').addClass(newStatus)
 			.fadeIn(500);
 	}
 	
