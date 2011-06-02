@@ -86,7 +86,6 @@ class Ot_Account extends Ot_Db_Table
    		try {
    			$result = parent::fetchAll($where, $order, $count, $offset);
    		} catch (Exception $e) {
-   			//var_dump($where);exit;
    			throw $e;
    		}
 
@@ -147,11 +146,9 @@ class Ot_Account extends Ot_Db_Table
 	   				$accountRoles->insert($d);
 	   			}
    			} catch(Exception $e) {
-   				//$accountRolesDba->rollback();
    				throw $e;
    			}
    		}
-   		//$accountRolesDba->commit();
    		return true;
    	}
    	

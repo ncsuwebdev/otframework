@@ -325,7 +325,6 @@ class Ot_AccountController extends Zend_Controller_Action
      * Adds a user to the system
      *
      */
-    // TODO: FIX THE FORM FOR MULTIPLE USERS
     public function addAction()
     {
         $account = new Ot_Account();
@@ -464,8 +463,6 @@ class Ot_AccountController extends Zend_Controller_Action
                 $messages[] = 'msg-error-invalidForm';
             }
         }
-        
-        
         
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
