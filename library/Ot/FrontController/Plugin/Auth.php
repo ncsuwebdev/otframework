@@ -127,9 +127,12 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 	            }
 	            
 	            // Create a new role that inherits from all the returned roles
-				$thisAccount->role = new Zend_Acl_Role('hybrid');
+				$thisAccount->role = new Zend_Acl_Role(implode(',', $roles));
 				
 				$acl->addRole($thisAccount->role, $roles); 
+				
+//				var_dump($thisAccount->role->getRoleId()); exit;
+				
             } else if (count($thisAccount->role) == 1) {
             	$thisAccount->role = $thisAccount->role[0];
             }

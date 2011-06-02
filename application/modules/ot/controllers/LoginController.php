@@ -253,7 +253,7 @@ class Ot_LoginController extends Zend_Controller_Action
                 
                 $loggerOptions = array(
                     'accountId'     => $thisAccount->accountId,
-                    'role'          => $thisAccount->role,
+                    'role'          => implode(',', $thisAccount->role),
                     'attributeName' => 'accountId',
                     'attributeId'   => $thisAccount->accountId,
                 );
