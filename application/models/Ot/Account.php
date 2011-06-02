@@ -197,7 +197,7 @@ class Ot_Account extends Ot_Db_Table
         return $result->current();
     }    
     
-    public function getAccountsForRole($roleId, $order, $count, $offset)
+    public function getAccountsForRole($roleId, $order = null, $count = null, $offset = null)
     {
     	$rolesDb = new Ot_Account_Roles();
     	
