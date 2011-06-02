@@ -355,7 +355,11 @@ class Ot_AccountController extends Zend_Controller_Action
                     'emailAddress' => $form->getValue('emailAddress'),
                     'timezone'     => $form->getValue('timezone'),
                     'role'         => $form->getValue('roleSelect'),
-                );    
+                );
+                
+                if(!isset($accountData['role']) || count($accountData['role'] < 1)) {
+                	$accountData['role'] = (array)$config->user->defaultRole->val;
+                }
 
                 $dba = Zend_Db_Table::getDefaultAdapter();
                 $dba->beginTransaction();
@@ -529,9 +533,16 @@ class Ot_AccountController extends Zend_Controller_Action
                 if ($this->_userData['accountId']
                     != Zend_Auth::getInstance()->getIdentity()->accountId) {
                     $data['realm']    = $form->getValue('realm');
-                    $data['role']     = $form->getValue('role');
+                    $data['role']     = $form->getValue('roleSelect');
+                    
+                    if(!isset($data['role']) || count($data['role']) < 1) {
+                    	$data['role'] = $config->user->defaultRole->val;
+                    }
+                    
                     $data['username'] = $form->getValue('username');
                 }
+                
+            	
                 
                 $account = new Ot_Account();
                 

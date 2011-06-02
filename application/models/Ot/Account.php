@@ -125,8 +125,8 @@ class Ot_Account extends Ot_Db_Table
    	
    	public function update(array $data, $where)
    	{
-   		$rolesToAdd = (array)$data['roles'];
-   		unset($data['roles']);
+   		$rolesToAdd = (array)$data['role'];
+   		unset($data['role']);
    		parent::update($data, $where);
    		$accountRoles = new Ot_Account_Roles();
    		$accountRolesDba = $accountRoles->getAdapter();
@@ -134,7 +134,7 @@ class Ot_Account extends Ot_Db_Table
    		
    		$accountId = $data['accountId'];
    		
-   		if(isset($rolesToAdd)) {
+   		if(isset($rolesToAdd) && count($rolesToAdd) > 0) {
    			try {
 	   			$where = $accountRolesDba->quoteInto('accountId = ?', $accountId);
 	   			$accountRoles->delete($where);
