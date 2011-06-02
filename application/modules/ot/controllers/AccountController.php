@@ -356,8 +356,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     'timezone'     => $form->getValue('timezone'),
                     'role'         => $form->getValue('roleSelect'),
                 );
-                
-                if(!isset($accountData['role']) || count($accountData['role'] < 1)) {
+                if(!isset($accountData['role']) || count($accountData['role']) < 1) {
                 	$accountData['role'] = (array)$config->user->defaultRole->val;
                 }
 
