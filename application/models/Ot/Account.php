@@ -110,13 +110,17 @@ class Ot_Account extends Ot_Db_Table
    	
    	public function insert(array $data)
    	{
-   		$roleId = $data['role'];
+   		$roleIds = $data['role'];
+   		unset($data['role']);
    		$accountId = parent::insert($data);
    		$accountRoles = new Ot_Account_Roles();
-   		$accountRoles->insert(array(
-   			'accountId' => $accountId,
-   			'roleId'    => $data['role'],
-   		));
+   		
+   		foreach($roleIds as $r) {
+   			$accountRoles->insert(array(
+   				'accountId' => $accountId,
+   				'roleId'    => $r,
+   			));
+   		}
    		return $accountId;
    	}
    	
