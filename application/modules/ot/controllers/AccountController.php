@@ -328,9 +328,16 @@ class Ot_AccountController extends Zend_Controller_Action
         $account = new Ot_Account();
         $config  = Zend_Registry::get('config');
         
-        $form = $account->form();
+        $defaultRole = $config->user->defaultRole->val;
+        $values = array('role' => $defaultRole);
+        
+        $form = $account->form($values);
         
         $messages = array();
+        
+        $acl = Zend_Registry::get('acl');
+
+        $permissions = $acl->getResources($defaultRole);
         
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -345,11 +352,8 @@ class Ot_AccountController extends Zend_Controller_Action
                     'lastName'     => $form->getValue('lastName'),
                     'emailAddress' => $form->getValue('emailAddress'),
                     'timezone'     => $form->getValue('timezone'),
-                    //'role'         => $form->getValue('role'),
-                );
-                
-                $roles = $form->getValue('roleSelect');
-                var_dump($roles);exit;
+                    'role'         => $form->getValue('roleSelect'),
+                );    
 
                 $dba = Zend_Db_Table::getDefaultAdapter();
                 $dba->beginTransaction();
@@ -419,14 +423,19 @@ class Ot_AccountController extends Zend_Controller_Action
                     $trigger = new Ot_Trigger();
                     $trigger->setVariables($accountData);
                     
+                    
                     $role = new Ot_Role();
-                    $thisRole = $role->find($accountData['role']);
+                    
+                    $roles = array();
+                    foreach ($accountData['role'] as $r) {
+                    	$roles[] = $role->find($r)->name;
+                    }
                     
                     $otAuthAdapter = new Ot_Auth_Adapter();
                                        
                     $thisAdapter = $otAuthAdapter->find($accountData['realm']);
                     
-                    $trigger->role = $thisRole->name;
+                    $trigger->role = implode(',', $roles);
                     $trigger->loginMethod = $thisAdapter->name;
                     
                     $authAdapter = new $thisAdapter->class;
@@ -453,9 +462,18 @@ class Ot_AccountController extends Zend_Controller_Action
             }
         }
         
-        $this->view->messages = $messages;
+        
+        
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.tooltip.min.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
         $this->_helper->pageTitle('ot-account-add:title');
+        
+        $this->view->messages = $messages;
         $this->view->form = $form;
+        $this->view->permissions = $permissions;
+        $this->view->permissionList = Zend_Json::encode($permissions);
 
     }   
     
@@ -511,12 +529,9 @@ class Ot_AccountController extends Zend_Controller_Action
                 if ($this->_userData['accountId']
                     != Zend_Auth::getInstance()->getIdentity()->accountId) {
                     $data['realm']    = $form->getValue('realm');
-                    //$data['role']     = $form->getValue('role');
+                    $data['role']     = $form->getValue('role');
                     $data['username'] = $form->getValue('username');
-                    
-                    $data['roles'] = $form->getValue('roleSelect');
                 }
-                
                 
                 $account = new Ot_Account();
                 
@@ -920,38 +935,24 @@ class Ot_AccountController extends Zend_Controller_Action
         
         $get = Zend_Registry::get('getFilter');
 
-        if (!isset($get->roles)) {
-        	echo Zend_Json_Encoder::encode('No Roles Value specified');
-        	return;
+        $roles = $get->roles;
+        
+        if (!isset($roles) || count($roles) < 1) {
+			$config = Zend_Registry::get('config');
+			$roles = array($config->user->defaultRole->val);
         }
         
-//    	$hybridRole = new Zend_Acl_Role('temp');
     	$acl = Zend_Registry::get('acl');
     	
     	
     	
     	$resources = array();
-    	foreach($get->roles as $role) {
+    	foreach($roles as $role) {
     		$resources[] = $acl->getResources($role);
     	}
     	
-//    	$acl->addRole($hybridRole, $resources);
-    	
     	$permissions = $this->mergeResources($resources);
     	
-//	    foreach ($permissions as &$permission) {
-//            foreach ($permission as &$c) {
-//                $c['someAccess'] = false;
-//                foreach ($c['part'] as $p) {
-//                    if ($p['access']) {
-//                        $c['someaccess'] = true;
-//                    }
-//                }
-//            }
-//        }
-        
-//        $acl->removeRole(4);
-        
         echo Zend_Json_Encoder::encode($permissions);
         return;
         
