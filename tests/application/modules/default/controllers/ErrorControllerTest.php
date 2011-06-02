@@ -9,6 +9,9 @@ class ErrorControllerTest extends ControllerTestCase
         $this->markTestIncomplete();
     }
 	
+    /**
+     * @expectedException Zend_Controller_Dispatcher_Exception
+     */
     public function testNotFoundSets404Header() {
     	$this->dispatch('/aksdhglah');
     	$this->assertResponseCode(404);

@@ -124,7 +124,7 @@ class Ot_Account extends Ot_Db_Table
    		return $accountId;
    	}
    	
-   	public function update($data, $where)
+   	public function update(array $data, $where)
    	{
    		$rolesToAdd = (array)$data['roles'];
    		unset($data['roles']);
@@ -200,7 +200,7 @@ class Ot_Account extends Ot_Db_Table
         return $result->current();
     }    
     
-    public function getAccountsForRole($roleId)
+    public function getAccountsForRole($roleId, $order, $count, $offset)
     {
     	$rolesDb = new Ot_Account_Roles();
     	
@@ -214,7 +214,7 @@ class Ot_Account extends Ot_Db_Table
         
         if(count($accountIds) > 0) {
         	$where = $this->getAdapter()->quoteInto('accountId IN (?)', $accountIds);
-        	return $this->fetchAll($where);
+        	return $this->fetchAll($where, $order, $count, $offset);
         } else {
         	return null;
         }

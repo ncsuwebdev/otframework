@@ -27,6 +27,7 @@ class NavControllerTest extends ControllerTestCase
 	public function testGetResourcesAction()
 	{
 		// @todo - load table data from example xml
+		// @todo - the huge array in here should probably be loaded in xml as well
 		$this->login();
 		
 		$this->dispatch('ot/nav/get-resources');
@@ -81,6 +82,7 @@ class NavControllerTest extends ControllerTestCase
 								'delete',
 								'edit',
 								'edit-all-accounts',
+								'get-permissions',
 								'index',
 								'revoke-connection',
 							),

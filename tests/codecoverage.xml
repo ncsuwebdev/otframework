@@ -23,4 +23,7 @@
 		<listener class="Test_Listener_DatabaseTransaction" file="application/Test_Listener_DatabaseTransaction.php">
 		</listener>
 	</listeners>
+	<php>
+		<ini name="memory_limit" value="1024M"/>
+	</php>
 </phpunit>

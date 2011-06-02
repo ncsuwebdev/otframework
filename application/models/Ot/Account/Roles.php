@@ -36,7 +36,7 @@ class Ot_Account_Roles extends Ot_Db_Table
      *
      * @var string
      */
-    protected $_name = 'tbl_account_roles';
+    protected $_name = 'tbl_ot_account_roles';
     
     /**
      * Primary key of the table

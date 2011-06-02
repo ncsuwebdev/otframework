@@ -257,6 +257,7 @@ class Ot_AccountController extends Zend_Controller_Action
             
             if (!is_null($query)) {
                 if ($qtype == 'role') {
+                	// find what role Id corresponds to the text string that was entered
                     foreach ($roles as $r) {
                         if ($query == $r['name']) {
                             $query = $r['roleId'];
@@ -267,14 +268,16 @@ class Ot_AccountController extends Zend_Controller_Action
                     
                 $where = $account->getAdapter()->quoteInto($qtype . ' = ?', $query);
             }
-
             
-            
-            $accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
-                            
+            // if they're searching by a role, you can't use the $where, since role no longer exists in the account table 
+            if($qtype == 'role') {
+            	$accounts = $account->getAccountsForRole($query, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+            } else{
+            	$accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+            } 
             $response = array(
                 'page' => $page + 1,
-                'total' => count($account->fetchAll($where)),
+                'total' => count($accounts),
                 'rows'  => array(),
             );
             
