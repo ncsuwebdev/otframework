@@ -414,7 +414,7 @@ class Ot_Account extends Ot_Db_Table
 	       	array('HtmlTag', array('tag' => 'div', 'class' => 'general'))
         ));
         
-        if(!$signup) {
+        if(!$signup && !$me) {
 	        $form->addDisplayGroup(array('roleSelect'), 'roles', array('legend' => 'User Access Roles'));
 	        $role = $form->getDisplayGroup('roles');
 	        $role->setDecorators(array(

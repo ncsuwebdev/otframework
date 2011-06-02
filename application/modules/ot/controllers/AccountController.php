@@ -629,6 +629,10 @@ class Ot_AccountController extends Zend_Controller_Action
             $messages[] = 'msg-info-requiredDataBeforeContinuing';
         }
         
+        if ($this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
+        	$messages[] = 'msg-info-editAccountSelf';
+        }
+        
 		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.tooltip.min.js');

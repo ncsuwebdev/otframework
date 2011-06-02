@@ -216,6 +216,7 @@ msg-info-passwordChanged;Your password has been changed.  You can now log in wit
 msg-info-loginBeforeContinuing;You must log in before continuing
 msg-info-apiCodeCreated;The API Code was successfully created.  This user has remote access now.
 msg-info-apiCodeDeleted;The API Code was successfully deleted.  This user has no more remote access.
+msg-info-editAccountSelf;You are editing your own account data. For security reasons we do not allow users to change their assigned roles.
 
 table-header-edit;Edit
 table-header-delete;Delete
