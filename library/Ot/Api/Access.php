@@ -75,11 +75,20 @@ class Ot_Api_Access
                 $this->_message = "User with this token not found.";
                 return false;
             }
-                    
+            
+            foreach($thisAccount->role as $r) {
+            	if(!$remoteAcl->isAllowed($r, $method)) {
+            		$this->_message = 'You do not have the proper credentials to remotely access this method.';
+                	return false;
+            	}
+            }
+            
+            /*
             if (!$remoteAcl->isAllowed($thisAccount->role, $method)) {
                 $this->_message = 'You do not have the proper credentials to remotely access this method.';
                 return false;
             }
+            */
             
             Zend_Auth::getInstance()->getStorage()->write($thisAccount);
         }

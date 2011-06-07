@@ -135,14 +135,14 @@ class Ot_Api
     public static function getAccount($accountId)
     {
         $otAccount = new Ot_Account();
-        $accountInfo = $otAccount->find($accountId)->toArray();
+        $accountInfo = $otAccount->find($accountId);
         
         if (is_null($accountInfo)) {
            throw new Ot_Exception_Data('msg-error-noAccount');
         }
         
-        $accountInfo = $accountInfo->toArray();
-        unset($accountInfo['password']);
+        $accountInfo->password = '';
+        unset($accountInfo->password);
         
         return $accountInfo;
     }

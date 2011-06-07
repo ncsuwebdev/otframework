@@ -131,7 +131,6 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 				
 				$acl->addRole($thisAccount->role, $roles); 
 				
-//				var_dump($thisAccount->role->getRoleId()); exit;
 				
             } else if (count($thisAccount->role) == 1) {
             	$thisAccount->role = $thisAccount->role[0];
