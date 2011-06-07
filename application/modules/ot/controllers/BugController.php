@@ -84,10 +84,8 @@ class Ot_BugController extends Zend_Controller_Action
         
         $otAccount = new Ot_Account();
         foreach ($text as &$t) {
-            $t['userInfo'] = $otAccount->find($t['accountId']);//->toArray();
+            $t['userInfo'] = $otAccount->find($t['accountId']);
         }
-        var_dump($t['userInfo']);
-        
         $this->view->text = $text;
 
         $this->view->bug = $thisBug->toArray();
@@ -164,8 +162,8 @@ class Ot_BugController extends Zend_Controller_Action
                         'accountId' => Zend_Auth::getInstance()->getIdentity()->accountId,
                         'postDt'    => $time,
                         'text'      => $form->getValue('description'),
-                        ),
-                    );
+                    ),
+                );
     
                 $bugId = $bug->insert($data);
                 
@@ -225,7 +223,7 @@ class Ot_BugController extends Zend_Controller_Action
         
         $otAccount = new Ot_Account();
         foreach ($text as &$t) {
-            $t['userInfo'] = $otAccount->find($t['accountId'])->toArray();
+            $t['userInfo'] = $otAccount->find($t['accountId']);
         }
         
         $this->view->text = $text;

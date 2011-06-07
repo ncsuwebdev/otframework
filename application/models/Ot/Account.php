@@ -66,6 +66,10 @@ class Ot_Account extends Ot_Db_Table
     		$data = (object) $data->toArray();
 		}
 		
+		if(empty($data)) {
+			return $data;
+		}
+		
     	$rolesDb = new Ot_Account_Roles();
     	
     	$where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $data->accountId);
@@ -127,7 +131,7 @@ class Ot_Account extends Ot_Db_Table
    	{
    		$rolesToAdd = (array)$data['role'];
    		unset($data['role']);
-   		parent::update($data, $where);
+   		$updateCount = parent::update($data, $where);
    		$accountRoles = new Ot_Account_Roles();
    		$accountRolesDba = $accountRoles->getAdapter();
    		//$accountRolesDba->beginTransaction();
@@ -149,14 +153,15 @@ class Ot_Account extends Ot_Db_Table
    				throw $e;
    			}
    		}
-   		return true;
+   		return $updateCount;
    	}
    	
    	public function delete($where)
    	{
-   		parent::delete($where);
+   		$deleteCount = parent::delete($where);
    		$accountRoles = new Ot_Account_Roles();
    		$accountRoles->delete($where);
+   		return $deleteCount;
    	}
    	
     public function getAccount($username, $realm)
@@ -316,7 +321,10 @@ class Ot_Account extends Ot_Db_Table
         if ($signup) {
             $form->addElements(array($username, $password, $passwordConf, $firstName, $lastName, $email, $timezone));
         } else {
-            $me = false;
+            $me = false; // bool value for if you're trying to edit your own account
+            // Is this even necessary? Someone that can edit account probably is a super admin,
+            // so why restrict this? They could just create a new user, change their permissions,
+            // then log in as the new account to switch they're main account's permissions.
             
             if (isset($default['accountId'])
                 && $default['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {

@@ -65,17 +65,17 @@ class Ot_AccountController extends Zend_Controller_Action
             $userData['accountId'] = $get->accountId;
         }
                         
-        $account = new Ot_Account(); 
+        $account = new Ot_Account();
         $thisAccount = $account->find($userData['accountId']);
         
         if (is_null($thisAccount)) {
             throw new Ot_Exception_Data('msg-error-noAccount');
-        }               
+        }
         
         $userData = array_merge($userData, (array) $thisAccount);
       
         
-        $authAdapter = new Ot_Auth_Adapter;
+        $authAdapter = new Ot_Auth_Adapter();
         $adapter = $authAdapter->find($userData['realm']);
         $a = $adapter;
         

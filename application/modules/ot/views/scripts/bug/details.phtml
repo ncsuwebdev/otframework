@@ -37,7 +37,7 @@
             <?php foreach ($this->text as $t) : ?>
             <div class="bugText">
                 <div class="header">
-                	<?php echo $this->translate('ot-bug-details:submittedBy', array($t['userInfo']['firstName'], $t['userInfo']['lastName'], $t['userInfo']['username'], $this->dateFormat($t['postDt'], $this->config->user->dateTimeFormat->val), $this->elapsedTime($this->bug['submitDt']))); ?>
+                	<?php echo $this->translate('ot-bug-details:submittedBy', array($t['userInfo']->firstName, $t['userInfo']->lastName, $t['userInfo']->username, $this->dateFormat($t['postDt'], $this->config->user->dateTimeFormat->val), $this->elapsedTime($this->bug['submitDt']))); ?>
                 </div>
                 <div class="bugContent">
                     <?php echo nl2br($t['text']); ?>
