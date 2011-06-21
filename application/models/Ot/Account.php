@@ -132,9 +132,11 @@ class Ot_Account extends Ot_Db_Table
    		$rolesToAdd = (array)$data['role'];
    		unset($data['role']);
    		$updateCount = parent::update($data, $where);
+   		if(count($rolesToAdd) < 1) {
+   			return $updateCount;
+   		}
    		$accountRoles = new Ot_Account_Roles();
    		$accountRolesDba = $accountRoles->getAdapter();
-   		//$accountRolesDba->beginTransaction();
    		
    		$accountId = $data['accountId'];
    		
