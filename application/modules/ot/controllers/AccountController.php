@@ -911,18 +911,20 @@ class Ot_AccountController extends Zend_Controller_Action
     		foreach ($resource as $module => $controllers) {
     			foreach($controllers as $controller => $parts) {
     				foreach($parts as $part => $rules) {
-						if(isset($rules['access'])) {
-							$permissions[$module][$controller][$part]['access'] = $rules['access'] || $permissions[$module][$controller][$part]['access'];
-						} else {
-							foreach($rules as $rule => $access) {
-								$permissions[$module][$controller][$part][$rule]['access'] = $access['access'] || $permissions[$module][$controller][$part][$rule]['access']; 
+    					if($part != 'description') {
+							if(isset($rules['access'])) {
+								$permissions[$module][$controller][$part]['access'] = $rules['access'] || $permissions[$module][$controller][$part]['access'];
+							} else {
+								foreach($rules as $rule => $access) {
+									$permissions[$module][$controller][$part][$rule]['access'] = $access['access'] || $permissions[$module][$controller][$part][$rule]['access']; 
+								}
 							}
-						}
+    					}
     				}
     			}
     		}
     	}
-    	
+
     	foreach ($permissions as &$permission) {
             foreach ($permission as &$c) {
                 $c['someAccess'] = false;
@@ -933,7 +935,6 @@ class Ot_AccountController extends Zend_Controller_Action
                 }
             }
 	    }
-	    
 	    return $permissions;
     }
     
