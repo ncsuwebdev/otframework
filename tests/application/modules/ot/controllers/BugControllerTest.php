@@ -4,10 +4,17 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/BugController.php';
 
 class BugControllerTest extends ControllerTestCase
 {
+	
+	public static function setUpBeforeClass()
+    {
+    	parent::setUpBeforeClass();
+    	self::setupDatabase();
+    }
+    
 	public function setUp()
 	{
 		parent::setUp();
-		$this->setupDatabase('ot_bug.xml');
+		$this->setupDatabase('controllers/bug/ot_bug.xml');
 	}
 	
 	public function addBug() {
@@ -22,7 +29,7 @@ class BugControllerTest extends ControllerTestCase
 			'status'          => 'new',
 			'text'            =>
 			array(
-				'accountId' => 31,
+				'accountId' => 1,
 				'postDt'    => 55555,
 				'text'      => 'bug text',
 			),
@@ -32,21 +39,29 @@ class BugControllerTest extends ControllerTestCase
 	
 	public function testIndexAction()
 	{
-		// @todo - load some example table with default bugs in it to match against
 		$this->dispatch('ot/bug');
 		$this->assertResponseCode(200);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
         $this->assertController('bug');
         $this->assertAction('index');
+		$this->assertQueryCount('table.list tr.row1, table.list tr.row2', 1);
+		
+		$this->getResponse()->setBody('');
+		$this->addBug();
+		
+		$this->dispatch('ot/bug');
 		$this->assertQueryCount('table.list tr.row1, table.list tr.row2', 2);
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+        $this->assertController('bug');
+        $this->assertAction('index');
 		
 		$this->markTestIncomplete('load xml table to match against');
 	}
 	
 	public function testDetailsActionWithExistingBug()
 	{
-		// @todo - load db table with bug 1 in it to match against
 		$this->login();
 		$this->dispatch('ot/bug/details/bugId/1');
 		$this->assertResponseCode(200);
@@ -54,9 +69,14 @@ class BugControllerTest extends ControllerTestCase
 		$this->assertModule('ot');
         $this->assertController('bug');
         $this->assertAction('details');
-		//$this->assertQueryCount('table.list tr.row1, table.list tr.row2', 2);
-		
-		$this->markTestIncomplete('Needs to actually check info');
+        
+		$this->assertQueryContentContains('table.form tr[1] td[2]', 'New');
+		$this->assertQueryContentContains('table.form tr[2] td[2]', '12/08/2010 02:51 PM');
+		$this->assertQueryContentContains('table.form tr[3] td[2]', 'Always');
+		$this->assertQueryContentContains('table.form tr[4] td[2]', 'Minor');
+		$this->assertQueryContentContains('table.form tr[5] td[2]', 'Low');
+		$this->assertQueryContentContains('table.form tr[6] td[2] div.bugText div.header', 'Submitted by Admin Mcadmin (admin)');
+		$this->assertQueryContentContains('table.form tr[6] td[2] div.bugText div.bugContent', 'testasdga description');
 	}
 	
 	/**
@@ -66,11 +86,6 @@ class BugControllerTest extends ControllerTestCase
 	{
 		$this->login();
 		$this->dispatch('ot/bug/details');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
-    	$this->assertController('bug');
-    	$this->assertAction('details');
 	}
 	
 	/**
@@ -80,11 +95,6 @@ class BugControllerTest extends ControllerTestCase
 	{
 		$this->login();
 		$this->dispatch('ot/bug/details?bugId=-9999');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
-    	$this->assertController('bug');
-    	$this->assertAction('details');
 	}
 	
 	public function testDeleteAction()
@@ -150,14 +160,12 @@ class BugControllerTest extends ControllerTestCase
 	
 	public function testAddingBugMakesCountIncrease()
 	{
-		$this->markTestIncomplete();
+		$this->addBug();
 		
 		$this->dispatch('ot/bug');
 		$this->assertQueryCount('table.list tr.row1, table.list tr.row2', 2);
 		
-		$this->tearDown();
-		$this->setUp(); //reset so assertQueryCount() doesn't add on the 2 from the previous dispatch
-		
+		$this->getResponse()->setBody('');
 		$this->addBug();
 		
 		$this->dispatch('ot/bug');

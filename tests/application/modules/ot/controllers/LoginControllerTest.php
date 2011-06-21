@@ -21,6 +21,24 @@ class LoginControllerTest extends ControllerTestCase
     	$this->assertAction('index');
 	}
 	
+	public function testIndexActionWithValidLoginData()
+	{
+		
+		$postData = array(
+			'username' => 'admin',
+			'password' => 'admin',
+		);
+		$this->request
+			->setMethod('POST')
+			->setPost($postData);
+		$this->dispatch('/ot/login?realm=local'); //the redir effects the entire ot/ dir, but check ot/account too
+		//$this->assertRedirect();
+		$this->assertModule('ot');
+    	$this->assertController('login');
+    	$this->assertAction('index');
+	
+	}
+	
 	public function wrongLoginDataProvider()
 	{
 		return array(

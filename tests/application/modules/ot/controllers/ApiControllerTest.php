@@ -95,8 +95,6 @@ class ApiControllerTest extends ControllerTestCase
 	{
 		$this->login();
 		$this->dispatch('/ot/api/xml?method=getMyAccount');
-				var_dump(headers_list(),'asdf');
-				var_dump($this->getResponse());
 		//$this->assertResponseCode(401);
 		$this->assertHeader('HTTP/1.1 401 Unauthorized');
 		$this->assertNotRedirect();

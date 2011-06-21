@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
 	<ot_tbl_ot_bug
-		bugId="1"
+		id="1"
 		title="test"
 		submitDt="1291837873"
+		reproducibility="always"
+		severity="minor"
+		priority="low"
+		status="new"
+	/>
+	<ot_tbl_ot_bug
+		id="2"
+		title="title2"
+		submitDt="55555"
 		reproducibility="always"
 		severity="minor"
 		priority="low"
@@ -13,23 +22,16 @@
 	<ot_tbl_ot_bug_text
 		bugTextId="1"
 		bugId="1"
-		accountId="31"
+		accountId="1"
 		postDt="1291837873"
 		text="testasdga description"
 	/>
-	
-	<ot_tbl_ot_account
-		accountId="31"
-		username="admin"
-		realm="local"
-		password="21232f297a57a5a743894a0e4a801fc3"
-		apiCode=""
-		role="3"
-		emailAddress="admin@admin.com"
-		firstName="Admin"
-		lastName="Mcadmin"
-		timezone="America/New_York"
-		lastLogin="1291662253"
+	<ot_tbl_ot_bug_text
+		bugTextId="2"
+		bugId="2"
+		accountId="1"
+		postDt="55555"
+		text="bug text"
 	/>
 
 </dataset>

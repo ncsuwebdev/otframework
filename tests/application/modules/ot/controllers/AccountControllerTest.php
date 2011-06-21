@@ -65,19 +65,92 @@ class AccountControllerTest extends ControllerTestCase
     
     }
     
-    public function testAllActionJson()
+    public function allActionJsonProvider()
+    {
+    	return array(
+    		array('1', '15', 'username', 'asc', 'guest', 'role', 'filter guests'),
+    		array('1', '1', 'username', 'asc', 'a', 'username', 'filter guests'),
+    	
+    	
+    	);
+    
+    }
+    
+    /**
+     * @dataProvider allActionJsonProvider
+     */
+    public function testAllActionJson($page, $rp, $sortName, $sortOrder, $query, $qType, $message)
     {
     	$this->login();
+    	
+    	$postData = array(
+    		'page' => $page,
+    		'rp' => $rp,
+    		'sortname' => $sortName,
+    		'sortorder' => $sortOrder,
+    		'query' => $query,
+    		'qtype' => $qType,
+    	);
+    	
     	$this->getRequest()
     	    ->setHeader('X-Requested-With', 'XMLHttpRequest')
-    	    ->setQuery('format', 'json');
+    	    ->setQuery('format', 'json')
+    	    ->setPost($postData);
         $this->dispatch('/ot/account/all/');
+        
+        $this->assertResponseCode(200);
+		$this->assertNotRedirect('/');
+		$this->assertModule('ot');
+    	$this->assertController('account');
+    	$this->assertAction('all');
+        
+        $results = json_decode($this->getResponse()->getBody(), true);
+        
+        $this->assertEquals($results['total'], count($results['rows']));
+        $this->assertLessThanOrEqual($rp, $results['total']);
+        
+        
         $this->markTestIncomplete();
     }
     
+    /**
+     * @depends testEditAction
+     * for some reason having testEditAction follow testAddAction causes a terrible memory leak or something
+     * testing goes from 20 minutes to 2-3 minutes if you switch the order.
+     * tried to figure out why; mysql timeouts during the postDispatch for frontController plugin activeUsers for some reason
+     */
     public function testAddAction()
     {
+    	// @todo - load example table
+    	//$this->markTestSkipped();
+    	$this->login();
+    	
+    	$postData = array(
+    		'username' => 'GEORGE',
+    		'realm' => 'local',
+    		'firstName' => 'george',
+    		'lastName' => 'asdf',
+    		'emailAddress' => 'srgraham@ncsu.edu',
+    		'timezone' => 'America/New_York',
+    		'roleSelect' => 44,
+    		'submit' => array('Save', 'asdf'),
+    	);
+    	
+    	$this->request
+			->setMethod('POST')
+			->setPost($postData);
+    	$this->dispatch('/ot/account/add/realm/local');
+    	$this->login();
+    	$this->assertResponseCode(200);
+		$this->assertRedirectTo('/ot/account/all');
+		$this->assertNotRedirect();
+		$this->assertModule('ot');
+    	$this->assertController('account');
+    	$this->assertAction('all');
+    	echo 'george';
+    	
         $this->markTestIncomplete();
+        
     }
     
     public function testEditAction()
@@ -89,11 +162,13 @@ class AccountControllerTest extends ControllerTestCase
     	$this->assertQuery('form#account input[type="hidden"]');
     	
     	
-    	
         $this->markTestIncomplete();
     }
     
-    public function textEditActionNonExistantAccount()
+    /**
+     * @expectedException Ot_Exception_Data
+     */
+    public function testEditActionNonExistantAccount()
     {
     	$this->login();
     	$this->dispatch('/ot/account/edit/accountId/9999999');

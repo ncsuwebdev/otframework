@@ -3,7 +3,14 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 {
     public $application;
     public $config;
+    public $loggedIn = false;
 
+    /**
+     * this runs at the start of each controller
+     * load the default database setup for each class, then make adjustments based on what needs to be changed
+     * */
+    
+    
     public function setUp()
     {
         $this->application = new Zend_Application(
@@ -34,11 +41,12 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         
         // unset these for optimization (globals get saved which slow down tests, so clear
         // them here to make it run faster for these globals we don't care about)
-        unset($_SERVER['DOCUMENT_ROOT']);
+        /*unset($_SERVER['DOCUMENT_ROOT']);
         unset($_SERVER['HTTP_HOST']);
-        unset($_SERVER['REQUEST_METHOD']);
-        
-        $this->logout();
+        unset($_SERVER['REQUEST_METHOD']);*/
+        if($this->loggedIn) {
+        	$this->logout();
+        }
         
     }
     
@@ -48,11 +56,11 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
      * and quickly have its contents refreshed for retesting
      * the xml file must exist in tests/_files/
      */
-    public function setupDatabase($xmlPath = 'dbtest.xml')
+    public static function setupDatabase($xmlPath = 'dbtest.xml')
     {
     	// @todo: fix database integration from within the ControllerTestCase
     	// currently doesn't work, so return early
-    	return;
+    	//return;
     	
     	$configFilePath = dirname(__FILE__) . '/../../application/configs';
     	$applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', 'testing');
@@ -66,7 +74,6 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 			'port'     => $applicationIni->resources->db->params->port,
 			'dbname'   => $applicationIni->resources->db->params->dbname
         );
-    	
     	
 		$db = Zend_Db::factory($adapter, $params);
 		$connection = new Zend_Test_PHPUnit_Db_Connection($db, 'mysql');
@@ -108,7 +115,6 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
              ->setResponse($this->getResponse())
              ->throwExceptions(true)
              ->returnResponse(false);
-
         $this->getFrontController()->dispatch();
     }
     
@@ -118,6 +124,9 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
      **/
 	public function login()
 	{
+		if($this->loggedIn) {
+			return;
+		}
 		// @todo - is there a better way to do this?
 		$username = 'admin';
         $password = 'admin';
@@ -129,6 +138,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $auth = Zend_Auth::getInstance();
         // Attempt authentication, saving the result
         $result = $auth->authenticate($authAdapter);
+        $this->loggedIn = true;
 	}
 	
 	/**
@@ -136,6 +146,9 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 	 */
 	public function logout()
 	{
+		if(!$this->loggedIn) {
+			return;
+		}
 		//$config = Zend_Registry::get('config');
         $userId = Zend_Auth::getInstance()->getIdentity();
         // Set up the auth adapter
@@ -144,7 +157,8 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $className   = (string)$adapter->class;
         $auth        = new $className();
         $auth->autoLogout();
-        Zend_Auth::getInstance()->clearIdentity();    
+        Zend_Auth::getInstance()->clearIdentity();
+        $this->loggedIn = false;
 	}
 	
 	/**
@@ -185,6 +199,8 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 	 * Gets the default properties for a class. This bypasses protected and private protections
 	 * if $propertyName set, returns the value of the specified property
 	 * if $propertyName not set, returns all the properties
+	 * 
+	 * PHPUnit_Framework_Assert::readAttribute() / $this->assertAttributeEquals() may be better
 	 */
 	public function getDefaultProperties($className, $propertyName)
 	{
