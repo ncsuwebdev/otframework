@@ -32,12 +32,13 @@
  */
 class Ot_LoginController extends Zend_Controller_Action
 {
+	
     /**
      * Action when going to the main login page
      *
      */
     public function indexAction()
-    {            
+    {
         $this->_helper->pageTitle('ot-login-index:title');
         
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
@@ -60,7 +61,7 @@ class Ot_LoginController extends Zend_Controller_Action
         
         $loginForms = array();
         
-        $realm = 'local';//set a default value for $realm, since it's required
+        $realm = 'local'; //set a default value for $realm, since it's required
         
         foreach ($adapters as $adapter) {
             $form = new Zend_Form();
@@ -156,7 +157,7 @@ class Ot_LoginController extends Zend_Controller_Action
                 $validForm = true;
             }
         }
-                
+             
         if ((isset($authRealm->realm) && $authRealm->autoLogin) || ($this->_request->isPost() && $validForm)) {
             
             if (isset($authRealm->realm) && !$this->_request->isPost()) {
@@ -240,15 +241,12 @@ class Ot_LoginController extends Zend_Controller_Action
                     $thisAccount->username  = $acctData['username'];
                     $thisAccount->realm     = $realm;
                     $thisAccount->role      = $role;
-                    
                 } else {
                     $role = $thisAccount->role;
                     
                     $data = array('accountId' => $thisAccount->accountId, 'lastLogin' => time());
-                    
                     $account->update($data, null);
                 }
-                
                 $auth->getStorage()->write($thisAccount);
                 
                 $loggerOptions = array(
@@ -369,7 +367,7 @@ class Ot_LoginController extends Zend_Controller_Action
                 $account = new Ot_Account();
                 $realm = $form->getValue('realm');
                 $userAccount = $account->getAccount($form->getValue('username'), 'local');//$form->getValue('realm'));
-                //var_dump($form->getValue('username'));exit;
+                
                 if (!is_null($userAccount)) {             
                              
                     // Generate key
@@ -379,7 +377,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     $cipher = constant((string)$config->app->loginOptions->passwordReset->cipher);
     
                     $code = bin2hex(mcrypt_encrypt($cipher, $key, $text, MCRYPT_MODE_CBC, $iv));
-//var_dump($code);exit;
+                    
                     $this->_helper->flashMessenger->addMessage('msg-info-passwordResetRequest');
                                 
                     $loggerOptions = array('attributeName' => 'accountId', 'attributeId' => $userAccount->accountId);
@@ -435,15 +433,13 @@ class Ot_LoginController extends Zend_Controller_Action
     
         $decryptKey = trim(mcrypt_decrypt($cipher, $key, $string, MCRYPT_MODE_CBC, $iv));
         
-        //var_dump($decryptKey);exit;
-        
         if (!preg_match('/[^@]*@[^-]*-[0-9]*/', $decryptKey)) {
             throw new Ot_Exception_Input('msg-error-invalidKey');
         }
         
         $userId = preg_replace('/\-.*/', '', $decryptKey);
         $ts = preg_replace('/^[^-]*-/', '', $decryptKey);
-        //die($ts);
+        
         $timestamp = new Zend_Date($ts);
         
         $now = new Zend_Date();
@@ -631,13 +627,10 @@ class Ot_LoginController extends Zend_Controller_Action
         }
 
         $form = $account->form(array('realm' => $realm), true);
-            
         $messages = array();
         
         if ($this->_request->isPost()) {
-            
             if ($form->isValid($_POST)) {
-                        
                 if ($form->getValue('password') == $form->getValue('passwordConf')) {
                                                                     
                     $accountData = array(
@@ -655,6 +648,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     if (!is_null($thisAccount)) {
                         $messages[] = 'msg-error-usernameTaken';
                     } else {
+                    	
                         $dba = Zend_Db_Table::getDefaultAdapter();
                         $dba->beginTransaction();
                             
@@ -664,7 +658,7 @@ class Ot_LoginController extends Zend_Controller_Action
 							$dba->rollback();
 							throw $e;
                         }
-                                
+                        
                         if (isset($config->app->accountPlugin)) {
                             $acctPlugin = new $config->app->accountPlugin;
                             
@@ -681,9 +675,9 @@ class Ot_LoginController extends Zend_Controller_Action
                             } catch (Exception $e) {
                                 $dba->rollback();
                                 throw $e;
-                            }                   
-                        }                
-
+                            }          
+                        }
+                        
                         $custom = new Ot_Custom();
                         $attributes = $custom->getAttributesForObject('Ot_Profile');
             
@@ -697,8 +691,8 @@ class Ot_LoginController extends Zend_Controller_Action
                         } catch (Exception $e) {
                             $dba->rollback();
                             throw $e;
-                        }              
-                                
+                        }
+                        
                         $dba->commit();
                         
                         $this->_helper->flashMessenger->addMessage('msg-info-accountCreated');
@@ -714,12 +708,9 @@ class Ot_LoginController extends Zend_Controller_Action
                             
                         $et = new Ot_Trigger();
                         $et->setVariables($accountData);
-                        
                         $et->password    = $form->getValue('password');
-                        
-                        // @FIXME - $config->app->authentication doesn't exist! (but user will never see the error because it redirects)
-                        $et->loginMethod = $config->app->authentication->$realm->name;
-                        $et->dispatch('Login_Index_Signup');                            
+                        $et->loginMethod = $realm;
+                        $et->dispatch('Login_Index_Signup');
             
                         return $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
                     }

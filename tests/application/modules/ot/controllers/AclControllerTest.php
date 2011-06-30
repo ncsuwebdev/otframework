@@ -4,27 +4,27 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/AclController.php';
 
 class AclControllerTest extends ControllerTestCase
 {
+	public function setUp()
+	{
+		parent::setUp();
+		$this->setupDatabase('controllers/acl/acl.xml');
+	}
 	
 	public function testIndexAction()
 	{
 		$this->login();
-		// @todo - load some example table with default accounts/roles in it to match against
 		$this->dispatch('ot/acl/index');
 		$this->assertResponseCode(200);
 		$this->assertNotRedirect();
 		$this->assertModule('ot');
         $this->assertController('acl');
         $this->assertAction('index');
-		$this->assertQueryCount('table.list tr.row1, table.list tr.row2', 5);
-		
-		$this->markTestIncomplete('load xml table to match against');
+		$this->assertQueryCount('table.list tr.row1, table.list tr.row2', 8);
 	}
 	
 	public function testDetailsAction()
 	{
 		$this->login();
-		
-		// @todo - load some example data into the db for the guest role 
 		
 		$this->dispatch('ot/acl/details/roleId/1');
 		$this->assertResponseCode(200);
@@ -46,8 +46,6 @@ class AclControllerTest extends ControllerTestCase
 		
 		$this->assertQueryCount('#tabs-remote table.list tr.controller', 10);
 		$this->assertQueryCount('#tabs-remote table.list tr.controller td.access', 2);
-		
-		$this->markTestIncomplete('load xml table to match against');
 	}
 	
 	/**
@@ -71,7 +69,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testAddAction()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		
 		$postData = array(
 			'name' => 'Test',
@@ -82,7 +79,7 @@ class AclControllerTest extends ControllerTestCase
 			->setPost($postData);
 		$this->dispatch('ot/acl/add/');
 		$this->assertResponseCode(302);
-		$this->assertRedirectTo('/ot/acl/details?roleId=21'); // @todo change this to redir to the correct id
+		$this->assertRedirectTo('/ot/acl/details?roleId=26');
 		$this->assertModule('ot');
         $this->assertController('acl');
         $this->assertAction('add');
@@ -91,7 +88,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testEditAction()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		
 		$postData = array(
 			'name' => 'testRename',
@@ -126,7 +122,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testEditActionWithLockedRole()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/edit/roleId/2');
 	}
 	
@@ -136,7 +131,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testEditActionWithInvalidRole()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/edit/roleId/58642155');
 	}
 	
@@ -144,7 +138,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testApplicationAccessAction()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		
 		$postData = array(
 			'cron' => array(
@@ -185,7 +178,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testApplicationAccessActionOnLockedRole()
 	{
 		$this->login();
-		// @todo - load example table
 		$this->dispatch('ot/acl/application-access/roleId/2');
 	}
 	
@@ -195,14 +187,12 @@ class AclControllerTest extends ControllerTestCase
 	public function testApplicationAccessActionWithInvalidRole()
 	{
 		$this->login();
-		// @todo - load example table
 		$this->dispatch('ot/acl/application-access/roleId/254681');
 	}
 	
 	public function testRemoteAccessAction()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$postData = array(
 			'access' => array(
 				'getVersions' => 'allow',
@@ -213,7 +203,7 @@ class AclControllerTest extends ControllerTestCase
 			->setMethod('POST')
 			->setPost($postData);
 		$this->dispatch('ot/acl/remote-access/roleId/24');
-		$this->assertResponseCode(200);
+		$this->assertResponseCode(302);
 		$this->assertRedirectTo('/ot/acl/details/?roleId=24');
 		$this->assertModule('ot');
         $this->assertController('acl');
@@ -226,7 +216,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testRemoteAccessActionWithoutRoleIdSet()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/remote-access/');
 	}
 	
@@ -236,7 +225,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testRemoteAccessActionWithInvalidRole()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/remote-access/roleId/54561');
 	}
 	
@@ -246,15 +234,12 @@ class AclControllerTest extends ControllerTestCase
 	public function testRemoteAccessActionWithLockedRole()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/remote-access/roleId/2');
 	}
 	
 	public function testDeleteAction()
 	{
 		$this->login();
-		// @todo - load some example data into the db
-		// example data should include a bunch of accounts from role 21 in order to test more stuff
 		$postData = array(
 			'deleteButton' => 'Yes, Delete',
 		);
@@ -263,12 +248,12 @@ class AclControllerTest extends ControllerTestCase
 			->setMethod('POST')
 			->setPost($postData);
 		
-		$this->dispatch('ot/acl/delete/roleId/21');
+		$this->dispatch('ot/acl/delete/roleId/25');
 		$this->assertResponseCode(302);
 		$this->assertRedirectTo('/ot/acl/');
 		$this->assertModule('ot');
         $this->assertController('acl');
-        $this->assertAction('index');
+        $this->assertAction('delete');
 	}
 	
 	/**
@@ -277,7 +262,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testDeleteActionOnDefaultRole()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/delete/roleId/1');
 	}
 	
@@ -287,7 +271,6 @@ class AclControllerTest extends ControllerTestCase
 	public function testDeleteActionWithoutRoleIdSet()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/delete/');
 	}
 	
@@ -297,17 +280,15 @@ class AclControllerTest extends ControllerTestCase
 	public function testDeleteActionOnLockedRole()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/delete/roleId/2');
 	}
 	
 	/**
-	 * @expectedException Ot_Exception_Input
+	 * @expectedException Ot_Exception_Data
 	 */
 	public function testDeleteActionOnNonExistantRole()
 	{
 		$this->login();
-		// @todo - load some example data into the db
 		$this->dispatch('ot/acl/delete/roleId/313219');
 	}
 	

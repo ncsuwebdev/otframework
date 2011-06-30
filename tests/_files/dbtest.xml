@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<dataset name="testdb">
+<dataset>
         <!-- Table ot_tbl_account_attributes -->
         <!-- Table ot_tbl_api_log -->
         <!-- Table ot_tbl_ot_account -->

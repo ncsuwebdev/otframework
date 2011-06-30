@@ -4,9 +4,29 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/MaintenanceController.p
 
 class MaintenanceControllerTest extends ControllerTestCase
 {
+	public function _toggleMaintenance($onOff)
+	{
+		$maintenanceModeFileName = $this->getDefaultProperties('Ot_MaintenanceController', '_maintenanceModeFileName');
+		if(!$maintenanceModeFileName) {
+			$this->fail('Maintenance mode file name invalid.');
+		}
+		$filepath = APPLICATION_PATH . '/../overrides/' . $maintenanceModeFileName;
+		
+		
+		if($onOff == 'on') {
+			if(!is_file($filepath)) {
+				fopen($filepath, 'w');
+			}
+		} elseif($onOff == 'off') {
+			if(is_file($filepath)) {
+				unlink($filepath);
+			}
+		}
+	}
 	
 	public function testIndexWhenMaintenanceModeIsOff()
 	{
+		$this->_toggleMaintenance('off');
 		$this->login();
 		$this->dispatch('/ot/maintenance/index');
 		
@@ -24,16 +44,11 @@ class MaintenanceControllerTest extends ControllerTestCase
 	{
 		$this->login();
 		$this->dispatch('/ot/maintenance/toggle');
-		
-		$this->assertResponseCode(302);
-		$this->assertRedirectTo('/ot/maintenance');
-		$this->assertModule('ot');
-    	$this->assertController('maintenance');
-    	$this->assertAction('toggle');
 	}
 	
 	public function testToggleOn()
 	{
+		$this->_toggleMaintenance('off');
 		$this->login();
 		$this->dispatch('/ot/maintenance/toggle?status=on');
 		
@@ -47,12 +62,9 @@ class MaintenanceControllerTest extends ControllerTestCase
 		$this->assertFileExists(APPLICATION_PATH . '/../overrides/' . $maintenanceModeFileName);
 	}
 	
-	/**
-	 * @depends testToggleOn
-	 **/
 	public function testIndexActionWhenMaintenanceIsOn()
 	{
-		// @todo - this order of operations stuff might mess up. think of some better way like manually adding the maintenace file
+		$this->_toggleMaintenance('on');
 		$this->login();
 		$this->dispatch('/ot/maintenance/index');
 		
@@ -61,13 +73,13 @@ class MaintenanceControllerTest extends ControllerTestCase
 		$this->assertModule('ot');
     	$this->assertController('maintenance');
     	$this->assertAction('index');
-		
-    	$this->assertQueryContentContains('.maintenanceModeOn', 'Site is currently in maintenance and not available to general users.
-<a href="/otframework/ot/maintenance">Click Here</a> to disable.');
+    	$this->assertQueryContentContains('.maintenanceModeOn', 'Site is currently in maintenance and not available to general users.');
+    	$this->assertQueryContentContains('.maintenanceModeOn', '<a href="/ot/maintenance">Click Here</a> to disable.');
 	}
 	
 	public function testToggleOff()
 	{
+		$this->_toggleMaintenance('on');
 		$this->login();
 		$this->dispatch('/ot/maintenance/toggle?status=off');
 		
@@ -81,9 +93,6 @@ class MaintenanceControllerTest extends ControllerTestCase
 		$this->assertFileNotExists(APPLICATION_PATH . '/../overrides/' . $maintenanceModeFileName);
 	}
 	
-	/**
-	 * @depends testToggleOff
-	 **/
 	public function testIndexActionWhenMaintenanceIsOff()
 	{
 		$this->login();

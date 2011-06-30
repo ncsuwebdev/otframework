@@ -4,11 +4,12 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/LoginController.php';
 
 class LoginControllerTest extends ControllerTestCase
 {
-	
+    
 	public function setUp()
 	{
 		parent::setUp();
-		$this->setupDatabase();
+		$this->setupDatabase('controllers/login/login.xml');
+		$this->logout();
 	}
 	
 	
@@ -32,7 +33,7 @@ class LoginControllerTest extends ControllerTestCase
 			->setMethod('POST')
 			->setPost($postData);
 		$this->dispatch('/ot/login?realm=local'); //the redir effects the entire ot/ dir, but check ot/account too
-		//$this->assertRedirect();
+		$this->assertRedirectTo('/');
 		$this->assertModule('ot');
     	$this->assertController('login');
     	$this->assertAction('index');
@@ -84,7 +85,6 @@ class LoginControllerTest extends ControllerTestCase
 		
 		$this->assertNotRedirect();
 		$this->assertQuery('.errors');
-		
 	}
 	
 	/**
@@ -160,24 +160,23 @@ class LoginControllerTest extends ControllerTestCase
 	
     public function testSignupValid()
     {
-    	$this->markTestSkipped('Known bug with this file, but I don\'t know if that bug is causing the redirect report problem.');
-    	//warning only works if john isn't already in the db
+    	//$this->markTestSkipped('Known bug with this file, but I don\'t know if that bug is causing the redirect report problem.');
     	$this->request
-    	     ->setMethod('POST')
-    	     ->setPost(
-    	     	array(
-    	     		'username'     => 'john',
-    	     		'password'     => 'admin',
-    	     		'passwordConf' => 'admin',
-    	     		'firstName'    => 'John',
-    	     		'lastName'     => 'Smith',
-    	     		'emailAddress' => 'srgraham@ncsu.edu',
-    	     		'timezone'     => 'America/New_York',
-    	     		'realm'        => 'local',
-    	     	)
-    	     );
-    	     $this->dispatch('/ot/login/signup/realm/local');
-    	     $this->assertRedirectTo('login/index/realm/local');
+	    	->setMethod('POST')
+	    	->setPost(
+		    	array(
+			    	'username'     => 'NEWUSERPERSON',
+			    	'password'     => 'admin',
+			    	'passwordConf' => 'admin',
+			    	'firstName'    => 'John',
+			    	'lastName'     => 'Smith',
+			    	'emailAddress' => 'srgraham@ncsu.edu',
+			    	'timezone'     => 'America/New_York',
+			    	'realm'        => 'local',
+		    	)
+    	);
+        $this->dispatch('/ot/login/signup/realm/local');
+        $this->assertRedirectTo('/login/index/realm/local');
     }
 	
 	/**
@@ -258,7 +257,7 @@ class LoginControllerTest extends ControllerTestCase
     public function testPasswordResetActionGivesExceptionWithInvalidKey()
     {
     	$this->markTestSkipped('"Couldn\'t find constant MCRYPT_RIJNDAEL_128" with CLI');
-    	$this->dispatch('ot/login/password-reset/?key=ahlkdhal;ksdh;lakh;dlk;ha5487]o');
+    	$this->dispatch('ot/login/password-reset/?key=ahlkdhalksdhlakhdlkha5487o');
     }
     
     
@@ -288,20 +287,16 @@ class LoginControllerTest extends ControllerTestCase
     public function wrongSignupDataProvider()
     {
     	return array(
-			/*  0 */ array('', '', '', '', '', '', '', '', 'everything blank'),
+			/*  0 */ array('', '', '', '', '', '', '', 'local', 'everything blank (except realm)'),
 			/*  1 */ array(' ',     'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'local', 'space for username'),
-			/*  2 */ array('a',     'password', 'password',  'first', 'last', "           asdf@a.com\r\n\r\n",         'America/New_York', 'local', 'short username'),
+			/*  2 */ array('a',     'password', 'password',  'first', 'last', "           srgraham@ncsu.edu\r\n\r\n",         'America/New_York', 'local', 'short username'),
 			/*  3 */ array('admin', 'pass',     'pass',      'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'local', 'password too short'),
 			/*  4 */ array('admin', 'password', 'different', 'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'local', 'different confirm password'),
 			/*  5 */ array('admin', 'password', 'password',  '',      'last', 'srgraham@ncsu.edu',         'America/New_York', 'local', 'no first name'),
 			/*  6 */ array('admin', 'password', 'password',  'first', '',     'srgraham@ncsu.edu',         'America/New_York', 'local', 'no last name'),
 			/*  7 */ array('admin', 'password', 'password',  'first', 'last', '',                          'America/New_York', 'local', 'no email'),
 			/*  8 */ array('admin', 'password', 'password',  'first', 'last', 'email',                     'America/New_York', 'local', 'invalid email address'),
-			/*  9 */ array('admin', 'password', 'password',  'first', 'last', "srgraham@ncsu.edu\r\n\r\n", 'America/New_York', 'local', 'invalid email'),
-			/* 10 */ array('admin', 'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         '\'"<>aaaa',        'local', 'invalid timezone'),
-			/* 11 */ array('admin', 'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', '',      'blank realm'),
-			/* 12 */ array('admin', 'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'hello', 'invalid realm'),
-			/* 13 */ array('admin', 'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         'America/New_York', 'hello', 'invalid realm'),
+			/*  9 */ array('admin', 'password', 'password',  'first', 'last', 'srgraham@ncsu.edu',         '\'"<>aaaa',        'local', 'invalid timezone'),
 			
 			//array('admin', 'password', 'password',  'first', 'last', 'email@address.com',         'America/New_York', 'local', 'message'),
 		);
@@ -324,16 +319,57 @@ class LoginControllerTest extends ControllerTestCase
 					'firstName'    => $fName,
 					'lastName'     => $lName,
 					'emailAddress' => $email,
-					'timezone'     => $timezone, 
-					'realm'        => $realm,
+					'timezone'     => $timezone,
 				)
 		);
 			
-		$this->dispatch('/ot/login/signup/realm/local?realm=local');
+		$this->dispatch('/ot/login/signup/?realm=' . $realm);
 		
 		$this->assertNotRedirect();
 		$this->assertQuery('#systemMessages');
 		$this->assertQuery('.errors', $message);
+    }
+    
+    /**
+     * @expectedException Ot_Exception
+     */
+    public function testSignupWithoutRealm()
+    {
+    	$postData = array(
+			'username'     => 'person',
+			'password'     => 'admin',
+			'passwordConf' => 'admin',
+			'firstName'    => 'first',
+			'lastName'     => 'last',
+			'emailAddress' => 'srgraham@ncsu.edu',
+			'timezone'     => 'America/New_York',
+		);
+		
+    	$this->request
+			->setMethod('POST')
+			->setPost($postData);
+		$this->dispatch('/ot/login/signup');
+    }
+    
+/**
+     * @expectedException Ot_Exception
+     */
+    public function testSignupWithInvalidRealm()
+    {
+    	$postData = array(
+			'username'     => 'person',
+			'password'     => 'admin',
+			'passwordConf' => 'admin',
+			'firstName'    => 'first',
+			'lastName'     => 'last',
+			'emailAddress' => 'srgraham@ncsu.edu',
+			'timezone'     => 'America/New_York',
+		);
+		
+    	$this->request
+			->setMethod('POST')
+			->setPost($postData);
+		$this->dispatch('/ot/login/signup?realm=akhslghasid');
     }
     
     /**
@@ -394,7 +430,7 @@ class LoginControllerTest extends ControllerTestCase
     
 	public function testSignupActionValid()
     {
-    	// @todo: load an xml database that doesn't contain admin123456 as a user, so that it will fully process this test
+    	$this->markTestSkipped('Skipped so it doesn\'t spam my email');
     	$username  = 'admin123456';
     	$password  = 'admin1';
     	$cPassword = 'admin1';

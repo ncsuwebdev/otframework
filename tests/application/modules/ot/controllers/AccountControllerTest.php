@@ -4,30 +4,11 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/AccountController.php';
 
 class AccountControllerTest extends ControllerTestCase
 {
-	
-	/*
+    // @todo - do testing stuff when there are a few custom_attributes
 	public function setUp()
 	{
-		$this->setupDatabase();
 		parent::setUp();
-	}
-	
-	public function setupDatabase()
-	{
-		$db = Zend_Db::factory('adapterName');
-		$connection = new Zend_Test_PHPUnit_Db_Connection($db, 'database_schema_name');
-		$databaseTester = new Zend_Test_PHPUnit_Db_SimpleTester($connection);
-		$dabaseFixture = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(
-			dirname(__FILE__) . '/_files/initialUserFixture.xml'
-		);
-		$databaseTester->setupDatabase($databaseFixture);
-	}
-	*/
-	
-	public function setUp()
-	{
-		//$this->markTestSkipped('fix acl stuff');
-		parent::setUp();
+		$this->setupDatabase('controllers/account/account.xml');
 	}
 	
 	public function testInit()
@@ -61,7 +42,9 @@ class AccountControllerTest extends ControllerTestCase
     
     public function testAllAction()
     {
-    	$this->markTestIncomplete();
+    	$this->login();
+    	$this->dispatch('ot/account/all');
+    	
     
     }
     
@@ -115,14 +98,14 @@ class AccountControllerTest extends ControllerTestCase
     
     /**
      * @depends testEditAction
-     * for some reason having testEditAction follow testAddAction causes a terrible memory leak or something
+     * for some reason having testEditAction follow testAddAction causes a terrible memory leak or something under certain database tables
      * testing goes from 20 minutes to 2-3 minutes if you switch the order.
      * tried to figure out why; mysql timeouts during the postDispatch for frontController plugin activeUsers for some reason
      */
     public function testAddAction()
     {
     	// @todo - load example table
-    	//$this->markTestSkipped();
+    	$this->markTestSkipped('Skip this test so it doesn\'t spam my email');
     	$this->login();
     	
     	$postData = array(
@@ -132,22 +115,22 @@ class AccountControllerTest extends ControllerTestCase
     		'lastName' => 'asdf',
     		'emailAddress' => 'srgraham@ncsu.edu',
     		'timezone' => 'America/New_York',
-    		'roleSelect' => 44,
+    		'roleSelect' => 1,
     		'submit' => array('Save', 'asdf'),
     	);
+    	
+    	$this->login();
     	
     	$this->request
 			->setMethod('POST')
 			->setPost($postData);
     	$this->dispatch('/ot/account/add/realm/local');
-    	$this->login();
-    	$this->assertResponseCode(200);
-		$this->assertRedirectTo('/ot/account/all');
-		$this->assertNotRedirect();
+    	$this->getResponse();
+    	$this->assertResponseCode(302);
+		$this->assertRedirectTo('/account/all');
 		$this->assertModule('ot');
     	$this->assertController('account');
-    	$this->assertAction('all');
-    	echo 'george';
+    	$this->assertAction('add');
     	
         $this->markTestIncomplete();
         

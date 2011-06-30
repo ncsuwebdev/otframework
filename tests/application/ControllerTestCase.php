@@ -51,6 +51,12 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
     }
     
     
+	public static function setUpBeforeClass()
+    {
+    	parent::setUpBeforeClass();
+    	self::setupDatabase();
+    }
+    
     /**
      * link to an xml file that will store a fake database that can easily
      * and quickly have its contents refreshed for retesting

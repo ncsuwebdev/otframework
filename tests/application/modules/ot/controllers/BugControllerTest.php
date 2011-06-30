@@ -4,17 +4,11 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/BugController.php';
 
 class BugControllerTest extends ControllerTestCase
 {
-	
-	public static function setUpBeforeClass()
-    {
-    	parent::setUpBeforeClass();
-    	self::setupDatabase();
-    }
     
 	public function setUp()
 	{
 		parent::setUp();
-		$this->setupDatabase('controllers/bug/ot_bug.xml');
+		$this->setupDatabase('controllers/bug/bug.xml');
 	}
 	
 	public function addBug() {
@@ -99,27 +93,65 @@ class BugControllerTest extends ControllerTestCase
 	
 	public function testDeleteAction()
 	{
-		$this->markTestIncomplete();
+		$this->login();
+		$postData = array(
+			'deleteButton' => 'Yes, Delete',
+		);
+		
+		$this->request
+			->setMethod('POST')
+			->setPost($postData);
+		$this->dispatch('ot/bug/delete/bugId/1');
+		$this->assertResponseCode(302);
+		$this->assertRedirectTo('/ot/bug');
+		$this->assertModule('ot');
+        $this->assertController('bug');
+        $this->assertAction('delete');
+        
+        $this->assertEquals($this->getResponse()->getBody(), '');
+        
+        $this->resetRequest();
+        $this->resetResponse();
+        
+        $this->dispatch('ot/bug/index');
+		$this->assertQueryCount('table.list tr td.noResults', 1);
 	}
 	
 	public function testAddAction()
 	{
+		$this->login();
+		$postData = array(
+			'title' => 'Bug Title',
+			'reproducibility' => 'always',
+			'severity' => 'minor',
+			'priority' => 'low',
+			'description' => 'description',
+		);
+		
+		$this->request
+			->setMethod('POST')
+			->setPost($postData);
+		$this->dispatch('ot/bug/add');
+		$this->assertResponseCode(302);
+		$this->assertRedirectTo('/ot/bug/details/bugId/2');
+		$this->assertModule('ot');
+        $this->assertController('bug');
+        $this->assertAction('add');
+        
 		$this->markTestIncomplete();
 	}
-	
-	
 	
 	public function incompleteDataProvider()
 	{
 		return array(
-			/*  0 */ array('', '', '', '', '', 'missing everything'),
-			/*  1 */ array('',      'reproducibility', 'severity', 'priority', 'description', 'missing title'),
-			/*  2 */ array('title', 'reproducibility', 'severity', 'priority', '',            'missing description'),
-			/*  3 */ array('title', '\'"<>',           'severity', 'priority', 'description', 'invalid reproducibility'),
-			/*  4 */ array('title', 'reproducibility', '\'"<>',    'priority', 'description', 'invalid severity'),
-			/*  5 */ array('title', 'reproducibility', 'severity', '\'"<>',    'description', 'invalid priority'),
+			/*  0 */ array('', '', '', '', '', '', 'missing everything'),
+			/*  1 */ array('', 'new',      'always', 'minor', 'low', 'description', 'missing title'),
+			/*  2 */ array('title', 'new', 'always', 'minor', 'low', '',            'missing description'),
+			/*  3 */ array('title', 'new', '\'"<>',           'minor', 'low', 'description', 'invalid reproducibility'),
+			/*  4 */ array('title', 'new', 'always', '\'"<>',    'low', 'description', 'invalid severity'),
+			/*  5 */ array('title', 'new', 'always', 'minor', '\'"<>',    'description', 'invalid priority'),
 		
-			// array('title', 'reproducibility', 'severity', 'priority', 'description', ''),
+			// array('title', 'status', 'reproducibility', 'severity', 'priority', 'description', ''),
 			
 		);
 	
@@ -130,8 +162,9 @@ class BugControllerTest extends ControllerTestCase
 	/**
 	 * @dataProvider incompleteDataProvider
 	 */
-	public function testAddActionIncompleteData($title, $reproducibility, $severity, $priority, $description, $errorMessage)
+	public function testAddActionIncompleteData($title, $status, $reproducibility, $severity, $priority, $description, $errorMessage)
 	{
+		// ignore status; it's there so that the dataprovider can be reused for the edit action
 		$this->request
 			->setMethod('POST')
 			->setPost(
@@ -151,10 +184,55 @@ class BugControllerTest extends ControllerTestCase
 		$this->assertQuery('.errors', $errorMessage);
 	}
 	
-	
 	public function testEditAction()
 	{
-		$this->markTestIncomplete();
+		$this->login();
+		$postData = array(
+			'title' => 'EDIT',
+			'status' => 'fixed',
+			'reproducibility' => 'never',
+			'severity' => 'crash',
+			'priority' => 'critical',
+			'description' => 'DESCRIPT TWOOOOO',
+		);
+		$this->request
+			->setMethod('POST')
+			->setPost($postData);
+		
+		$this->dispatch('/ot/bug/edit/bugId/1');
+		
+		$this->assertResponseCode(302);
+		$this->assertRedirectTo('/ot/bug/details/bugId/1');
+		$this->assertModule('ot');
+        $this->assertController('bug');
+        $this->assertAction('edit');
+		
+	
+	}
+	
+	/**
+	 * @dataProvider incompleteDataProvider
+	 */
+	public function testEditActionIncompleteData($title, $status, $reproducibility, $severity, $priority, $description, $errorMessage)
+	{
+		$this->request
+			->setMethod('POST')
+			->setPost(
+				array(
+					'title'           => $title,
+					'status'          => $status,
+					'reproducibility' => $reproducibility,
+					'severity'        => $severity,
+					'priority'        => $priority,
+					'description'     => $description,
+				)
+		);
+			
+		$this->dispatch('/ot/bug/edit/bugId/1');
+		
+		$this->assertNotRedirect();
+		$this->assertQuery('#systemMessages');
+		$this->assertQuery('.errors', $errorMessage);
 	}
 	
 	

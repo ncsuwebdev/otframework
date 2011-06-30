@@ -113,24 +113,37 @@ class Ot_Account extends Ot_Db_Table
    	
    	public function insert(array $data)
    	{
-   		$roleIds = $data['role'];
-   		unset($data['role']);
-   		$accountId = parent::insert($data);
-   		$accountRoles = new Ot_Account_Roles();
-   		
-   		foreach($roleIds as $r) {
-   			$accountRoles->insert(array(
-   				'accountId' => $accountId,
-   				'roleId'    => $r,
-   			));
+   		$roleIds = array();
+   		if(isset($data['role']) && count($data['role']) > 0) {
+	   		$roleIds = (array)$data['role'];
+	   		unset($data['role']);
+   		}
+   		try {
+   			$accountId = parent::insert($data);
+   		} catch(Exception $e) {
+   			throw new Ot_Exception('Account insert failed.');
+   		}
+   		$a = new Ot_Account_Roles();
+   		if(count($roleIds) > 0) {
+	   		$accountRoles = new Ot_Account_Roles();
+	   		
+	   		foreach($roleIds as $r) {
+	   			$accountRoles->insert(array(
+	   				'accountId' => $accountId,
+	   				'roleId'    => $r,
+	   			));
+   			}
    		}
    		return $accountId;
    	}
    	
    	public function update(array $data, $where)
    	{
-   		$rolesToAdd = (array)$data['role'];
-   		unset($data['role']);
+   		$rolesToAdd = array();
+   		if(isset($data['role']) && count($data['role']) > 0) {
+	   		$rolesToAdd = (array)$data['role'];
+	   		unset($data['role']);
+   		}
    		$updateCount = parent::update($data, $where);
    		if(count($rolesToAdd) < 1) {
    			return $updateCount;
@@ -253,6 +266,7 @@ class Ot_Account extends Ot_Db_Table
                  ->addFilter('StringTrim')
                  ->addFilter('Alnum')
                  ->addFilter('StripTags')
+                 ->addValidator('StringLength', false, array(3, 64))
                  ->setAttrib('maxlength', '64')
                  ->setValue((isset($default['username'])) ? $default['username'] : ''); 
 
@@ -281,14 +295,15 @@ class Ot_Account extends Ot_Db_Table
         $password->setRequired(true)
                  ->addValidator('StringLength', false, array($this->_minPasswordLength, $this->_maxPasswordLength))
                  ->addFilter('StringTrim')
-                 ->addFilter('StripTags');   
+                 ->addFilter('StripTags');
 
         // Password confirmation field
         $passwordConf = $form->createElement('password', 'passwordConf', array('label' => 'model-account-passwordConf'));
         $passwordConf->setRequired(true)
                      ->addValidator('StringLength', false, array($this->_minPasswordLength, $this->_maxPasswordLength))
+                     ->addValidator('Identical', false, array('token' => 'password'))
                      ->addFilter('StringTrim')
-                     ->addFilter('StripTags'); 
+                     ->addFilter('StripTags');
                                       
         // Email address field
         $email = $form->createElement('text', 'emailAddress', array('label' => 'model-account-emailAddress'));
@@ -326,7 +341,7 @@ class Ot_Account extends Ot_Db_Table
             $me = false; // bool value for if you're trying to edit your own account
             // Is this even necessary? Someone that can edit account probably is a super admin,
             // so why restrict this? They could just create a new user, change their permissions,
-            // then log in as the new account to switch they're main account's permissions.
+            // then log in as the new account to switch their main account's permissions.
             
             if (isset($default['accountId'])
                 && $default['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
@@ -407,22 +422,23 @@ class Ot_Account extends Ot_Db_Table
         	'Fieldset',
         	array('HtmlTag', array('tag' => 'div', 'class' => 'buttons'))
         ));
-        
-        $form->addDisplayGroup(array(
-            	'realm',
-            	'username',
-            	'firstName',
-            	'lastName',
-            	'emailAddress',
-            	'timezone'            	
-            ), 'general', array('legend' => 'General Information'));
-            
-        $general = $form->getDisplayGroup('general');
-        $general->setDecorators(array(
-	        'FormElements',
-	        'Fieldset',
-	       	array('HtmlTag', array('tag' => 'div', 'class' => 'general'))
-        ));
+        if(!$signup) {
+	        $form->addDisplayGroup(array(
+	            	'realm',
+	            	'username',
+	            	'firstName',
+	            	'lastName',
+	            	'emailAddress',
+	            	'timezone',
+	            ), 'general', array('legend' => 'General Information'));
+	            
+	        $general = $form->getDisplayGroup('general');
+	        $general->setDecorators(array(
+		        'FormElements',
+		        'Fieldset',
+		       	array('HtmlTag', array('tag' => 'div', 'class' => 'general'))
+	        ));
+        }
         
         if(!$signup && !$me) {
 	        $form->addDisplayGroup(array('roleSelect'), 'roles', array('legend' => 'User Access Roles'));

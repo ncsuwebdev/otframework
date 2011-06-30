@@ -120,7 +120,7 @@ class Ot_Role extends Ot_Db_Table
     }    
     
     /**
-     * deletes a role from teh dB
+     * deletes a role from the db
      *
      * @param unknown_type $where
      */
@@ -209,7 +209,7 @@ class Ot_Role extends Ot_Db_Table
         $where = $dba->quoteInto('roleId = ?', $roleId);
         
         try {
-        	parent::delete($where);
+        	$this->delete($where);
         } catch (Exception $e) {
             if (!$inTransaction) {
                 $dba->rollBack();
