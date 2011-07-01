@@ -84,8 +84,8 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
                         
         $navTree['children'] = $this->_buildTree($navTree);
            
-        $vr = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
-        $view = $vr->view;
+        
+        $view = Zend_Layout::getMvcInstance()->getView();
         
         $view->navTreeHtml = $nav->generateHtml($navTree);
         Zend_Registry::set('navArray', $navTree);
