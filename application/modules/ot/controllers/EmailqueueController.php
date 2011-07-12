@@ -61,7 +61,6 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             $qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
             $query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
             
-            
             $where = null;
             if (!is_null($query)) {
                 $where = $queue->getAdapter()->quoteInto($qtype . ' = ?', $query);
