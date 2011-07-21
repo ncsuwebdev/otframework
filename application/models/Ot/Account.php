@@ -14,7 +14,7 @@
  *
  * @package    Ot_Account
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
@@ -25,7 +25,7 @@
  *
  * @package    Ot_Account
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  *
  */
@@ -37,12 +37,12 @@ class Ot_Account extends Ot_Db_Table
      * @var string
      */
     protected $_name = 'tbl_ot_account';
-    
+
     /**
      * The minimum length for a password
      */
     protected $_minPasswordLength = 5;
-    
+
     /**
      * The maximum length for a generated password
      */
@@ -54,38 +54,38 @@ class Ot_Account extends Ot_Db_Table
      * @var string
      */
     protected $_primary = 'accountId';
-    
+
     /**
      * Formats the resultset returned by the database
-     * 
+     *
      * @param unknown_type $data
      */
     private function _addExtraData($data) {
-    	
+
 		if (get_Class($data) == 'Zend_Db_Table_Row') {
     		$data = (object) $data->toArray();
 		}
-		
+
 		if(empty($data)) {
 			return $data;
 		}
-		
+
     	$rolesDb = new Ot_Account_Roles();
-    	
+
     	$where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $data->accountId);
-    	
+
     	$roles = $rolesDb->fetchAll($where);
-    	
+
     	$roleList = array();
     	foreach ($roles as $r) {
 			$roleList[] = $r['roleId'];
     	}
-    	
-    	$data->role = $roleList; 
 
-    	return $data;   
+    	$data->role = $roleList;
+
+    	return $data;
     }
-    
+
    	public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
    		try {
    			$result = parent::fetchAll($where, $order, $count, $offset);
@@ -103,14 +103,14 @@ class Ot_Account extends Ot_Db_Table
    			return null;
    		}
    	}
-   	
+
    	public function find() {
    		$result = parent::find(func_get_args());
-   		
+
    		return $this->_addExtraData($result);
    	}
-   	
-   	
+
+
    	public function insert(array $data)
    	{
    		$roleIds = array();
@@ -126,7 +126,7 @@ class Ot_Account extends Ot_Db_Table
    		$a = new Ot_Account_Roles();
    		if(count($roleIds) > 0) {
 	   		$accountRoles = new Ot_Account_Roles();
-	   		
+
 	   		foreach($roleIds as $r) {
 	   			$accountRoles->insert(array(
 	   				'accountId' => $accountId,
@@ -136,7 +136,7 @@ class Ot_Account extends Ot_Db_Table
    		}
    		return $accountId;
    	}
-   	
+
    	public function update(array $data, $where)
    	{
    		$rolesToAdd = array();
@@ -150,9 +150,9 @@ class Ot_Account extends Ot_Db_Table
    		}
    		$accountRoles = new Ot_Account_Roles();
    		$accountRolesDba = $accountRoles->getAdapter();
-   		
+
    		$accountId = $data['accountId'];
-   		
+
    		if(isset($rolesToAdd) && count($rolesToAdd) > 0) {
    			try {
 	   			$where = $accountRolesDba->quoteInto('accountId = ?', $accountId);
@@ -170,7 +170,7 @@ class Ot_Account extends Ot_Db_Table
    		}
    		return $updateCount;
    	}
-   	
+
    	public function delete($where)
    	{
    		$deleteCount = parent::delete($where);
@@ -178,27 +178,27 @@ class Ot_Account extends Ot_Db_Table
    		$accountRoles->delete($where);
    		return $deleteCount;
    	}
-   	
+
     public function getAccount($username, $realm)
     {
         $where = $this->getAdapter()->quoteInto('username = ?', $username)
                . ' AND '
                . $this->getAdapter()->quoteInto('realm = ?', $realm);
-               
+
         $result = $this->fetchAll($where);
-        
+
         if (count($result) != 1) {
             return null;
         }
         return $result[0];
     }
-    
-    
+
+
     public function generatePassword()
     {
         return substr(md5(microtime()), 2, 2 + $this->_minPasswordLength);
     }
-    
+
     public function generateApiCode()
     {
         return md5(microtime() * 34);
@@ -209,26 +209,26 @@ class Ot_Account extends Ot_Db_Table
         $where = $this->getAdapter()->quoteInto('apiCode = ?', $accessCode);
         $this->_messages[] = $where;
         $result = $this->fetchAll($where, null, 1);
-        
+
         if (count($result) != 1) {
             throw new Exception('Code not found');
         }
-        
+
         return $result->current();
-    }    
-    
+    }
+
     public function getAccountsForRole($roleId, $order = null, $count = null, $offset = null)
     {
     	$rolesDb = new Ot_Account_Roles();
-    	
+
         $where = $rolesDb->getAdapter()->quoteInto('roleId = ?', $roleId);
-        
+
         $roles = $rolesDb->fetchAll($where)->toArray();
         $accountIds = array();
         foreach ($roles as $role) {
         	$accountIds[] = $role['accountId'];
         }
-        
+
         if(count($accountIds) > 0) {
         	$where = $this->getAdapter()->quoteInto('accountId IN (?)', $accountIds);
         	return $this->fetchAll($where, $order, $count, $offset);
@@ -236,12 +236,12 @@ class Ot_Account extends Ot_Db_Table
         	return null;
         }
     }
-    
-    public function form($default = array(), $signup = false) 
+
+    public function form($default = array(), $signup = false)
     {
         $config = Zend_Registry::get('config');
         $acl    = Zend_Registry::get('acl');
-        
+
         $form = new Zend_Form();
         $form->setAttrib('id', 'account')->setDecorators(
             array('FormElements', array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')), 'Form')
@@ -249,7 +249,7 @@ class Ot_Account extends Ot_Db_Table
 
         $authAdapter = new Ot_Auth_Adapter;
         $adapters    = $authAdapter->fetchAll(null, 'displayOrder');
-        
+
         // Realm Select box
         $realmSelect = $form->createElement('select', 'realm', array('label' => 'Login Method'));
         foreach ($adapters as $adapter) {
@@ -259,7 +259,7 @@ class Ot_Account extends Ot_Db_Table
             );
         }
         $realmSelect->setValue((isset($default['realm'])) ? $default['realm'] : '');
-        
+
         // Create and configure username element:
         $username = $form->createElement('text', 'username', array('label' => 'model-account-username'));
         $username->setRequired(true)
@@ -268,7 +268,7 @@ class Ot_Account extends Ot_Db_Table
                  ->addFilter('StripTags')
                  ->addValidator('StringLength', false, array(3, 64))
                  ->setAttrib('maxlength', '64')
-                 ->setValue((isset($default['username'])) ? $default['username'] : ''); 
+                 ->setValue((isset($default['username'])) ? $default['username'] : '');
 
         // First Name
         $firstName = $form->createElement('text', 'firstName', array('label' => 'model-account-firstName'));
@@ -304,14 +304,14 @@ class Ot_Account extends Ot_Db_Table
                      ->addValidator('Identical', false, array('token' => 'password'))
                      ->addFilter('StringTrim')
                      ->addFilter('StripTags');
-                                      
+
         // Email address field
         $email = $form->createElement('text', 'emailAddress', array('label' => 'model-account-emailAddress'));
         $email->setRequired(true)
               ->addFilter('StringTrim')
               ->addValidator('EmailAddress')
               ->setValue((isset($default['emailAddress'])) ? $default['emailAddress'] : '');
-        
+
         $timezone = $form->createElement('select', 'timezone', array('label' => 'model-account-timezone'));
         $timezone->addMultiOptions(Ot_Timezone::getTimezoneList());
         $timezone->setValue(
@@ -320,21 +320,21 @@ class Ot_Account extends Ot_Db_Table
                 && $default['timezone'] != ''
             )
             ? $default['timezone'] : date_default_timezone_get()
-        ); 
-        
+        );
+
         // Role select box
         $roleSelect = $form->createElement('multiCheckbox', 'roleSelect');
         $roleSelect->setRequired(true);
-    
+
         $roles = $acl->getAvailableRoles();
         foreach ($roles as $r) {
             $roleSelect->addMultiOption($r['roleId'], $r['name']);
         }
-        
+
         $roleSelect->setValue((isset($default['role'])) ? $default['role'] : '');
-        
+
         $roleSelect->setAttrib('class', 'roleSelect');
-        
+
         if ($signup) {
             $form->addElements(array($username, $password, $passwordConf, $firstName, $lastName, $email, $timezone));
         } else {
@@ -342,96 +342,88 @@ class Ot_Account extends Ot_Db_Table
             // Is this even necessary? Someone that can edit account probably is a super admin,
             // so why restrict this? They could just create a new user, change their permissions,
             // then log in as the new account to switch their main account's permissions.
-            
+
             if (isset($default['accountId'])
                 && $default['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
                 $me = true;
             }
-            
+
             if (!$me) {
                 $form->addElements(array($realmSelect, $username));
             }
-            
+
             $form->addElements(array($firstName, $lastName, $email, $timezone));
-            
+
             if (!$me) {
                 $form->addElement($roleSelect);
             }
         }
-        
+
+        $subformElements = array();
+
         if (isset($config->app->accountPlugin)) {
             $acctPlugin = new $config->app->accountPlugin;
-            
+
             if (isset($default['accountId'])) {
                 $subform = $acctPlugin->editSubForm($default['accountId']);
             } else {
                 $subform = $acctPlugin->addSubForm();
             }
-            
+
             foreach ($subform->getElements() as $e) {
                 $form->addElement($e);
+                $subformElements[] = $e->getName();
             }
         }
-        
+
         $custom = new Ot_Custom();
-        
+
         if (isset($default['accountId'])) {
             $attributes = $custom->getData('Ot_Profile', $default['accountId'], 'Zend_Form');
         } else {
             $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
         }
-        
+
         foreach ($attributes as $a) {
             $form->addElement($a['formRender']);
         }
-        
+
         $submit = $form->createElement('submit', 'submit', array('label' => 'form-button-save'));
         $submit->setDecorators(
             array(
                 array('ViewHelper', array('helper' => 'formSubmit'))
             )
         );
-        
+
         $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
         $cancel->setDecorators(
             array(
                 array('ViewHelper', array('helper' => 'formButton'))
             )
         );
-        
+
         $form->setElementDecorators(
             array(
                 'ViewHelper',
-                'Errors',      
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                array('Label', array('tag' => 'span')),   
+                'Errors',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                array('Label', array('tag' => 'span')),
             )
         )->addElements(array($submit, $cancel));
-        
-        /*
-         * Groups the form elements into divs (general and access role)
-         */
-        $form->addDisplayGroup(array(
-        	'submit',
-        	'cancel'
-        ), 'buttons');
-        
-        $buttons = $form->getDisplayGroup('buttons');
-        $buttons->setDecorators(array(
-        	'FormElements',
-        	'Fieldset',
-        	array('HtmlTag', array('tag' => 'div', 'class' => 'buttons'))
-        ));
+
+
         if(!$signup) {
-	        $form->addDisplayGroup(array(
+	        $form->addDisplayGroup(array_merge(array(
 	            	'realm',
 	            	'username',
 	            	'firstName',
 	            	'lastName',
 	            	'emailAddress',
-	            	'timezone',
-	            ), 'general', array('legend' => 'General Information'));
-	            
+	            	'timezone'), $subformElements, array(
+                        'submit',
+                        'cancel'))
+	            , 'general', array('legend' => 'General Information'));
+
 	        $general = $form->getDisplayGroup('general');
 	        $general->setDecorators(array(
 		        'FormElements',
@@ -439,7 +431,8 @@ class Ot_Account extends Ot_Db_Table
 		       	array('HtmlTag', array('tag' => 'div', 'class' => 'general'))
 	        ));
         }
-        
+
+
         if(!$signup && !$me) {
 	        $form->addDisplayGroup(array('roleSelect'), 'roles', array('legend' => 'User Access Roles'));
 	        $role = $form->getDisplayGroup('roles');
@@ -449,7 +442,7 @@ class Ot_Account extends Ot_Db_Table
 	        	array('HtmlTag', array('tag' => 'div', 'class' => 'accessRoles'))
 	        ));
         }
-              
+
         if (isset($default['accountId'])) {
             $accountId = $form->createElement('hidden', 'accountId');
             $accountId->setValue($default['accountId']);
@@ -457,21 +450,21 @@ class Ot_Account extends Ot_Db_Table
                 array(
                     array('ViewHelper', array('helper' => 'formHidden'))
                 )
-            ); 
-            
+            );
+
             $form->addElement($accountId);
-        }     
+        }
 
         if ($signup) {
-            
+
             // Realm hidden box
             $realmHidden = $form->createElement('hidden', 'realm');
             $realmHidden->setValue($default['realm']);
-            $realmHidden->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));             
-            
+            $realmHidden->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
+
             $form->addElement($realmHidden);
         }
-                      
+
         return $form;
     }
 }
