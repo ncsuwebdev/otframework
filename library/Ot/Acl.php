@@ -14,7 +14,7 @@
  *
  * @package    Ot_Acl
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
@@ -25,7 +25,7 @@
  *
  * @package    Ot_Acl
  * @category   Access Control
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  */
 class Ot_Acl extends Zend_Acl
@@ -38,10 +38,10 @@ class Ot_Acl extends Zend_Acl
      */
     public function __construct($scope = 'application')
     {
-    	
+
         if ($scope == 'application') {
             $controllers = Zend_Controller_Front::getInstance()->getControllerDirectory();
-    
+
             // Gets all controllers to get the actions in them
             foreach ($controllers as $key => $value) {
                 foreach (new DirectoryIterator($value) as $file) {
@@ -55,14 +55,14 @@ class Ot_Acl extends Zend_Acl
                 }
             }
         } elseif ($scope == 'remote') {
-        
+
             $class = new ReflectionClass('Internal_Api');
-                        
+
             foreach ($class->getMethods() as $m) {
                 $this->add(new Zend_Acl_Resource($m->getName()));
             }
         }
-        
+
         $roles = $this->getAvailableRoles('', $scope);
 
         foreach ($roles as $r) {
@@ -72,12 +72,12 @@ class Ot_Acl extends Zend_Acl
                 if ($rule['resource'] == '*' || $this->has($rule['resource'])) {
                     $this->{$rule['type']}($r['roleId'],
                         ($rule['resource'] == '*') ? null : $rule['resource'],
-                        ($rule['privilege'] == '*') ? null : $rule['privilege'] 
+                        ($rule['privilege'] == '*') ? null : $rule['privilege']
                     );
                 }
             }
         }
-        
+
         $this->_roles = $roles;
     }
 
@@ -86,10 +86,10 @@ class Ot_Acl extends Zend_Acl
         if (!is_null($this->_roles)) {
             return $this->_roles;
         }
-        
+
         $role = new Ot_Role();
         return $role->getRoles($scope);
-    }  
+    }
 
     /**
      * Gets all the children of a given role
@@ -104,7 +104,7 @@ class Ot_Acl extends Zend_Acl
         if ($roles == '') {
             $roles = $this->getAvailableRoles();
         }
-        
+
         foreach ($roles as &$r) {
             unset($r['rules']);
         }
@@ -116,7 +116,7 @@ class Ot_Acl extends Zend_Acl
                     $children[$r['roleId']] = $roles[$r['roleId']];
                     $children[$r['roleId']]['parent'] = array();
                 }
-                                
+
                 if (isset($children[$r['inheritRoleId']])) {
                     $children[$r['roleId']]['parent'] = array_merge($children[$r['roleId']]['parent'], $roles[$roleId]);
                 } else {
@@ -128,19 +128,19 @@ class Ot_Acl extends Zend_Acl
         }
 
         return $children;
-    }    
+    }
 
     public function getRemoteResources($roleId = 0)
     {
         $roles = $this->getAvailableRoles();
-        
+
         $role = 0;
-        
+
         if ($roleId != 0) {
             if (!isset($roles[$roleId])) {
                 throw new Ot_Exception('Requested role not found in the access list.');
             }
-            
+
             $role = $roles[$roleId];
         }
 
@@ -153,7 +153,7 @@ class Ot_Acl extends Zend_Acl
                 }
             }
         }
-                
+
         $result = array();
 
         $filter = new Zend_Filter();
@@ -161,7 +161,7 @@ class Ot_Acl extends Zend_Acl
         $filter->addFilter(new Zend_Filter_StringToLower());
 
         $class = new ReflectionClass('Internal_Api');
-        
+
         foreach ($class->getMethods() as $method) {
             $resource = $method->getName();
             if ($role != '') {
@@ -208,7 +208,7 @@ class Ot_Acl extends Zend_Acl
                 }
             }
         }
-        
+
         return $result;
     }
 
@@ -227,18 +227,18 @@ class Ot_Acl extends Zend_Acl
         }
 
         $roles = $this->getAvailableRoles();
-        
+
         $role = 0;
-        
+
         if ($roleId != 0) {
             if (!isset($roles[$roleId])) {
                 throw new Ot_Exception('Requested role not found in the access list.');
             }
-            
+
             $role = $roles[$roleId];
         }
-        
-        
+
+
 
         // Sets the denys for the role
         $denys = array();
@@ -249,7 +249,7 @@ class Ot_Acl extends Zend_Acl
                 }
             }
         }
-                
+
         $result = array();
 
         $filter = new Zend_Filter();
@@ -330,8 +330,7 @@ class Ot_Acl extends Zend_Acl
                     }
 
                     foreach ($methods as $m) {
-                        if (preg_match('/action/i', $m->name) &&
-                            basename($class->getMethod($m->name)->getFileName()) == $file) {
+                        if (preg_match('/action/i', $m->name)) {
 
                             $action = $filter->filter(preg_replace('/action/i', '', $m->name));
 
