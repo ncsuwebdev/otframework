@@ -19,33 +19,33 @@
     <br /><br />
     <table class="form">
         <tbody>
-	        <tr>
-	            <td><label><?php echo $this->translate('model-role-form:roleName'); ?></label></td>
-	            <td><?php echo $this->role['name']; ?></td>
-	        </tr>
-	        <tr>
-	            <td><label><?php echo $this->translate('model-role-form:inheritRoleId'); ?></label></td>
-	            <td><?php echo ($this->role['inheritRoleId'] != 0) ? $this->inheritRole : $this->translate('ot-acl-form:noInheritance'); ?></td>
-	        </tr>
-	        <tr>
-	            <td><label><?php echo $this->translate('ot-acl-details:editable') ?></label></td>
-	            <td><?php echo ($this->role['editable'] == 1) ? $this->translate('form-button-yes') : $this->translate('form-button-no'); ?></td>
-	        </tr>
+            <tr>
+                <td><label><?php echo $this->translate('model-role-form:roleName'); ?></label></td>
+                <td><?php echo $this->role['name']; ?></td>
+            </tr>
+            <tr>
+                <td><label><?php echo $this->translate('model-role-form:inheritRoleId'); ?></label></td>
+                <td><?php echo ($this->role['inheritRoleId'] != 0) ? $this->inheritRole : $this->translate('ot-acl-form:noInheritance'); ?></td>
+            </tr>
+            <tr>
+                <td><label><?php echo $this->translate('ot-acl-details:editable') ?></label></td>
+                <td><?php echo ($this->role['editable'] == 1) ? $this->translate('form-button-yes') : $this->translate('form-button-no'); ?></td>
+            </tr>
         </tbody>
     </table>
 <div id="access" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-	<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
        <li class="ui-state-default ui-corner-top"><a href="#tabs-application"><span><?php echo $this->translate('ot-acl-index:table:applicationAccess'); ?></span></a></li>
        <li class="ui-state-default ui-corner-top"><a href="#tabs-remote"><span><?php echo $this->translate('ot-acl-index:table:remoteAccess'); ?></span></a></li>
-	</ul>
+    </ul>
     <div id="tabs-application" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
-	    <?php if ($this->acl['application-access'] && $this->role['editable']): ?>
-	        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:applicationAccess:edit'); ?><span class="ui-icon ui-icon-newwin"></span></a>
-	        <br /><br />
-	    <?php endif; ?>     
-    	<?php echo $this->translate('ot-acl-details:applicationAccess:header'); ?>
-    	<br /><br />   
-	    <div class="accessTable"> 
+        <?php if ($this->acl['application-access'] && $this->role['editable']): ?>
+            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:applicationAccess:edit'); ?><span class="ui-icon ui-icon-newwin"></span></a>
+            <br /><br />
+        <?php endif; ?>     
+        <?php echo $this->translate('ot-acl-details:applicationAccess:header'); ?>
+        <br /><br />   
+        <div class="accessTable"> 
         <?php foreach ($this->resources as $module => $controllers) : ?>
         <div class="aclSection">
             <table class="list">
@@ -90,13 +90,13 @@
         </div>
     </div>  
     <div id="tabs-remote" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
-	    <?php if ($this->acl['remote-access'] && $this->role['editable']): ?>
-	        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:remoteAccess:edit'); ?><span class="ui-icon ui-icon-transferthick-e-w"></span></a>
-	        <br /><br />
-	    <?php endif; ?>     	
-    	<?php echo $this->translate('ot-acl-details:remoteAccess:header'); ?>
-    	<br /><br />   
-	    <div class="accessTable">    
+        <?php if ($this->acl['remote-access'] && $this->role['editable']): ?>
+            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $this->role['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-details:remoteAccess:edit'); ?><span class="ui-icon ui-icon-transferthick-e-w"></span></a>
+            <br /><br />
+        <?php endif; ?>         
+        <?php echo $this->translate('ot-acl-details:remoteAccess:header'); ?>
+        <br /><br />   
+        <div class="accessTable">    
         <table class="list">
             <tbody>
             <tr class="ui-widget-header">

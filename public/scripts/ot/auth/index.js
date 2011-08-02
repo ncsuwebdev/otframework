@@ -1,9 +1,9 @@
 $('document').ready(function() {
 
-	$('#adapterList').sortable({
-		cursor: 'ns-resize',
-		update: function(event, ui) {
-    	    $.post($('#baseUrl').val() + '/ot/auth/save-adapter-order/', {
+    $('#adapterList').sortable({
+        cursor: 'ns-resize',
+        update: function(event, ui) {
+            $.post($('#baseUrl').val() + '/ot/auth/save-adapter-order/', {
                     'adapterKeys[]': $('#adapterList').sortable('toArray')
                 },
                 function (data) {
@@ -19,7 +19,7 @@ $('document').ready(function() {
                     setTimeout(function() { $('#orderMessage').fadeOut(); }, 2500); 
                 },
                 "json"
-    	    );	    
-	    }
-	});
+            );        
+        }
+    });
 });

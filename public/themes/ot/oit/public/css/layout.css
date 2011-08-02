@@ -1,6 +1,6 @@
 #bd {
-	background-image: none;
-	margin:0px;
+    background-image: none;
+    margin:0px;
     padding:0px;
     width: 963px;
     background-color: #FFF;
@@ -36,7 +36,7 @@
 }
 
 .authInfo a {
-	color: #FFFFFF;
+    color: #FFFFFF;
 }
 
 #brandingBar {
@@ -93,12 +93,12 @@ a#ncsuBrandingLink span, a#oitBrandingLink span {
 }
 
 #oitLogo {
-	margin-left: 15px;
-	background-image:url(../images/oit_logo.png);
-	background-repeat: no-repeat;
-	background-position: 0px 5px;
-	height: 45px;
-	padding: 10px 0px 0px 100px;
+    margin-left: 15px;
+    background-image:url(../images/oit_logo.png);
+    background-repeat: no-repeat;
+    background-position: 0px 5px;
+    height: 45px;
+    padding: 10px 0px 0px 100px;
     font-size: 3em;
     color: #FFF;
     display: block;
@@ -109,14 +109,14 @@ a#homeLink {
 }
 
 #pageTitle {
-	font-size: 1.5em;
-	font-weight: bold;
-	margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 th, td {
-	border:0px solid #000000;
-	padding:0.5em;
+    border:0px solid #000000;
+    padding:0.5em;
 }
 
 div#overrideTranslate {

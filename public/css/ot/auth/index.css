@@ -8,8 +8,8 @@
 }
 
 a.linkButton {
-	font-weight: normal;
-	padding: 0.3em 1em;
+    font-weight: normal;
+    padding: 0.3em 1em;
 }
 
 #adapterList tr.header td {
@@ -19,7 +19,7 @@ a.linkButton {
 }
 
 #adapterList tbody {
-	border: 1px solid #DDD;
+    border: 1px solid #DDD;
 }
 
 #adapterList {
@@ -50,10 +50,10 @@ a.linkButton {
 }
 
 #orderMessage {
-	padding: 3px 10px;
+    padding: 3px 10px;
 }
 
 p {
-	height: 25px;
-	padding-left: 15px;
+    height: 25px;
+    padding-left: 15px;
 }

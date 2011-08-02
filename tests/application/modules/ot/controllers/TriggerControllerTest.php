@@ -4,72 +4,72 @@ require_once APPLICATION_PATH . '/modules/ot/controllers/TriggerController.php';
 
 class TriggerControllerTest extends ControllerTestCase
 {
-	
     
-	public function testIndexAction()
-	{
-		// @todo - load some example table with default triggers in it to match against
-		$this->login();
-		$this->dispatch('ot/trigger');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
+    
+    public function testIndexAction()
+    {
+        // @todo - load some example table with default triggers in it to match against
+        $this->login();
+        $this->dispatch('ot/trigger');
+        $this->assertResponseCode(200);
+        $this->assertNotRedirect();
+        $this->assertModule('ot');
         $this->assertController('trigger');
         $this->assertAction('index');
-		$this->assertQueryCount('table.list tr', 5);
-		
-		//$this->markTestIncomplete('load xml table to match against');
-	}
-	
-	public function testDetailsAction()
-	{
-		$this->login();
-		$this->dispatch('ot/trigger/details/triggerId/Login_Index_Forgot');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
+        $this->assertQueryCount('table.list tr', 5);
+        
+        //$this->markTestIncomplete('load xml table to match against');
+    }
+    
+    public function testDetailsAction()
+    {
+        $this->login();
+        $this->dispatch('ot/trigger/details/triggerId/Login_Index_Forgot');
+        $this->assertResponseCode(200);
+        $this->assertNotRedirect();
+        $this->assertModule('ot');
         $this->assertController('trigger');
         $this->assertAction('details');
         
         $this->assertQueryContentContains('table.list tr[2] td[1]', 'User forgot password');
         $this->assertQueryContentContains('table.list tr[2] td[2]', 'Send email');
-	}
-	
-	/**
-	 * @expectedException Ot_Exception_Input
-	 */
-	public function testDetailsActionWithMissingTriggerIdGivesException()
-	{
-		$this->login();
-		$this->dispatch('ot/trigger/details/');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
+    }
+    
+    /**
+     * @expectedException Ot_Exception_Input
+     */
+    public function testDetailsActionWithMissingTriggerIdGivesException()
+    {
+        $this->login();
+        $this->dispatch('ot/trigger/details/');
+        $this->assertResponseCode(200);
+        $this->assertNotRedirect();
+        $this->assertModule('ot');
         $this->assertController('trigger');
         $this->assertAction('details');
-	}
-	
-	/**
-	 * @expectedException Ot_Exception_Data
-	 */
-	public function testDetailsActionWithInvalidTriggerIdGivesException()
-	{
-		$this->login();
-		$this->dispatch('ot/trigger/details/triggerId/I_AM_AN_INVALID_TRIGGER_ID');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
+    }
+    
+    /**
+     * @expectedException Ot_Exception_Data
+     */
+    public function testDetailsActionWithInvalidTriggerIdGivesException()
+    {
+        $this->login();
+        $this->dispatch('ot/trigger/details/triggerId/I_AM_AN_INVALID_TRIGGER_ID');
+        $this->assertResponseCode(200);
+        $this->assertNotRedirect();
+        $this->assertModule('ot');
         $this->assertController('trigger');
         $this->assertAction('details');
-	}
-	
-	public function testEditAction()
-	{
-		$this->login();
-		$this->dispatch('ot/trigger/edit/triggerActionId/15');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
+    }
+    
+    public function testEditAction()
+    {
+        $this->login();
+        $this->dispatch('ot/trigger/edit/triggerActionId/15');
+        $this->assertResponseCode(200);
+        $this->assertNotRedirect();
+        $this->assertModule('ot');
         $this->assertController('trigger');
         $this->assertAction('edit');
         
@@ -109,36 +109,36 @@ class TriggerControllerTest extends ControllerTestCase
         
         $this->assertQueryContentContains('table.list tr[7] td[1]', '[[resetUrl]]');
         $this->assertQueryContentContains('table.list tr[7] td[2]', 'URL the user will need to go to to reset their password.');
-	}
-	
-	/**
-	 * @expectedException Ot_Exception_Input
-	 */
-	public function testEditActionWithMissingTriggerGivesException()
-	{
-		$this->login();
-		$this->dispatch('ot/trigger/edit/');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
+    }
+    
+    /**
+     * @expectedException Ot_Exception_Input
+     */
+    public function testEditActionWithMissingTriggerGivesException()
+    {
+        $this->login();
+        $this->dispatch('ot/trigger/edit/');
+        $this->assertResponseCode(200);
+        $this->assertNotRedirect();
+        $this->assertModule('ot');
         $this->assertController('trigger');
         $this->assertAction('edit');
-	
-	}
-	
-	/**
-	 * @expectedException Ot_Exception_Data
-	 */
-	public function testEditActionWithInvalidTriggerGivesException()
-	{
-		$this->login();
-		$this->dispatch('ot/trigger/edit/triggerActionId/111111111');
-		$this->assertResponseCode(200);
-		$this->assertNotRedirect();
-		$this->assertModule('ot');
+    
+    }
+    
+    /**
+     * @expectedException Ot_Exception_Data
+     */
+    public function testEditActionWithInvalidTriggerGivesException()
+    {
+        $this->login();
+        $this->dispatch('ot/trigger/edit/triggerActionId/111111111');
+        $this->assertResponseCode(200);
+        $this->assertNotRedirect();
+        $this->assertModule('ot');
         $this->assertController('trigger');
         $this->assertAction('edit');
-	
-	}
+    
+    }
     
 }

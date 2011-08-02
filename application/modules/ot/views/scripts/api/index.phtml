@@ -5,7 +5,7 @@
         <p><b><?php echo $this->translate('ot-api-index:method'); ?>: </b><code><?php echo $a['method']; ?></code></p>
         <p><b><?php echo $this->translate('ot-api-index:description'); ?>: </b><?php echo $a['description']; ?></p>
         <p><b><?php echo $this->translate('ot-api-index:returnValue'); ?>: </b><?php echo $this->defaultVal($a['return'], $this->translate('ot-api-index:noReturnValue')); ?></p>
-		<span>
+        <span>
             <b><?php echo $this->translate('ot-api-index:arguments'); ?>: </b>
             <?php if (count($a['args']) > 0) : ?>
                 <ul class="args">

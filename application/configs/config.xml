@@ -6,7 +6,7 @@
       <theme>default</theme>
       <tablePrefix>ot_</tablePrefix>
       <loginOptions>
-      	<generateAccountOnLogin>1</generateAccountOnLogin>
+          <generateAccountOnLogin>1</generateAccountOnLogin>
         <passwordReset>
           <key>tl30fkvERtili</key>
           <iv>39v09v90fef094gj</iv>
@@ -39,7 +39,7 @@
         <Ot_Profile>User Profile</Ot_Profile>
       </customFieldObjects>
       <oauth>
-      	<consumers>    
+          <consumers>    
       <!-- use 
             <{consumerId}>
                 <name></name>
@@ -52,7 +52,7 @@
                 <authorizeUrl></authorizeUrl>
             </{consumerId}> 
      -->
-     	</consumers>
+         </consumers>
       </oauth>
     </app>
     <user>
@@ -114,7 +114,7 @@
       </trigger>
     </triggers>
     <api>
-    	<call name="getVersions" class="Ot_Version" method="getVersions" />
+        <call name="getVersions" class="Ot_Version" method="getVersions" />
     </api>
   </production>
 </configData>

@@ -11,12 +11,12 @@
         </tr>
         <?php
         foreach ($this->configList as $key => $value) : ?>
-	        <tr class="<?php $this->cycle('row1', 'row2'); ?>"> 
-	           <td class="description" title="<?php echo (empty($value->description) ? $this->translate('ot-config-index:noDescription') : $value->description); ?>">
-	               <?php echo $key; ?>
-	           </td>
-	           <td><?php echo $value->val; ?></td>
-	            
+            <tr class="<?php $this->cycle('row1', 'row2'); ?>"> 
+               <td class="description" title="<?php echo (empty($value->description) ? $this->translate('ot-config-index:noDescription') : $value->description); ?>">
+                   <?php echo $key; ?>
+               </td>
+               <td><?php echo $value->val; ?></td>
+                
                 <?php if ($this->acl['edit']) : ?>
                 <td style="text-align: center">
                     <a href="<?php echo $this->url(array('controller' => 'config', 'action' => 'edit', 'key' => $key), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>

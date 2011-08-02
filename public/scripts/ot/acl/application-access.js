@@ -3,23 +3,23 @@ $('document').ready(function() {
     $('.description').tipsy({gravity: 'e', fade: true});
     
     $('#prePopulateButton').click(function() {
-    	
-    	if ($('#roleName').val() == "") {
-    		alert('You must provide a role name');
-    		return false;
-    	}
-    	
-    	if ($('#roleNamePreset').val() != undefined) {
-	    	if (confirm('You will lose any changes you have made.')) {
-	    		location.href = $('#baseUrl').val() + '/ot/acl/add' 
-	    					  + '/?roleName=' + $('#roleName').val() + '&inheritRoleId=' + $('#inheritRoleId').val();
-	    	} else {
-	    		return false;
-	    	}
-    	} else {
-    		location.href = $('#baseUrl').val() + '/ot/acl/add' 
-			  + '/?roleName=' + $('#roleName').val() + '&inheritRoleId=' + $('#inheritRoleId').val();
-    	}
+        
+        if ($('#roleName').val() == "") {
+            alert('You must provide a role name');
+            return false;
+        }
+        
+        if ($('#roleNamePreset').val() != undefined) {
+            if (confirm('You will lose any changes you have made.')) {
+                location.href = $('#baseUrl').val() + '/ot/acl/add' 
+                              + '/?roleName=' + $('#roleName').val() + '&inheritRoleId=' + $('#inheritRoleId').val();
+            } else {
+                return false;
+            }
+        } else {
+            location.href = $('#baseUrl').val() + '/ot/acl/add' 
+              + '/?roleName=' + $('#roleName').val() + '&inheritRoleId=' + $('#inheritRoleId').val();
+        }
     });
     
     $('.allAccess').each(function() {
@@ -40,11 +40,11 @@ $('document').ready(function() {
         
     $('#aclEditor').submit(function() {
 
-    	if ($('#roleName').val() == "") {
-    		alert('You must provide a role name');
-    		return false;
-    	}
-    	
+        if ($('#roleName').val() == "") {
+            alert('You must provide a role name');
+            return false;
+        }
+        
         $('.allAccess').each(function () {
         
             var parentVal = $(this).val();

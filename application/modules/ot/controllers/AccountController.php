@@ -134,21 +134,21 @@ class Ot_AccountController extends Zend_Controller_Action
         $where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
         $roleIds = $rolesDb->fetchAll($where)->toArray();
 
-    	if (count($roleIds) == 0) {
+        if (count($roleIds) == 0) {
             throw new Ot_Exception_Data('Role id not found');
         }
 
         foreach ($roleIds as &$r) {
-        	$r = $r['roleId'];
+            $r = $r['roleId'];
         }
 
         $role = new Ot_Role();
         $where = $role->getAdapter()->quoteInto('roleId IN (?)', $roleIds);
         $roles = $role->fetchAll($where)->toArray();
 
-	    foreach ($roles as &$r) {
-	     	$r = $r['name'];
-	    }
+        foreach ($roles as &$r) {
+             $r = $r['name'];
+        }
 
         $this->view->roles = $roles;
         $custom = new Ot_Custom();
@@ -257,7 +257,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
             if (!is_null($query)) {
                 if ($qtype == 'role') {
-                	// find what role Id corresponds to the text string that was entered
+                    // find what role Id corresponds to the text string that was entered
                     foreach ($roles as $r) {
                         if ($query == $r['name']) {
                             $query = $r['roleId'];
@@ -271,9 +271,9 @@ class Ot_AccountController extends Zend_Controller_Action
 
             // if they're searching by a role, you can't use the $where, since role no longer exists in the account table
             if($qtype == 'role') {
-            	$accounts = $account->getAccountsForRole($query, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+                $accounts = $account->getAccountsForRole($query, $sortname . ' ' . $sortorder, $rp, $page * $rp);
             } else{
-            	$accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+                $accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
             }
             $response = array(
                 'page' => $page + 1,
@@ -291,29 +291,29 @@ class Ot_AccountController extends Zend_Controller_Action
                 $realmMap[$a->adapterKey] = $a->name;
             }
 
-			// TODO: fix bug on account/all page. Search results are not displaying correctly
+            // TODO: fix bug on account/all page. Search results are not displaying correctly
             if(count($accounts) > 0) {
-	            foreach ($accounts as $a) {
+                foreach ($accounts as $a) {
 
-	            	$roleList = array();
+                    $roleList = array();
 
-	            	foreach ($a->role as $r) {
-	            		$roleList[] = $roles[$r]['name'];
-	            	}
+                    foreach ($a->role as $r) {
+                        $roleList[] = $roles[$r]['name'];
+                    }
 
-	                $row = array(
-	                    'id'   => $a->accountId,
-	                    'cell' => array(
-	                        $a->username,
-	                        $a->firstName,
-	                        $a->lastName,
-	                        $realmMap[$a->realm],
-							implode(', ', $roleList)
-	                    ),
-	                );
+                    $row = array(
+                        'id'   => $a->accountId,
+                        'cell' => array(
+                            $a->username,
+                            $a->firstName,
+                            $a->lastName,
+                            $realmMap[$a->realm],
+                            implode(', ', $roleList)
+                        ),
+                    );
 
-	                $response['rows'][] = $row;
-	            }
+                    $response['rows'][] = $row;
+                }
             }
 
             echo Zend_Json::encode($response);
@@ -357,7 +357,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     'role'         => (array)$form->getValue('roleSelect'),
                 );
                 if(!isset($accountData['role']) || count($accountData['role']) < 1) {
-                	$accountData['role'] = (array)$config->user->defaultRole->val;
+                    $accountData['role'] = (array)$config->user->defaultRole->val;
                 }
 
                 $dba = Zend_Db_Table::getDefaultAdapter();
@@ -433,7 +433,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
                     $roles = array();
                     foreach ($accountData['role'] as $r) {
-                    	$roles[] = $role->find($r)->name;
+                        $roles[] = $role->find($r)->name;
                     }
 
                     $otAuthAdapter = new Ot_Auth_Adapter();
@@ -502,14 +502,14 @@ class Ot_AccountController extends Zend_Controller_Action
         $result = $rolesDb->fetchAll($where);
 
         if(count($result) < 1) {
-        	throw new Ot_Exception_Data('No roles associated with this account');
+            throw new Ot_Exception_Data('No roles associated with this account');
         }
 
         $acl = Zend_Registry::get('acl');
 
         $resources = array();
         foreach ($result as $r) {
-        	$resources[] = $acl->getResources($r->roleId);
+            $resources[] = $acl->getResources($r->roleId);
         }
 
         $permissions = $this->mergeResources($resources);
@@ -535,7 +535,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     $data['role']     = (array)$form->getValue('roleSelect');
 
                     if(!isset($data['role']) || count($data['role']) < 1) {
-                    	$data['role'] = $config->user->defaultRole->val;
+                        $data['role'] = $config->user->defaultRole->val;
                     }
 
                     $data['username'] = $form->getValue('username');
@@ -629,10 +629,10 @@ class Ot_AccountController extends Zend_Controller_Action
         }
 
         if ($this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
-        	$messages[] = 'msg-info-editAccountSelf';
+            $messages[] = 'msg-info-editAccountSelf';
         }
 
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.tooltip.min.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
@@ -909,27 +909,27 @@ class Ot_AccountController extends Zend_Controller_Action
     }
 
     private function mergeResources($resources) {
-    	$permissions = array_pop($resources);
+        $permissions = array_pop($resources);
 
-    	foreach ($resources as $resource) {
-    		foreach ($resource as $module => $controllers) {
-    			foreach($controllers as $controller => $parts) {
-    				foreach($parts as $part => $rules) {
-    					if($part != 'description') {
-							if(isset($rules['access'])) {
-								$permissions[$module][$controller][$part]['access'] = $rules['access'] || $permissions[$module][$controller][$part]['access'];
-							} else {
-								foreach($rules as $rule => $access) {
-									$permissions[$module][$controller][$part][$rule]['access'] = $access['access'] || $permissions[$module][$controller][$part][$rule]['access'];
-								}
-							}
-    					}
-    				}
-    			}
-    		}
-    	}
+        foreach ($resources as $resource) {
+            foreach ($resource as $module => $controllers) {
+                foreach($controllers as $controller => $parts) {
+                    foreach($parts as $part => $rules) {
+                        if($part != 'description') {
+                            if(isset($rules['access'])) {
+                                $permissions[$module][$controller][$part]['access'] = $rules['access'] || $permissions[$module][$controller][$part]['access'];
+                            } else {
+                                foreach($rules as $rule => $access) {
+                                    $permissions[$module][$controller][$part][$rule]['access'] = $access['access'] || $permissions[$module][$controller][$part][$rule]['access'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-    	foreach ($permissions as &$permission) {
+        foreach ($permissions as &$permission) {
             foreach ($permission as &$c) {
                 $c['someAccess'] = false;
                 foreach ($c['part'] as $p) {
@@ -938,8 +938,8 @@ class Ot_AccountController extends Zend_Controller_Action
                     }
                 }
             }
-	    }
-	    return $permissions;
+        }
+        return $permissions;
     }
 
     /**
@@ -949,7 +949,7 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function getPermissionsAction() {
 
-    	$this->_helper->layout()->disableLayout();
+        $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
         $get = Zend_Registry::get('getFilter');
@@ -957,20 +957,20 @@ class Ot_AccountController extends Zend_Controller_Action
         $roles = $get->roles;
 
         if (!isset($roles) || count($roles) < 1) {
-			$config = Zend_Registry::get('config');
-			$roles = array($config->user->defaultRole->val);
+            $config = Zend_Registry::get('config');
+            $roles = array($config->user->defaultRole->val);
         }
 
-    	$acl = Zend_Registry::get('acl');
+        $acl = Zend_Registry::get('acl');
 
 
 
-    	$resources = array();
-    	foreach($roles as $role) {
-    		$resources[] = $acl->getResources($role);
-    	}
+        $resources = array();
+        foreach($roles as $role) {
+            $resources[] = $acl->getResources($role);
+        }
 
-    	$permissions = $this->mergeResources($resources);
+        $permissions = $this->mergeResources($resources);
 
         echo Zend_Json_Encoder::encode($permissions);
         return;

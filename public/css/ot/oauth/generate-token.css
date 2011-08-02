@@ -1,14 +1,14 @@
 @CHARSET "UTF-8";
 
 .access {
-	font-size: 1.2em;
-	font-weight: bold;
-	border-bottom: 1px solid #CCC;
-	padding: 2px;
-	margin: 10px 0px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 1px solid #CCC;
+    padding: 2px;
+    margin: 10px 0px;
 }
 
 .key {
-	margin-bottom: 20px;
-	font-family: Courier;
+    margin-bottom: 20px;
+    font-family: Courier;
 }

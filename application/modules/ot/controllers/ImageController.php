@@ -43,8 +43,8 @@ class Ot_ImageController extends Zend_Controller_Action
 
         // if not set, give a 404 and exit
         if (!isset($get->imageId)) {
-        	//$this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
-        	header('HTTP/1.1 404 Not Found');
+            //$this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
+            header('HTTP/1.1 404 Not Found');
             return;
         }
         

@@ -473,37 +473,37 @@ class Ot_AclController extends Zend_Controller_Action
             // aList is an array of all the affected accountIds
             $aList = array();
             if (count($affectedAccounts) > 0) {
-	            foreach($affectedAccounts as $a) {
-	            	$aList[] = $a->accountId;
-	            }
-	            
-	            if(count($aList) > 0) {
-		            
-		            // get a list of all the accounts that still have a role after removing one so we can diff()
-		            // it to find the accounts that no longer have a role
-		            $accountRolesDba = $accountRoles->getAdapter();
-		            $where = $accountRolesDba->quoteInto('accountId IN(?)', $aList);
-	            
-	            	$affectedAccountsStillWithRoles = $accountRoles->fetchAll($where);
-	            
-		            $affectedAccountsStillWithRolesIds = array();
-		            foreach($affectedAccountsStillWithRoles as $a) {
-		            	$affectedAccountsStillWithRolesIds[] = $a->accountId;
-		            }
-		            
-		            // here's the list of accounts that don't have a role, so we have to add $defaultRole to them.
-		            $affectedAccountsWithNoRoles = array_diff($aList, $affectedAccountsStillWithRolesIds);
-		            
-		            foreach ($affectedAccountsWithNoRoles as $a) {
-		            	$accountRoles->insert(
-		            		array(
-		            			'accountId' => $a,
-		            			'roleId'    => $defaultRole,
-		            		)
-		            	);
-		            }
-		            
-	            }
+                foreach($affectedAccounts as $a) {
+                    $aList[] = $a->accountId;
+                }
+                
+                if(count($aList) > 0) {
+                    
+                    // get a list of all the accounts that still have a role after removing one so we can diff()
+                    // it to find the accounts that no longer have a role
+                    $accountRolesDba = $accountRoles->getAdapter();
+                    $where = $accountRolesDba->quoteInto('accountId IN(?)', $aList);
+                
+                    $affectedAccountsStillWithRoles = $accountRoles->fetchAll($where);
+                
+                    $affectedAccountsStillWithRolesIds = array();
+                    foreach($affectedAccountsStillWithRoles as $a) {
+                        $affectedAccountsStillWithRolesIds[] = $a->accountId;
+                    }
+                    
+                    // here's the list of accounts that don't have a role, so we have to add $defaultRole to them.
+                    $affectedAccountsWithNoRoles = array_diff($aList, $affectedAccountsStillWithRolesIds);
+                    
+                    foreach ($affectedAccountsWithNoRoles as $a) {
+                        $accountRoles->insert(
+                            array(
+                                'accountId' => $a,
+                                'roleId'    => $defaultRole,
+                            )
+                        );
+                    }
+                    
+                }
             }
             
             $dba->commit();

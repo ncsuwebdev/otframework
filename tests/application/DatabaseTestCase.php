@@ -11,14 +11,14 @@ abstract class DatabaseTestCase extends Zend_Test_PHPUnit_DatabaseTestCase
     
     protected function getSetUpOperation()
     {
-    	return PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT();
+        return PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT();
     }
     
     protected function setUp()
     {
-    	$configFilePath = APPLICATION_PATH . '/configs';
-    	$configXml = new Zend_Config_Xml($configFilePath . '/config.xml', 'production');
-		Zend_Registry::set('config', $configXml);
+        $configFilePath = APPLICATION_PATH . '/configs';
+        $configXml = new Zend_Config_Xml($configFilePath . '/config.xml', 'production');
+        Zend_Registry::set('config', $configXml);
         $this->application = new Zend_Application(
             APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
         $this->bootstrap = array($this, 'appBootstrap');
@@ -53,20 +53,20 @@ abstract class DatabaseTestCase extends Zend_Test_PHPUnit_DatabaseTestCase
      */
     public function dbXmlCompare($xmlFile, $table, $ignoredColumns)
     {
-    	$config = Zend_Registry::get('config');
-    	$tablePrefix = $config->app->tablePrefix;
-    	
-    	$xmlSet = $this->getDataSet(TESTS_PATH . '/_files/' . $xmlFile);
-    	$dbSetTable = $this->getConnection()->createDataSet();
-    	
-    	if($ignoredColumns) {
-    		if(!is_array($ignoredColumns)) {
-    			$ignoredColumns = array($ignoredColumns);
-    		}
-    		$dbset = new PHPUnit_Extensions_Database_DataSet_DataSetFilter($dbSetTable, array($tablePrefix . $table => $ignoredColumns));
-    	}
-    	
-    	$this->assertTablesEqual($xmlSet->getTable($tablePrefix . $table), $dbset->getTable($tablePrefix . $table));
+        $config = Zend_Registry::get('config');
+        $tablePrefix = $config->app->tablePrefix;
+        
+        $xmlSet = $this->getDataSet(TESTS_PATH . '/_files/' . $xmlFile);
+        $dbSetTable = $this->getConnection()->createDataSet();
+        
+        if($ignoredColumns) {
+            if(!is_array($ignoredColumns)) {
+                $ignoredColumns = array($ignoredColumns);
+            }
+            $dbset = new PHPUnit_Extensions_Database_DataSet_DataSetFilter($dbSetTable, array($tablePrefix . $table => $ignoredColumns));
+        }
+        
+        $this->assertTablesEqual($xmlSet->getTable($tablePrefix . $table), $dbset->getTable($tablePrefix . $table));
     
     }
     

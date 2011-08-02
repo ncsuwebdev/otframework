@@ -12,7 +12,7 @@
             </exclude>
         </whitelist>
         <blacklist>
-        	<directory suffix=".php">../application</directory>
+            <directory suffix=".php">../application</directory>
         </blacklist>
     </filter>
     <logging>
@@ -20,10 +20,10 @@
         <log type="testdox-html" target="./log/testdox.html" />
     </logging>
     <listeners>
-		<listener class="Test_Listener_DatabaseTransaction" file="application/Test_Listener_DatabaseTransaction.php">
-		</listener>
-	</listeners>
-	<php>
-		<ini name="memory_limit" value="1024M"/>
-	</php>
+        <listener class="Test_Listener_DatabaseTransaction" file="application/Test_Listener_DatabaseTransaction.php">
+        </listener>
+    </listeners>
+    <php>
+        <ini name="memory_limit" value="1024M"/>
+    </php>
 </phpunit>

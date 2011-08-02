@@ -23,13 +23,13 @@
 }
 
 #fileTreeWrapper {
-	float: left;
-	border: 1px solid #999999;
-	margin: 10px;
-	height: 480px;
-	padding: 5px;
-	width: 200px;
-    overflow-x: auto;	
+    float: left;
+    border: 1px solid #999999;
+    margin: 10px;
+    height: 480px;
+    padding: 5px;
+    width: 200px;
+    overflow-x: auto;    
 }
 
 #editBox {
@@ -41,7 +41,7 @@
 #replacementsDiv {
     float: right;
     width: 475px;
-    padding-right: 10px;	
+    padding-right: 10px;    
 }
 
 .editableDropDownContainer {

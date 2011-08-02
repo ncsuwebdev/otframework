@@ -5,9 +5,9 @@
     <div class="activeTheme">
         <?php echo $this->themes[$this->currentTheme]['name']; ?>
         <?php if (file_exists($this->themes[$this->currentTheme]["path"] . '/public/images/theme.png')) : ?>
-        	<?php echo '<img src="' . $this->baseUrl() . '/' . $this->themes[$this->currentTheme]['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
+            <?php echo '<img src="' . $this->baseUrl() . '/' . $this->themes[$this->currentTheme]['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
         <?php else : ?>
-        	<br /><div style="height:200px;width:200px;"><br /><br /><br /><br />[<?php echo $this->translate('ot-theme-index:noPreviewAvailable'); ?>]</div>
+            <br /><div style="height:200px;width:200px;"><br /><br /><br /><br />[<?php echo $this->translate('ot-theme-index:noPreviewAvailable'); ?>]</div>
         <?php endif; ?>
         <br /><?php echo $this->themes[$this->currentTheme]['description']; ?>
     </div>
@@ -16,12 +16,12 @@
 <h3><?php echo $this->translate('ot-theme-index:additionalThemes'); ?></h3>
 <?php foreach ($this->themes as $id => $theme) : ?>
     <?php if ($id != $this->currentTheme) : ?>
-	    <a href="<?php echo $this->url(array('controller' => 'theme', 'action' => 'select', 'theme' => $id), 'ot', true); ?>" class="themePreview">
+        <a href="<?php echo $this->url(array('controller' => 'theme', 'action' => 'select', 'theme' => $id), 'ot', true); ?>" class="themePreview">
             <?php echo $theme['name']; ?>
             <?php if (file_exists($theme['path'] . '/public/images/theme.png')) : ?>
-            	<?php echo '<img src="' . $this->baseUrl() . '/' . $theme['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
+                <?php echo '<img src="' . $this->baseUrl() . '/' . $theme['url'] . '/public/images/theme.png' . '" width="200" height="200" />'; ?>
             <?php else : ?>
-            	<br /><div style="height:200px; width:200px;"><br /><br /><br /><br />[<?php echo $this->translate('ot-theme-index:noPreviewAvailable'); ?>]</div>
+                <br /><div style="height:200px; width:200px;"><br /><br /><br /><br />[<?php echo $this->translate('ot-theme-index:noPreviewAvailable'); ?>]</div>
             <?php endif; ?>
             <br /><?php echo $theme['description']; ?>
         </a>

@@ -1,9 +1,9 @@
 .enabled {
-	background-color: #0C0;
+    background-color: #0C0;
 }
 
 .enabled a {
-    color: #FFF;	
+    color: #FFF;    
 }
 
 .disabled {
@@ -15,14 +15,14 @@
 }
 
 #alertBox {
-	border: 1px solid #000;
-	margin-bottom: 5px;
-	width: 97%;
-	height: 25px;
-	line-height: 25px;
-	padding: 0 5px;
-	font-weight: bold;
-	background-color: #66EE00;
+    border: 1px solid #000;
+    margin-bottom: 5px;
+    width: 97%;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 5px;
+    font-weight: bold;
+    background-color: #66EE00;
 }
 
 #alertWrapper {

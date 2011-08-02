@@ -97,15 +97,15 @@ class Ot_LogController extends Zend_Controller_Action
             }
             
             foreach ($logs as $l) {
-            	$roleIds = explode(',', $l->role);
-            	$roleList = array();
-            	foreach($roleIds as $roleId) {
-            		if(isset($roles[$roleId]['name'])) {
-						$roleList[] = $roles[$roleId]['name'];
-            		} else {
-            			$roleList[] = $roleId;
-            		}
-            	}
+                $roleIds = explode(',', $l->role);
+                $roleList = array();
+                foreach($roleIds as $roleId) {
+                    if(isset($roles[$roleId]['name'])) {
+                        $roleList[] = $roles[$roleId]['name'];
+                    } else {
+                        $roleList[] = $roleId;
+                    }
+                }
                 $row = array(
                     'id'   => $l->accountId,
                     'cell' => array(

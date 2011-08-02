@@ -77,10 +77,10 @@ class Ot_Api_Access
             }
             
             foreach($thisAccount->role as $r) {
-            	if(!$remoteAcl->isAllowed($r, $method)) {
-            		$this->_message = 'You do not have the proper credentials to remotely access this method.';
-                	return false;
-            	}
+                if(!$remoteAcl->isAllowed($r, $method)) {
+                    $this->_message = 'You do not have the proper credentials to remotely access this method.';
+                    return false;
+                }
             }
             
             /*
@@ -104,28 +104,28 @@ class Ot_Api_Access
     /* An error occured. Output the error formatted based on the page type (html, json, xml, ...) and dies right after */
     public function raiseError($message, $type = self::API_REST, $header = 'HTTP/1.1 401 Unauthorized')
     {
-    	
+        
         if ($type == self::API_SOAP) {
             return new SoapFault('Error', $message);
         } elseif($type == self::API_JSON) {
-        	header($header);
-        	$json = array(
-        		'success' => new StdClass(),
-        		'error' => $message
-        	);
+            header($header);
+            $json = array(
+                'success' => new StdClass(),
+                'error' => $message
+            );
             echo Zend_Json::encode($json);
             return;
         } elseif($type == self::API_XML) { // output in xml
-        	header($header, true, 401);
-        	$rest = new Zend_Rest_Server();
-        	$result = $rest->fault(
-            	new Zend_Rest_Server_Exception($message),
-            	401
+            header($header, true, 401);
+            $rest = new Zend_Rest_Server();
+            $result = $rest->fault(
+                new Zend_Rest_Server_Exception($message),
+                401
             );
             echo $result->saveXML();
             return;
         } else {
-        	header($header);
+            header($header);
             echo $message;
             return;
         }

@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 
 #description {
-	height: 100px;
+    height: 100px;
 }
 
 div.zend_form label.optional, div.zend_form label.required {
@@ -9,5 +9,5 @@ div.zend_form label.optional, div.zend_form label.required {
 }
 
 div.elm {
-	margin-left: 150px;
+    margin-left: 150px;
 }

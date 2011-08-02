@@ -209,7 +209,7 @@ class Ot_Role extends Ot_Db_Table
         $where = $dba->quoteInto('roleId = ?', $roleId);
         
         try {
-        	$this->delete($where);
+            $this->delete($where);
         } catch (Exception $e) {
             if (!$inTransaction) {
                 $dba->rollBack();
@@ -229,11 +229,11 @@ class Ot_Role extends Ot_Db_Table
         
         $accountRoles = new Ot_Account_Roles();
         try {
-        	$accountRoles->delete($where);
+            $accountRoles->delete($where);
         } catch (Exception $e) {
-        	if (!$inTransaction) {
-        		$dba->rollback();
-        	}
+            if (!$inTransaction) {
+                $dba->rollback();
+            }
         }
             
         if (!$inTransaction) {

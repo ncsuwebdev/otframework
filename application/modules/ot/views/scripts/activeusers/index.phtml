@@ -15,10 +15,10 @@
             <td><?php echo $a['accountInfo']['firstName']; ?> <?php echo $a['accountInfo']['lastName']; ?></td>
             <td><?php echo $a['accountInfo']['emailAddress']; ?></td>
             <td><?php
-	            foreach($a['accountInfo']['role'] as $role) {
-	            	$roleList[] = $this->roleMap[$role];
-	            }
-	            echo implode(', ', $roleList);
+                foreach($a['accountInfo']['role'] as $role) {
+                    $roleList[] = $this->roleMap[$role];
+                }
+                echo implode(', ', $roleList);
             ?></td>
             <td><?php echo $this->elapsedTime($a['dt']); ?></td>
         </tr>

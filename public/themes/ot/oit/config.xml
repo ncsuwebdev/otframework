@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configData>
-	<production>
-	    <theme>
-	        <name>Office of Information Technology</name>
-	        <description>An OIT theme.</description>
-	    </theme>
-	    <css>
-	        <file path="reset-fonts-grids-base.css" order="prepend"/>
-		    <file path="layout.css" order="append"/>
-	        <file path="superfish.css" order="append"/>	    
-		    <file path="nav.css" order="append"/>
-	    </css>
-	    <scripts>
-	        <file path="jquery.plugin.hoverIntent.js" order="append"/>
-		    <file path="jquery.plugin.supersubs.js" order="append"/>
-		    <file path="jquery.plugin.superfish.js" order="append"/>
-		    <file path="default.js" order="append"/>
-	    </scripts>
-	</production>
+    <production>
+        <theme>
+            <name>Office of Information Technology</name>
+            <description>An OIT theme.</description>
+        </theme>
+        <css>
+            <file path="reset-fonts-grids-base.css" order="prepend"/>
+            <file path="layout.css" order="append"/>
+            <file path="superfish.css" order="append"/>        
+            <file path="nav.css" order="append"/>
+        </css>
+        <scripts>
+            <file path="jquery.plugin.hoverIntent.js" order="append"/>
+            <file path="jquery.plugin.supersubs.js" order="append"/>
+            <file path="jquery.plugin.superfish.js" order="append"/>
+            <file path="default.js" order="append"/>
+        </scripts>
+    </production>
 </configData>

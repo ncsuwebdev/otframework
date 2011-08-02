@@ -4,14 +4,14 @@
     <form method="post" action="?attributeId=<?php echo $this->attribute['attributeId']; ?>" id="edit" class="checkRequiredFields">
         <table class="form">
             <tbody>
-	            <tr>
-	                <td width="100"><label><?php echo $this->translate("ot-custom-form:object"); ?></label></td>
-	                <td><?php echo $this->objectId; ?></td>
-	            </tr>
-	            <tr>
-	                <td><label><?php echo $this->translate("ot-custom-form:description"); ?></label></td>
-	                <td><?php echo $this->objectDescription; ?></td>
-	            </tr>
+                <tr>
+                    <td width="100"><label><?php echo $this->translate("ot-custom-form:object"); ?></label></td>
+                    <td><?php echo $this->objectId; ?></td>
+                </tr>
+                <tr>
+                    <td><label><?php echo $this->translate("ot-custom-form:description"); ?></label></td>
+                    <td><?php echo $this->objectDescription; ?></td>
+                </tr>
             </tbody>
         </table>
         <br /><br />
@@ -39,10 +39,10 @@
                         <?php echo $this->translate("ot-custom-edit:addOptions"); ?>
                         <table class="form" id="options">
                             <tbody>
-    	                        <tr id="optionRow">
-    	                            <td width="50"><label for="option[]"><?php echo $this->translate("ot-custom-form:option"); ?></label></td>
-    	                            <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
-    	                        </tr>
+                                <tr id="optionRow">
+                                    <td width="50"><label for="option[]"><?php echo $this->translate("ot-custom-form:option"); ?></label></td>
+                                    <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
+                                </tr>
                             </tbody>
                         </table>
                         <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate("ot-custom-form:linkAddRow"); ?></a>

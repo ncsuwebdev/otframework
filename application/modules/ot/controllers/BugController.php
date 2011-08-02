@@ -36,7 +36,7 @@ class Ot_BugController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-    	
+        
         $bug = new Ot_Bug();
 
         $bugs = $bug->getBugs();

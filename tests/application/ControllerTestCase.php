@@ -23,7 +23,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         
         // CLI doesn't define some global variables, which ends up giving errors on
         // library/Oauth/Request.php and possibly other places too
-		
+        
         $_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__) . '/../applcation';
         $_SERVER['HTTP_HOST'] = 'localhost';
         
@@ -45,16 +45,16 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         unset($_SERVER['HTTP_HOST']);
         unset($_SERVER['REQUEST_METHOD']);*/
         if($this->loggedIn) {
-        	$this->logout();
+            $this->logout();
         }
         
     }
     
     
-	public static function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
-    	parent::setUpBeforeClass();
-    	self::setupDatabase();
+        parent::setUpBeforeClass();
+        self::setupDatabase();
     }
     
     /**
@@ -64,28 +64,28 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
      */
     public static function setupDatabase($xmlPath = 'dbtest.xml')
     {
-    	// @todo: fix database integration from within the ControllerTestCase
-    	// currently doesn't work, so return early
-    	//return;
-    	
-    	$configFilePath = dirname(__FILE__) . '/../../application/configs';
-    	$applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', 'testing');
-    	
-    	
-    	$adapter = $applicationIni->resources->db->adapter;
-    	$params = array(
-			'username' => $applicationIni->resources->db->params->username,
-			'password' => $applicationIni->resources->db->params->password,
-			'host'     => $applicationIni->resources->db->params->host,
-			'port'     => $applicationIni->resources->db->params->port,
-			'dbname'   => $applicationIni->resources->db->params->dbname
+        // @todo: fix database integration from within the ControllerTestCase
+        // currently doesn't work, so return early
+        //return;
+        
+        $configFilePath = dirname(__FILE__) . '/../../application/configs';
+        $applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', 'testing');
+        
+        
+        $adapter = $applicationIni->resources->db->adapter;
+        $params = array(
+            'username' => $applicationIni->resources->db->params->username,
+            'password' => $applicationIni->resources->db->params->password,
+            'host'     => $applicationIni->resources->db->params->host,
+            'port'     => $applicationIni->resources->db->params->port,
+            'dbname'   => $applicationIni->resources->db->params->dbname
         );
-    	
-		$db = Zend_Db::factory($adapter, $params);
-		$connection = new Zend_Test_PHPUnit_Db_Connection($db, 'mysql');
-		$databaseTester = new Zend_Test_PHPUnit_Db_SimpleTester($connection);
-		$databaseFixture = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/' . $xmlPath);
-		$databaseTester->setupDatabase($databaseFixture);
+        
+        $db = Zend_Db::factory($adapter, $params);
+        $connection = new Zend_Test_PHPUnit_Db_Connection($db, 'mysql');
+        $databaseTester = new Zend_Test_PHPUnit_Db_SimpleTester($connection);
+        $databaseFixture = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/' . $xmlPath);
+        $databaseTester->setupDatabase($databaseFixture);
     }
 
     public function appBootstrap()
@@ -108,7 +108,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         // fetch method into $_SERVER because CLI doesn't set it automatically
         $_SERVER['REQUEST_METHOD'] = $request->getMethod();
         if(!$_SERVER['REQUEST_METHOD']) {
-        	$_SERVER['REQUEST_METHOD'] = 'GET';
+            $_SERVER['REQUEST_METHOD'] = 'GET';
         }
         
         if (null !== $url) {
@@ -128,13 +128,13 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
      * logs you into admin account so that you won't get redirected to login page all the time
      * 
      **/
-	public function login()
-	{
-		if($this->loggedIn) {
-			return;
-		}
-		// @todo - is there a better way to do this?
-		$username = 'admin';
+    public function login()
+    {
+        if($this->loggedIn) {
+            return;
+        }
+        // @todo - is there a better way to do this?
+        $username = 'admin';
         $password = 'admin';
         $authAdapter = new Ot_Auth_Adapter();
         $adapter     = $authAdapter->find('local');
@@ -145,17 +145,17 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         // Attempt authentication, saving the result
         $result = $auth->authenticate($authAdapter);
         $this->loggedIn = true;
-	}
-	
-	/**
-	 * logs you out
-	 */
-	public function logout()
-	{
-		if(!$this->loggedIn) {
-			return;
-		}
-		//$config = Zend_Registry::get('config');
+    }
+    
+    /**
+     * logs you out
+     */
+    public function logout()
+    {
+        if(!$this->loggedIn) {
+            return;
+        }
+        //$config = Zend_Registry::get('config');
         $userId = Zend_Auth::getInstance()->getIdentity();
         // Set up the auth adapter
         $authAdapter = new Ot_Auth_Adapter();
@@ -165,65 +165,65 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         $auth->autoLogout();
         Zend_Auth::getInstance()->clearIdentity();
         $this->loggedIn = false;
-	}
-	
-	/**
-	 * convert xml to assoc array
-	 */
-	public function xmlToArray($xmlStr)
-	{
-		$xmlObj = simplexml_load_string($xmlStr);
-		return $this->objectsIntoArray($xmlObj);
-		
-	}
-	
-	public function objectsIntoArray($arrObjData) {
-		$arrData = array();
+    }
+    
+    /**
+     * convert xml to assoc array
+     */
+    public function xmlToArray($xmlStr)
+    {
+        $xmlObj = simplexml_load_string($xmlStr);
+        return $this->objectsIntoArray($xmlObj);
+        
+    }
+    
+    public function objectsIntoArray($arrObjData) {
+        $arrData = array();
    
-	    // if input is object, convert into array
-	    if (is_object($arrObjData)) {
-	        $arrObjData = get_object_vars($arrObjData);
-	    }
-	   
-	    if (is_array($arrObjData)) {
-	        foreach ($arrObjData as $index => $value) {
-	            if (is_object($value) || is_array($value)) {
-	                $value = $this->objectsIntoArray($value); // recursive call
-	            }
-	            $arrData[$index] = $value;
-	        }
-	    }
-	    //$arrayRemove = array('@attributes' => '');
-	    //$arrData = array_diff_assoc($arrData, $arrayRemove);
-	    if(isset($arrData['@attributes'])) {
-	    	unset($arrData['@attributes']);
-	    }
-    	return $arrData;
-	}
-	
-	/**
-	 * Gets the default properties for a class. This bypasses protected and private protections
-	 * if $propertyName set, returns the value of the specified property
-	 * if $propertyName not set, returns all the properties
-	 * 
-	 * PHPUnit_Framework_Assert::readAttribute() / $this->assertAttributeEquals() may be better
-	 */
-	public function getDefaultProperties($className, $propertyName)
-	{
-		$reflection = new ReflectionClass($className);
-		$defaults = $reflection->getDefaultProperties();
-		if(is_array($defaults)) {
-			if($propertyName) {
-				if(isset($defaults[$propertyName])) {
-					return $defaults[$propertyName];
-				} else {
-					//missing property!!
-					return NULL;
-				}
-			} else {
-				return $defaults;
-			}
-		}
-	}
-	
+        // if input is object, convert into array
+        if (is_object($arrObjData)) {
+            $arrObjData = get_object_vars($arrObjData);
+        }
+       
+        if (is_array($arrObjData)) {
+            foreach ($arrObjData as $index => $value) {
+                if (is_object($value) || is_array($value)) {
+                    $value = $this->objectsIntoArray($value); // recursive call
+                }
+                $arrData[$index] = $value;
+            }
+        }
+        //$arrayRemove = array('@attributes' => '');
+        //$arrData = array_diff_assoc($arrData, $arrayRemove);
+        if(isset($arrData['@attributes'])) {
+            unset($arrData['@attributes']);
+        }
+        return $arrData;
+    }
+    
+    /**
+     * Gets the default properties for a class. This bypasses protected and private protections
+     * if $propertyName set, returns the value of the specified property
+     * if $propertyName not set, returns all the properties
+     * 
+     * PHPUnit_Framework_Assert::readAttribute() / $this->assertAttributeEquals() may be better
+     */
+    public function getDefaultProperties($className, $propertyName)
+    {
+        $reflection = new ReflectionClass($className);
+        $defaults = $reflection->getDefaultProperties();
+        if(is_array($defaults)) {
+            if($propertyName) {
+                if(isset($defaults[$propertyName])) {
+                    return $defaults[$propertyName];
+                } else {
+                    //missing property!!
+                    return NULL;
+                }
+            } else {
+                return $defaults;
+            }
+        }
+    }
+    
 }

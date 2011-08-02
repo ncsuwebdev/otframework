@@ -56,11 +56,11 @@
             <?php endif; ?>
             </td>
             <td style="text-align: center;">
-            	<?php if ($c['status'] == 'enabled'): ?>
-            		<a class="runLink" href="<?php echo $this->url(array('module' => 'cron', 'controller' => 'index', 'action' => $c['name']), 'default', true); ?>"><?php echo $this->translate('ot-cron-index:runNow'); ?></a>
+                <?php if ($c['status'] == 'enabled'): ?>
+                    <a class="runLink" href="<?php echo $this->url(array('module' => 'cron', 'controller' => 'index', 'action' => $c['name']), 'default', true); ?>"><?php echo $this->translate('ot-cron-index:runNow'); ?></a>
                 <?php else: ?>
-                	<?php echo $this->translate('ot-cron-index:cannotRun'); ?>
-            	<?php endif; ?>
+                    <?php echo $this->translate('ot-cron-index:cannotRun'); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center;">
                 <?php if ((!array_key_exists('lastRunDt', $c)) || ($c['lastRunDt'] == 0)): ?>

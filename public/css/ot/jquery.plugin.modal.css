@@ -1,9 +1,9 @@
 /* jqModal base Styling courtesy of;
-	Brice Burgess <bhb@iceburg.net> */
+    Brice Burgess <bhb@iceburg.net> */
 
 /* The Window's CSS z-index value is respected (takes priority). If none is supplied,
-	the Window's z-index value will be set to 3000 by default (via jqModal.js). */
-	
+    the Window's z-index value will be set to 3000 by default (via jqModal.js). */
+    
 .jqmWindow {
     display: none;
     
@@ -24,8 +24,8 @@
 
 /* Background iframe styling for IE6. Prevents ActiveX bleed-through (<select> form elements, etc.) */
 * iframe.jqm {position:absolute;top:0;left:0;z-index:-1;
-	width: expression(this.parentNode.offsetWidth+'px');
-	height: expression(this.parentNode.offsetHeight+'px');
+    width: expression(this.parentNode.offsetWidth+'px');
+    height: expression(this.parentNode.offsetHeight+'px');
 }
 
 /* Fixed posistioning emulation for IE6

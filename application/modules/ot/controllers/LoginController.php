@@ -163,9 +163,9 @@ class Ot_LoginController extends Zend_Controller_Action
             if (isset($authRealm->realm) && !$this->_request->isPost()) {
                 $realm = $authRealm->realm;
             } else {
-            	if($form->getValue('realm')) {
-                	$realm = $form->getValue('realm');
-            	}
+                if($form->getValue('realm')) {
+                    $realm = $form->getValue('realm');
+                }
             }
 
             $username = ($formUserId) ? $formUserId : $form->getValue('username');
@@ -651,10 +651,10 @@ class Ot_LoginController extends Zend_Controller_Action
                         $dba->beginTransaction();
 
                         try {
-                        	$accountData['accountId'] = $account->insert($accountData);
+                            $accountData['accountId'] = $account->insert($accountData);
                         } catch (Exception $e) {
-							$dba->rollback();
-							throw $e;
+                            $dba->rollback();
+                            throw $e;
                         }
 
                         if (isset($config->app->accountPlugin)) {

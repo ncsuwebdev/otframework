@@ -2,27 +2,27 @@
     <?php echo $this->translate("ot-custom-add:header"); ?>
     <br /><br />
     <form method="post" action="" id="add" class="checkRequiredFields">
-	   <table class="form">
+       <table class="form">
            <tbody>
-	           <tr>
-	               <td width="100"><label><?php echo $this->translate("ot-custom-form:object"); ?></label></td>
-	               <td><?php echo $this->objectId; ?></td>
-	           </tr>
-	           <tr>
-	               <td><label><?php echo $this->translate("ot-custom-form:description"); ?></label></td>
-	               <td><?php echo $this->objectDescription; ?></td>
-	           </tr>
+               <tr>
+                   <td width="100"><label><?php echo $this->translate("ot-custom-form:object"); ?></label></td>
+                   <td><?php echo $this->objectId; ?></td>
+               </tr>
+               <tr>
+                   <td><label><?php echo $this->translate("ot-custom-form:description"); ?></label></td>
+                   <td><?php echo $this->objectDescription; ?></td>
+               </tr>
             </tbody>
-	    </table><br /><br />
-	    <table class="form">
+        </table><br /><br />
+        <table class="form">
             <tbody>
-    	        <tr>
-    	            <td width="130"><label><?php echo $this->translate("ot-custom-form:label"); ?></label></td>
-    	            <td><input type="text" name="label" id="label" value="" size="20" class="required" /></td>
-    	        </tr>
-    	        <tr>
-    	            <td><label><?php echo $this->translate("ot-custom-form:type"); ?></label></td>
-    	            <td>
+                <tr>
+                    <td width="130"><label><?php echo $this->translate("ot-custom-form:label"); ?></label></td>
+                    <td><input type="text" name="label" id="label" value="" size="20" class="required" /></td>
+                </tr>
+                <tr>
+                    <td><label><?php echo $this->translate("ot-custom-form:type"); ?></label></td>
+                    <td>
                        <select name="type" class="required" id="type">
                             <?php foreach ($this->types as $type => $value) : ?>
                                 <option value="<?php echo $value; ?>"><?php echo $type; ?></option>
@@ -31,24 +31,24 @@
                        <div id="descriptionInput" style="display: none;">
                            <textarea name="option[]"></textarea>
                        </div>
-    	               <div id="opt" style="display: none;">
-    	                   <table class="form" id="options">
+                       <div id="opt" style="display: none;">
+                           <table class="form" id="options">
                                <tbody>
-    		                      <tr id="optionRow">
-    		                          <td width="50"><label for="option[]"><?php echo $this->translate("ot-custom-form:option"); ?></label></td>
-    		                          <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
-    		                      </tr>
+                                  <tr id="optionRow">
+                                      <td width="50"><label for="option[]"><?php echo $this->translate("ot-custom-form:option"); ?></label></td>
+                                      <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
+                                  </tr>
                               </tbody>
-    		              </table>
-    		            <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate("ot-custom-form:linkAddRow"); ?></a>
-    		            <a id="removeRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-minusthick"></span><?php echo $this->translate("ot-custom-form:linkRemoveRow"); ?></a>
-    	               </div>
-    	            </td>
-    	        </tr>
-    	        <tr>
-    	            <td><label><?php echo $this->translate("ot-custom-form:required"); ?></label></td>
-    	            <td><input type="checkbox" value="1" name="required" id="required" /></td>
-    	        </tr>
+                          </table>
+                        <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate("ot-custom-form:linkAddRow"); ?></a>
+                        <a id="removeRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-minusthick"></span><?php echo $this->translate("ot-custom-form:linkRemoveRow"); ?></a>
+                       </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label><?php echo $this->translate("ot-custom-form:required"); ?></label></td>
+                    <td><input type="checkbox" value="1" name="required" id="required" /></td>
+                </tr>
                 <tr>
                     <td><label><?php echo $this->translate("ot-custom-form:direction"); ?></label></td>
                     <td>
@@ -58,7 +58,7 @@
                     </td>
                 </tr>
             </tbody>  
-	    </table>
+        </table>
         <input type="submit" value="<?php echo $this->translate("ot-custom-add:linkAdd"); ?>" />
         <button type="button" id="cancel"><?php echo $this->translate("form-button-cancel"); ?></button>
     </form>

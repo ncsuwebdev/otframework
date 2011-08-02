@@ -2,26 +2,26 @@
 <br /><br />
 <div id="loginForms" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
     <?php $tabSelectedIndex = 0; ?>
-	<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
         <?php $counter = 0; ?>
         <?php foreach ($this->loginForms as $key => $f): ?>
             <li class="ui-state-default ui-corner-top"><a href="#tabs-<?php echo $key; ?>"><span><?php echo $f['name']; ?></span></a></li>
             <?php if ($key == $this->realm) $tabSelectedIndex = $counter; ?>
             <?php $counter++; ?>
         <?php endforeach; ?>
-	</ul>
+    </ul>
     <input type="hidden" id="tabSelectedIndex" value="<?php echo $tabSelectedIndex; ?>" />
     <?php foreach ($this->loginForms as $key => $f): ?>
     <div id="tabs-<?php echo $key; ?>" class="ui-tabs-panel ui-widget-content ui-corner-bottom"> 
-     	<div class="description">
-    		<?php echo $f['description']; ?>
-    	</div>
+         <div class="description">
+            <?php echo $f['description']; ?>
+        </div>
         <?php echo $f['form']; ?>
         <?php if (!$f['autoLogin']): ?>
         <div class="forgot">
-        	<a href="<?php echo $this->url(array('action' => 'forgot', 'realm' => $f['realm']), 'login', true); ?>"><?php echo $this->translate("ot-login-index:linkForgot"); ?></a>
+            <a href="<?php echo $this->url(array('action' => 'forgot', 'realm' => $f['realm']), 'login', true); ?>"><?php echo $this->translate("ot-login-index:linkForgot"); ?></a>
         </div>
         <?php endif; ?>
     </div> 
-<?php endforeach; ?>	
+<?php endforeach; ?>    
 </div>

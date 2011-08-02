@@ -62,122 +62,122 @@ class Ot_Account extends Ot_Db_Table
      */
     private function _addExtraData($data) {
 
-		if (get_Class($data) == 'Zend_Db_Table_Row') {
-    		$data = (object) $data->toArray();
-		}
+        if (get_Class($data) == 'Zend_Db_Table_Row') {
+            $data = (object) $data->toArray();
+        }
 
-		if(empty($data)) {
-			return $data;
-		}
+        if(empty($data)) {
+            return $data;
+        }
 
-    	$rolesDb = new Ot_Account_Roles();
+        $rolesDb = new Ot_Account_Roles();
 
-    	$where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $data->accountId);
+        $where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $data->accountId);
 
-    	$roles = $rolesDb->fetchAll($where);
+        $roles = $rolesDb->fetchAll($where);
 
-    	$roleList = array();
-    	foreach ($roles as $r) {
-			$roleList[] = $r['roleId'];
-    	}
+        $roleList = array();
+        foreach ($roles as $r) {
+            $roleList[] = $r['roleId'];
+        }
 
-    	$data->role = $roleList;
+        $data->role = $roleList;
 
-    	return $data;
+        return $data;
     }
 
-   	public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
-   		try {
-   			$result = parent::fetchAll($where, $order, $count, $offset);
-   		} catch (Exception $e) {
-   			throw $e;
-   		}
+       public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
+           try {
+               $result = parent::fetchAll($where, $order, $count, $offset);
+           } catch (Exception $e) {
+               throw $e;
+           }
 
-   		if($result->count() > 0) {
-	   		foreach ($result as $r) {
-	   			$ret[] = $this->_addExtraData($r);
-	   		}
+           if($result->count() > 0) {
+               foreach ($result as $r) {
+                   $ret[] = $this->_addExtraData($r);
+               }
 
-   			return $ret;
-   		} else {
-   			return null;
-   		}
-   	}
+               return $ret;
+           } else {
+               return null;
+           }
+       }
 
-   	public function find() {
-   		$result = parent::find(func_get_args());
+       public function find() {
+           $result = parent::find(func_get_args());
 
-   		return $this->_addExtraData($result);
-   	}
+           return $this->_addExtraData($result);
+       }
 
 
-   	public function insert(array $data)
-   	{
-   		$roleIds = array();
-   		if(isset($data['role']) && count($data['role']) > 0) {
-	   		$roleIds = (array)$data['role'];
-	   		unset($data['role']);
-   		}
-   		try {
-   			$accountId = parent::insert($data);
-   		} catch(Exception $e) {
-   			throw new Ot_Exception('Account insert failed.');
-   		}
-   		$a = new Ot_Account_Roles();
-   		if(count($roleIds) > 0) {
-	   		$accountRoles = new Ot_Account_Roles();
+       public function insert(array $data)
+       {
+           $roleIds = array();
+           if(isset($data['role']) && count($data['role']) > 0) {
+               $roleIds = (array)$data['role'];
+               unset($data['role']);
+           }
+           try {
+               $accountId = parent::insert($data);
+           } catch(Exception $e) {
+               throw new Ot_Exception('Account insert failed.');
+           }
+           $a = new Ot_Account_Roles();
+           if(count($roleIds) > 0) {
+               $accountRoles = new Ot_Account_Roles();
 
-	   		foreach($roleIds as $r) {
-	   			$accountRoles->insert(array(
-	   				'accountId' => $accountId,
-	   				'roleId'    => $r,
-	   			));
-   			}
-   		}
-   		return $accountId;
-   	}
+               foreach($roleIds as $r) {
+                   $accountRoles->insert(array(
+                       'accountId' => $accountId,
+                       'roleId'    => $r,
+                   ));
+               }
+           }
+           return $accountId;
+       }
 
-   	public function update(array $data, $where)
-   	{
-   		$rolesToAdd = array();
-   		if(isset($data['role']) && count($data['role']) > 0) {
-	   		$rolesToAdd = (array)$data['role'];
-	   		unset($data['role']);
-   		}
-   		$updateCount = parent::update($data, $where);
-   		if(count($rolesToAdd) < 1) {
-   			return $updateCount;
-   		}
-   		$accountRoles = new Ot_Account_Roles();
-   		$accountRolesDba = $accountRoles->getAdapter();
+       public function update(array $data, $where)
+       {
+           $rolesToAdd = array();
+           if(isset($data['role']) && count($data['role']) > 0) {
+               $rolesToAdd = (array)$data['role'];
+               unset($data['role']);
+           }
+           $updateCount = parent::update($data, $where);
+           if(count($rolesToAdd) < 1) {
+               return $updateCount;
+           }
+           $accountRoles = new Ot_Account_Roles();
+           $accountRolesDba = $accountRoles->getAdapter();
 
-   		$accountId = $data['accountId'];
+           $accountId = $data['accountId'];
 
-   		if(isset($rolesToAdd) && count($rolesToAdd) > 0) {
-   			try {
-	   			$where = $accountRolesDba->quoteInto('accountId = ?', $accountId);
-	   			$accountRoles->delete($where);
-	   			foreach($rolesToAdd as $roleId) {
-	   				$d = array(
-	   					'accountId' => $accountId,
-	   					'roleId' => $roleId,
-	   				);
-	   				$accountRoles->insert($d);
-	   			}
-   			} catch(Exception $e) {
-   				throw $e;
-   			}
-   		}
-   		return $updateCount;
-   	}
+           if(isset($rolesToAdd) && count($rolesToAdd) > 0) {
+               try {
+                   $where = $accountRolesDba->quoteInto('accountId = ?', $accountId);
+                   $accountRoles->delete($where);
+                   foreach($rolesToAdd as $roleId) {
+                       $d = array(
+                           'accountId' => $accountId,
+                           'roleId' => $roleId,
+                       );
+                       $accountRoles->insert($d);
+                   }
+               } catch(Exception $e) {
+                   throw $e;
+               }
+           }
+           return $updateCount;
+       }
 
-   	public function delete($where)
-   	{
-   		$deleteCount = parent::delete($where);
-   		$accountRoles = new Ot_Account_Roles();
-   		$accountRoles->delete($where);
-   		return $deleteCount;
-   	}
+       public function delete($where)
+       {
+           $deleteCount = parent::delete($where);
+           $accountRoles = new Ot_Account_Roles();
+           $accountRoles->delete($where);
+           return $deleteCount;
+       }
 
     public function getAccount($username, $realm)
     {
@@ -219,21 +219,21 @@ class Ot_Account extends Ot_Db_Table
 
     public function getAccountsForRole($roleId, $order = null, $count = null, $offset = null)
     {
-    	$rolesDb = new Ot_Account_Roles();
+        $rolesDb = new Ot_Account_Roles();
 
         $where = $rolesDb->getAdapter()->quoteInto('roleId = ?', $roleId);
 
         $roles = $rolesDb->fetchAll($where)->toArray();
         $accountIds = array();
         foreach ($roles as $role) {
-        	$accountIds[] = $role['accountId'];
+            $accountIds[] = $role['accountId'];
         }
 
         if(count($accountIds) > 0) {
-        	$where = $this->getAdapter()->quoteInto('accountId IN (?)', $accountIds);
-        	return $this->fetchAll($where, $order, $count, $offset);
+            $where = $this->getAdapter()->quoteInto('accountId IN (?)', $accountIds);
+            return $this->fetchAll($where, $order, $count, $offset);
         } else {
-        	return null;
+            return null;
         }
     }
 
@@ -413,34 +413,34 @@ class Ot_Account extends Ot_Db_Table
 
 
         if(!$signup) {
-	        $form->addDisplayGroup(array_merge(array(
-	            	'realm',
-	            	'username',
-	            	'firstName',
-	            	'lastName',
-	            	'emailAddress',
-	            	'timezone'), $subformElements, array(
+            $form->addDisplayGroup(array_merge(array(
+                    'realm',
+                    'username',
+                    'firstName',
+                    'lastName',
+                    'emailAddress',
+                    'timezone'), $subformElements, array(
                         'submit',
                         'cancel'))
-	            , 'general', array('legend' => 'General Information'));
+                , 'general', array('legend' => 'General Information'));
 
-	        $general = $form->getDisplayGroup('general');
-	        $general->setDecorators(array(
-		        'FormElements',
-		        'Fieldset',
-		       	array('HtmlTag', array('tag' => 'div', 'class' => 'general'))
-	        ));
+            $general = $form->getDisplayGroup('general');
+            $general->setDecorators(array(
+                'FormElements',
+                'Fieldset',
+                   array('HtmlTag', array('tag' => 'div', 'class' => 'general'))
+            ));
         }
 
 
         if(!$signup && !$me) {
-	        $form->addDisplayGroup(array('roleSelect'), 'roles', array('legend' => 'User Access Roles'));
-	        $role = $form->getDisplayGroup('roles');
-	        $role->setDecorators(array(
-	        	'FormElements',
-	        	'Fieldset',
-	        	array('HtmlTag', array('tag' => 'div', 'class' => 'accessRoles'))
-	        ));
+            $form->addDisplayGroup(array('roleSelect'), 'roles', array('legend' => 'User Access Roles'));
+            $role = $form->getDisplayGroup('roles');
+            $role->setDecorators(array(
+                'FormElements',
+                'Fieldset',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'accessRoles'))
+            ));
         }
 
         if (isset($default['accountId'])) {
