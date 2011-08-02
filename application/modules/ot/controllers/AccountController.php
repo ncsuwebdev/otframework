@@ -479,6 +479,56 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->permissionList = Zend_Json::encode($permissions);
 
     }
+    
+    /**
+     * Imports users in bulk
+     *
+     */
+    public function importAction()
+    {
+        
+        $account = new Ot_Account();
+        $form = $account->importForm();
+        
+        $messages = array();
+        
+        if ($this->_request->isPost()) {
+            
+            if ($form->isValid($_POST)) {
+                $cleanImport = ereg_replace("[^A-Za-z0-9,-]", "", $form->getValue('text'));
+                $user = explode(",", $cleanImport);
+                
+                $success = array();
+                $failure = array();
+                
+                foreach ($user as $userId) {
+                    if ($account->createNewUserForUnityId($userId, $form->getValue('newRoleId'))) {
+                        $success[] = $userId;
+                    } else {
+                        $failure[] = $userId;
+                    }
+                }
+                
+                if (count($success)) {
+                    $this->_helper->flashMessenger->addMessage('Successfully imported account(s) for ' . implode(', ', $success) . '.');
+                }
+                
+                if (count($failure)) {
+                    $this->_helper->flashMessenger->addMessage('Failed to import account(s) for ' . implode(', ', $failure) . '.');
+                }
+
+                $this->_helper->redirector->setPrependBase('')
+                     ->gotoUrl($this->view->url(array('module' => 'ot', 'controller' => 'account', 'action' => 'import'), 'default', true));
+            } else {
+                $messages[] = 'There was an error processing the form.';
+            }
+        
+        }
+        
+        $this->view->form = $form;
+        $this->_helper->pageTitle('Batch Create Accounts from Unity ID List');
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+    }
 
     /**
      * Edits an existing user

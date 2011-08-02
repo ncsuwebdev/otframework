@@ -236,6 +236,93 @@ class Ot_Account extends Ot_Db_Table
             return null;
         }
     }
+    
+    public function createNewUserForUnityId($unityId, $roleId)
+    {    
+        $account = new Ot_Account();
+        $where = $account->getAdapter()->quoteInto('username = ?', $unityId);
+        $where .= $account->getAdapter()->quoteInto(' AND realm = ?', 'wrap');
+        $thisAccount = $account->fetchAll($where)->toArray();
+        
+        $dba = $account->getAdapter();
+        $dba->beginTransaction();
+        
+        if (count($thisAccount) < 1) {
+            $data = array (
+                'username'  => $unityId, 
+                'realm'     => 'wrap', 
+                'timezone'  => 'America/New_York', 
+                'role'      => $roleId,
+            );
+
+            try {
+                $account->insert($data, null);
+                $dba->commit();
+                $dba->closeConnection();
+                return true;
+            } catch (Exception $e) {
+                $dba->rollback();
+                $dba->closeConnection();
+                return false;
+            }
+        } else {
+            $dba->closeConnection();
+            return false;
+        }
+    }
+    
+    public function importForm(array $default = array())
+    {
+        $form = new Zend_Form();
+        $form->setAction('')
+             ->setMethod('post')
+             ->setAttrib('id', 'noteForm')
+             ->setDecorators(array(
+                 'FormElements',
+                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                 'Form',
+             ));
+                                               
+        $text = $form->createElement('textarea', 'text', array('label' => 'Enter a comma separated list of unity IDs:'));
+        $text->addFilter('StringTrim')
+              ->setAttrib('id', 'wysiwyg')
+              ->setAttrib('style', 'width: 650px; height: 200px;')
+              ->setValue((isset($default['text'])) ? $default['text'] : 'userid,userid2,userid3');
+        
+        $roleList = array();
+        $otRole = new Ot_Role();
+        $allRoles = $otRole->fetchAll();
+        foreach ($allRoles as $r) {
+            $roleList[$r->roleId] = $r->name;
+        }
+             
+        $newRoleId = $form->createElement('radio', 'newRoleId', array('label' => 'Choose a role for all accounts listed above: '));
+        $newRoleId->setRequired(true);
+        $newRoleId->setMultiOptions($roleList);
+        $newRoleId->setValue((isset($default['newRoleId'])) ? $default['newRoleId'] : '');
+              
+    $form->addElements(array($text, $newRoleId));
+        
+        $submit = $form->createElement('submit', 'saveButton', array('label' => 'Submit'));
+        $submit->setDecorators(array(
+            array('ViewHelper', array('helper' => 'formSubmit'))
+        ));
+        
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+            array('ViewHelper', array('helper' => 'formButton'))
+        ));        
+                            
+        $form->setElementDecorators(array(
+                 'ViewHelper',
+                 'Errors',      
+                 array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
+                 array('Label', array('tag' => 'span')),      
+             ))->addElements(array($submit, $cancel));
+             
+        return $form;
+    }
 
     public function form($default = array(), $signup = false)
     {
