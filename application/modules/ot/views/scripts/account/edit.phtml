@@ -4,6 +4,7 @@
 <br /><br />
 <?php echo $this->form; ?>
 
+<?php if ($this->acl['edit-permission']): ?>
 <?php foreach ($this->permissions as $module => $controllers): ?>
 	<table id = "<?php echo $module; ?>" class="<?php echo ucwords($module);?> list accessTable">
 		<thead>
@@ -33,7 +34,7 @@
 					<div id="tooltip-<?php echo $module . '-' . $controller ;?>" class="actions">
 						<table class="list">
 							<tr class="controller ui-widget-header"><td><strong><?php echo ucwords($controller); ?></strong></td></tr>
-							<?php foreach ($actions['part'] as $action => $access) :?>						
+							<?php foreach ($actions['part'] as $action => $access) :?>
 								<tr><td class="action description <?php echo $access['access'] ? 'access' : 'noAccess';?>" id="<?php echo $module . '-' . $controller . '-' . $action;?>" title="<?php echo $access['description']; ?>"><?php echo ucwords($action);?></td></tr>
 							<?php endforeach;?>
 						</table>
@@ -43,3 +44,4 @@
 		<?php // endif;?>
 	<?php endforeach;?>
 <?php endforeach;?>
+<?php endif; ?>
