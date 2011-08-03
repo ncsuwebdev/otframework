@@ -957,15 +957,15 @@ class Ot_AccountController extends Zend_Controller_Action
     public function changeRolesAction()
     {        
 
-    	$account = new Ot_Account();
-    	$form = $account->changeRoleForm();
+        $account = new Ot_Account();
+        $form = $account->changeRoleForm();
         
         $messages = array();
         
         if ($this->_request->isPost()) {
             
             if ($form->isValid($_POST)) {
-        		
+                
                 $cleanImport = ereg_replace("[^A-Za-z0-9,-]", "", $form->getValue('text'));
                 $user = explode(",", $cleanImport);
                 
@@ -997,9 +997,9 @@ class Ot_AccountController extends Zend_Controller_Action
         }
         
         $this->view->form = $form;
-    	$this->_helper->pageTitle('Change Roles for Unity ID List');
-    	$this->view->messages = $this->_helper->flashMessenger->getMessages();
-    		
+        $this->_helper->pageTitle('Change Roles for Unity ID List');
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+            
     }
 
     /**
