@@ -32,6 +32,10 @@
         <?php endif; ?>
         <br /><br />        
     <?php endif; ?>    
+        <div id="gravatarWrapper">
+            <?php echo $this->gravatar($this->userData['emailAddress'], array('imgSize' => 128)); ?>
+            <a href="http://gravatar.com" target="_blank">Change picture...</a>
+        </div>
         <table class="form">
             <tbody>
                 <tr>
@@ -82,7 +86,8 @@
                 </tr>         
                 <?php endforeach; ?>
             </tbody>
-        </table>     
+        </table>
+        * To change your account's picture, signup for an account at <a href="http://gravatar.com" target="_blank">Gravatar.com</a> and associate a picture with your account's email address (<?php echo $this->userData['emailAddress']; ?>).
     </div>
     <?php foreach ($this->consumers as $c): ?>
     <div id="tabs-<?php echo $c['consumerId']; ?>">

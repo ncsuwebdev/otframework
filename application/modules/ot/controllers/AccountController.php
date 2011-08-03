@@ -486,7 +486,6 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function importAction()
     {
-        
         $account = new Ot_Account();
         $form = $account->importForm();
         
@@ -495,17 +494,26 @@ class Ot_AccountController extends Zend_Controller_Action
         if ($this->_request->isPost()) {
             
             if ($form->isValid($_POST)) {
-                $cleanImport = ereg_replace("[^A-Za-z0-9,-]", "", $form->getValue('text'));
-                $user = explode(",", $cleanImport);
+                
+                $cleanImport = preg_replace("/[^A-Z0-9,-]/i", "", $form->getValue('text'));
+                $userList = explode(",", $cleanImport);
                 
                 $success = array();
                 $failure = array();
                 
-                foreach ($user as $userId) {
-                    if ($account->createNewUserForUnityId($userId, $form->getValue('newRoleId'))) {
+                foreach ($userList as $userId) {
+                    
+                    $userId = trim($userId);
+                    
+                    if (empty($userId)) {
+                        continue;
+                    }
+                    
+                    try {
+                        $account->createNewUserForUnityId($userId, $form->getValue('newRoleId'));
                         $success[] = $userId;
-                    } else {
-                        $failure[] = $userId;
+                    } catch (Exception $e) {
+                        $failure[] = $userId . ' (' . $e->getMessage() . ')';
                     }
                 }
                 
@@ -966,17 +974,25 @@ class Ot_AccountController extends Zend_Controller_Action
             
             if ($form->isValid($_POST)) {
                 
-                $cleanImport = ereg_replace("[^A-Za-z0-9,-]", "", $form->getValue('text'));
+                $cleanImport = preg_replace("[^A-Za-z0-9,-]", "", $form->getValue('text'));
                 $user = explode(",", $cleanImport);
                 
                 $success = array();
                 $failure = array();
                 
                 foreach ($user as $userId) {
-                    if ($account->changeAccountRoleForUnityId($userId, $form->getValue('newRoleId'))) {
-                        $success[] = $userId;
-                    } else {
-                        $failure[] = $userId;
+                    
+                    $userId = trim($userId);
+                    
+                    if (empty($userId)) {
+                        continue;
+                    }
+                    
+                    try {
+                        $account->changeAccountRoleForUnityId($userId, $form->getValue('newRoleId'));
+                        $success[] = $userId; 
+                    } catch (Exception $e) {
+                        $failure[] = $userId . ' (' . $e->getMessage() . ')';
                     }
                 }
                 

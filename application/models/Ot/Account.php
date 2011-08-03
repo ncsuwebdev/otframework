@@ -123,8 +123,8 @@ class Ot_Account extends Ot_Db_Table
            } catch(Exception $e) {
                throw new Ot_Exception('Account insert failed.');
            }
-           $a = new Ot_Account_Roles();
-           if(count($roleIds) > 0) {
+           
+           if (count($roleIds) > 0) {
                $accountRoles = new Ot_Account_Roles();
 
                foreach($roleIds as $r) {
@@ -140,7 +140,7 @@ class Ot_Account extends Ot_Db_Table
        public function update(array $data, $where)
        {
            $rolesToAdd = array();
-           if(isset($data['role']) && count($data['role']) > 0) {
+           if (isset($data['role']) && count($data['role']) > 0) {
                $rolesToAdd = (array)$data['role'];
                unset($data['role']);
            }
@@ -239,66 +239,46 @@ class Ot_Account extends Ot_Db_Table
     
     public function changeAccountRoleForUnityId($unityId, $newRoleId)
     {
-        $where = $this->getAdapter()->quoteInto('username = ?', $unityId);
-        $where .= $this->getAdapter()->quoteInto(' AND realm = ?', 'wrap');
-        $thisAccount = $this->fetchAll($where)->toArray();
-        
-        $dba = $this->getAdapter();
-        $dba->beginTransaction();
-        if(count($thisAccount) == 1) {
-                $data = array(
-                    'accountId' => $thisAccount[0]['accountId'],
-                       'role'      => $newRoleId
-                );
-                                
-                try {
-                        $this->update($data, null);
-                        $dba->commit();
-                        $dba->closeConnection();
-                        return true;
-                } catch (Exception $e) {
-                        $dba->rollback();
-                        $dba->closeConnection();
-                        return false;
-                }
+        $thisAccount = $this->getAccount($unityId, 'wrap');
+ 
+        if (!is_null($thisAccount)) {
+            $data = array(
+                'accountId' => $thisAccount->accountId,
+                'role'      => $newRoleId
+            );
+                            
+            try {
+                $this->update($data, null);
+            } catch (Exception $e) {
+                throw $e;
+            }
         } else {
-            $dba->closeConnection();
-            return false;
+            throw new Exception('Account not found');
         }
         
     }
     
     public function createNewUserForUnityId($unityId, $roleId)
     {    
-        $account = new Ot_Account();
-        $where = $account->getAdapter()->quoteInto('username = ?', $unityId);
-        $where .= $account->getAdapter()->quoteInto(' AND realm = ?', 'wrap');
-        $thisAccount = $account->fetchAll($where)->toArray();
+        $thisAccount = $this->getAccount($unityId, 'wrap');
         
-        $dba = $account->getAdapter();
-        $dba->beginTransaction();
-        
-        if (count($thisAccount) < 1) {
+        if (is_null($thisAccount)) {
+            
             $data = array (
                 'username'  => $unityId, 
-                'realm'     => 'wrap', 
+                'realm'     => 'wrap',
+                'password'  => md5($this->generatePassword()),
                 'timezone'  => 'America/New_York', 
                 'role'      => $roleId,
             );
 
             try {
-                $account->insert($data, null);
-                $dba->commit();
-                $dba->closeConnection();
-                return true;
+                return $this->insert($data);
             } catch (Exception $e) {
-                $dba->rollback();
-                $dba->closeConnection();
-                return false;
+                throw $e;
             }
         } else {
-            $dba->closeConnection();
-            return false;
+            throw new Exception('Account already exists');
         }
     }
     
@@ -314,11 +294,11 @@ class Ot_Account extends Ot_Db_Table
                  'Form',
              ));
                                                
-        $text = $form->createElement('textarea', 'text', array('label' => 'Enter a comma separated list of unity IDs:'));
+        $text = $form->createElement('textarea', 'text', array('label' => 'Enter a comma separated list of Unity IDs:'));
         $text->addFilter('StringTrim')
               ->setAttrib('id', 'wysiwyg')
               ->setAttrib('style', 'width: 650px; height: 200px;')
-              ->setValue((isset($default['text'])) ? $default['text'] : 'userid,userid2,userid3');
+              ->setValue((isset($default['text'])) ? $default['text'] : '');
         
         $roleList = array();
         $otRole = new Ot_Role();
@@ -332,7 +312,7 @@ class Ot_Account extends Ot_Db_Table
         $newRoleId->setMultiOptions($roleList);
         $newRoleId->setValue((isset($default['newRoleId'])) ? $default['newRoleId'] : '');
               
-    $form->addElements(array($text, $newRoleId));
+        $form->addElements(array($text, $newRoleId));
         
         $submit = $form->createElement('submit', 'saveButton', array('label' => 'Submit'));
         $submit->setDecorators(array(
@@ -367,11 +347,11 @@ class Ot_Account extends Ot_Db_Table
                  'Form',
              ));
                                                
-        $text = $form->createElement('textarea', 'text', array('label' => ' Enter a comma separated list of unity IDs:'));
+        $text = $form->createElement('textarea', 'text', array('label' => ' Enter a comma separated list of Unity IDs:'));
         $text->addFilter('StringTrim')
              ->setAttrib('id', 'wysiwyg')
              ->setAttrib('style', 'width: 650px; height: 200px;')
-             ->setValue((isset($default['text'])) ? $default['text'] : 'userid,userid2,userid3');
+             ->setValue((isset($default['text'])) ? $default['text'] : '');
         
         $roleList = array();
         $otRole = new Ot_Role();
