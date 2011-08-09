@@ -219,9 +219,12 @@ class ApiControllerTest extends ControllerTestCase
         $this->assertController('api');
         $this->assertAction('json');
         
-        var_dump($this->getResponse()->outputBody());
-        var_dump('err' . json_last_error());
+        $matchAgainst = array(
+            'success' => array(),
+            'error' => 'You do not have the proper signed credentials to remotely access this method.',
+        );
         
+        $this->assertEquals(json_decode($this->getResponse()->outputBody(), true), $matchAgainst);
         
     }
     

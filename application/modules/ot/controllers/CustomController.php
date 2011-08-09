@@ -74,7 +74,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $config = Zend_Registry::get('config');
 
         if (!isset($config->app->customFieldObjects->{$get->objectId})) {
-            throw new Ot_Exception_Input('msg-error-objectNotSetup');
+            throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
 
         $custom = new Ot_Custom();
@@ -196,7 +196,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $config = Zend_Registry::get('config');
 
         if (!isset($config->app->customFieldObjects->{$get->objectId})) {
-            throw new Ot_Exception_Input('msg-error-objectNotSetup');
+            throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
 
         $custom = new Ot_Custom();
@@ -302,16 +302,6 @@ class Ot_CustomController extends Zend_Controller_Action
                 }
             }
 
-            $attribute = $attr->find($get->attributeId);
-
-            if (is_null($attribute)) {
-                throw new Ot_Exception_Data('msg-error-noAttribute');
-            }
-
-            $attribute = $attribute->toArray();
-
-            $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
-
             if (isset($_POST['opt_delete'])) {
                 foreach ($_POST['opt_delete'] as $opt) {
                     $key = array_search($filter->filter($opt), $attribute['options']);
@@ -340,10 +330,9 @@ class Ot_CustomController extends Zend_Controller_Action
             $logOptions = array('attributeName' => 'nodeAddtributeId', 'attributeId' => $data['attributeId']);
                     
             $this->_helper->log(Zend_Log::INFO, 'Attribute ' . $data['label'] . ' was modified.', $logOptions);
-            
             $this->_helper
                  ->flashMessenger
-                 ->addMessage($this->view->translate('msg-info-attributeSaved', $data['label']));
+                 ->addMessage($this->view->translate('msg-info-attributeSaved', array($data['label'])));
 
             $this->_helper->redirector->gotoRoute(
                 array(
@@ -411,7 +400,7 @@ class Ot_CustomController extends Zend_Controller_Action
 
             $this->_helper
                  ->flashMessenger
-                 ->addMessage($this->view->translate('msg-info-attributeDeleted', $attribute['label']));
+                 ->addMessage($this->view->translate('msg-info-attributeDeleted', array($attribute['label'])));
 
             $this->_helper->redirector->gotoRoute(
                 array(

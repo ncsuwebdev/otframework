@@ -660,7 +660,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         'attributeId'   => $this->_userData['accountId'],
                     );
 
-                    $this->_helper->log(Zend_Log::INFO, 'Account was modified.', loggerOptions);
+                    $this->_helper->log(Zend_Log::INFO, 'Account was modified.', $loggerOptions);
 
                     if (isset($req->uri) && $req->uri != '') {
                         $uri = $req->uri;

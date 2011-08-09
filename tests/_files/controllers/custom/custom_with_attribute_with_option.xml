@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <!-- Table ot_tbl_ot_custom_attribute -->
+    <ot_tbl_ot_custom_attribute
+        objectId="Ot_Profile"
+        label="radio not checkbox"
+        type="radio"
+        options="a:5:{i:0;s:1:&quot;1&quot;;i:1;s:1:&quot;2&quot;;i:2;s:1:&quot;3&quot;;i:3;s:1:&quot;4&quot;;i:4;s:1:&quot;5&quot;;}"
+        required="1"
+        direction="vertical"
+        order="0"
+    />
+    
+    <!-- Table ot_tbl_ot_custom_attribute_value -->
+    <ot_tbl_ot_custom_attribute_value
+        objectId="Ot_Profile"
+        parentId="1"
+        attributeId="1"
+        value="b"
+    />
+</dataset>

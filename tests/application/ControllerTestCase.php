@@ -1,9 +1,11 @@
 <?php
+
 class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 {
     public $application;
     public $config;
     public $loggedIn = false;
+    protected static $dbTester;
 
     /**
      * this runs at the start of each controller
@@ -57,6 +59,11 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
         self::setupDatabase();
     }
     
+    public static function tearDownAfterClass()
+    {
+        
+    }
+    
     /**
      * link to an xml file that will store a fake database that can easily
      * and quickly have its contents refreshed for retesting
@@ -64,26 +71,29 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
      */
     public static function setupDatabase($xmlPath = 'dbtest.xml')
     {
-        // @todo: fix database integration from within the ControllerTestCase
-        // currently doesn't work, so return early
-        //return;
         
-        $configFilePath = dirname(__FILE__) . '/../../application/configs';
-        $applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', 'testing');
+        if (!self::$dbTester) {
+            $configFilePath = dirname(__FILE__) . '/../../application/configs';
+            $applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', 'testing');
+            
+            
+            $adapter = $applicationIni->resources->db->adapter;
+            $params = array(
+                'username' => $applicationIni->resources->db->params->username,
+                'password' => $applicationIni->resources->db->params->password,
+                'host'     => $applicationIni->resources->db->params->host,
+                'port'     => $applicationIni->resources->db->params->port,
+                'dbname'   => $applicationIni->resources->db->params->dbname
+            );
+            
+            $db = Zend_Db::factory($adapter, $params);
+            $connection = new Zend_Test_PHPUnit_Db_Connection($db, 'mysql');
+            $databaseTester = new Zend_Test_PHPUnit_Db_SimpleTester($connection);
+            self::$dbTester = $databaseTester;
+        } else {
+            $databaseTester = self::$dbTester;
+        }
         
-        
-        $adapter = $applicationIni->resources->db->adapter;
-        $params = array(
-            'username' => $applicationIni->resources->db->params->username,
-            'password' => $applicationIni->resources->db->params->password,
-            'host'     => $applicationIni->resources->db->params->host,
-            'port'     => $applicationIni->resources->db->params->port,
-            'dbname'   => $applicationIni->resources->db->params->dbname
-        );
-        
-        $db = Zend_Db::factory($adapter, $params);
-        $connection = new Zend_Test_PHPUnit_Db_Connection($db, 'mysql');
-        $databaseTester = new Zend_Test_PHPUnit_Db_SimpleTester($connection);
         $databaseFixture = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/' . $xmlPath);
         $databaseTester->setupDatabase($databaseFixture);
     }
@@ -95,6 +105,13 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
     
     public function dispatch($url = null)
     {
+        // this is a reminder to me for catching some of the times I make post data but forget to send it
+        if(($this->request->getMethod() == 'POST' && !$this->request->getPost())
+            || ($this->request->getMethod() != 'POST' && $this->request->getPost())
+        ) {
+            $this->fail('!!!AHH, post data not set right!!!');
+        }
+        
         // redirector should not exit
         $redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
         $redirector->setExit(false);
@@ -122,20 +139,19 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
              ->throwExceptions(true)
              ->returnResponse(false);
         $this->getFrontController()->dispatch();
+        
+        
     }
     
     /**
-     * logs you into admin account so that you won't get redirected to login page all the time
-     * 
+     * logs you into an account so that you won't get redirected to login page all the time
+     * defaults to dbtest.xml's admin account
      **/
-    public function login()
+    public function login($username = 'admin', $password = 'admin')
     {
         if($this->loggedIn) {
             return;
         }
-        // @todo - is there a better way to do this?
-        $username = 'admin';
-        $password = 'admin';
         $authAdapter = new Ot_Auth_Adapter();
         $adapter     = $authAdapter->find('local');
         $className   = (string)$adapter->class;

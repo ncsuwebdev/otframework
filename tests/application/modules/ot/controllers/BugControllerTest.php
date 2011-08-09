@@ -115,6 +115,8 @@ class BugControllerTest extends ControllerTestCase
         
         $this->dispatch('ot/bug/index');
         $this->assertQueryCount('table.list tr td.noResults', 1);
+        
+        var_dump($this->getResponse()->getBody());exit;
     }
     
     public function testAddAction()

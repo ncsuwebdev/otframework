@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <!-- Table ot_tbl_ot_custom_attribute -->
+    <ot_tbl_ot_custom_attribute
+        objectId="Ot_Profile"
+        label="attr1"
+        type="textarea"
+        options="a:0:{}"
+        required="1"
+        direction="vertical"
+        order="0"
+    />
+    <ot_tbl_ot_custom_attribute
+        objectId="Ot_Profile"
+        label="attr2"
+        type="textarea"
+        options="a:0:{}"
+        required="1"
+        direction="vertical"
+        order="0"
+    />
+    <ot_tbl_ot_custom_attribute
+        objectId="Ot_Profile"
+        label="attr3"
+        type="textarea"
+        options="a:0:{}"
+        required="1"
+        direction="vertical"
+        order="0"
+    />
+    
+    <!-- Table ot_tbl_ot_custom_attribute_value -->
+    <ot_tbl_ot_custom_attribute_value
+        objectId="Ot_Profile"
+        parentId="1"
+        attributeId="1"
+        value="here is some text in a textarea!!!!!!"
+    />
+    <ot_tbl_ot_custom_attribute_value
+        objectId="Ot_Profile"
+        parentId="2"
+        attributeId="2"
+        value="i am default text!!!"
+    />
+    <ot_tbl_ot_custom_attribute_value
+        objectId="Ot_Profile"
+        parentId="3"
+        attributeId="3"
+        value="i a third value!!!"
+    />
+</dataset>

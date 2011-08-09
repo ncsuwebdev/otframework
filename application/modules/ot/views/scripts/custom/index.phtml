@@ -1,11 +1,13 @@
 <?php echo $this->translate("ot-custom-index:header"); ?>
 <br /><br />
 <table class="list">
-    <tbody>
+    <thead>
         <tr class="ui-widget-header">
             <th width="200"><?php echo $this->translate("ot-custom-index:table:object"); ?></th>
             <th width="350"><?php echo $this->translate("ot-custom-index:table:description"); ?></th>
         </tr>
+    </thead>
+    <tbody>
         <?php if (count($this->objects) > 0) : ?>
         <?php foreach ($this->objects as $o) : ?>
         <tr class="<?php $this->cycle('row1', 'row2'); ?>">

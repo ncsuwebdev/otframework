@@ -419,7 +419,7 @@ class LoginControllerTest extends ControllerTestCase
                     'firstName'    => $fName,
                     'lastName'     => $lName,
                     'emailAddress' => $email,
-                    'timezone'     => $timezone, 
+                    'timezone'     => $timezone,
                     'realm'        => $realm,
                 )
         );
@@ -449,7 +449,7 @@ class LoginControllerTest extends ControllerTestCase
                     'firstName'    => $fName,
                     'lastName'     => $lName,
                     'emailAddress' => $email,
-                    'timezone'     => $timezone, 
+                    'timezone'     => $timezone,
                     'realm'        => $realm,
                 )
         );

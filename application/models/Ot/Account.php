@@ -213,7 +213,7 @@ class Ot_Account extends Ot_Db_Table
             throw new Exception('Code not found');
         }
 
-        return $result->current();
+        return $result[0];
     }
 
     public function getAccountsForRole($roleId, $order = null, $count = null, $offset = null)
