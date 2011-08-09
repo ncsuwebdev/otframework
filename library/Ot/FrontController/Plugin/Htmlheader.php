@@ -38,11 +38,22 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         $baseUrl = $view->baseUrl();
         
         $themePath = $view->applicationThemePath;
-                
+        
         $themeConfig = new Zend_Config_Xml(realpath(APPLICATION_PATH . '/../public/' . $view->applicationThemePath) . '/config.xml', 'production', true);
         
-        $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
-        $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
+        $userConfig = Zend_Registry::get('config');
+        
+        // $useMinify decides whether to minify css, js, etc. if you don't want to minify, it creates new
+        //   <link> tags for each item instead of grouping them into a single file
+        $useMinify = $userConfig->user->useMinify->val;
+        
+        if($useMinify) {
+            $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
+            $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
+        } else {
+            $view->headLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
+            $view->headLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
+        }
         
         if (isset($themeConfig->css->file)) {
             foreach ($themeConfig->css->file as $c) {
@@ -53,17 +64,31 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 }
                 
                 if ($c->order == 'append') {
-                    $view->minifyHeadLink()->appendStylesheet($path);
+                    if($useMinify) {
+                        $view->minifyHeadLink()->appendStylesheet($path);
+                    } else {
+                        $view->headLink()->appendStylesheet($path);
+                    }
                 } elseif ($c->order == 'prepend') {
-                    $view->minifyHeadLink()->prependStylesheet($path);
+                    if($useMinify) {
+                        $view->minifyHeadLink()->prependStylesheet($path);
+                    } else {
+                        $view->headLink()->prependStylesheet($path);
+                    }
                 }
             }
         }
         
-        $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
-        $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
-        $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
-                
+        if($useMinify) {
+            $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
+            $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
+            $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
+        } else {
+            $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
+            $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
+            $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
+        }
+        
         if (isset($themeConfig->scripts->file)) {
             foreach ($themeConfig->scripts->file as $s) {
                 $path = $s->path;
@@ -73,9 +98,17 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 }
                 
                 if ($s->order == 'append') {
-                    $view->minifyHeadScript()->appendFile($path);
+                    if($useMinify) {
+                        $view->minifyHeadScript()->appendFile($path);
+                    } else {
+                        $view->headScript()->appendFile($path);
+                    }
                 } elseif ($s->order == 'prepend') {
-                    $view->minifyHeadScript()->prependFile($path);
+                    if($useMinify) {
+                        $view->minifyHeadScript()->prependFile($path);
+                    } else {
+                        $view->headScript()->prependFile($path);
+                    }
                 }
             }
         }

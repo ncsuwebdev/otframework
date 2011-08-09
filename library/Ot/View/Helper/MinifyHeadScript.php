@@ -54,6 +54,11 @@ class Ot_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript
             }
         }
         
+        // if there's nothing to minify, don't dump the link
+        if(count($scripts) == 0) {
+            return '';
+        }
+        
         // Remove the slash at the beginning if there is one
         if (substr($baseUrl, 0, 1) == '/') {
             $baseUrl = substr($baseUrl, 1);
@@ -69,7 +74,6 @@ class Ot_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript
         }
         
         $scriptTag = $this->itemToString($item, '', '', '');
-        
         return $scriptTag;
     }
     

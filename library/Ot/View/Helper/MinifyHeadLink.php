@@ -59,7 +59,6 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
         if (substr($baseUrl, 0, 1) == '/') {
             $baseUrl = substr($baseUrl, 1);
         }
-        
         foreach ($stylesheets as $media=>$styles) {
             $item = new stdClass();
             $item->rel = 'stylesheet';
@@ -73,6 +72,11 @@ class Ot_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink
             $item->media = $media;
             $item->conditionalStylesheet = false;
             $items[] = $this->itemToString($item);
+        }
+        
+        // if there's nothing to minify, don't echo the link
+        if(count($items) == 0) {
+            return '';
         }
         
         $link = implode($this->_escape($this->getSeparator()), $items);

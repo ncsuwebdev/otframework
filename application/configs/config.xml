@@ -77,6 +77,7 @@
       <timeFormat description="Time formatted using PHP's strftime() function." val="%I:%M %p"/>
       <minutesToKeepUserActivity description="The number of minutes to keep the logged-in user activity." val="10"/>
       <showTrackbackOnErrors description="Whether or not to show the trackback of the error" val="1"/>
+      <useMinify description="Whether or not to use minify to combine and compress js, css, etc" val="0"/>
     </user>
     <triggers>
       <trigger name="Login_Index_Forgot" description="When a user has forgotten their password, they ask for a reset email to be sent to their registered email address.">
