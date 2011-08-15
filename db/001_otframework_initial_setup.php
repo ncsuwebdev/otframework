@@ -258,7 +258,7 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           KEY `scope` (`scope`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
         
-        INSERT INTO `" . $this->tablePrefix . "tbl_ot_role_rule` (`ruleId`, `roleId`, `type`, `resource`, `privilege`, `scope`) VALUES
+        INSERT INTO `ot_tbl_ot_role_rule` (`ruleId`, `roleId`, `type`, `resource`, `privilege`, `scope`) VALUES
         (8, 2, 'allow', '*', '*', 'application'),
         (9, 3, 'allow', '*', '*', 'application'),
         (111, 2, 'allow', '*', '*', 'remote'),
@@ -273,16 +273,17 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
         (241, 1, 'deny', 'setCronJobStatus', '*', 'remote'),
         (242, 1, 'deny', 'getBugReports', '*', 'remote'),
         (243, 1, 'allow', 'describe', '*', 'remote'),
-        (342, 1, 'allow', 'ot_bug', 'add', 'application'),
-        (343, 1, 'allow', 'ot_bug', 'index', 'application'),
-        (344, 1, 'allow', 'ot_api', '*', 'application'),
-        (345, 1, 'allow', 'ot_cron', '*', 'application'),
-        (346, 1, 'allow', 'default_index', '*', 'application'),
-        (347, 1, 'allow', 'error_error', '*', 'application'),
-        (348, 1, 'allow', 'ot_image', '*', 'application'),
-        (349, 1, 'allow', 'ot_login', '*', 'application'),
-        (350, 1, 'allow', 'ot_oauthserver', 'access-token', 'application'),
-        (351, 1, 'allow', 'ot_oauthserver', 'request-token', 'application');
+        (352, 1, 'allow', 'default_index', '*', 'application'),
+        (353, 1, 'allow', 'ot_account', 'index', 'application'),
+        (354, 1, 'allow', 'ot_api', '*', 'application'),
+        (355, 1, 'allow', 'ot_bug', 'add', 'application'),
+        (356, 1, 'allow', 'ot_bug', 'index', 'application'),
+        (357, 1, 'allow', 'ot_cron', '*', 'application'),
+        (358, 1, 'allow', 'ot_image', '*', 'application'),
+        (359, 1, 'allow', 'ot_login', '*', 'application'),
+        (360, 1, 'allow', 'ot_oauthserver', 'access-token', 'application'),
+        (361, 1, 'allow', 'ot_oauthserver', 'request-token', 'application');
+
         
         CREATE TABLE `" . $this->tablePrefix . "tbl_ot_trigger_action` (
           `triggerActionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
