@@ -11,7 +11,19 @@ $('document').ready(function() {
     }).superfish({
         animation: {height:'show', opacity:'show'},   // slide-down effect without fade-in
         delay: 500,
-        speed: 'fast'
+        speed: 'fast',
+        disableHI: true
     });
-    
+
+    /*
+     * Superfish causes scren readers to skip over menu items if their <a> does
+     * not contain an "href" attribute. To prevent this, we add the "href" to
+     * empty links and then disable the the link via javascript instead.
+     */
+    $('a.no-link')
+        .css('cursor', 'default')
+        .click(function() {
+            return false;
+        });
+
 });

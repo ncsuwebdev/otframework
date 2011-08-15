@@ -88,11 +88,9 @@ class Ot_Nav extends Ot_Db_Table
                     $title = 'title="' . $c['module'] . ':' . $c['controller'] . ':' . $c['action'] . '"';
                 }
                 
-                if ($c['link'] != '' && $c['allowed']) {
+                if ($c['allowed']) {
                     $str .= '<a' . ($title ? ' ' . $title : '') . ' href="' . $c['link'] . '" target="'
-                         . $c['target'] . '">' . $c['display'] . '</a>' . "\n";
-                } else {
-                    $str .= '<a' . ($title ? ' ' . $title : '') . '>' . $c['display'] . "\n" . '</a>';
+                         . $c['target'] . '"' . (($c['link'] == '') ? ' class="no-link"' : '') . '>' . $c['display'] . '</a>' . "\n";
                 }
                 
                 if (count($c['children']) != 0) {
