@@ -381,10 +381,55 @@ class Ot_Account extends Ot_Db_Table
         $form->setElementDecorators(array(
              'ViewHelper',
              'Errors',      
-             array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-             array('Label', array('tag' => 'span')),      
+             array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+             array('Label', array('tag' => 'span')),
          ))->addElements(array($submit, $cancel));
              
+        return $form;
+    }
+
+    public function masqueradeForm(array $default = array())
+    {
+        $config = Zend_Registry::get('config');
+        $acl    = Zend_Registry::get('acl');
+
+        $form = new Zend_Form();
+        $form->setAttrib('id', 'account')->setDecorators(
+            array('FormElements', array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')), 'Form')
+        );
+
+        $authAdapter = new Ot_Auth_Adapter;
+        $adapters    = $authAdapter->fetchAll(null, 'displayOrder');
+
+        // Realm Select box
+        $realmSelect = $form->createElement('select', 'realm', array('label' => 'Login Method'));
+        foreach ($adapters as $adapter) {
+            $realmSelect->addMultiOption(
+                $adapter->adapterKey,
+                $adapter->name . (!$adapter->enabled ? ' (Disabled)' : '')
+            );
+        }
+        $realmSelect->setValue((isset($default['realm'])) ? $default['realm'] : '');
+
+        // Create and configure username element:
+        $username = $form->createElement('text', 'username', array('label' => 'model-account-username'));
+        $username->setRequired(true)
+                 ->addFilter('StringTrim')
+                 ->addFilter('Alnum')
+                 ->addFilter('StripTags')
+                 ->addValidator('StringLength', false, array(3, 64))
+                 ->setAttrib('maxlength', '64')
+                 ->setValue((isset($default['username'])) ? $default['username'] : '');
+
+        $submit = $form->createElement('submit', 'submit', array('label' => 'form-button-save'));
+        $submit->setDecorators(
+            array(
+                array('ViewHelper', array('helper' => 'formSubmit'))
+            )
+        );
+
+        $form->addElements(array($realmSelect, $username, $submit));
+
         return $form;
     }
     

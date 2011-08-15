@@ -90,6 +90,29 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->_userData = $userData;
     }
 
+    public function masqueradeAction()
+    {
+        $accountModel = new Ot_Account();
+        $form = $accountModel->masqueradeForm($this->_userData);
+
+        if ($this->_request->isPost()) {
+            if ($form->isValid($_POST)) {
+
+                $identity = Zend_Auth::getInstance()->getIdentity();
+
+                $mAccount = $accountModel->getAccount($form->getValue('username'), $form->getValue('realm'));
+
+                if (is_null($mAccount)) {
+                    $form->addError('The account was not found.');
+                }
+
+                // ...
+
+            }
+        }
+        $this->view->form = $form;
+    }
+
     /**
      * Default user profile page
      *
