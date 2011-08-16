@@ -258,7 +258,7 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           KEY `scope` (`scope`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
         
-        INSERT INTO `ot_tbl_ot_role_rule` (`ruleId`, `roleId`, `type`, `resource`, `privilege`, `scope`) VALUES
+        INSERT INTO `" . $this->tablePrefix . "tbl_ot_role_rule` (`ruleId`, `roleId`, `type`, `resource`, `privilege`, `scope`) VALUES
         (8, 2, 'allow', '*', '*', 'application'),
         (9, 3, 'allow', '*', '*', 'application'),
         (111, 2, 'allow', '*', '*', 'remote'),
