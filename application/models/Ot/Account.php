@@ -421,7 +421,7 @@ class Ot_Account extends Ot_Db_Table
                  ->setAttrib('maxlength', '64')
                  ->setValue((isset($default['username'])) ? $default['username'] : '');
 
-        $submit = $form->createElement('submit', 'submit', array('label' => 'form-button-save'));
+        $submit = $form->createElement('submit', 'submit', array('label' => 'Masquerade'));
         $submit->setDecorators(
             array(
                 array('ViewHelper', array('helper' => 'formSubmit'))

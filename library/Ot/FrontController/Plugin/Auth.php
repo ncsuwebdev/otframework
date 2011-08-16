@@ -87,7 +87,39 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         $thisAccount = null;
         
         if ($auth->hasIdentity() && $auth->getIdentity() != '' && !is_null($auth->getIdentity())) {
-            
+
+            $identity = $auth->getIdentity();
+
+            if (!isset($identity->accountId) || is_null($identity->accountId)) {
+                $auth->clearIdentity();
+
+                $request->setModuleName($this->_noAuth['module']);
+                $request->setControllerName($this->_noAuth['controller']);
+                $request->setActionName($this->_noAuth['action']);
+
+                return;
+            }
+
+            if (!isset($identity->username) || is_null($identity->username)) {
+                $auth->clearIdentity();
+
+                $request->setModuleName($this->_noAuth['module']);
+                $request->setControllerName($this->_noAuth['controller']);
+                $request->setActionName($this->_noAuth['action']);
+
+                return;
+            }
+
+            if (!isset($identity->realm) || is_null($identity->realm)) {
+                $auth->clearIdentity();
+
+                $request->setModuleName($this->_noAuth['module']);
+                $request->setControllerName($this->_noAuth['controller']);
+                $request->setActionName($this->_noAuth['action']);
+
+                return;
+            }
+
             $authAdapter = new Ot_Auth_Adapter;
             $adapter = $authAdapter->find($auth->getIdentity()->realm);
             $className = (string)$adapter->class;
@@ -107,7 +139,15 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             }     
             
             $thisAccount = $account->getAccount($auth->getIdentity()->username, $auth->getIdentity()->realm);
-            
+
+            $thisAccount->masquerading = false;
+            if (isset($identity->masquerading) && $identity->masquerading == true && isset($identity->realAccount) && !is_null($identity->realAccount)) {
+
+                $thisAccount->masquerading = true;
+                $thisAccount->realAccount = $identity->realAccount;
+                
+            }
+
             if (is_null($thisAccount)) {
                 $auth->clearIdentity();
                 

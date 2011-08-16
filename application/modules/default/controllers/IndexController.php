@@ -37,6 +37,6 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {            
-        //$this->_helper->pageTitle('default-index-index:title');
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
 }

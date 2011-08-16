@@ -92,25 +92,75 @@ class Ot_AccountController extends Zend_Controller_Action
 
     public function masqueradeAction()
     {
-        $accountModel = new Ot_Account();
-        $form = $accountModel->masqueradeForm($this->_userData);
 
-        if ($this->_request->isPost()) {
-            if ($form->isValid($_POST)) {
+        $this->_helper->pageTitle('Masquerade');
 
-                $identity = Zend_Auth::getInstance()->getIdentity();
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->masquerading = false;
 
-                $mAccount = $accountModel->getAccount($form->getValue('username'), $form->getValue('realm'));
+        $identity = Zend_Auth::getInstance()->getIdentity();
+        
+        if (isset($identity->masquerading) && $identity->masquerading) {
+            $this->view->masquerading = true;
+            $this->view->identity = $identity;
+        } else {
 
-                if (is_null($mAccount)) {
-                    $form->addError('The account was not found.');
+            $accountModel = new Ot_Account();
+            $form = $accountModel->masqueradeForm();
+
+            if ($this->_request->isPost()) {
+
+                if ($form->isValid($_POST)) {
+
+                    $mAccount = $accountModel->getAccount($form->getValue('username'), $form->getValue('realm'));
+
+                    if ($mAccount->accountId == $identity->accountId) {
+                        throw new Ot_Exception('You cannot masquerade as yourself.');
+                    }
+
+                    if (is_null($mAccount)) {
+                        throw new Ot_Exception('The account was not found.');
+                    }
+
+                    $config = Zend_Registry::get('config');
+                    $mAccount->role = (string)$config->user->newAccountRole->val;
+
+                    $mAccount->realAccount = $identity;
+                    $mAccount->masquerading = true;
+
+                    Zend_Auth::getInstance()->getStorage()->write($mAccount);
+
+                    $this->_helper->flashMessenger->addMessage('You are now masquerading as ' . $mAccount->firstName . ' ' . $mAccount->lastName . ' (' . $mAccount->username . ' in ' . $mAccount->realm . ' realm).');
+
+                    $this->_helper->redirector->gotoRoute(array('action' => 'index', 'controller' => 'index'), 'default', true);
+
                 }
-
-                // ...
-
             }
+
+            $this->view->form = $form;
         }
-        $this->view->form = $form;
+    }
+
+    public function unmasqueradeAction()
+    {
+        $identity = Zend_Auth::getInstance()->getIdentity();
+
+        if (!$identity->masquerading) {
+            throw new Ot_Exception('You are not masquerading!');
+        }
+
+        $realIdentity = $identity->realAccount;
+
+        Zend_Auth::getInstance()->clearIdentity();
+
+        $realIdentity->masquerading = false;
+
+        Zend_Auth::getInstance()->getStorage()->write($realIdentity);
+        
+        $this->_helper->flashMessenger->addMessage('You are no longer masquerading.');
+
+        $this->_helper->redirector->gotoRoute(array('action' => 'masquerade'), 'account', true);
+
     }
 
     /**

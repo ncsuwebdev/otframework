@@ -4,8 +4,12 @@ $auth = Zend_Auth::getInstance();
 if (!$auth->hasIdentity()) {
     echo '<b>' . $this->translate('theme-scripts-auth:notLoggedIn') . '</b> ' . $this->translate('theme-scripts-auth:logInHere',array('<a href="' . $this->url(array(), 'login', true) . '" id="authLogin" class="authModal">', '</a>'));
 } else {
-    
+
     $identity = $auth->getIdentity();
+    
+    if (isset($identity->masquerading) && $identity->masquerading) {
+        $identity = $identity->realAccount;
+    }
     
     echo $this->translate('theme-scripts-auth:welcome') . ' ';
     
@@ -20,6 +24,12 @@ if (!$auth->hasIdentity()) {
     echo '<a href="' . $this->url(array(), 'account', true) . '" id="authMyAccount">' . $this->translate('theme-scripts-auth:myAccount') . '</a>'
         . '&nbsp; | &nbsp;'
         . '<a href="' . $this->url(array('action' => 'logout'), 'login', true) . '" id="authLogout" class="authModal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';
+
+    $identity = $auth->getIdentity();
+
+    if (isset($identity->masquerading) && $identity->masquerading) {
+        echo '<br /><span>You are masquerading as <a href="' . $this->url(array('action' => 'index', 'accountId' => $identity->accountId), 'account', true) . '">' . $identity->firstName . ' ' . $identity->lastName . '</a>. ' . '<a href="' . $this->url(array('action' => 'unmasquerade'), 'account', true) . '">Stop Masquerading</a></span>';
+    }
 }
     
 
