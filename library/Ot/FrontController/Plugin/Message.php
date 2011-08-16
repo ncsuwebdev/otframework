@@ -12,8 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Index_Controller
- * @category   Controller
+ * @package    Ot_FrontController_Plugin_Htmlheader
+ * @category   Front Controller Plugin
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
@@ -21,21 +21,17 @@
  */
 
 /**
- * Main controller for the application
+ * Adds messages from the flash messenger to the requested page automatically.
  *
- * @package    Index_Controller
- * @category   Controller
+ * @package    Ot_FrontController_Plugin_Htmlheader
+ * @category   Front Controller Plugin
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class IndexController extends Zend_Controller_Action
+class Ot_FrontController_Plugin_Message extends Zend_Controller_Plugin_Abstract
 {
-          
-    /**
-     * shows the homepage
-     *
-     */
-    public function indexAction()
+    public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
+        $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
 }
