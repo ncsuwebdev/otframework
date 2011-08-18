@@ -108,9 +108,7 @@ Your browser does not support inline frames or is currently configured  not to d
         </div>
         <div id="ft">
             <div id="ft-header" class="gradient-gray ui-helper-clearfix">
-                <div id="overrideTranslateWrapper">
-                    <button class="ui-button ui-state-default ui-corner-all ui-button-text-only"><?php $this->overrideTranslation()->link($this->translate('theme-layouts-layout:editText')); ?></button>
-                </div>
+                <div id="overrideTranslateWrapper"><?php $this->overrideTranslation()->link($this->translate('theme-layouts-layout:editText')); ?></div>
             </div>
             <?php echo $this->render('footer.phtml'); ?>
         </div>
