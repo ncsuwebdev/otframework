@@ -33,6 +33,9 @@
                 <?php if ($this->acl['changeStatus']) : ?>
                 <th width="100"><?php echo $this->translate("table-header-status"); ?></th>
                 <?php endif; ?>
+                <?php if ($this->acl['add']) : ?>
+                <th width="100"><?php echo $this->translate("table-header-clone"); ?></th>
+                <?php endif; ?>
             </tr>
             <?php if (count($this->actions) > 0) : ?>
                 <?php foreach ($this->actions as $a) : ?>
@@ -52,6 +55,11 @@
                     <?php if ($this->acl['changeStatus']) : ?>
                     <td align="center">
                         <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'change-status', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo ($a['enabled']) ? $this->translate('ot-trigger-details:disableAction') : $this->translate('ot-trigger-details:enableAction'); ?></a>
+                    </td>
+                    <?php endif; ?>
+                    <?php if ($this->acl['add']) : ?>
+                    <td align="center">
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->triggerId, 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo $this->translate('ot-trigger-clone:cloneAction'); ?></a>
                     </td>
                     <?php endif; ?>
                 </tr>

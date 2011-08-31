@@ -150,6 +150,21 @@ class Ot_TriggerController extends Zend_Controller_Action
             $values['helper'] = $get->helper;
         }
         
+        if (isset($get->triggerActionId)) {
+        	$action = new Ot_Trigger_Action();
+	        $actionToClone = $action->find($get->triggerActionId);
+	        
+	        if (!is_null($actionToClone)) {
+	            $values = array_merge($values, $actionToClone->toArray());
+	            $this->_helper->pageTitle('ot-trigger-add:cloneTitle', array('triggerName' => $values['name']));
+	            $clonedTriggerName = $values['name'];
+	            if (strpos($values['name'], 'clone-') === false) {
+	               $values['name'] = 'clone-' . $values['name'];
+	            }
+	        }
+	        
+        }
+        
         $form = $action->form($values);
              
         $messages = array();
@@ -181,10 +196,13 @@ class Ot_TriggerController extends Zend_Controller_Action
                 $thisHelper->addProcess($subData);
                     
                 $logOptions = array('attributeName' => 'triggerActionId', 'attributeId'   => $triggerActionId);
-                    
-                $this->_helper->log(Zend_Log::INFO, 'Trigger Action added', $logOptions);
-                    
-                $this->_helper->flashMessenger->addMessage('msg-info-triggerAdded');
+                if (!$clonedTriggerName) {
+                    $this->_helper->log(Zend_Log::INFO, 'Trigger Action added', $logOptions);
+                    $this->_helper->flashMessenger->addMessage('msg-info-triggerAdded');
+                } else {
+                    $this->_helper->log(Zend_Log::INFO, 'Trigger Action cloned', $logOptions);
+                    $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-triggerCloned', array('clonedTriggerName' => $clonedTriggerName)));
+                }
                     
                 $this->_helper->redirector->gotoRoute(
                     array(
@@ -206,7 +224,11 @@ class Ot_TriggerController extends Zend_Controller_Action
         foreach ($thisTrigger->var as $var) {
             $vars[$var->name] = $var->description;
         }
-                
+        
+        if ($clonedTriggerName) {
+            $this->view->clonedTriggerName = $clonedTriggerName;
+        }
+        
         $this->view->messages     = $messages;
         $this->view->templateVars = $vars;        
         $this->view->form         = $form;
@@ -259,8 +281,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         $values = array('triggerActionId' => $get->triggerActionId);
         $values = array_merge($values, $thisAction->toArray());
         
-        $form = $action->form($values);      
-             
+        $form = $action->form($values);
         $messages = array();
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -314,6 +335,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         $this->view->templateVars = $vars;        
         $this->view->form = $form;
     }
+    
     
     /**
      * delete an existing trigger action

@@ -221,6 +221,7 @@ msg-info-editAccountSelf;You are editing your own account data. For security rea
 table-header-edit;Edit
 table-header-delete;Delete
 table-header-status;Status
+table-header-clone;Clone
 
 form-button-delete;Yes, Delete
 form-button-enable;Yes, Enable
@@ -479,6 +480,7 @@ ot-trigger-table:description;Description
 ot-trigger-index:title;Trigger Index
 ot-trigger-index:header;Triggers are actions that happen with the applications.  By adding a trigger action, you can have the application execute some code at a designated point of the application.<br /><br />These are all the available triggers in the system.
 ot-trigger-index:name;Name
+ot-trigger-clone:cloneAction;Clone
 ot-trigger-details:title;Trigger Actions for %1$s
 ot-trigger-details:header;You can manage the actions for this trigger here.
 ot-trigger-details:linkBack;Back to Trigger List
@@ -491,7 +493,9 @@ ot-trigger-details:noActions;No Actions Found.
 ot-trigger-details:enableAction;Enable
 ot-trigger-details:disableAction;Disable
 ot-trigger-add:title;Select Trigger Type
+ot-trigger-add:cloneTitle;Cloning Trigger '%1$s'
 ot-trigger-add:header;Select the type of action you would like to trigger.
+ot-trigger-add:cloneHeader;Creates a new trigger, using values from '%1$s'.
 ot-trigger-add:noVariables;No variables available.
 ot-trigger-edit:title;Modify Trigger Type
 ot-trigger-edit:header;Modify this action's properties, as well as the shortcut name of the action.
@@ -560,6 +564,7 @@ msg-info-triggerAdded;The action was added successfully.
 msg-info-triggerUpdated;The action was modified successfully.
 msg-info-triggerDeleted;The action was deleted successfully.
 msg-info-triggerActionStatus;The action status was changed successfully.
+msg-info-triggerCloned;The action '%1$s' was cloned successfully.
 
 ot-login-form:username;Username:
 ot-login-index:title;Login

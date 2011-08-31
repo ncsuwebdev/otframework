@@ -1,4 +1,8 @@
-<?php echo $this->translate("ot-trigger-add:header"); ?>
+<?php if (!$this->clonedTriggerName) : ?>
+    <?php echo $this->translate("ot-trigger-add:header"); ?>asdf
+<?php else : ?>
+    <?php echo $this->translate("ot-trigger-add:cloneHeader", array('triggerName' => $this->clonedTriggerName)); ?>
+<?php endif; ?>
 <?php echo $this->form; ?>
 <?php echo $this->translate("ot-trigger-availableTitle"); ?>
 <br /><br />
