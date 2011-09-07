@@ -225,7 +225,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             $vars[$var->name] = $var->description;
         }
         
-        if ($clonedTriggerName) {
+        if (isset($clonedTriggerName) && $clonedTriggerName) {
             $this->view->clonedTriggerName = $clonedTriggerName;
         }
         
