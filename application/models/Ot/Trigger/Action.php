@@ -120,7 +120,7 @@ class Ot_Trigger_Action extends Ot_Db_Table
         if (isset($values['triggerActionId'])) {
             $subForm = $thisHelper->editSubForm($values['triggerActionId']);
         } else {
-            $subForm = $thisHelper->addSubForm();    
+            $subForm = $thisHelper->addSubForm();  
         }
         
         $form->addSubForm($subForm, $obj);

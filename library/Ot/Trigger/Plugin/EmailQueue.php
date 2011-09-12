@@ -153,7 +153,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         
         $mail = new Zend_Mail();
         $mail->addTo($data['to']);
-        $mail->setFrom($data['from']);
+        $mail->setFrom($data['from'], $data['fromName']);
         $mail->setSubject($data['subject']);
         $mail->setBodyText($data['body']);
         
@@ -194,7 +194,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
             $to->setValue($data['to']);
         }
            
-        $from = $form->createElement('text', 'from', array('label' => 'From:'));
+        $from = $form->createElement('text', 'from', array('label' => 'From Address:'));
         $from->setRequired(true)
              ->setAttrib('maxlength', '255')
              ->setAttrib('size', '40')
@@ -203,6 +203,17 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
              
         if (isset($data['from'])) {
             $from->setValue($data['from']);
+        }
+        
+        $fromName = $form->createElement('text', 'fromName', array('label' => 'From Name:'));
+        $fromName->setRequired(false)
+                 ->setAttrib('maxlength', '255')
+                 ->setAttrib('size', '40')
+                 ->addFilter('StripTags')
+                 ->addFilter('StringTrim');
+        
+        if (isset($data['fromName'])) {
+            $fromName->setValue($data['fromName']);
         }
            
         $subject = $form->createElement('text', 'subject', array('label' => 'Subject:'));
@@ -226,7 +237,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
             $body->setValue($data['body']);
         }              
         
-        $form->addElements(array($to, $from, $subject, $body))->setElementDecorators(
+        $form->addElements(array($to, $from, $fromName, $subject, $body))->setElementDecorators(
             array(
                 'ViewHelper',
                 'Errors',

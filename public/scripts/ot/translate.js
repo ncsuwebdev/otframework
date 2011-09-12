@@ -22,7 +22,7 @@ $('document').ready(function() {
     modalSource.dialog({ 
         modal: true, 
         autoOpen: false,
-        resizable: false,
+        resizable: true,
         overlay: { 
             opacity: 0.5, 
             background: "black" 

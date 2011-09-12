@@ -151,7 +151,6 @@ class Ot_TriggerController extends Zend_Controller_Action
         }
         
         if (isset($get->triggerActionId)) {
-        	$action = new Ot_Trigger_Action();
 	        $actionToClone = $action->find($get->triggerActionId);
 	        
 	        if (!is_null($actionToClone)) {
@@ -170,7 +169,6 @@ class Ot_TriggerController extends Zend_Controller_Action
         $messages = array();
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
-                $action = new Ot_Trigger_Action();
                 
                 $data = array(
                     'triggerId' => $get->triggerId,
