@@ -152,7 +152,14 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         $eq = new Ot_Email_Queue();
         
         $mail = new Zend_Mail();
-        $mail->addTo($data['to']);
+
+        $to = explode(',', $data['to']);
+        array_walk($to, 'trim');
+
+        foreach ($to as $t) {
+            $mail->addTo($t);
+        }
+        
         $mail->setFrom($data['from'], $data['fromName']);
         $mail->setSubject($data['subject']);
         $mail->setBodyText($data['body']);

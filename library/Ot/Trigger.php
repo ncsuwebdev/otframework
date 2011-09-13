@@ -61,27 +61,32 @@ class Ot_Trigger
         $this->_vars = array_merge($this->_vars, $data);
     }
     
+
     /**
-     * Dispatches the trigger specified 
-     * 
+     * Dispatches the trigger specified
+     *
      * @param int $triggerId
      */
     public function dispatch($triggerId)
     {
         $action = new Ot_Trigger_Action();
         $actions = $action->getActionsForTrigger($triggerId);
-        
+
         foreach ($actions as $a) {
             $helper = new $a->helper;
-            
+
             $data = $helper->get($a->triggerActionId);
-            
+
             foreach ($data as &$d) {
                 foreach ($this->_vars as $key => $value) {
+                    if (is_array($value)) {
+                        $value = implode(', ', $value);
+                    }
+
                     $d = str_replace("[[$key]]", $value, $d);
                 }
             }
-            
+
             $helper->dispatch($data);
         }
     }

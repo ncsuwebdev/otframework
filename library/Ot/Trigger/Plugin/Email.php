@@ -151,7 +151,14 @@ class Ot_Trigger_Plugin_Email implements Ot_Plugin_Interface
     public function dispatch($data)
     {        
         $mail = new Zend_Mail();
-        $mail->addTo($data['to']);
+
+        $to = explode(',', $data['to']);
+        array_walk($to, 'trim');
+
+        foreach ($to as $t) {
+            $mail->addTo($t);
+        }
+        
         $mail->setFrom($data['from'], $data['fromName']);
         $mail->setSubject($data['subject']);
         $mail->setBodyText($data['body']);
@@ -185,13 +192,14 @@ class Ot_Trigger_Plugin_Email implements Ot_Plugin_Interface
            ->setAttrib('maxlength', '255')
            ->setAttrib('size', '40')
            ->addFilter('StripTags')
-           ->addFilter('StringTrim');
+           ->addFilter('StringTrim')
+           ->setDescription('Seperate multiple email addresses by comma.');
            
         if (isset($data['to'])) {
             $to->setValue($data['to']);
         }
            
-        $from = $form->createElement('text', 'from', array('label' => 'From Address:'));
+        $from = $form->createElement('text', 'from', array('label' => 'From Email Address:'));
         $from->setRequired(true)
              ->setAttrib('maxlength', '255')
              ->setAttrib('size', '40')
@@ -201,18 +209,19 @@ class Ot_Trigger_Plugin_Email implements Ot_Plugin_Interface
         if (isset($data['from'])) {
             $from->setValue($data['from']);
         }
-        
-        $fromName = $form->createElement('text', 'fromName', array('label' => 'From Name:'));
+
+
+        $fromName = $form->createElement('text', 'fromName', array('label' => 'From Display Name:'));
         $fromName->setRequired(false)
-                 ->setAttrib('maxlength', '255')
-                 ->setAttrib('size', '40')
-                 ->addFilter('StripTags')
-                 ->addFilter('StringTrim');
-        
+             ->setAttrib('maxlength', '255')
+             ->setAttrib('size', '40')
+             ->addFilter('StripTags')
+             ->addFilter('StringTrim');
+
         if (isset($data['fromName'])) {
             $fromName->setValue($data['fromName']);
         }
-           
+
         $subject = $form->createElement('text', 'subject', array('label' => 'Subject:'));
         $subject->setRequired(true)
                 ->setAttrib('maxlength', '255')
@@ -240,6 +249,7 @@ class Ot_Trigger_Plugin_Email implements Ot_Plugin_Interface
                 'Errors',
                 array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
                 array('Label', array('tag' => 'span')),
+                'Description'
             )
         );
 
