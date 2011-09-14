@@ -99,7 +99,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->masquerading = false;
 
         $identity = Zend_Auth::getInstance()->getIdentity();
-        
+
         if (isset($identity->masquerading) && $identity->masquerading) {
             $this->view->masquerading = true;
             $this->view->identity = $identity;
@@ -156,7 +156,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $realIdentity->masquerading = false;
 
         Zend_Auth::getInstance()->getStorage()->write($realIdentity);
-        
+
         $this->_helper->flashMessenger->addMessage('You are no longer masquerading.');
 
         $this->_helper->redirector->gotoRoute(array('action' => 'masquerade'), 'account', true);
@@ -345,12 +345,15 @@ class Ot_AccountController extends Zend_Controller_Action
             // if they're searching by a role, you can't use the $where, since role no longer exists in the account table
             if($qtype == 'role') {
                 $accounts = $account->getAccountsForRole($query, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+                $totals = $account->getAccountsForRole($querey);
             } else{
                 $accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
+                $totals = $account->fetchAll($where);
             }
+
             $response = array(
                 'page' => $page + 1,
-                'total' => count($accounts),
+                'total' => count($totals),
                 'rows'  => array(),
             );
 
@@ -552,7 +555,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->permissionList = Zend_Json::encode($permissions);
 
     }
-    
+
     /**
      * Imports users in bulk
      *
@@ -561,27 +564,27 @@ class Ot_AccountController extends Zend_Controller_Action
     {
         $account = new Ot_Account();
         $form = $account->importForm();
-        
+
         $messages = array();
-        
+
         if ($this->_request->isPost()) {
-            
+
             if ($form->isValid($_POST)) {
-                
+
                 $cleanImport = preg_replace("/[^A-Z0-9,-]/i", "", $form->getValue('text'));
                 $userList = explode(",", $cleanImport);
-                
+
                 $success = array();
                 $failure = array();
-                
+
                 foreach ($userList as $userId) {
-                    
+
                     $userId = trim($userId);
-                    
+
                     if (empty($userId)) {
                         continue;
                     }
-                    
+
                     try {
                         $account->createNewUserForUnityId($userId, $form->getValue('newRoleId'));
                         $success[] = $userId;
@@ -589,11 +592,11 @@ class Ot_AccountController extends Zend_Controller_Action
                         $failure[] = $userId . ' (' . $e->getMessage() . ')';
                     }
                 }
-                
+
                 if (count($success)) {
                     $this->_helper->flashMessenger->addMessage('Successfully imported account(s) for ' . implode(', ', $success) . '.');
                 }
-                
+
                 if (count($failure)) {
                     $this->_helper->flashMessenger->addMessage('Failed to import account(s) for ' . implode(', ', $failure) . '.');
                 }
@@ -603,9 +606,9 @@ class Ot_AccountController extends Zend_Controller_Action
             } else {
                 $messages[] = 'There was an error processing the form.';
             }
-        
+
         }
-        
+
         $this->view->form = $form;
         $this->_helper->pageTitle('Batch Create Accounts from Unity ID List');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
@@ -1030,65 +1033,65 @@ class Ot_AccountController extends Zend_Controller_Action
     public function changeUserRoleAction()
     {
     }
-    
+
     /**
      * Change user roles in bulk
      *
      */
     public function changeRolesAction()
-    {        
+    {
 
         $account = new Ot_Account();
         $form = $account->changeRoleForm();
-        
+
         $messages = array();
-        
+
         if ($this->_request->isPost()) {
-            
+
             if ($form->isValid($_POST)) {
-                
+
                 $cleanImport = preg_replace("[^A-Za-z0-9,-]", "", $form->getValue('text'));
                 $user = explode(",", $cleanImport);
-                
+
                 $success = array();
                 $failure = array();
-                
+
                 foreach ($user as $userId) {
-                    
+
                     $userId = trim($userId);
-                    
+
                     if (empty($userId)) {
                         continue;
                     }
-                    
+
                     try {
                         $account->changeAccountRoleForUnityId($userId, $form->getValue('newRoleId'));
-                        $success[] = $userId; 
+                        $success[] = $userId;
                     } catch (Exception $e) {
                         $failure[] = $userId . ' (' . $e->getMessage() . ')';
                     }
                 }
-                
+
                 if (count($success)) {
                     $this->_helper->flashMessenger->addMessage('Successfully changed role(s) for ' . implode(', ', $success) . '.');
                 }
-                
+
                 if (count($failure)) {
                     $this->_helper->flashMessenger->addMessage('Failed to change role(s) for ' . implode(', ', $failure) . '.');
                 }
-                
+
                 $this->_helper->redirector->setPrependBase('')
                      ->gotoUrl($this->view->url(array('module' => 'ot', 'controller' => 'account', 'action' => 'change-roles'), 'default', true));
             } else {
                 $messages[] = 'There was an error processing the form.';
             }
-        
+
         }
-        
+
         $this->view->form = $form;
         $this->_helper->pageTitle('Change Roles for Unity ID List');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
-            
+
     }
 
     /**
