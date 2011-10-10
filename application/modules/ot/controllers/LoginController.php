@@ -138,7 +138,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
         $get = Zend_Registry::get('getFilter');
 
-        if (isset($get->realm)) {
+        if (isset($get->realm) && $get->realm) {
             $realm = $get->realm;
         }
 

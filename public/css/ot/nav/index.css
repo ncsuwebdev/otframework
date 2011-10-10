@@ -110,3 +110,7 @@ a.expander {
 #masterList .liClosed ul {
     display: none;
 }
+
+#saveNavButton.highlight {
+	border: 2px solid #fb3;
+}

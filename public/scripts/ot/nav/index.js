@@ -9,6 +9,8 @@ var newElementIdCounter = 0;
 
 var currentElementId = "";
 
+var initialStructureCache;
+
 $('document').ready(function() {
 
     baseUrl = $('#baseUrl').val();
@@ -123,6 +125,8 @@ $('document').ready(function() {
                     window.location.reload(true);
                 }
               }, "json");
+        initialStructureCache = str;
+        $('#saveNavButton').removeClass('highlight');
     });
     
     // grabs the modules, controllers, and actions, available from the ACL to
@@ -225,6 +229,10 @@ $('document').ready(function() {
         currentElementId = "";
         $("#navElementDialog").dialog("open");
     });
+    
+    initialStructureCache = $.toJSON(serialize($('ul#masterList')));
+    $(window).bind('beforeunload', catchUnload);
+    
 });
 
 function initDragDrop() {
@@ -430,3 +438,19 @@ var sitemapHistory = {
         $('#masterList li:has(ul li):not(.liClosed)').addClass('liOpen');
     }
 };
+
+/**
+ * On page change, this function is called. If the nav has been edited since the initial load or last 
+ * save, then it confirms with the user that they want to ignore nav changes. If no changes were made,
+ * then it doesn't do anything.
+ */
+function catchUnload(e) {
+	currentStructure = $.toJSON(serialize($('ul#masterList')));
+	
+	if(currentStructure != initialStructureCache) {
+		$('#saveNavButton').addClass('highlight');
+		e.preventDefault();
+	} else {
+		$(window).unbind('beforeunload', catchUnload);
+	}
+}
