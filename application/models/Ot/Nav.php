@@ -78,10 +78,18 @@ class Ot_Nav extends Ot_Db_Table
      */
     public function generateHtml($navData, $addTitles = false)
     {
-        $str = '';        
+        $str = '';
         foreach ($navData['children'] as $c) {
             if ($c['show']) {
-                $str .= '<li name="' . $c['display'] . '" id="navItem_' . $c['parent'] . '_' . $c['id'] . '">';
+            	
+            	$childrenStr = '';
+            	if(count($c['children']) != 0) {
+            	   $childrenStr = $this->generateHtml($c, $addTitles);
+            	}
+            	
+            	$liStr = '';
+            	
+                $liStr .= '<li name="' . $c['display'] . '" id="navItem_' . $c['parent'] . '_' . $c['id'] . '">';
                 
                 $title = '';
                 if ($addTitles) {
@@ -89,18 +97,31 @@ class Ot_Nav extends Ot_Db_Table
                 }
                 
                 if ($c['allowed']) {
-                    $str .= '<a' . ($title ? ' ' . $title : '') . ' href="' . $c['link'] . '" target="'
+                    $liStr .= '<a' . ($title ? ' ' . $title : '') . ' href="' . $c['link'] . '" target="'
                          . $c['target'] . '"' . (($c['link'] == '') ? ' class="no-link"' : '') . '>' . $c['display'] . '</a>' . "\n";
+                    if(!$childrenStr && !$c['link']) { //if it's a dropdown with no accessible children, don't print it
+                        continue;
+                    }
+                } else { // not allowed
+                    if(!$childrenStr) {
+                    	continue;
+                    }
+                    // if it's not allowed but has children that are allowed, print them.
+                    $liStr .= '<a' . ($title ? ' ' . $title : '') . ' href="' . $c['link'] . '" target="'
+                         . $c['target'] . '"' . (($c['link'] == '') ? ' class="no-link"' : '') . '>' . $c['display'] . '</a>' . "\n"
+                         . '<ul>' . "\n" . $childrenStr . '</ul>' . "\n";
                 }
                 
-                if (count($c['children']) != 0) {
-        
-                    $str .= '<ul>' . "\n";
-                    $str .= $this->generateHtml($c, $addTitles);
-                    $str .= '</ul>' . "\n";
+                
+                if($childrenStr) {
+                    $liStr .= '<ul>' . "\n";
+                    $liStr .= $childrenStr;
+                    $liStr .= '</ul>' . "\n";
                 }
         
-                $str .= "</li>";
+                $liStr .= "</li>";
+                
+                $str .= $liStr;
             }
         }
 
