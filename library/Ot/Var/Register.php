@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_Cron
+ * @package    Ot_Trigger
  * @category   Library
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
@@ -21,17 +21,18 @@
  */
 
 /**
- * Model to interact with the cron jobs
+ * Model to interact with the email triggers
  *
- * @package    Ot_Cron
+ * @package    Ot_Trigger
  * @category   Library
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  *
  */
-class Ot_Cron_Register
+class Ot_Var_Register
 {
-    const REGISTRY_KEY = 'Ot_Cron_Registry';
+
+    const REGISTRY_KEY = 'Ot_Var_Registry';
 
     public function __construct()
     {
@@ -40,32 +41,30 @@ class Ot_Cron_Register
         }
     }
 
-    public function registerCronjob(Ot_Cron $cron)
+    public function registerVar(Ot_Var $var)
     {
-        $registered = $this->getCronjobs();
-        $registered[$cron->getName()] = $cron;
+        $registered = $this->getVars();
+        $registered[$var->getName()] = $var;
 
         Zend_Registry::set(self::REGISTRY_KEY, $registered);
     }
 
-    public function registerCronjobs(array $cronJobs)
+    public function registerVars(array $vars)
     {
-        foreach ($cronJobs as $job) {
-            $this->registerCron($job);
+        foreach ($vars as $v) {
+            $this->registerVar($v);
         }
     }
 
-    public function getCronjob($name)
+    public function getVar($name)
     {
-        $registered = $this->getCronJobs();
+        $registered = $this->getVars();
 
         return (isset($registered[$name])) ? $registered[$name] : null;
+
     }
     
-    /**
-     * returns all cron jobs regardless of whether it's enabled or disabled
-     **/
-    public function getCronjobs()
+    public function getVars()
     {
         return Zend_Registry::get(self::REGISTRY_KEY);
     }

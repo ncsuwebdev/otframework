@@ -121,6 +121,16 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
                     'action'     => 'index',
                 )
             )
+        )->addRoute(
+            'cronjob',
+            new Zend_Controller_Router_Route(
+                'cronjob',
+                array(
+                    'module'     => 'ot',
+                    'controller' => 'cronjob',
+                    'action'     => 'index',
+                )
+            )
         );
     }
 
@@ -165,6 +175,45 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
 
         $register = new Ot_Trigger_Register();
         $register->registerTriggers(array($forgotTrigger, $signupTrigger, $createPassword, $noPassword));
+    }
 
+    public function _initVars()
+    {
+        $vars = array();
+
+        $vars[] = new Ot_Var('timezone', 'The current timezone for the application.', 'America/New_York');
+        $vars[] = new Ot_Var('language', 'The default language for the application.', 'en');
+        $vars[] = new Ot_Var('appTitle', 'The title of the application.', 'OT Framework Application');
+        $vars[] = new Ot_Var('appDescription', 'The application description.', 'App description!');
+        $vars[] = new Ot_Var('metaKeywords', 'The meta keywords you would like to use for the application.', '');
+        $vars[] = new Ot_Var('fromEmailAddress', 'The global from email address.  All email from the system will come from this address.', 'admin@app.com');
+        $vars[] = new Ot_Var('fromEmailName', 'The global from email name.  This is the name that will be shown with the fromEmailAddress.', 'Admin');
+        $vars[] = new Ot_Var('fileUploadAllowableExtensions', 'The allowable extensions for files.  I would not suggest putting executable files in here...', 'pdf,doc,ppt,html,txt,zip');
+        $vars[] = new Ot_Var('headerRowRepeat', 'The number of rows displayed in a table before the header cells are repeated.', '25');
+        $vars[] = new Ot_Var('requiredAccountFields', 'When a user logs in, if these fields are not populated, they will be forced to populate the fields before continuing (separate by commas)', 'firstName, lastName, emailAddress');
+        $vars[] = new Ot_Var('defaultRole', 'Default role that a user gets if they are not logged in.', '1');
+        $vars[] = new Ot_Var('newAccountRole', 'Role which is assigned to users when a new account is created for them', '1');
+        $vars[] = new Ot_Var('dateTimeFormat', 'Date / Time formatted using PHP\'s strftime() function.', '%m/%d/%Y %I:%M %p');
+        $vars[] = new Ot_Var('medDateFormat', 'Date formatted using PHP\'s strftime() function.', '%b %e, %Y');
+        $vars[] = new Ot_Var('longDateCompactFormat', 'Date formatted using PHP\'s strftime() function.', '%a, %b %e, %Y');
+        $vars[] = new Ot_Var('timezone', 'Date formatted using PHP\'s strftime() function.', '%A, %B %e, %Y');
+        $vars[] = new Ot_Var('longDateFormat', 'Date formatted using PHP\'s strftime() function.', '%m/%d/%Y');
+        $vars[] = new Ot_Var('dayFormat', 'Date formatted using PHP\'s strftime() function.', '%d');
+        $vars[] = new Ot_Var('timeFormat', 'Time formatted using PHP\'s strftime() function.', '%I:%M %p');
+        $vars[] = new Ot_Var('minutesToKeepUserActivity', 'The number of minutes to keep the logged-in user activity.', '10');
+        $vars[] = new Ot_Var('showTrackbackOnErrors', 'Whether or not to show the trackback of the error', '1');
+        $vars[] = new Ot_Var('useMinify', 'Whether or not to use minify to combine and compress js, css, etc', '0');
+
+        $vr = new Ot_Var_Register();
+        $vr->registerVars($vars);
+    }
+
+    public function _initCronjobs()
+    {
+        $eq = new Ot_Cron('Ot_EmailQueue', 'Processes emails from the queue', '* * * * *');
+        $eq->setMethod(new Ot_Cronjob_EmailQueue());
+
+        $register = new Ot_Cron_Register();
+        $register->registerCronjob($eq);
     }
 }

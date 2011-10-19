@@ -41,12 +41,12 @@
         <?php if (count($this->cronjobs) > 0): ?>
         <?php foreach ($this->cronjobs  as $c): ?>
         <tr class="<?php $this->cycle('row1', 'row2'); ?>">
-            <td><?php echo $c['name']; ?></td>
-            <td style="text-align:center;" class="<?php echo $c['status']; ?>">
+            <td><?php echo $c->getName(); ?></td>
+            <td style="text-align:center;" class="<?php echo (isset($this->status[$c->getName()])) ? $this->status[$c->getName()]['status'] : 'disabled'; ?>">
             <?php if ($this->acl['toggle']): ?>
-            <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle', 'name' => $c['name']), 'ot', true); ?>">
+            <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle', 'name' => $c->getName()), 'ot', true); ?>">
             <?php endif; ?>
-            <?php if ($c['status'] == 'enabled'): ?>
+            <?php if (isset($this->status[$c->getName()]) && $this->status[$c->getName()]['status'] == 'enabled'): ?>
             <?php echo $this->translate('ot-cron-index:enabled'); ?>
             <?php else: ?>
             <?php echo $this->translate('ot-cron-index:disabled'); ?>
@@ -56,8 +56,8 @@
             <?php endif; ?>
             </td>
             <td style="text-align: center;">
-                <?php if ($c['status'] == 'enabled'): ?>
-                    <a class="runLink" href="<?php echo $this->url(array('module' => 'cron', 'controller' => 'index', 'action' => $c['name']), 'default', true); ?>"><?php echo $this->translate('ot-cron-index:runNow'); ?></a>
+                <?php if (isset($this->status[$c->getName()]) && $this->status[$c->getName()]['status'] == 'enabled'): ?>
+                    <a class="runLink" href="<?php echo $this->url(array('module' => 'cron', 'controller' => 'index', 'action' => $c->getName()), 'default', true); ?>"><?php echo $this->translate('ot-cron-index:runNow'); ?></a>
                 <?php else: ?>
                     <?php echo $this->translate('ot-cron-index:cannotRun'); ?>
                 <?php endif; ?>
@@ -71,7 +71,7 @@
             </td>
             <?php if ($this->acl['edit']): ?>
             <td style="text-align:center">
-                <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'edit', 'name' => $c['name']), 'ot', true); ?>"><img src="<?php echo $this->baseUrl(); ?>/images/edit.png" alt="<?php echo $this->translate('table-header-edit'); ?>" /></a>
+                <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'edit', 'name' => $c->getName()), 'ot', true); ?>"><img src="<?php echo $this->baseUrl(); ?>/images/edit.png" alt="<?php echo $this->translate('table-header-edit'); ?>" /></a>
             </td>
             <?php endif; ?>
         </tr>

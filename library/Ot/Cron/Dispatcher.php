@@ -32,93 +32,107 @@
 class Ot_Cron_Dispatcher
 {
     /**
-     * The variables to be replaced in the email
-     *
-     * @var unknown_type
-     */
-    protected $_vars = array();
-
-    const REGISTRY_KEY = 'Ot_Cron_Registry';
-
-    public function __construct()
-    {
-        if (!Zend_Registry::isRegistered(self::REGISTRY_KEY)) {
-            Zend_Registry::set(self::REGISTRY_KEY, array());
-        }
-    }
-
-    /**
-     * Overrides the set method so that we can wrap the variables for the email
-     * in a nice package. 
-     *
-     * @param unknown_type $name
-     * @param unknown_type $value
-     */
-    public function __set($name, $value)
-    {
-        $this->_vars[$name] = $value;        
-    }
-    
-    /**
-     * Sets an array of email variables
-     *
-     * @param array $data
-     */
-    public function setVariables(array $data)
-    {
-        $this->_vars = array_merge($this->_vars, $data);
-    }
-    
-
-    /**
      * Dispatches the cron jobs
      *
      * @param int $
      */
-    public function dispatch($cron)
-    {
-    	
+    public function dispatch($name = null)
+    {    	
     	$register = new Ot_Cron_Register();
-    	$jobs = $register->getCronJobs();
+        $cs = new Ot_Cron_Status();
+
+        if (!is_null($name)) {
+            $thisJob = $register->getCronjob($name);
+
+            if (!is_null($thisJob)) {
+                if (!$cs->isEnabled($thisJob->getName())) {
+                    throw new Ot_Exception('Job is disabled and cannot be run');
+                }
+
+                $lastRunDt = $cs->getLastRunDt($thisJob->getName());
+
+                $job->getMethod()->execute($lastRunDt);
+
+                $cs->executed($thisJob->getName(), time());
+            } else {
+                throw new Ot_Exception('Cron Job cannot be found');
+            }
+
+            return;
+        }
+
+        $now = time();
+
     	foreach ($jobs as $job) {
-    	
-    	}
-    	
-    	/**
-schedule:
+            if ($this->shouldExecute($job->getSchedule(), $now)) {                
 
-minutes (0-59)
-hour (0-23)
-dayOfMonth (1-31)
-month (1-12)
-dayOfWeek (0-6) (sun-sat)
+                if (!$cs->isEnabled($job->getName())) {
+                    continue;
+                }
 
-(?P<minute>[0-9\*,\/\-]+)\s+
-^then parse each. change x/y to comma saperated list of times "30/5" changes to "0,5,10,15,20,25,30"
-A/B means go from 0 to A, stepping B each time
+                $lastRunDt = $cs->getLastRunDt($job->getName());
 
-    	 */
-    	
-    }
+                $job->getMethod()->execute($lastRunDt);
 
-    public function registerCron(Ot_Cron $cron)
-    {
-        $registered = $this->getRegisteredTriggers();
-        $registered[] = $cron;
-
-        Zend_Registry::set(self::REGISTRY_KEY, $registered);
-    }
-
-    public function registerCrons(array $cronJobs)
-    {
-        foreach ($cronJobs as $job) {
-            $this->registerCron($job);
+                $cs->executed($job->getName(), time());
+            }
         }
     }
 
-    public function getRegisteredCronJobs()
+    public function shouldExecute($schedule, $timestamp)
     {
-        return Zend_Registry::get(self::REGISTRY_KEY);
+        $tab = explode(' ', $schedule);
+
+        if (count($tab) != 5) {
+            return false;
+        }
+
+        $crontab = array_combine(array('min', 'hour', 'dayOfMonth', 'month', 'dayOfWeek'), $tab);
+
+        $currentTime = array(
+            'min'        => date('i', $timestamp),
+            'hour'       => date('H', $timestamp),
+            'dayOfMonth' => date('d', $timestamp),
+            'month'      => date('m', $timestamp),
+            'dayOfWeek'  => date('w', $timestamp),
+        );
+
+        foreach ($crontab as $key => $value) {
+            if ($value != '*') {
+                $possibleValues = $this->_valueToArray($value);
+
+                if (!in_array($currentTime[$key], $possibleValues)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    protected function _valueToArray($value)
+    {
+        if (preg_match('/-/', $value)) {
+            $range = explode('-', $value);
+
+            if (count($range) != 2) {
+                return array();
+            }
+
+            return range($range[0], $range[1]);
+        }
+
+        if (preg_match('/,/', $value)) {
+            return explode(',', $value);
+        }
+
+        if (preg_match('/\*\//', $value)) {
+            $frequency = str_replace('*/', '', $value);
+
+            return range(0, 60, $frequency);
+        }
+
+        return array($value);
     }
 }
 

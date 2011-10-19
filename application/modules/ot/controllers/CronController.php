@@ -46,17 +46,27 @@ class Ot_CronController extends Zend_Controller_Action
             
         $config = Zend_Registry::get('config');
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'cron_index', $config->user->defaultRole->val);
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_cronjob', $config->user->defaultRole->val);
         
         $role = new Ot_Role();
         $this->view->defaultRole = $role->find($config->user->defaultRole->val);
 
-        $cs = new Ot_Cron_Status();
+        $registry = new Ot_Cron_Register();
 
-        $jobs = $cs->getAvailableCronJobs();
-        
+        $status = new Ot_Cron_Status();
+        $statusMarkers = $status->fetchAll();
+
+        $status = array();
+        foreach ($statusMarkers as $s) {
+            $status[$s->name] = array(
+                'status' => $s->status,
+                'lastRunDt' => $s->lastRunDt,
+            );
+        }
+
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
-        $this->view->cronjobs = $jobs;
+        $this->view->cronjobs = $registry->getCronjobs();
+        $this->view->status = $status;
         $this->_helper->pageTitle('ot-cron-index:title');
     }
 
