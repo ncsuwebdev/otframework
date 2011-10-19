@@ -10,14 +10,14 @@
         <tr>
             <td>
                 <?php if ($this->acl['details']):?>
-                <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $t->name), 'ot', true); ?>">
+                <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'name' => $t->getName()), 'ot', true); ?>">
                 <?php endif; ?>
-                <?php echo $t->name; ?>
+                <?php echo $t->getName(); ?>
                 <?php if ($this->acl['details']):?>
                 </a>
                 <?php endif; ?>
             </td>
-            <td><?php echo $t->description; ?></td>                
+            <td><?php echo $t->getDescription(); ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

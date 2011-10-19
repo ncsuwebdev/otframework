@@ -1,94 +1,46 @@
 <?php
-/**
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file _LICENSE.txt.
- *
- * This license is also available via the world-wide-web at
- * http://itdapps.ncsu.edu/bsd.txt
- *
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to itappdev@ncsu.edu so we can send you a copy immediately.
- *
- * @package    Ot_Trigger
- * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of      
- *             Information Technology
- * @license    BSD License
- * @version    SVN: $Id: $
- */
-
-/**
- * Model to interact with the email triggers
- *
- * @package    Ot_Trigger
- * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of      
- *             Information Technology
- *
- */
 class Ot_Trigger
 {
-    /**
-     * The variables to be replaced in the email
-     *
-     * @var unknown_type
-     */
-    protected $_vars = array();
-    
-       
-    /**
-     * Overrides the set method so that we can wrap the variables for the email
-     * in a nice package. 
-     *
-     * @param unknown_type $name
-     * @param unknown_type $value
-     */
-    public function __set($name, $value)
+    protected $_name;
+    protected $_description;
+    protected $_options;
+
+    public function __construct($name = '', $description = '')
     {
-        $this->_vars[$name] = $value;        
+        $this->setName($name);
+        $this->setDescription($description);
     }
-    
-    /**
-     * Sets an array of email variables
-     *
-     * @param array $data
-     */
-    public function setVariables(array $data)
+
+    public function setName($_name)
     {
-        $this->_vars = array_merge($this->_vars, $data);
+        $this->_name = $_name;
+        return $this;
     }
-    
 
-    /**
-     * Dispatches the trigger specified
-     *
-     * @param int $triggerId
-     */
-    public function dispatch($triggerId)
+    public function getName()
     {
-        $action = new Ot_Trigger_Action();
-        $actions = $action->getActionsForTrigger($triggerId);
+        return $this->_name;
+    }
 
-        foreach ($actions as $a) {
-            $helper = new $a->helper;
+    public function setDescription($_description)
+    {
+        $this->_description = $_description;
+        return $this;
+    }
 
-            $data = $helper->get($a->triggerActionId);
+    public function getDescription()
+    {
+        return $this->_description;
+    }
 
-            foreach ($data as &$d) {
-                foreach ($this->_vars as $key => $value) {
-                    if (is_array($value)) {
-                        $value = implode(', ', $value);
-                    }
+    public function addOption($key, $description)
+    {
+        $this->_options[$key] = $description;
+        return $this;
+    }
 
-                    $d = str_replace("[[$key]]", $value, $d);
-                }
-            }
-
-            $helper->dispatch($data);
-        }
+    public function getOptions()
+    {
+        return $this->_options;
     }
 }
-

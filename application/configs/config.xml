@@ -79,41 +79,6 @@
       <showTrackbackOnErrors description="Whether or not to show the trackback of the error" val="1"/>
       <useMinify description="Whether or not to use minify to combine and compress js, css, etc" val="0"/>
     </user>
-    <triggers>
-      <trigger name="Login_Index_Forgot" description="When a user has forgotten their password, they ask for a reset email to be sent to their registered email address.">
-        <var name="firstName" description="First name of the user"/>
-        <var name="lastName" description="Last name of the user."/>
-        <var name="emailAddress" description="Email address of the user."/>
-        <var name="username" description="Username of user."/>
-        <var name="loginMethod" description="Name of login method which they use to log into the system with."/>
-        <var name="resetUrl" description="URL the user will need to go to to reset their password."/>
-      </trigger>
-      <trigger name="Login_Index_Signup" description="When a user signs up for a new account.">
-        <var name="firstName" description="First name of the user."/>
-        <var name="lastName" description="Last name of the user."/>
-        <var name="emailAddress" description="Email address of the user."/>
-         <var name="username" description="Username of user."/>
-        <var name="loginMethod" description="Name of login method which they use to log into the system with."/>
-        <var name="password" description="The password they give to their account."/>
-      </trigger>
-      <trigger name="Admin_Account_Create_Password" description="When an administrator creates an account for a user where a password is dynamically generated for the user.">
-        <var name="firstName" description="First name of the user."/>
-        <var name="lastName" description="Last name of the user."/>
-        <var name="emailAddress" description="Email address of the user."/>
-        <var name="username" description="Username of user."/>
-        <var name="loginMethod" description="Name of login method which they use to log into the system with."/>
-        <var name="password" description="The password they give to their account."/>
-        <var name="role" description="Assigned role given to the user."/>
-      </trigger>
-      <trigger name="Admin_Account_Create_NoPassword" description="When an administrator creates an account for a user when no password is created for the user.">
-        <var name="firstName" description="First name of the user."/>
-        <var name="lastName" description="Last name of the user."/>
-        <var name="emailAddress" description="Email address of the user."/>
-        <var name="username" description="Username of user."/>
-        <var name="loginMethod" description="Name of login method which they use to log into the system with."/>
-        <var name="role" description="Assigned role given to the user."/>
-      </trigger>
-    </triggers>
     <api>
         <call name="getVersions" class="Ot_Version" method="getVersions" />
     </api>

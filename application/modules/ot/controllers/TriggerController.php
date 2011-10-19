@@ -30,26 +30,7 @@
  *             Information Technology
  */
 class Ot_TriggerController extends Zend_Controller_Action
-{
-    /**
-     * Trigger config file
-     *
-     * @var Zend_Config
-     */
-    protected $_triggerConfig = '';
-    
-    /**
-     * Setup controller vars
-     *
-     */
-    public function init()
-    {
-        $config = Zend_Registry::get('config');
-        $this->_triggerConfig = $config->triggers->trigger;
-    
-    parent::init();
-    }
-        
+{        
     /**
      * Shows all availabe triggers
      */
@@ -58,8 +39,10 @@ class Ot_TriggerController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-trigger-index:title');
         
         $this->view->acl = array('details' => $this->_helper->hasAccess('details'));
-        
-        $this->view->triggers = $this->_triggerConfig;
+
+        $register = new Ot_Trigger_Register();
+
+        $this->view->triggers = $register->getTriggers();
     }
     
     /**
@@ -78,29 +61,24 @@ class Ot_TriggerController extends Zend_Controller_Action
         
         $get = Zend_Registry::get('getFilter');
         
-        if (!isset($get->triggerId)) {
+        if (!isset($get->name)) {
             throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
         }
-        
-        $thisTrigger = null;
-        foreach ($this->_triggerConfig as $t) {
-            if ($t->name == $get->triggerId) {
-                $thisTrigger = $t;
-                break;
-            }
-        }
+
+        $register = new Ot_Trigger_Register();
+
+        $thisTrigger = $register->getTrigger($get->name);
         
         if (is_null($thisTrigger)) {
             throw new Ot_Exception_Data('msg-error-noTrigger');
         }
         
-        $this->view->triggerId = $get->triggerId;
         $this->view->trigger = $thisTrigger;
-        $this->_helper->pageTitle('ot-trigger-details:title', $get->triggerId);
+        $this->_helper->pageTitle('ot-trigger-details:title', $thisTrigger->getName());
         
         $action = new Ot_Trigger_Action();
 
-        $where = $action->getAdapter()->quoteInto('triggerId = ?', $get->triggerId);
+        $where = $action->getAdapter()->quoteInto('triggerId = ?', $thisTrigger->getName());
         $actions = $action->fetchAll($where)->toArray();
         
         $config = Zend_Registry::get('config');
@@ -122,46 +100,40 @@ class Ot_TriggerController extends Zend_Controller_Action
     {
         $get = Zend_Registry::get('getFilter');
         
-        if (!isset($get->triggerId)) {
+        if (!isset($get->name)) {
             throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
         }
-        
-        $thisTrigger = null;
-        foreach ($this->_triggerConfig as $t) {
-            if ($t->name == $get->triggerId) {
-                $thisTrigger = $t;
-                break;
-            }
-        }
-        
+        $register = new Ot_Trigger_Register();
+
+        $thisTrigger = $register->getTrigger($get->name);
+
         if (is_null($thisTrigger)) {
             throw new Ot_Exception_Data('msg-error-noTrigger');
         }
-        
-        $this->view->triggerId = $get->triggerId;
+
         $this->view->trigger = $thisTrigger;
         $this->_helper->pageTitle('ot-trigger-add:title');
         
         $action = new Ot_Trigger_Action();
 
-        $values = array('triggerId' => $get->triggerId);
+        $values = array('triggerId' => $thisTrigger->getName());
         
         if (isset($get->helper)) {
             $values['helper'] = $get->helper;
         }
         
         if (isset($get->triggerActionId)) {
-	        $actionToClone = $action->find($get->triggerActionId);
-	        
-	        if (!is_null($actionToClone)) {
-	            $values = array_merge($values, $actionToClone->toArray());
-	            $this->_helper->pageTitle('ot-trigger-add:cloneTitle', array('triggerName' => $values['name']));
-	            $clonedTriggerName = $values['name'];
-	            if (strpos($values['name'], 'clone-') === false) {
-	               $values['name'] = 'clone-' . $values['name'];
-	            }
-	        }
-	        
+            $actionToClone = $action->find($get->triggerActionId);
+            
+            if (!is_null($actionToClone)) {
+                $values = array_merge($values, $actionToClone->toArray());
+                $this->_helper->pageTitle('ot-trigger-add:cloneTitle', array('triggerName' => $values['name']));
+                $clonedTriggerName = $values['name'];
+                if (strpos($values['name'], 'clone-') === false) {
+                   $values['name'] = 'clone-' . $values['name'];
+                }
+            }
+            
         }
         
         $form = $action->form($values);
@@ -171,7 +143,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             if ($form->isValid($_POST)) {
                 
                 $data = array(
-                    'triggerId' => $get->triggerId,
+                    'triggerId' => $thisTrigger->getName(),
                     'name'      => $form->getValue('name'),
                     'helper'    => $form->getValue('helper'),
                 );
@@ -205,8 +177,8 @@ class Ot_TriggerController extends Zend_Controller_Action
                 $this->_helper->redirector->gotoRoute(
                     array(
                         'controller' => 'trigger',
-                        'action' => 'details',
-                        'triggerId' => $get->triggerId,
+                        'action'     => 'details',
+                        'triggerId'  => $thisTrigger->getName(),
                     ),
                     'ot',
                     true
@@ -217,18 +189,11 @@ class Ot_TriggerController extends Zend_Controller_Action
             }
         }
         
-        $vars = array();
-               
-        foreach ($thisTrigger->var as $var) {
-            $vars[$var->name] = $var->description;
-        }
-        
         if (isset($clonedTriggerName) && $clonedTriggerName) {
             $this->view->clonedTriggerName = $clonedTriggerName;
         }
         
-        $this->view->messages     = $messages;
-        $this->view->templateVars = $vars;        
+        $this->view->messages     = $messages; 
         $this->view->form         = $form;
     }
 
@@ -252,21 +217,15 @@ class Ot_TriggerController extends Zend_Controller_Action
             throw new Ot_Exception_Data('msg-error-noTriggerActionId');
         }
         
-        $triggerId = $thisAction->triggerId;
-         
-        $thisTrigger = null;
-        foreach ($this->_triggerConfig as $t) {
-            if ($t->name == $triggerId) {
-                $thisTrigger = $t;
-                break;
-            }
-        }
-        
+        $register = new Ot_Trigger_Register();
+        $thisTrigger = $register->getTrigger($thisAction->triggerId);
+
         if (is_null($thisTrigger)) {
             throw new Ot_Exception_Data('msg-error-noTrigger');
         }
-       
+
         $this->view->trigger = $thisTrigger;
+       
         
         $this->_helper->pageTitle('ot-trigger-edit:title');
 
@@ -314,7 +273,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                 
                 $this->_helper->redirector->gotoRoute(
                     array(
-                        'controller' => 'trigger', 'action' => 'details', 'triggerId' => $triggerId),
+                        'controller' => 'trigger', 'action' => 'details', 'name' => $thisTrigger->getName()),
                     'ot',
                     true
                 );
@@ -324,13 +283,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             }
         }
         
-        $vars = array();
-        foreach ($thisTrigger->var as $var) {
-            $vars[$var->name] = $var->description;
-        }
-        
-        $this->view->messages = $messages;
-        $this->view->templateVars = $vars;        
+        $this->view->messages = $messages;       
         $this->view->form = $form;
     }
     
@@ -378,7 +331,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             $this->_helper->flashMessenger->addMessage('msg-info-triggerDeleted');
             
             $this->_helper->redirector->gotoRoute(
-                array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $triggerId),
+                array('controller' => 'trigger', 'action' => 'details', 'name' => $triggerId),
                 'ot',
                 true
             );
@@ -436,7 +389,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             $this->_helper->flashMessenger->addMessage('msg-info-triggerActionStatus');
             
             $this->_helper->redirector->gotoRoute(
-                array('controller' => 'trigger', 'action' => 'details', 'triggerId' => $triggerId),
+                array('controller' => 'trigger', 'action' => 'details', 'name' => $triggerId),
                 'ot',
                 true
             );

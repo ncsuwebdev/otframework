@@ -1,4 +1,19 @@
 <?php echo $this->translate("ot-trigger-edit:header"); ?>
+
+<br /><br />
+<table class="form">
+    <tbody>
+        <tr>
+            <td><label><?php echo $this->translate("ot-trigger-details:trigger"); ?></label></td>
+            <td><?php echo $this->trigger->getName(); ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate("ot-trigger-details:description"); ?></label></td>
+            <td><?php echo $this->trigger->getDescription(); ?></td>
+        </tr>
+    </tbody>
+</table>
+
 <?php echo $this->form; ?>
 <?php echo $this->translate("ot-trigger-availableTitle"); ?>
 <br /><br />
@@ -10,8 +25,8 @@
             <th width="200"><?php echo $this->translate("ot-trigger-table:variable"); ?></th>
             <th width="300"><?php echo $this->translate("ot-trigger-table:description"); ?></th>
         </tr>
-        <?php if (count($this->templateVars) > 0) : ?>
-            <?php foreach ($this->templateVars as $key => $variable) : ?>
+        <?php if (count($this->trigger->getOptions()) > 0) : ?>
+            <?php foreach ($this->trigger->getOptions() as $key => $variable) : ?>
             <tr>
                 <td>[[<?php echo $key; ?>]]</td>
                 <td><?php echo $variable; ?></td>

@@ -501,8 +501,8 @@ class Ot_AccountController extends Zend_Controller_Action
 
                     $this->_helper->flashMessenger->addMessage('msg-info-accountCreated');
 
-                    $trigger = new Ot_Trigger();
-                    $trigger->setVariables($accountData);
+                    $td = new Ot_Trigger_Dispatcher();
+                    $td->setVariables($accountData);
 
 
                     $role = new Ot_Role();
@@ -516,17 +516,17 @@ class Ot_AccountController extends Zend_Controller_Action
 
                     $thisAdapter = $otAuthAdapter->find($accountData['realm']);
 
-                    $trigger->role = implode(',', $roles);
-                    $trigger->loginMethod = $thisAdapter->name;
+                    $td->role = implode(',', $roles);
+                    $td->loginMethod = $thisAdapter->name;
 
                     $authAdapter = new $thisAdapter->class;
 
                     if ($authAdapter->manageLocally()) {
                         $this->_helper->flashMessenger->addMessage('msg-info-accountPasswordCreated');
 
-                        $trigger->dispatch('Admin_Account_Create_Password');
+                        $td->dispatch('Admin_Account_Create_Password');
                     } else {
-                        $trigger->dispatch('Admin_Account_Create_NoPassword');
+                        $td->dispatch('Admin_Account_Create_NoPassword');
                     }
 
                     $logOptions = array(

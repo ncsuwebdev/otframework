@@ -7,16 +7,16 @@
     <tbody>
         <tr>
             <td><label><?php echo $this->translate("ot-trigger-details:trigger"); ?></label></td>
-            <td><?php echo $this->triggerId; ?></td>
+            <td><?php echo $this->trigger->getName(); ?></td>
         </tr>
         <tr>
             <td><label><?php echo $this->translate("ot-trigger-details:description"); ?></label></td>
-            <td><?php echo $this->trigger->description; ?></td>
+            <td><?php echo $this->trigger->getDescription(); ?></td>
         </tr>
     </tbody>
 </table><br />
     <?php if ($this->acl['add']) : ?>
-        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->triggerId), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-trigger-details:linkAdd"); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'name' => $this->trigger->getName()), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-trigger-details:linkAdd"); ?><span class="ui-icon ui-icon-plusthick"></span></a>
         <br /><br />
     <?php endif; ?>
     <table class="list">

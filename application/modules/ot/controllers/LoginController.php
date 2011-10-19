@@ -380,14 +380,14 @@ class Ot_LoginController extends Zend_Controller_Action
 
                     $this->_helper->log(Zend_Log::INFO, 'User ' . $username->getValue() . ' sent a password reset request.', $loggerOptions);
 
-                    $et = new Ot_Trigger();
-                    $et->setVariables($userAccount->toArray());
+                    $dt = new Ot_Trigger_Dispatcher();
+                    $dt->setVariables($userAccount->toArray());
 
-                    $et->resetUrl = Zend_Registry::get('siteUrl') . '/login/password-reset/?key=' . $code;
+                    $dt->resetUrl = Zend_Registry::get('siteUrl') . '/login/password-reset/?key=' . $code;
 
-                    $et->loginMethod = $config->app->authentication->$realm->name;
+                    $dt->loginMethod = $config->app->authentication->$realm->name;
 
-                    $et->dispatch('Login_Index_Forgot');
+                    $dt->dispatch('Login_Index_Forgot');
 
                     $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
                 } else {
@@ -704,11 +704,11 @@ class Ot_LoginController extends Zend_Controller_Action
                             Zend_Log::INFO, 'User ' . $accountData['username'] . ' created an account.', $loggerOptions
                         );
 
-                        $et = new Ot_Trigger();
-                        $et->setVariables($accountData);
-                        $et->password    = $form->getValue('password');
-                        $et->loginMethod = $realm;
-                        $et->dispatch('Login_Index_Signup');
+                        $dt = new Ot_Trigger_Dispatcher();
+                        $dt->setVariables($accountData);
+                        $dt->password    = $form->getValue('password');
+                        $dt->loginMethod = $realm;
+                        $dt->dispatch('Login_Index_Signup');
 
                         return $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
                     }
