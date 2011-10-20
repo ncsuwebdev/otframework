@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <ot_tbl_ot_bug
+        bugId="1"
+        title="test"
+        submitDt="1291837873"
+        reproducibility="always"
+        severity="minor"
+        priority="low"
+        status="new"
+    />
+           
+    <ot_tbl_ot_bug_text
+        bugTextId="1"
+        bugId="1"
+        accountId="1"
+        postDt="1291837873"
+        text="testasdga description"
+    />
+
+</dataset>

@@ -1,0 +1,30 @@
+<div id="translationInstructions">
+<?php echo $this->translate("ot-translate-index:header"); ?>
+</div>
+<?php if (count($this->translationTable) != 0): ?>
+<form method="post" id="translationForm" action="<?php echo $this->url(array('controller' => 'translate', 'm' => $this->module, 'c' => $this->controller, 'a' => $this->action), 'ot', true); ?>">
+    <div id="translateKeys">
+          <?php foreach ($this->translationTable as $key => $value): ?>
+            <div>
+                <h3><a href='#'><?php echo $this->translate("ot-translate-index:section", $value['title']); ?></a></h3>
+                <div>
+                <label for="<?php echo $key; ?>_old"><?php echo $this->translate("ot-translate-index:currentText"); ?></label><br />
+                <textarea readonly="1" id="<?php echo $key; ?>_old" style="width:400px"><?php echo htmlentities($value['value']); ?></textarea>
+                <br /><br />
+                <label for="<?php echo $key; ?>_new"><?php echo $this->translate("ot-translate-index:changeText"); ?></label><br />
+                <textarea style="width:400px" name="<?php echo $key; ?>" id="<?php echo $key; ?>_new"></textarea>
+                <br /><br />
+                <input type="checkbox" value="ON" name="<?php echo $key; ?>#reset" /> <?php echo $this->translate("ot-translate-index:removeText"); ?><br />
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php if ($this->showSubmit): ?>
+    <input type="submit" value="Submit" />
+    <?php endif; ?>
+</form>    
+<?php else: ?>
+<div class="ui-state-error ui-corner-all">
+<span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"/>
+<?php echo $this->translate("ot-translate-index:noChange"); ?></div>
+<?php endif; ?>

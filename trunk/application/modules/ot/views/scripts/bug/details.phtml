@@ -1,0 +1,49 @@
+<?php echo $this->translate('ot-bug-details:header'); ?>
+<br /><br />
+<?php if ($this->acl['index']): ?>
+<a href="<?php echo $this->url(array('controller' => 'bug'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-bug-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<?php endif; ?> 
+<?php if ($this->acl['edit']) : ?>
+    <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'edit', 'bugId' => $this->bug['bugId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-bug-details:edit'); ?><span class="ui-icon ui-icon-pencil"></span></a>
+<?php endif; ?>
+<?php if ($this->acl['delete']) : ?>
+    <a href="<?php echo $this->url(array('controller' => 'bug', 'action' => 'delete', 'bugId' => $this->bug['bugId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-bug-details:delete'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
+<?php endif; ?>
+<br /><br />
+    <table class="form">
+        <tr>
+            <td><label><?php echo $this->translate('ot-bug-details:form:status'); ?></label></td>
+            <td><?php echo ucwords($this->bug['status']); ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate('ot-bug-details:form:submitDate'); ?></label></td>
+            <td><?php echo $this->dateFormat($this->bug['submitDt'], $this->config->user->dateTimeFormat->val); ?> (<?php echo $this->elapsedTime($this->bug['submitDt']); ?>)</td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate('ot-bug-details:form:reproducibility'); ?></label></td>
+            <td><?php echo ucwords($this->bug['reproducibility']); ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate('ot-bug-details:form:severity'); ?></label></td>
+            <td><?php echo ucwords($this->bug['severity']); ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate('ot-bug-details:form:priority'); ?></label></td>
+            <td><?php echo ucwords($this->bug['priority']); ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate('ot-bug-details:form:text'); ?></label></td>
+            <td>
+            <?php foreach ($this->text as $t) : ?>
+            <div class="bugText">
+                <div class="header">
+                    <?php echo $this->translate('ot-bug-details:submittedBy', array($t['userInfo']->firstName, $t['userInfo']->lastName, $t['userInfo']->username, $this->dateFormat($t['postDt'], $this->config->user->dateTimeFormat->val), $this->elapsedTime($this->bug['submitDt']))); ?>
+                </div>
+                <div class="bugContent">
+                    <?php echo nl2br($t['text']); ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            </td>
+        </tr>
+    </table>

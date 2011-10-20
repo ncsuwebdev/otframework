@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <!-- Table ot_tbl_ot_custom_attribute -->
+    <ot_tbl_ot_custom_attribute
+        objectId="INVALID_OBJECT_THING"
+        label="label"
+        type="textarea"
+        options="a:0:{}"
+        required="1"
+        direction="vertical"
+        order="0"
+    />
+    
+    <!-- Table ot_tbl_ot_custom_attribute_value -->
+    <ot_tbl_ot_custom_attribute_value
+        objectId="INVALID_OBJECT_THING"
+        parentId="1"
+        attributeId="1"
+        value="i am a value on an invalid object! Oh no!"
+    />
+</dataset>

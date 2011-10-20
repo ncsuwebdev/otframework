@@ -1,0 +1,76 @@
+<div id="aclIndexAdd">
+<a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $this->role->roleId), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-applicationAccess:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<br /><br />
+    <?php echo $this->translate('ot-acl-remoteAccess:header'); ?>
+    <br /><br />
+
+<table class="form">
+    <tbody>
+        <tr>
+            <td><label><?php echo $this->translate('model-role-form:roleName'); ?></label></td>
+            <td><?php echo $this->role->name; ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate('model-role-form:inheritRoleId'); ?></label></td>
+            <td><?php echo ($this->role->inheritRoleId != 0) ? $this->inheritRole->name : 'None'; ?></td>
+        </tr>
+    </tbody>
+</table>
+    <form method="post" id="aclEditor" action="" class="checkRequiredFields">
+        <?php if (count($this->children) != 0) : ?>
+        <div class="ui-state-highlight ui-corner-all">
+            <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+            <?php echo $this->translate('ot-acl-applicationAccess:caution'); ?>
+            <ul>
+            <?php foreach ($this->children as $c) : ?>
+                <li>
+                <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $c['roleId']), 'ot', true); ?>"><?php echo $c['name']; ?></a> <?php echo $this->translate('ot-acl-applicationAccess:via'); ?>
+                <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $c['parent']['roleId']), 'ot', true); ?>"><?php echo $c['parent']['name']; ?></a>
+                
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        </div>
+        <?php endif; ?>
+        <div id="accessList">
+            <div class="aclSection">
+                <table class="list">
+                    <tbody>
+                    <tr class="ui-widget-header">
+                        <td width="300"><?php echo $this->translate('ot-acl-form:method'); ?></td>
+                        <td width="120"><?php echo $this->translate('ot-acl-form:currently'); ?></td>
+                        <td width="180"><?php echo $this->translate('ot-acl-form:grantRevoke'); ?></td>
+                    </tr>
+                    <?php foreach ($this->resources as $method => $access) : ?>
+                    <tr class="controller">
+                        <td title="<?php echo $access['description']; ?>" class="td1 description">
+                        <?php echo $method; ?>
+                        </td>
+                        <td class="<?php if ($access['access']) { echo 'access'; } else { echo 'noAccess'; } ?>">
+                        <?php if ($access['access']) : ?>
+                            <?php echo $this->translate('ot-acl-form:allAccess'); ?>
+                        <?php else: ?>
+                            <?php echo $this->translate('ot-acl-form:noAccess'); ?>
+                        <?php endif; ?>
+                        </td>
+                        <td>
+                        <select size="1" class="allAccess" name="access[<?php echo $method; ?>]" id="<?php echo $method; ?>">
+                            <option value="<?php if ($access['access']) { echo 'allow'; } else { echo 'deny'; } ?>"><?php echo $this->translate('ot-acl-form:noChange'); ?></option>
+                        <?php if (!$access['access']) : ?>
+                            <option value="allow"><?php echo $this->translate('ot-acl-form:grantAccess'); ?></option>
+                        <?php else: ?>
+                            <option value="deny"><?php echo $this->translate('ot-acl-form:revokeAccess'); ?></option>
+                        <?php endif; ?>
+                        </select>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" value="<?php echo $this->translate('model-role-form:submit'); ?>" /> 
+            <button type="button" id="cancel"><?php echo $this->translate('form-button-cancel'); ?></button>
+        </div>
+        
+    </form>
+</div>

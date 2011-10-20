@@ -1,0 +1,623 @@
+default-index-error:title;ERROR!
+default-index-error:noMessage;No error message passed
+default-index-error:404:title;404 Error: Page not found
+default-index-error:404:header;The requested page was not found
+default-index-error:404:message;The page that you requested could not be found.
+default-index-error:generic;Processing request failed.
+default-index-error:file;File
+default-index-error:function;Function
+default-index-error:line;Line
+
+ot-account-index:title;Account for %1$s %2$s (%3$s):
+ot-account-index:header;
+ot-account-index:userData;User Data
+ot-account-index:userDataHeader;This data is represents your account within this application.
+ot-account-index:linkEditUserData;Edit User Data
+ot-account-index:linkChangePassword;Change Password
+ot-account-index:linkDeleteUser;Delete User
+ot-account-index:connectionHeader;Connections can be made between this application and other apps.  The requesting application must make the request on your behalf, then you will be asked to login here to grant the requesting application access.  You may revoke any unwanted access by these connections at any time.
+ot-account-index:remote;External Application Access
+ot-account-index:remoteHeader;If you would like another application to access this application's data, you will need to individually grant them this access. 
+ot-account-index:consumerHasAccessButton;Revoke Access
+ot-account-index:account;Account
+ot-account-index:connectionsTo;Connections to %1$s
+ot-account-index:none;None
+ot-account-index:interact;%1$s is setup to interact with your account on %2$s.
+ot-account-index:authorizedOn;You are authorized on %1$s.
+ot-account-index:revokeAccess;To revoke access, you must do this from 
+ot-account-index:notAuthorized;You are not authorized on %1$s.
+ot-account-index:authorizeAccess;Authorize Access
+ot-account-index:serviceDescription;Service Description
+ot-account-index:developers;Developers!
+ot-account-index:canSetup;You can setup your application to interact with %1$s.
+ot-account-index:viewApiDocumentation;View API Documentation
+ot-account-index:accessTokenGenerated;Access token generated on %1$s.
+ot-account-index:noConnectionsMade;No connections have been made on your behalf.
+
+ot-account-all:title;Manage Users
+ot-account-all:linkNewAccount;Add New Account
+ot-account-all:header;Here you can add users and grant them roles.  Roles are defined by the application administrator.
+ot-account-add:title;Add Account
+ot-account-add:header;Enter in the information below to add a user to the system.
+ot-account-edit:title;Edit Account
+ot-account-edit:header;Make any desired changes to your user data.
+ot-account-delete:title;Delete User
+ot-account-delete:header;You have selected to delete the user <b>%1$s</b> who logs in via <b>%2$s</b>.
+ot-account-delete:accountDeleted;Account was deleted
+ot-account-changePassword:title;Change My Password
+ot-account-changePassword:header;You may change your own password by filling in the fields below. If this is the first time logging into the system, you must change your password to proceed. Fill in the following fields to change your password.
+ot-account-changePassword:form:oldPassword;Old Password:
+ot-account-changePassword:form:newPassword;New Password:
+ot-account-changePassword:form:newPasswordConf;New Password Confirm:
+ot-account-changePassword:form:submit;Change My Password
+ot-account-revokeConnection:title;Revoke Application Access
+ot-account-revokeConnection:consumerIdNotSet;The consumerId is not set in the query string.
+ot-account-revokeConnection:consumerIdNotExists;The consumer associated with your request token no longer exists
+ot-account-revokeConnection:noAccessToken;You do not have an existing access token for this consumer
+ot-account-revokeconnection:tokenRemoved;Token has been removed. %1$s no longer has access to your account.
+
+ot-activeusers-index:title;Currently Logged In Users
+ot-activeusers-index:header;These are all the users who have been active in the last 10 minutes
+
+ot-api-index:title;API Documentation
+ot-api-index:method;Method
+ot-api-index:description;Description
+ot-api-index:returnValue;Return Value
+ot-api-index:arguments;Arguments
+ot-api-index:noArguments;No Arguments Required
+ot-api-index:noReturnValue;No return value
+
+ot-auth-index:title;Manage Authentication Adapters
+ot-auth-index:header;This page allows you to enable and disable different ways users can log into your application. Note that one adapter must be enabled at all times.<br /><br />Drag the arrows below to reorder the way the different types are displayed on the login page.
+ot-auth-index:adapter;Adapter
+ot-auth-index:description;Description
+ot-auth-index:status;Status
+ot-auth-index:enable;Enable
+ot-auth-index:disable;Disable
+ot-auth-index:edit;Edit
+
+ot-auth-toggle:title;Toggle Authentication Adapter
+ot-auth-toggle:header;Are you sure you want to %1$s the "%2$s" adapter?.
+ot-auth-toggle:keyNotSet;The authentication adapter key is not set in the query string.
+ot-auth-toggle:noAdapter;No authentication adapter exists with the given key.
+ot-auth-toggle:mustBeOneAdapter;There must be one authentication adapter enabled at all times.
+
+ot-auth-edit:valueNotFound;Value for key not found in query string.
+ot-auth-edit:noAdapter;No authentication adapter exists with the given key.
+ot-auth-edit:problemSubmitting;There was a problem submitting the form
+ot-auth-edit:title;Edit Authentication Adapter
+
+ot-oauth-add:title;Register Application for Remote Access
+ot-oauth-add:header;This page allows you to register your application to use this application's API.
+ot-oauth-add:successfullyRegistered;Your application was successfully registered.
+ot-oauth-add:problemSubmitting;There was a problem submitting your form.
+ot-oauth-delete:title;Remove Application from Remote Access
+ot-oauth-delete:header;You have selected to remove <b>%1$s</b> as a registered application from this system.  All access tokens for this application will be removed, and no more access will be granted to %1$s.
+ot-oauth-delete:consumerIdNotSet;The consumerId not set in query string.
+ot-oauth-delete:consumerNotFound;The consumer was not found.
+ot-oauth-delete:notAllowedtoEdit;You are not allowed to edit other users applications.
+ot-oauth-delete:deleteLabel;Delete Application
+ot-oauth-delete:applicationRemoved;Your application was successfully removed.
+ot-oauth-details:back;Back to Applications
+ot-oauth-details:consumerEditButton;Edit Application
+ot-oauth-details:consumerRegenerateButton;Reset Consumer Key/Secret
+ot-oauth-details:consumerDeleteButton;Delete Application
+ot-oauth-details:header;Header
+ot-oauth-details:title;Connection Details for %1$s
+ot-oauth-details:generateTokenButton;Make a New Connection
+ot-oauth-details:callbackUrl;Callback URL
+ot-oauth-details:consumerKey;Consumer Key
+ot-oauth-details:consumerSecret;Consumer Secret
+ot-oauth-details:requestTokenUrl;Request Token URL
+ot-oauth-details:accessTokenUrl;Access Token URL
+ot-oauth-details:authorizeUrl;Authorize URL
+ot-oauth-details:encryptionNotice;We only support hmac-sha1 signatures. We do not support the plaintext signature method.
+ot-oauth-details:consumerIdNotSet;The consumerId not set in query string.
+ot-oauth-details:consumerNotFound;Consumer not found.
+ot-oauth-details:notAllowedToEdit;You are not allowed to edit other users applications.
+ot-oauth-details:activeUsers;There are %1$s active users.
+ot-oauth-details:activeUser;There is 1 active user.
+ot-oauth-edit:title;Edit Consumer Application's Details
+ot-oauth-edit:header;Change the details of the consumer application below.
+ot-oauth-edit:consumerIdNotSet;The consumerId is not set in the query string.
+ot-oauth-edit:consumerNotfound;Consumer not found.
+ot-oauth-edit:notAllowedToEdit;You are not allowed to edit other users applications.
+ot-oauth-edit:successfullyModified;Your application was successfully modified.
+ot-oauth-edit:problemSubmitting;There was a problem submitting your form.
+ot-oauth-generateToken:title;Manually create a connection
+ot-oauth-generateToken:header;If your application does not require each user to register access to this application, you can create a single access token and use that in your application.  Beware that any API access to this application will be done so under <b>your</b> username, so make sure your application doesn't need user-level access granted.<br /><br />Because you are registering your application manually, some methods that rely on the logged-in-user's credentials will not work as you may expect.  Remember that on every request, you are the logged-in-user.<br /><br />If you are sure that you would like to setup your application this way, you can generate an access token and a token secret.  These keys will only be displayed once, so please record these keys as you will need them when sending API requests to this application.
+ot-oauth-generateToken:alert;Alert
+ot-oauth-generateToken:alertPost;Record these tokens as this is the only time you will see them!
+ot-oauth-generateToken:alertPre;Read carefully before proceeding!
+ot-oauth-generateToken:headerSubmit;Here are your access token/secret combination. Using this, in addition to the Consumer Key/Secret will allow your application to have remote access to this application
+ot-oauth-generateToken:accessToken;Access Token
+ot-oauth-generateToken:accessSecret;Token Secret
+ot-oauth-generateToken:back;Back to %1$s Details
+ot-oauth-generateToken:consumerIdNotSet;The consumerId not set in query string.
+ot-oauth-generateToken:consumerNotFound;The consumer was not found.
+ot-oauth-generateToken:notAllowedToEdit;You are not allowed to edit other users applications.
+ot-oauth-generateToken:alreadyHaveToken;You already have an existing access token for this consumer. Remove that token to create a new one.
+ot-oauth-generateToken:generateButton;Generate Access Token/Secret
+ot-oauth-index:title;Applications using %1$s
+ot-oauth-index:header;If you are a developer and would like your application to access this application, you will need to register your application here.<br /><Br />This application uses OAuth to manage its remote access.  Once you register, you will be given a Consumer Key/Secret which you will use to access our data.  If you are new to OAuth or would like to set your application up to access our API, you can find out more from the <a href="http://oauth.net">OAuth Website</a>.
+ot-oauth-index:addButton;Register an Application
+ot-oauth-index:detailsButton;Get Application Details
+ot-oauth-index:applicationListText;You have registered the following applications:
+ot-oauth-index:noApplications;You have not setup any applications to access this application's data remotely.
+ot-oauth-allConsumers:title;All Applications using %1$s 
+ot-oauth-allConsumers:header;This list consists of every consumer application that has been registered to use %1$s.
+ot-oauth-allConsumers:detailsButton;Get Application Details
+ot-oauth-allConsumers:applicationListText;The following applications have been registered:
+ot-oauth-allConsumers:noApplications;No applications have been setup to access this application's data remotely.
+ot-oauth-regenerateConsumerKeys:title;Reset Consumer Key/Secret
+ot-oauth-regenerateConsumerKeys:header;You have selected to reset the consumer secret/key for <b>%1$s</b>. This will require you to update the secret/key in your application before it will be allowed to communicate with this app.
+ot-oauth-regenerateConsumerKeys:consumerIdNotSet;The consumerId is not set in the query string.
+ot-oauth-regenerateConsumerKeys:notAllowedToEdit;You are not allowed to edit other users applications.
+ot-oauth-regenerateConsumerKeys:resetButton;Reset Consumer Key/Secret
+ot-oauth-regenerateConsumerKeys:consumerKeyReset;The consumer key and secret was reset for your application. Please update your application to allow access.
+
+ot-oauthclient-index:noIdGiven;No consumer ID was given.
+ot-oauthclient-callback:notAuthorized;You were not authorized.
+ot-oauthclient-callback:tokensDontMatch;Tokens do not match!
+
+ot-oauthserver-authorize:title;Authorize Consumer
+ot-oauthserver-authorize:header;The application <b>%1$s</b> would like to have access to this application on your behalf.  If you agree to allowing %1$s access, click the button below authorizing it access.
+ot-oauthserver-grant:title;Application Authorized...Redirecting
+ot-oauthserver-grant:header;Access granted to %1$s
+ot-oauthserver-grant:redirectMessage;You will now be redirected back to %1$s.  If you are not redirected, you may <a id="callbackUrl" href="%2$s">click here</a> as well.
+ot-oauthserver-grant:accessNotGranted;You have chosen to allow %1$s access to your account.  You may now return to %1$s and proceed with the authorization process.
+ot-oauthserver-deny:title;Application Denied Access
+ot-oauthserver-deny:header;Access denied to %1$s
+ot-oauthserver-deny:info;The access token passed from %1$s has been removed.  The requesting application will not be granted access.  If you would like to grant this access in the future, you can use %1$s to request access again. 
+ot-oauthserver-revoke:title;Revoke access to %1$s
+ot-oauthserver-revoke:header;The application <b>%1$s</b> currently has access to this application on your behalf.  Would you like to revoke access from %1$s?
+ot-oauthserver-alreadyAuthorized:title;Application Already Authorized
+ot-oauthserver-alreadyAuthorized:hasAccess;%1$s Has Access.
+ot-oauthserver-alreadyAuthorized:info;You have already granted access to %1$s.  If you no longer wish to allow %1$s access to your account, you should remove the access via <b><a href="%2$s/account/">My Account</a></b>.
+ot-oauthserver-generateToken:title;Manually create a connection
+
+model-account-username;Username
+model-account-loginMethod;Login Method
+model-account-firstName;First Name
+model-account-lastName;Last Name
+model-account-emailAddress;Email Address
+model-account-password;Password
+model-account-passwordConf;Confirm Password
+model-account-role;Access Role
+model-account-timezone;Timezone
+
+model-image-resizeImage:typeNotSupported;Image type not supported (must be png or jpeg)
+model-image-resizeImage:imageNotCreated;Image not created
+
+model-trigger-action:noHelpersDefined;No helpers are defined in the application config file.
+
+msg-error-otExceptionAccess:title;You do not have access
+msg-error-otExceptionData:title;Error accessing data
+msg-error-otExceptionInput:title;Error processing application input
+msg-error-noAccount;User Account Not Found
+msg-error-apiAccessDenied;You must be authenticated to use this method
+msg-error-invalidTimezone;Timezone is invalid
+msg-error-invalidStatus;Invalid status
+msg-error-optionNotFound;Option not found
+msg-error-accountTaken;Username is taken.  Please select a different username
+msg-error-invalidForm;You did not fill in valid information into the form.
+msg-error-accountAccessDelete;You are not allowed to delete yourself.
+msg-error-authAdapterSupport;The authentication adapter for your account does not support this feature
+msg-error-passwordMismatch;New passwords do not match
+msg-error-passwordInvalidOriginal;Original Password was incorrect
+msg-error-noRemoteAccess;This application is not configured for remote access
+
+msg-info-requiredDataBeforeContinuing;You must fill out the following information about yourself before continuing.
+msg-info-accountCreated;The user account was successfully created.
+msg-info-accountPasswordCreated;A password has been created to the account and emailed to the user.
+msg-info-accountUpdated;The account was successfully updated
+msg-info-accountDeleted;The account was successfully deleted
+msg-info-passwordChanged;Your password has been changed.  You can now log in with your new credentials
+msg-info-loginBeforeContinuing;You must log in before continuing
+msg-info-apiCodeCreated;The API Code was successfully created.  This user has remote access now.
+msg-info-apiCodeDeleted;The API Code was successfully deleted.  This user has no more remote access.
+msg-info-editAccountSelf;You are editing your own account data. For security reasons we do not allow users to change their assigned roles.
+
+table-header-edit;Edit
+table-header-delete;Delete
+table-header-status;Status
+
+form-button-delete;Yes, Delete
+form-button-enable;Yes, Enable
+form-button-disable;Yes, Disable
+form-button-save;Save
+form-button-cancel;Cancel
+form-button-yes;Yes
+form-button-no;No
+form-button-edit;Edit
+form-delete-confirm;Are you sure you want to do this?
+
+model-role-form:roleName;Role Name:
+model-role-form:inheritRoleId;Inherit From:
+model-role-form:submit;Save Access Role
+
+ot-acl-form:allAccess;All Access
+ot-acl-form:someAccess;Some Access
+ot-acl-form:noAccess;No Access
+ot-acl-form:hasAccess;Has Access
+ot-acl-form:currently;Currently:
+ot-acl-form:grantRevoke;Grant/Revoke:
+ot-acl-form:noChange;No Change
+ot-acl-form:grantAllAccess;Grant All Access
+ot-acl-form:revokeAllAccess;Revoke All Access
+ot-acl-form:grant;Grant
+ot-acl-form:revoke;Revoke
+ot-acl-form:grantAccess;Grant Access
+ot-acl-form:revokeAccess;Revoke Access
+ot-acl-form:noInheritance;No Inheritance
+ot-acl-form:method;Method
+ot-acl-index:title;Manage Access Roles
+ot-acl-index:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_api. The API will not work correctly until access is granted to the default role (%1$s).
+ot-acl-index:header;Access Roles provide a simple approach to managing user access within the application. Roles are created by any user with access, allowing them to grand and revoke access to certain resources within the application.  Resources are defined as accessible functions within the application.<br /><br />Below are all active roles that are available to be assigned to users:
+ot-acl-index:linkAdd;Add New Access Role
+ot-acl-index:table:roleName;Role Name
+ot-acl-index:table:inheritedFrom;Inherited From
+ot-acl-index:table:applicationAccess;Application Access
+ot-acl-index:table:remoteAccess;Remote Access
+ot-acl-index:noRoles;No Roles found
+ot-acl-details:title;Access Role Details
+ot-acl-details:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_api. The API will not work correctly until access is granted to the default role (%1$s).
+ot-acl-details:accessTitle;Application Access
+ot-acl-details:header;These are the individual details for the %1$s access role as they appear in the actual ACL configuration file.
+ot-acl-details:back;Back to ACL List
+ot-acl-details:edit;Edit
+ot-acl-details:delete;Delete
+ot-acl-details:editable;Editable?
+ot-acl-details:form:access;Access
+ot-acl-details:applicationAccess:header;These are the access rules for this role within the application.
+ot-acl-details:applicationAccess:edit;Edit these rules
+ot-acl-details:remoteAccess:header;These are the access rules for this role when someone is accessing this application remotely.
+ot-acl-details:remoteAccess:edit;Edit these rules
+ot-acl-add:title;Add Access Role
+ot-acl-add:header;Select the name that you would like to call the role.  This system also allows roles to inherit permission from an existing role.  Inhertance is optional but is useful in implementing a tiered access system.
+ot-acl-edit:title;Edit Access Role
+ot-acl-edit:header;Select the name that you would like to call the role.  This system also allows roles to inherit permission from an existing role.  Inhertance is optional but is useful in implementing a tiered access system.
+ot-acl-applicationAccess:caution;<b>Caution!</b>  Making changes to this role will affect the following roles which are inherited (directly or indirectly) from this role:
+ot-acl-applicationAccess:via;via
+ot-acl-applicationAccess:title;Edit Application Access Rules
+ot-acl-applicationAccess:header;Set the access rules that will determine a role's access within the application.
+ot-acl-applicationAccess:back;Back to Role Details
+ot-acl-remoteAccess:title;Edit Remote Access Rules
+ot-acl-remoteAccess:header;Set the access rules that will determine a role's access to remote procedure calls.
+ot-acl-delete:title;Delete Access Role
+ot-acl-delete:header;You have selected to delete the role <b>%1$s</b>.
+ot-acl-delete:accountRoleChange;There are currently users who are assigned this role.  They will be put into the default role of <b>%1$s</b>.
+
+ot-backup-index:title;Backup Admin
+ot-backup-index:header;Select the table you would like to download.
+ot-backup-index:downloadAllSql;Click Here to Download All Tables as SQL
+
+ot-bug-index:title;Bug Reports
+ot-bug-index:header;These are the bugs which have been filed.
+ot-bug-index:linkNew;New Bug Report
+ot-bug-index:table:title;Bug Title
+ot-bug-index:table:dateTime;Submit Date/Time
+ot-bug-index:table:status;Status
+ot-bug-index:table:edit;Edit
+ot-bug-index:table:delete;Delete
+ot-bug-index:noBugs;No Bugs Found.
+ot-bug-details:title;Bug Details
+ot-bug-details:header;These are the details provided about the bug.
+ot-bug-details:back;Back to Bug List
+ot-bug-details:edit;Edit Bug
+ot-bug-details:delete;Delete Bug
+ot-bug-details:form:status;Status:
+ot-bug-details:form:submitDate;Submit Date:
+ot-bug-details:form:reproducibility;Reproducibility:
+ot-bug-details:form:severity;Severity:
+ot-bug-details:form:priority;Priority:
+ot-bug-details:form:text;Bug Text:
+ot-bug-details:submittedBy;Submitted by %1$s %2$s (%3$s) on %4$s (%5$s)
+ot-bug-add:title;File Bug Report
+ot-bug-add:header;If you are experiencing an issue with this application, you can file a bug report here.  If you have a feature request, you should contact your administrator directly.
+ot-bug-edit:title;Edit Bug
+ot-bug-edit:textTitle;Existing Bug Text
+ot-bug-edit:header;Make any changes you would like to the bug.
+ot-bug-edit:submittedBy;Submitted by %1$s %2$s (%3$s) on %4$s
+ot-bug-delete:title;Delete Bug
+ot-bug-delete:textTitle;Are you sure you want to delete this bug?
+
+ot-cache-index:title;Cache Management
+ot-cache-index:header;If you are having issues with something that may be cached, you can clear the cache here.
+ot-cache-index:linkClear;Click here to clear the cache
+
+ot-config-index:title;Configuration Admin
+ot-config-index:header;This is the current configuration of the application.
+ot-config-index:table:name;Name
+ot-config-index:table:value;Value
+ot-config-index:noDescription;No Description Provided
+ot-config-edit:form:reset;Reset to Default: 
+ot-config-edit:form:submit;Save Config Option
+ot-config-edit:title;Edit Configuration Option
+ot-config-edit:header;You can edit the application configuration from here. These changes will be made globally and immediately.
+ot-config-edit:description;<b>Description:</b>
+ot-config-edit:noDescription;No Description Provided
+
+ot-cron-index:title;Cron Job Status
+ot-cron-index:header;This interface provides the ability to manage cron jobs.
+ot-cron-index:linkAdd;Add New Cron Job
+ot-cron-index:successfulAlert;CRON Job Ran Successfully.
+ot-cron-index:linkEnableAll;Enable All
+ot-cron-index:linkDisableAll;Disable All
+ot-cron-index:table:cronJob;Cron Job
+ot-cron-index:table:status;Status
+ot-cron-index:table:execute;Execute
+ot-cron-index:table:lastRunDt;Last Run Date
+ot-cron-index:enabled;Enabled
+ot-cron-index:disabled;Disabled
+ot-cron-index:runNow;Run Now
+ot-cron-index:cannotRun;Cannot run a disabled job
+ot-cron-index:neverRun;Job has never run
+ot-cron-index:noJobsFound;No Cron Jobs Found.
+ot-cron-index:noAccess;The deafult role (%1$s) does not have access to cron_index. CRON jobs will not run correctly until access is granted to the default role (%1$s).
+ot-cron-index:editAcl;Click here to edit the ACL.
+
+ot-cron-toggle:title;Toggle Cron Job Status
+ot-cron-toggle:header;Are you sure you want to <b>%1$s</b> <b>%2$s</b>?
+ot-cron-toggle:displayName;all cron jobs
+
+ot-custom-form:object;Object:
+ot-custom-form:description;Description:
+ot-custom-form:label;Label:
+ot-custom-form:type;Type:
+ot-custom-form:required;Required:
+ot-custom-form:direction;Display Direction:
+ot-custom-form:option;Option:
+ot-custom-form:linkAddRow;Add Row
+ot-custom-form:linkRemoveRow;Remove Row
+ot-custom-form:vertical;Vertical
+ot-custom-form:horizontal;Horizontal
+ot-custom-index:title;Custom Fields
+ot-custom-index:header;This system allows for custom attributes to be added to a certain set of objects within the system.  Select the object below to modify any attributes associated with it.
+ot-custom-index:table:object;Object
+ot-custom-index:table:description;Description
+ot-custom-index:noObjects;No objects found.
+ot-custom-details:title;Attributes for %1$s
+ot-custom-details:linkBack;Back to Object List
+ot-custom-details:linkAdd;Add New Custom Attribute To %1$s
+ot-custom-details:linkSaveOrder;Save Attribute Order
+ot-custom-details:noAttributes;No custom attributes found for this object.
+ot-custom-attributeDetails:title;Attribute Details
+ot-custom-attributeDetails:delete;Delete
+ot-custom-attributeDetails:options;Options:
+ot-custom-attributeDetails;noOptions;No Options
+ot-custom-add:title;Add Custom Attribute to %1$s
+ot-custom-add:header;Enter in the information below to add custom attribute to this object.
+ot-custom-add:linkAdd;Add Custom Attribute
+ot-custom-edit:title;Edit Custom Attribute for %1$s
+ot-custom-edit:header;Enter in the information below to add custom attribute to this object.
+ot-custom-edit:delete;<b>Delete "%1$s"</b>
+ot-custom-edit:addOptions;Add New Options:
+ot-custom-edit:linkSave;Save Custom Attribute
+ot-custom-delete:title;Delete Attribute from %1$s
+ot-custom-delete:header;You have selected to delete the attribute <b>%1$s</b>.  Are you sure you want to do this?  <b>This will remove all data associated with this attribute.</b>
+ot-debug-index:title;Debug Mode Admin
+ot-debug-index:debugInfo;Debug mode will only show up for you.  No one else will see the debug info unless they also turn on debug mode.
+ot-debug-index:notDebug;This application is not in debug mode.
+ot-debug-index:turnOff;Turn debug mode off
+ot-debug-index:turnOn;Turn debug mode on
+
+ot-emailqueue-index:title;Email Queue
+ot-emailqueue-index:header;The following are the emails that have been sent or are queued to be sent.
+ot-emailqueue-details:title;Queued Email Details
+ot-emailqueue-details:linkBack;Back to Email List
+ot-emailqueue-details:deleteEmail;Delete Email
+ot-emailqueue-details:status;Status:
+ot-emailqueue-details:queueDate;Queue Date
+ot-emailqueue-details:sentDate;Sent Date
+ot-emailqueue-details:notSent;Not Sent
+ot-emailqueue-details:affected;Affected Attribute
+ot-emailqueue-details:none;None
+ot-emailqueue-details:message;Message:
+ot-emailqueue-details:to;To:
+ot-emailqueue-details:from;From:
+ot-emailqueue-details:subject;Subject:
+ot-emailqueue-details:body;Body:
+ot-emailqueue-delete:pageTitle;Delete Email
+ot-emailqueue-delete:textTitle;Are you sure you want to delete this email?
+ot-emailqueue-delete:success;Email successfully deleted
+
+ot-index-index:title;Application Library Versions
+ot-index-index:header;The following library versions are installed for this application:
+ot-index-index:library;Library
+ot-index-index:version;Version
+ot-index-index:ot;OT Application Framework
+ot-index-index:zend;Zend Framework
+ot-index-index:jQuery;jQuery
+ot-index-index:jQueryUi;jQuery UI
+
+ot-log-clear:title;Clear Logs
+ot-log-clear:header;You have selected to clear the logs.
+ot-log-index:title;Action Logs
+ot-log-index:header;The following are the action logs recorded.
+ot-log-index:clearLogs;Clear Logs
+
+ot-maintenance-index:title;Maintenance Mode Admin
+ot-maintenance-index:notMaintenance;This application is not in maintenance mode.
+ot-maintenance-index:turnOff;Turn maintenance mode off
+ot-maintenance-index:turnOn;Turn maintenance mode on
+
+ot-nav-index:title;Navigation Editor
+ot-nav-index:addElement;Add New Navigation Element
+ot-nav-index:display;Display
+ot-nav-index:label;Label
+ot-nav-index:externalLink;External Link
+ot-nav-index:link;Link
+ot-nav-index:permissions;Permissions
+ot-nav-index:module;Module
+ot-nav-index:controller;Controller
+ot-nav-index:action;Action
+ot-nav-index:noPermissions;If no permissions are specified, default/index/index will be used.
+ot-nav-index:linkSave;Save Navigation Structure
+ot-nav-index:linkAdd;Add New Item
+ot-nav-index:undoMove;Undo Move
+ot-nav-index:undoMoveMessage;* Hint: Press Control+Z or Apple+Z to undo a move
+
+ot-theme-index:title;Select Theme
+ot-theme-index:header;This interface provides the ability to change the system theme.
+ot-theme-index:currentTheme;Current Theme
+ot-theme-index:additionalThemes;Additional Themes
+ot-theme-index:noPreviewAvailable;No Preview Available
+ot-theme-select:changeSuccess;Theme changed successfully!
+
+ot-translate-index:header;You may change any of the text on this page by including text in the <b>Change Text To:</b> block.  If you wish to remove an existing text change and reset it back to the default text, check the box marked <b>Remove custom text and reset to default</b>.  When you are done, click <b>Save</b> to save your changes.
+ot-translate-index:section;Section: %1$s
+ot-translate-index:currentText;<b>Current Text is:</b>
+ot-translate-index:changeText;<b>Change Text to: </b>(leave blank for no changes)
+ot-translate-index:removeText;Remove custom text and reset to default
+ot-translate-index:noChange;No text can be changed on this page.
+
+ot-trigger-availableTitle;<b>Available Variables</b>
+ot-trigger-availableHeader;These variables are available for inclusion in your scripts.  The placeholders will be processed with actual data when a trigger is executed.
+ot-trigger-table:variable;Variable
+ot-trigger-table:description;Description
+ot-trigger-index:title;Trigger Index
+ot-trigger-index:header;Triggers are actions that happen with the applications.  By adding a trigger action, you can have the application execute some code at a designated point of the application.<br /><br />These are all the available triggers in the system.
+ot-trigger-index:name;Name
+ot-trigger-details:title;Trigger Actions for %1$s
+ot-trigger-details:header;You can manage the actions for this trigger here.
+ot-trigger-details:linkBack;Back to Trigger List
+ot-trigger-details:linkAdd;Add New Action
+ot-trigger-details:trigger;Trigger:
+ot-trigger-details:description;Description:
+ot-trigger-details:name;Name
+ot-trigger-details:action;Action
+ot-trigger-details:noActions;No Actions Found.
+ot-trigger-details:enableAction;Enable
+ot-trigger-details:disableAction;Disable
+ot-trigger-add:title;Select Trigger Type
+ot-trigger-add:header;Select the type of action you would like to trigger.
+ot-trigger-add:noVariables;No variables available.
+ot-trigger-edit:title;Modify Trigger Type
+ot-trigger-edit:header;Modify this action's properties, as well as the shortcut name of the action.
+ot-trigger-delete:title;Delete Action
+ot-trigger-delete:header;You have selected to delete the action <b>%1$s</b> for <b>%2$s</b>.  Are you sure you want to do this?
+ot-trigger-changeStatus:title;%1$s Action
+ot-trigger-changeStatus:header;You have selected to <b>%1$s</b> the action <b>%2$s</b> for <b>%3$s</b>.  Are you sure you want to do this?
+
+msg-error-roleIdNotSet;Role ID not set in query string.
+msg-error-noRole;Role not found.
+msg-error-blankRole;Role Name can not be blank.
+msg-error-unallowedRoleEdit;You are not allowed to edit this role.
+msg-error-unallowedRoleDelete;You are not allowed to delete this role.
+msg-error-dependedRoleCannotDelete;This role is depended upon by other roles (%1$s) and cannot be deleted as long as the other roles depend upon it.
+msg-error-noDefaultRole;The default role was not found.
+msg-error-deleteDefaultRole;You cannot delete this role because it is set as the default role for users who are not logged in.
+msg-error-bugIdNotFound;Bug ID Not found in query string.
+msg-error-noBug;Bug not found.
+msg-error-formError;There was an error processing the form.
+msg-error-configFileNotFound;Config override file not found.
+msg-error-configFileNotWritable;Config override file (%1$s) is not writable, therefore it cannot be edited.
+msg-error-cacheDirectoryNotWritable;Cache directory is not writable. Please correct this and try again.
+msg-error-noKey;No key was found in query string.
+msg-error-noConfigKey;Key not found in config file.
+msg-error-savingConfig;Error saving user configuration file to disk.
+msg-error-nameNotSet;Name is not set in query string.
+msg-error-objectNotFound;Object not found in query string.
+msg-error-objectNotSetup;Object not setup in config file.
+msg-error-objectIdNotSet;Object ID was not set, please try again.
+msg-error-attributeIdsNotSet;Attribute IDs were not set, please try again.
+msg-error-attributeIdNotSet;Attribute ID not set in query string.
+msg-error-noAttribute;Attribute not found.
+msg-error-orderNotSaved;There was an error saving the order. %1$s Please try again.
+msg-error-queueIdNotSet;Queue ID not set.
+msg-error-noQueue;Queued email could not be found.
+msg-error-configDirNotWritable;Config directory (%1$s) is not writable, add write permissions to this folder and try again.
+msg-error-statusNotFound;No status was found in query string.
+msg-error-savingNav;Error saving the navigation to the database: 
+msg-error-notValidResource;%1$s_%2$s is not a valid resource.
+msg-error-langDirNotWritable;Langague override directory is not writable.
+msg-error-writingLangFile;Error writing to language file.
+msg-error-triggerIdNotFound;Trigger ID not found in query string.
+msg-error-noTrigger;Trigger does not exist in configuration file.
+msg-error-triggerActionIdNotFound;Trigger Action ID not found in query string.
+msg-error-noTriggerActionId;Trigger action does not exist.
+msg-error-triggerHelperNotFound;Trigger Helper not found.
+
+msg-info-bugSubmitted;Bug was submitted successfully.
+msg-info-bugUpdated;Bug was saved successfully.
+msg-info-bugDeleted;Bug was deleted successfully.
+msg-info-cacheCleared;Cache was cleared successfully.
+msg-info-cacheNotCleared;Cache was not cleared. Please re-try submitting this form to clear cache.
+msg-info-configUpdated;The value for %1$s has been updated successfully!
+msg-info-newOrderSaved;New order was saved successfully.
+msg-info-attributeAdded;Attribute %1$s successfully added to %2$s.
+msg-info-attributeSaved;%1$s successfully saved.
+msg-info-attributeDeleted;%1$s successfully deleted.
+msg-info-debugOn;Debug mode has been turned on.
+msg-info-debugOff;Debug mode has been turned off.
+msg-info-logsCleared;The logs have been cleared.
+msg-info-maintenanceOn;Maintenance mode has been turned on.
+msg-info-maintenanceOff;Maintenance mode has been turned off.
+msg-info-savedNav;Navigation structure saved successfully to the database.
+msg-info-savedLang;Text was successfully saved.
+msg-info-triggerAdded;The action was added successfully.
+msg-info-triggerUpdated;The action was modified successfully.
+msg-info-triggerDeleted;The action was deleted successfully.
+msg-info-triggerActionStatus;The action status was changed successfully.
+
+ot-login-form:username;Username:
+ot-login-index:title;Login
+ot-login-index:header;Select the way you would like to log in.
+ot-login-index:password;Password:
+ot-login-index:login;Login
+ot-login-index:signUp;Sign-Up Now
+ot-login-index:linkForgot;I Forgot my Password...
+ot-login-index:noAdaptersEnabled;No authentication adapters are enabled. Please contact an administrator.
+ot-login-forgot:linkReset;Reset My Password
+ot-login-forgot:title;Forgot My Password
+ot-login-forgot:header;If you have forgotten your password, enter your username below and we can send a reset request to the email address we have on file for you.
+ot-login-passwordReset:new;New Password:
+ot-login-passwordReset:confirm;Confirm Password:
+ot-login-passwordReset:linkReset;Reset My Password
+ot-login-passwordReset:title;Password Reset
+ot-login-passwordReset:header;You can reset your password to whatever you like.
+ot-login-signup:title;Sign-up for an Account
+ot-login-signup:header;You can create a new account here. If you already have an account for %1$s, you can  
+ot-login-signup:clickHere;click here to log in.
+ot-login-signup:enterId;Enter your requested user ID below, as well as your email address.
+ot-login-signup:realmNotFound;Realm %1$s not found.
+ot-login-login:header;Please log in to access your account. 
+ot-login-login:userId;User ID:
+ot-login-login:password;Password:
+ot-login-login:clickHere;Click here if you have forgotten your password.
+ot-login-login:noAccountTitle;Don't have an account?
+ot-login-login:noAccountHeader;If you want to submit a proposal, you can sign up for an account. A confirmation email will be sent to the email you provided that contains your password.
+ot-login-login:alphanumericOnly;(Should only contain alphanumeric characters)
+ot-login-login:email;Email Address:
+ot-login-login:linkSignup;Sign Up Now!
+ot-login-logout:header;Are you sure you want to log out of the application?
+
+msg-error-createAccountNotAllowed;You are not allowed to create an account.
+msg-error-invalidUsername;Your entered an invalid username/password.
+msg-error-invalidFormInfo;You did not fill in valid information into the form.
+msg-error-realmNotFound;Realm not found.
+msg-error-authNotSupported;The authentication adapter for your account does not support this feature.
+msg-error-userAccountNotFound;The user account you entered was not found.
+msg-error-noKeyFound;No key found.
+msg-error-invalidKey;The key is not valid.
+msg-error-keyExpired;This key has expired. You need to generate another request to reset your password and try again.
+msg-error-passwordsNotMatch;The passwords you entered did not match.
+msg-error-authNotAllowed;The authentication adapter for your account does not allow users to signup.
+msg-error-usernameTaken;This username is already taken.  Please choose another name and try again.
+
+msg-info-passwordResetRequest;A password reset request was sent to the email address on file.
+msg-info-passwordReset;Your password has been reset.
+msg-info-accountCreated;Your account was created successfully. You may now log in.
+
+theme-scripts-auth:notLoggedIn;You are not Logged in!
+theme-scripts-auth:logInHere;%1$sLog in%2$s here.
+theme-scripts-auth:welcome;Welcome
+theme-scripts-auth:myAccount;My Account
+theme-scripts-auth:logOut;Log Out
+theme-scripts-auth:sureLogOut;Are you sure you want to log out?
+theme-scripts-footer:poweredByZendFramework;Powered by Zend Framework
+theme-scripts-footer:OIT;OIT - Outreach Technologies
+theme-scripts-footer:NCSU;North Carolina State University
+theme-layouts-layout:editText;Edit Text For This Page
+

@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<dataset>
+    <!-- Table ot_tbl_account_attributes -->
+    <ot_tbl_account_attributes />
+    <!-- Table ot_tbl_api_log -->
+    <ot_tbl_api_log />
+    <!-- Table ot_tbl_ot_account -->
+    <ot_tbl_ot_account
+        username="admin"
+        realm="local"
+        password="21232f297a57a5a743894a0e4a801fc3"
+        apiCode="21232f297a57a5a743894a0e4a801fc3"
+        emailAddress="admin@admin.com"
+        firstName="Admin"
+        lastName="Mcadmin"
+        timezone="America/New_York"
+    />
+    <!-- Table ot_tbl_ot_account_roles -->
+    <ot_tbl_ot_account_roles
+        accountId="1"
+        roleId="3"
+    />
+    <!-- Table ot_tbl_ot_active_user -->
+    <ot_tbl_ot_active_user
+        accountId="1"
+        dt="1291816312"
+    />
+    <!-- Table ot_tbl_ot_auth_adapter -->
+    <ot_tbl_ot_auth_adapter
+        adapterKey="local"
+        class="Ot_Auth_Adapter_Local"
+        name="Local Auth"
+        description="Authentication using a local ID and Password created by the user."
+        enabled="1"
+        displayOrder="1"
+    />
+    <ot_tbl_ot_auth_adapter
+        adapterKey="wrap"
+        class="Ot_Auth_Adapter_Wrap"
+        name="NCSU Wrap"
+        description="Authentication using your Unity ID and Password"
+        enabled="1"
+        displayOrder="2"
+    />
+    <!-- Table ot_tbl_ot_bug -->
+    <ot_tbl_ot_bug />
+    <!-- Table ot_tbl_ot_bug_text -->
+    <ot_tbl_ot_bug_text />
+    <!-- Table ot_tbl_ot_cron_status -->
+    <ot_tbl_ot_cron_status />
+    <!-- Table ot_tbl_ot_custom_attribute -->
+    <ot_tbl_ot_custom_attribute />
+    <!-- Table ot_tbl_ot_custom_attribute_value -->
+    <ot_tbl_ot_custom_attribute />
+    <!-- Table ot_tbl_ot_email_queue -->
+    <ot_tbl_ot_email_queue />
+    <!-- Table ot_tbl_ot_image -->
+    <ot_tbl_ot_image />
+    <!-- Table ot_tbl_ot_log -->
+    <ot_tbl_ot_log
+        logId="1"
+        accountId="31"
+        role="3"
+        request="/login"
+        sid="pvl1lhbptl7n2kblfuua585q30"
+        timestamp="1291662253"
+        message="User admin logged in."
+        priority="6"
+        priorityName="INFO"
+        attributeName="accountId"
+        attributeId="31"
+    />
+    <!-- Table ot_tbl_ot_migrations -->
+    <ot_tbl_ot_migrations
+        migrationId="001"
+    />
+    <ot_tbl_ot_migrations
+        migrationId="002"
+    />
+    <ot_tbl_ot_migrations
+        migrationId="003"
+    />
+    <ot_tbl_ot_migrations
+        migrationId="004"
+    />
+    <!-- Table ot_tbl_ot_nav -->
+    <ot_tbl_ot_nav
+        id="1"
+        parent="0"
+        display="Home"
+        module="default"
+        controller="index"
+        action=""
+        link="index/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="2"
+        parent="0"
+        display="Admin"
+        module="ot"
+        controller="index"
+        action="index"
+        link=""
+        target=""
+    />
+    <ot_tbl_ot_nav
+        id="3"
+        parent="2"
+        display="Access"
+        module="default"
+        controller="index"
+        action="index"
+        link=""
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="4"
+        parent="3"
+        display="Registered Applications"
+        module="ot"
+        controller="oauth"
+        action="all-consumers"
+        link="ot/oauth/all-consumers"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="5"
+        parent="3"
+        display="User Access Roles"
+        module="ot"
+        controller="acl"
+        action="index"
+        link="ot/acl/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="6"
+        parent="3"
+        display="Users"
+        module="ot"
+        controller="account"
+        action="all"
+        link="account/index/all"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="7"
+        parent="2"
+        display="Configuration"
+        module="ot"
+        controller="index"
+        action="index"
+        link=""
+        target=""
+    />
+    <ot_tbl_ot_nav
+        id="8"
+        parent="7"
+        display="App Config"
+        module="ot"
+        controller="config"
+        action="index"
+        link="ot/config/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="9"
+        parent="7"
+        display="App Triggers"
+        module="ot"
+        controller="trigger"
+        action="index"
+        link="ot/trigger/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="10"
+        parent="7"
+        display="Authentication Types"
+        module="ot"
+        controller="auth"
+        action="index"
+        link="ot/auth/"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="11"
+        parent="7"
+        display="Custom Fields"
+        module="ot"
+        controller="custom"
+        action="index"
+        link="ot/custom/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="12"
+        parent="7"
+        display="Debug Mode"
+        module="ot"
+        controller="debug"
+        action="index"
+        link="ot/debug"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="13"
+        parent="7"
+        display="Maintenance Mode"
+        module="ot"
+        controller="maintenance"
+        action="index"
+        link="ot/maintenance"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="14"
+        parent="7"
+        display="Navigation Editor"
+        module="ot"
+        controller="nav"
+        action="index"
+        link="ot/nav/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="15"
+        parent="7"
+        display="Theme"
+        module="ot"
+        controller="theme"
+        action="index"
+        link="ot/theme/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="16"
+        parent="2"
+        display="Bug Reports"
+        module="ot"
+        controller="bug"
+        action=""
+        link="ot/bug"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="17"
+        parent="2"
+        display="Caching"
+        module="ot"
+        controller="cache"
+        action=""
+        link="ot/cache"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="18"
+        parent="2"
+        display="Cron Jobs"
+        module="ot"
+        controller="cron"
+        action="index"
+        link="ot/cron/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="19"
+        parent="2"
+        display="Database Backup"
+        module="ot"
+        controller="backup"
+        action=""
+        link="ot/backup"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="20"
+        parent="2"
+        display="Email Queue"
+        module="ot"
+        controller="emailqueue"
+        action="index"
+        link="ot/emailqueue/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="21"
+        parent="2"
+        display="Logs"
+        module="ot"
+        controller="log"
+        action="index"
+        link="ot/log/index"
+        target="_self"
+    />
+    <ot_tbl_ot_nav
+        id="22"
+        parent="2"
+        display="Version Information"
+        module="ot"
+        controller="index"
+        action="index"
+        link="ot/index/index"
+        target="_self"
+    />
+    <!-- Table ot_tbl_ot_oauth_client_token -->
+    <ot_tbl_ot_oauth_client_token />
+    <!-- Table ot_tbl_ot_oauth_server_consumer -->
+    <ot_tbl_ot_oauth_server_consumer />
+    <!-- Table ot_tbl_ot_oauth_server_nonce -->
+    <ot_tbl_ot_oauth_server_nonce />
+    <!-- Table ot_tbl_ot_oauth_server_token -->
+    <ot_tbl_ot_oauth_server_token />
+    <!-- Table ot_tbl_ot_role -->
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="1"
+        name="guest"
+        inheritRoleId="0"
+        editable="1"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="2"
+        name="administrator"
+        inheritRoleId="0"
+        editable="0"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="3"
+        name="oit_ot_staff"
+        inheritRoleId="0"
+        editable="0"
+    />
+    <!-- Table ot_tbl_ot_role_rule -->
+    <ot_tbl_ot_role_rule
+        ruleId="8"
+        roleId="2"
+        type="allow"
+        resource="*"
+        privilege="*"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="9"
+        roleId="3"
+        type="allow"
+        resource="*"
+        privilege="*"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="111"
+        roleId="2"
+        type="allow"
+        resource="*"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="233"
+        roleId="3"
+        type="allow"
+        resource="*"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="234"
+        roleId="1"
+        type="allow"
+        resource="getVersions"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="235"
+        roleId="1"
+        type="deny"
+        resource="getConfigOption"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="236"
+        roleId="1"
+        type="deny"
+        resource="getMyAccount"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="237"
+        roleId="1"
+        type="deny"
+        resource="updateMyAccount"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="238"
+        roleId="1"
+        type="deny"
+        resource="getAccount"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="239"
+        roleId="1"
+        type="deny"
+        resource="updateAccount"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="240"
+        roleId="1"
+        type="deny"
+        resource="getCronJobs"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="241"
+        roleId="1"
+        type="deny"
+        resource="setCronJobStatus"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="242"
+        roleId="1"
+        type="deny"
+        resource="getBugReports"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="243"
+        roleId="1"
+        type="allow"
+        resource="describe"
+        privilege="*"
+        scope="remote"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="342"
+        roleId="1"
+        type="allow"
+        resource="ot_bug"
+        privilege="add"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="343"
+        roleId="1"
+        type="allow"
+        resource="ot_bug"
+        privilege="index"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="344"
+        roleId="1"
+        type="allow"
+        resource="ot_api"
+        privilege="*"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="345"
+        roleId="1"
+        type="allow"
+        resource="ot_cron"
+        privilege="*"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="346"
+        roleId="1"
+        type="allow"
+        resource="default_index"
+        privilege="*"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="347"
+        roleId="1"
+        type="allow"
+        resource="error_error"
+        privilege="*"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="348"
+        roleId="1"
+        type="allow"
+        resource="ot_image"
+        privilege="*"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="349"
+        roleId="1"
+        type="allow"
+        resource="ot_login"
+        privilege="*"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="350"
+        roleId="1"
+        type="allow"
+        resource="ot_oauthserver"
+        privilege="access-token"
+        scope="application"
+    />
+    <ot_tbl_ot_role_rule
+        ruleId="351"
+        roleId="1"
+        type="allow"
+        resource="ot_oauthserver"
+        privilege="request-token"
+        scope="application"
+    />
+    <!-- Table ot_tbl_ot_trigger_action -->
+    <ot_tbl_ot_trigger_action
+        triggerActionId="14"
+        triggerId="Login_Index_Signup"
+        name="Signup for an account"
+        helper="Ot_Trigger_Plugin_Email"
+        enabled="1"
+    />
+    <ot_tbl_ot_trigger_action
+        triggerActionId="15"
+        triggerId="Login_Index_Forgot"
+        name="User forgot password"
+        helper="Ot_Trigger_Plugin_Email"
+        enabled="1"
+    />
+    <ot_tbl_ot_trigger_action
+        triggerActionId="16"
+        triggerId="Admin_Account_Create_Password"
+        name="Admin created account"
+        helper="Ot_Trigger_Plugin_Email"
+        enabled="1"
+    />
+    <ot_tbl_ot_trigger_action
+        triggerActionId="17"
+        triggerId="Admin_Account_Create_NoPassword"
+        name="When a WRAP account gets created"
+        helper="Ot_Trigger_Plugin_Email"
+        enabled="1"
+    />
+    <!-- Table ot_tbl_ot_trigger_helper_email -->
+    <ot_tbl_ot_trigger_helper_email
+        triggerActionId="14"
+        to="[[emailAddress]]"
+        from="admin@webapps.ncsu.edu"
+        subject="Thanks for signing up!"
+        body="Hey [[firstName]]!  Welcome to The System.
+
+
+
+Your user id:  [[username]]
+
+You password: [[password]]"
+        />
+    <ot_tbl_ot_trigger_helper_email
+        triggerActionId="15"
+        to="[[emailAddress]]"
+        from="admin@webapps.ncsu.edu"
+        subject="Your password has been reset"
+        body="Thanks [[firstName]] [[lastName]]
+
+
+
+You password for [[username]] has been reset.  Go here [[resetUrl]] to change your password."
+        />
+    <ot_tbl_ot_trigger_helper_email
+        triggerActionId="16"
+        to="[[emailAddress]]"
+        from="admin@webapps.ncsu.edu"
+        subject="You've been given an account"
+        body="Hey [[firstName]], You've been given a(n) [[role]] account!
+
+
+
+[[username]]
+
+[[password]]"
+    />
+    <ot_tbl_ot_trigger_helper_email
+        triggerActionId="17"
+        to="[[emailAddress]]"
+        from="admin@webapps.ncsu.edu"
+        subject="You've got a new account!"
+        body="Hey [[firstName]] [[lastName]]
+
+
+
+You've been given a new [[role]] [[loginMethod]] account.
+
+
+
+Your username is [[username]]"
+    />
+    <!-- Table ot_tbl_ot_trigger_helper_emailqueue -->
+    <ot_tbl_ot_trigger_helper_emailqueue />
+</dataset>

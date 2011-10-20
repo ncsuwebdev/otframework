@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+div.zend_form {
+    margin: 10px auto;
+    width: 400px;
+    border: 1px solid #CCC;
+    background-color: #FFF;
+    padding: 10px;
+}

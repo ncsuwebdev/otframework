@@ -1,0 +1,69 @@
+<div>
+    <?php echo $this->translate("ot-custom-edit:header"); ?>
+    <br /><br />
+    <form method="post" action="?attributeId=<?php echo $this->attribute['attributeId']; ?>" id="edit" class="checkRequiredFields">
+        <table class="form">
+            <tbody>
+                <tr>
+                    <td width="100"><label><?php echo $this->translate("ot-custom-form:object"); ?></label></td>
+                    <td><?php echo $this->objectId; ?></td>
+                </tr>
+                <tr>
+                    <td><label><?php echo $this->translate("ot-custom-form:description"); ?></label></td>
+                    <td><?php echo $this->objectDescription; ?></td>
+                </tr>
+            </tbody>
+        </table>
+        <br /><br />
+        <table class="form">
+            <tr>
+                <td width="130"><label><?php echo $this->translate("ot-custom-form:label"); ?></label></td>
+                <td><input type="text" name="label" id="label" value="<?php echo $this->attribute['label']; ?>" size="20" class="required" /></td>
+            </tr>
+            <tr>
+                <td><label><?php echo $this->translate("ot-custom-form:type"); ?></label></td>
+                <td>
+                    <select id="type" name="type" class="required">
+                        <?php foreach ($this->types as $key => $value) : ?>
+                            <option<?php echo ($key == $this->attribute['type']) ? ' selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div id="descriptionInput" style="display: none;">
+                           <textarea name="option[]"><?php if ($this->attribute['type'] == 'description') : ?><?php echo isset($this->attribute['options'][0]) ? $this->attribute['options'][0] : ''; ?><?php endif; ?></textarea>
+                       </div>
+                    <div id="opt"<?php if ($this->attribute['type'] == 'select' || $this->attribute['type'] == 'radio') { echo ' style="display: block;"'; } ?>>
+                        <?php foreach ($this->attribute['options'] as $o) : ?>
+                            <input type="checkbox" value="<?php echo $o; ?>" name="opt_delete[]" /> <?php echo $this->translate("ot-custom-edit:delete", $o); ?><br />
+                        <?php endforeach; ?>
+                        <br /><br />
+                        <?php echo $this->translate("ot-custom-edit:addOptions"); ?>
+                        <table class="form" id="options">
+                            <tbody>
+                                <tr id="optionRow">
+                                    <td width="50"><label for="option[]"><?php echo $this->translate("ot-custom-form:option"); ?></label></td>
+                                    <td width="120"><input type="text" maxlength="128" size="20" name="option[]" value="" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <a id="addRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate("ot-custom-form:linkAddRow"); ?></a>
+                        <a id="removeRowButton" class="ui-state-default ui-corner-all linkButton"><span class="ui-icon ui-icon-minusthick"></span><?php echo $this->translate("ot-custom-form:linkRemoveRow"); ?></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label><?php echo $this->translate("ot-custom-form:required"); ?></label></td>
+                <td><input type="checkbox" value="1" name="required" id="required"<?php if ($this->attribute['required']) echo ' checked="checked"'; ?> /></td>
+            </tr>
+            <tr>
+                <td><label><?php echo $this->translate("ot-custom-form:direction"); ?></label></td>
+                <td>
+                    <label for="direction"><input type="radio" value="vertical" name="direction"<?php if ($this->attribute['direction'] == 'vertical') echo ' checked="checked"'; ?> /> <?php echo $this->translate("ot-custom-form:vertical"); ?></label>
+                    <br />
+                    <label for="direction"><input type="radio" value="horizontal" name="direction" <?php if ($this->attribute['direction'] == 'horizontal') echo ' checked="checked"'; ?> /> <?php echo $this->translate("ot-custom-form:horizontal"); ?></label>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="<?php echo $this->translate("ot-custom-edit:linkSave"); ?>" />
+        <input type="button" value="<?php echo $this->translate("form-button-cancel"); ?>" id="cancel" />
+    </form>
+</div>

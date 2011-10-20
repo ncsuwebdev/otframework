@@ -1,0 +1,45 @@
+<textarea id="permissionList" style="display: none;"><?php echo $this->permissionList; ?></textarea>
+
+<?php echo $this->translate('ot-account-add:header'); ?>
+<br /><br />      
+<?php echo $this->form; ?>
+
+<?php foreach ($this->permissions as $module => $controllers): ?>
+    <table id = "<?php echo $module; ?>" class="<?php echo ucwords($module);?> list accessTable">
+        <thead>
+            <tr class="ui-widget-header">
+                <td><?php echo ucwords($module);?></td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($controllers as $controller => $actions) : ?>
+                <tr class="controller" id = "<?php echo $module . '-' . $controller; ?>">
+                    <td id="<?php echo $module . '-' . $controller;?>" title="<?php echo htmlspecialchars($actions['description'], ENT_QUOTES, 'utf-8'); ?>" class="td1 description controller <?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someAccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+                        <?php echo ucwords($controller); ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endforeach; ?>
+
+<div style="clear:both;" />
+
+<?php foreach ($this->permissions as $module => $controllers) :?>
+    <?php foreach ($controllers as $controller => $actions) : ?>
+        <?php  //if (!empty($actions['all']['access']) || !empty($actions['someAccess'])) :?>
+            <?php if (isset($actions['part'])) :?>
+                <div id="wrapper-<?php echo $module . '-' . $controller ;?>" class="wrapper">
+                    <div id="tooltip-<?php echo $module . '-' . $controller ;?>" class="actions">
+                        <table class="list">
+                            <tr class="controller ui-widget-header"><td><strong><?php echo ucwords($controller); ?></strong></td></tr>
+                            <?php foreach ($actions['part'] as $action => $access) :?>                        
+                                <tr><td class="action description <?php echo $access['access'] ? 'access' : 'noAccess';?>" id="<?php echo $module . '-' . $controller . '-' . $action;?>" title="<?php echo $access['description']; ?>"><?php echo ucwords($action);?></td></tr>
+                            <?php endforeach;?>
+                        </table>
+                    </div>
+                </div>
+            <?php endif;?>
+        <?php // endif;?>
+    <?php endforeach;?>
+<?php endforeach;?>

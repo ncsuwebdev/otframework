@@ -1,0 +1,21 @@
+<a href="<?php echo $this->url(array('controller' => 'api', 'action' => 'sample'), 'ot', true); ?>">View a code sample for how to use this API with PHP</a>
+
+<?php foreach ($this->api as $a) : ?>   
+    <div class="docBlock">
+        <p><b><?php echo $this->translate('ot-api-index:method'); ?>: </b><code><?php echo $a['method']; ?></code></p>
+        <p><b><?php echo $this->translate('ot-api-index:description'); ?>: </b><?php echo $a['description']; ?></p>
+        <p><b><?php echo $this->translate('ot-api-index:returnValue'); ?>: </b><?php echo $this->defaultVal($a['return'], $this->translate('ot-api-index:noReturnValue')); ?></p>
+        <span>
+            <b><?php echo $this->translate('ot-api-index:arguments'); ?>: </b>
+            <?php if (count($a['args']) > 0) : ?>
+                <ul class="args">
+                    <?php foreach ($a['args'] as $arg) : ?>
+                        <li><code><?php echo $arg; ?></code></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <?php echo $this->translate('ot-api-index:noArguments'); ?>
+            <?php endif; ?>
+        </span>
+    </div>   
+<?php endforeach; ?>

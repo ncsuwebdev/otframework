@@ -1,0 +1,116 @@
+#masterList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 700px;
+}
+
+#masterList li {
+    margin: 10px 0 0 10px;
+    padding: 0.4em;
+    padding-left: 3em;
+    font-size: 1.0em;
+    border-top: 1px solid #DDD;;
+}
+
+#masterList li span.moveHandle {
+    position: absolute;
+    margin-left: -1.3em;
+    cursor: pointer;
+}
+
+#undoMessage {
+    font-size: 0.9em;
+    color: #777;
+}
+
+a.controlButton {
+    float: right;
+    padding: 0em 0.3em 0em 0.3em;
+    line-height: 1px;
+    text-decoration: none;
+    position: relative;
+    margin-left: 3px;
+}
+
+ul#masterList * {
+    list-style-type: none;
+}
+
+.editElement, .deleteElement {
+    cursor: pointer;
+}
+
+span#linkPrefix {
+    font-size: 12px;
+    padding-right: 3px;    
+}
+
+div.elm {
+    margin-bottom: 10px;
+    line-height: 20px;
+}
+
+form#navElementForm label {
+    float: left;
+    font-weight: bold;
+    display: block;
+    width: 115px;
+    overflow: hidden;
+    line-height: 20px;
+    height: 20px;
+    white-space: nowrap;
+    margin-right: 10px;
+}
+
+fieldset {
+    border: 1px solid #DDD;
+    padding: 10px;
+    width: 650px;
+}
+
+fieldset legend {
+    padding: 0 5px;
+    font-weight: bold;
+}
+
+#masterList .dropzone {
+    height: 3px;
+    background-color: #fff;
+    border-bottom: 6px solid #fff;
+    margin-left: -40px;
+    margin-bottom: 1px;
+}
+
+/*
+#masterList .liOpen { 
+    background: url(../../../images/ot/nav_li.gif) left repeat-y;
+}
+*/
+
+#masterList .liOpen > a.expander {
+    width: 15px;
+    height: 1em;
+    background: url(../../../images/ot/nav_open.gif) 50% 50% no-repeat;
+}
+
+#masterList .liClosed > a.expander {
+    width: 15px;
+    height: 1em;
+    background: url(../../../images/ot/nav_closed.gif) 50% 50% no-repeat;
+}
+
+a.expander {
+    position: absolute;
+    margin-top: 0.70em;
+    margin-left: -2.3em;
+    cursor: pointer;
+}
+    
+#masterList .liClosed ul {
+    display: none;
+}
+
+#saveNavButton.highlight {
+	border: 2px solid #fb3;
+}

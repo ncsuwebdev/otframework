@@ -1,0 +1,174 @@
+<?php echo $this->translate('ot-account-index:header'); ?>
+<br /><br />
+<?php if ($this->acl['delete']): ?>
+    <a href="<?php echo $this->url(array('action' => 'delete', 'accountId' => $this->userData['accountId']), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
+    <?php echo $this->translate('ot-account-index:linkDeleteUser'); ?>
+    <span class="ui-icon ui-icon-minusthick"></span></a>
+    <br /><br />
+<?php endif; ?>
+
+<div id="oauth">
+    <ul>
+        <li><a href="#tabs-data"><span><?php echo $this->translate('ot-account-index:account'); ?></span></a></li>
+        <?php foreach ($this->consumers as $c): ?>
+        <li><a href="#tabs-<?php echo $c['consumerId']; ?>"><span><?php echo $c['name']; ?></span></a></li>
+        <?php endforeach; ?>
+        <li><a href="#tabs-connections"><span><?php echo $this->translate('ot-account-index:connectionsTo', array($this->config->user->appTitle->val)); ?></span></a></li>
+    </ul>
+    <div id="tabs-data">
+    <?php echo $this->translate('ot-account-index:userDataHeader'); ?>
+    <br /><br />
+    <?php if ($this->acl['edit'] || $this->acl['changePassword']) : ?>
+        <?php if ($this->acl['edit']): ?>   
+            
+            <a href="<?php echo $this->url(array('action' => 'edit', 'accountId' => $this->userData['accountId']), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
+            <?php echo $this->translate('ot-account-index:linkEditUserData'); ?>
+            <span class="ui-icon ui-icon-pencil"></span></a>
+        <?php endif; ?>
+        <?php if ($this->acl['changePassword']) : ?>
+            <a href="<?php echo $this->url(array('action' => 'change-password'), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
+            <?php echo $this->translate('ot-account-index:linkChangePassword'); ?>
+            <span class="ui-icon ui-icon-locked"></span></a>
+        <?php endif; ?>
+        <br /><br />        
+    <?php endif; ?>    
+        <div id="gravatarWrapper">
+            <?php echo $this->gravatar($this->userData['emailAddress'], array('imgSize' => 128)); ?>
+            <a href="http://gravatar.com" target="_blank">Change picture...</a>
+        </div>
+        <table class="form">
+            <tbody>
+                <tr>
+                    <td width="130"><label><?php echo $this->translate('model-account-username'); ?></label></td>
+                    <td><?php echo $this->userData['username']; ?></td>
+                </tr>
+                <tr>
+                    <td><label><?php echo $this->translate('model-account-loginMethod'); ?></label></td>
+                    <td><?php echo $this->userData['authAdapter']['name']; ?></td>
+                </tr>
+                <tr>
+                    <td><label><?php echo $this->translate('model-account-role'); ?></label></td>
+                    <td><?php echo implode(', ', $this->roles); ?></td>
+                </tr>
+                <tr>
+                    <td>
+                    <label><?php echo $this->translate('model-account-firstName'); ?></label></td>
+                    <td><?php echo $this->userData['firstName']; ?></td>
+                </tr> 
+                <tr>
+                    <td>
+                    <label><?php echo $this->translate('model-account-lastName'); ?></label></td>
+                    <td><?php echo $this->userData['lastName']; ?></td>
+                </tr>                 
+                <tr>
+                    <td>            
+                    <label><?php echo $this->translate('model-account-emailAddress'); ?></label></td>
+                    <td><?php echo (empty($this->userData['emailAddress']) ? 'None' : $this->userData['emailAddress']); ?></td>
+                </tr>                 
+                <tr>
+                    <td>            
+                    <label><?php echo $this->translate('model-account-timezone'); ?></label></td>
+                    <td><?php echo (empty($this->userData['timezone']) ? $this->config->user->timezone->val : $this->userData['timezone']); ?></td>
+                </tr> 
+                <?php foreach($this->attributes as $key=>$attr) : ?>
+                <tr>
+                    <td>            
+                    <label><?php echo ucwords($key); ?>:</label></td>
+                    <td>
+                    <?php if (empty($attr)) : ?> 
+                          <?php echo $this->translate('ot-account-index:none'); ?>
+                    <?php elseif (is_array($attr)): ?>
+                          <?php echo implode(', ', $attr); ?>
+                    <?php else : ?>
+                          <?php echo $attr; ?>
+                    <?php endif; ?>
+                    </td>
+                </tr>         
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        * To change your account's picture, signup for an account at <a href="http://gravatar.com" target="_blank">Gravatar.com</a> and associate a picture with your account's email address (<?php echo $this->userData['emailAddress']; ?>).
+    </div>
+    <?php foreach ($this->consumers as $c): ?>
+    <div id="tabs-<?php echo $c['consumerId']; ?>">
+        <?php echo $this->translate('ot-account-index;interact', array($this->config->user->appTitle->val, '<b>' . $c['name'] . '</b>')); ?>
+        <?php if ($c['authorized']): ?>
+            <div class="access authorized">
+                <span><?php echo $this->translate('ot-account-index:authorizedOn', array($c['name'])); ?></span>
+                <?php echo $this->translate('ot-account-index:revokeAccess'); ?> 
+                <?php if ($c['website'] == ''): ?>
+                    <?php echo $c['name']; ?>.
+                <?php else: ?>
+                    <a href="<?php echo $c['website']; ?>"><?php echo $c['name']; ?></a>.
+                <?php endif; ?>
+            </div>            
+        <?php else: ?>
+            <div class="access notAuthorized">
+                <span><?php echo $this->tramslate('ot-account-index;notAuthorized', array($c['name'])); ?></span>
+                <?php if ($this->acl['grantAccess']): ?>
+                    <a href="<?php echo $this->url(array('controller' => 'oauthclient', 'consumerId' => $c['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
+                    <?php echo $this->translate('ot-account-index:authorizeAccess'); ?>
+                    <span class="ui-icon ui-icon-key"></span></a>
+                <?php endif; ?>
+            </div>        
+        <?php endif; ?>
+        <h2><?php echo $this->translate('ot-account-index:serviceDescription'); ?></h2>
+        <div class="description">
+            <?php echo nl2br($c['description']); ?>
+        </div>
+    </div>
+    <?php endforeach; ?>    
+    <div id="tabs-connections"> 
+        <?php if ($this->acl['oauth'] || $this->acl['apiDocs']) : ?>
+            <div id="developers">
+                <span><?php echo $this->translate('ot-account-index:developers'); ?></span>
+                <?php if ($this->acl['oauth']) : ?>
+                    <?php echo $this->translate('ot-account-index:canSetup', '<b>' . $this->config->user->appTitle->val . '</b>'); ?>
+                    <a href="<?php echo $this->url(array(), 'oauth', true); ?>">here</a>.
+                    <br />
+                <?php endif; ?>
+                <?php if ($this->acl['apiDocs']) : ?>
+                    <br />
+                    <div style="text-align: center">
+                        <a href="<?php echo $this->url(array(), 'api', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:viewApiDocumentation'); ?><span class="ui-icon ui-icon-gear"></span></a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>    
+        <?php echo $this->translate('ot-account-index:connectionHeader'); ?>
+        <div class="ui-helper-clearfix"></div>
+    <?php if (count($this->accessTokens) != 0): ?>
+        <?php foreach ($this->accessTokens as $t): ?>
+        <div class="token">
+            <div class="consumerIcon">
+                <?php if ($t['consumer']['imageId'] != 0): ?>
+                <img src="<?php echo $this->url(array('imageId' => $t['consumer']['imageId']), 'image', true); ?>" />
+                <?php else: ?>
+                <img src="<?php echo $this->baseUrl(); ?>/images/ot/consumer.png" alt="consumer" />
+                <?php endif; ?>
+            </div>
+            <?php if ($this->acl['revokeAccess']): ?>
+            <div class="revoke">
+                <a href="<?php echo $this->url(array('controller' => 'oauthserver', 'action' => 'revoke', 'consumerId' => $t['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
+                    <?php echo $this->translate('ot-account-index:consumerHasAccessButton'); ?>
+                <span class="ui-icon ui-icon-minusthick"></span></a>            
+            </div>
+            <?php endif; ?>
+            <div class="name">
+                <a href="<?php echo $t['consumer']['website']; ?>"><?php echo $t['consumer']['name']; ?></a> has access.
+            </div>
+            <div class="description">
+                <?php echo nl2br($t['consumer']['description']); ?>
+            </div>    
+            <div class="accessToken">
+                <?php echo $this->translate('ot-account-index:accessTokenGenerated', array ($this->dateFormat($t['requestDt'], $this->config->user->dateTimeFormat->val))); ?>
+            </div>
+            <div class="ui-helper-clearfix"></div>
+        </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+    <b><?php echo $this->translate('ot-account-index:noConnectionsMade'); ?></b>
+    <?php endif; ?>
+    </div>
+</div>
+<br /><br />

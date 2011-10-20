@@ -1,0 +1,36 @@
+<?php echo $this->translate("ot-login-login:header"); ?> 
+<br /><br />
+<form action="" method="post" id="login" class="checkRequiredFields">
+<table class="form">
+    <tbody>
+    <tr>
+        <td class="label"><label for="userId"><?php echo $this->translate("ot-login-login:userId"); ?></label></td>
+        <td class="value"><input type="text" id="username" name="username" class="required" /></td>
+    </tr>
+    <tr>
+        <td class="label"><label for="password"><?php echo $this->translate("ot-login-login:password"); ?> </label></td>
+        <td class="value"><input type="password" id="password" name="password" class="required" /><br /><br />
+        <a href="<?php echo $this->url(array('action' => 'forgot'), 'login', true); ?>"><?php echo $this->translate("ot-login-login:clickHere"); ?></a> </td>
+    </tr>
+    </tbody>
+</table>
+<input type="submit" value="Login" />
+</form>
+<br /><br />
+<form method="POST" action="<?php echo $this->url(array('action' => 'signup'), 'login', true); ?>" id="signup" class="checkRequiredFields">
+<h3><?php echo $this->translate("ot-login-login:noAccountTitle"); ?></h3>
+<?php echo $this->translate("ot-login-login:noAccountHeader"); ?>
+<br /><br />
+<table class="form">
+    <tr>
+        <td><label for="userId"><?php echo $this->translate("ot-login-login:userId"); ?></label></td>
+        <td><input type="text" id="userId" name="userId" value="" class="required" />
+        <?php echo $this->translate("ot-login-login:alphanumericOnly"); ?></td>
+    </tr>
+    <tr>
+        <td><label for="email"><?php echo $this->translate("ot-login-login:email"); ?></label></td>
+        <td><input type="text" id="email" name="email" value="" class="required" /></td>
+    </tr>
+</table>
+<input type="submit" value="<?php echo $this->translate("ot-login-login:linkSignup"); ?>" />
+</form>        

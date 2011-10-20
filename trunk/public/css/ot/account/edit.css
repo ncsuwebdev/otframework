@@ -1,0 +1,113 @@
+@CHARSET "UTF-8";
+
+
+div.zend_form label.optional, div.zend_form label.required {
+    width: 125px;
+}
+
+div.accessRoles fieldset div.elm label {
+    float : left;
+    
+}
+
+div.accessRoles fieldset div.elm input[type="checkbox"] {
+    float : left; 
+    margin : 5px;
+}
+
+div.accessRoles br {
+    display : none;
+}
+
+legend {
+    font-size : 12pt;
+    font-weight : bold; 
+}
+
+div.general {
+    float : left;
+    width : 25%;
+}
+
+div.accessRoles {
+    float : left;
+    width : 75%;
+}
+
+table.accessTable {
+    float : left;
+    margin : 5px;
+    text-align : center;
+}
+
+td{
+    width : 125px;
+}
+
+td.hidden {
+    margin : none;
+    background : none;
+}
+
+td.access {
+    background-image: url(../../../../images/ot/aclAccess.gif);
+    background-repeat: repeat-x;
+    color: #FFF;
+    font-weight: normal;
+    text-align: center;
+    background-color: #6b2;
+}
+
+td.noAccess {
+    width : 125px;
+    background-image: url(../../../../images/ot/aclNoAccess.gif);
+    background-repeat: repeat-x;
+    color: #FFF;
+    font-weight: normal;
+    text-align: center;    
+    background-color: #b21;
+}
+
+td.someAccess {
+    background-image: url(../../../../images/ot/aclSomeAccess.gif);
+    background-repeat: repeat-x;
+    background-color: #fb0;
+    color: #000;
+    font-weight: normal;
+    text-align: center;    
+}
+
+div.actions {
+    padding : 5px;
+    background : #EEE;
+    border : none;
+    -moz-box-shadow: 4px 5px 15px #555;
+    -webkit-box-shadow: 4px 5px 15px #555;
+    box-shadow: 4px 5px 15px #555;
+    text-align : center;
+}
+
+div.wrapper {
+    display : none;
+}
+
+div.actions table {
+    margin : 0;
+}
+
+td.controller {
+    font-weight : bold;
+}
+
+td.action {
+    font-size : 95%;
+    line-height : 1.05263;
+}
+
+td.action.noAccess {
+    display : none;
+}
+
+td.controller.access, td.controller.someAccess {
+    cursor : pointer;
+}

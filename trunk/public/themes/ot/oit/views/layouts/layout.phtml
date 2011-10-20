@@ -1,0 +1,117 @@
+<?php echo $this->doctype('XHTML1_STRICT'); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<?php
+$this->headMeta()->appendName('keywords', $this->config->user->metaKeywords->val)
+                 ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
+                 ->appendHttpEquiv('Content-Language', 'en-US');
+
+echo $this->headMeta() . "\n";
+
+$this->headTitle($this->config->user->appTitle->val)
+     ->headTitle(strip_tags($this->title))
+     ->headTitle()->setSeparator(' - ');
+
+echo "\n";
+
+echo $this->headTitle() . "\n\n";
+
+//print the minified (common) css first, then the autoloaded css
+echo $this->minifyHeadLink() . "\n";
+
+//add the NCSU branding css to the headlink
+$this->headLink()->appendStylesheet('http://www.ncsu.edu/brand/utility-bar/iframe/css/utility_bar_iframe.css');
+
+echo $this->headLink() . "\n\n";
+
+// print the minified (common) scripts first, then the autoloaded scripts
+echo $this->minifyHeadScript() . "\n";
+echo $this->headScript() . "\n";
+
+$this->overrideTranslation()->js();
+echo "\n";
+
+
+?>
+</head>
+
+<body>
+<p><input type="hidden" name="baseUrl" id="baseUrl" value="<?php echo $this->baseUrl(); ?>" /></p>
+
+<!-- START NCSU Branding Utility Bar -->
+<iframe name="ncsu_branding_bar" id="ncsu_branding_bar" frameborder="0" src="http://www.ncsu.edu/brand/utility-bar/iframe/index.php?color=black_on_white&amp;inurl=<?php echo Zend_Registry::get('siteUrl'); ?>&amp;center=yes" scrolling="no">
+Your browser does not support inline frames or is currently configured  not to display inline frames.
+<br />Visit <a href="http://ncsu.edu/">http://www.ncsu.edu</a>.
+</iframe>
+<!-- END NCSU Branding Utility Bar -->
+
+    <div id="doc2" class="yui-t7">
+        <div id="hd">
+            <div id="logoBox">
+                <div id="brandingBar">
+                    <div id="brandingBarInner">
+                        <div id="brandingLinks">
+                            <a id="ncsuBrandingLink" target="_blank" href="http://www.ncsu.edu"><span>ncsu.edu</span></a>
+                            <a id="oitBrandingLink" target="_blank" href="http://oit.ncsu.edu"><span>oit.ncsu.edu</span></a>
+                        </div>
+                        <div class="authInfo"><?php echo $this->render('auth.phtml'); ?></div>
+                    </div>
+                </div>
+                <div class="ui-helper-clearfix"></div>
+                <a id="homeLink" href="<?php echo $this->baseUrl(); ?>">
+                    <span id="oitLogo">
+                        <span class="title"><?php echo $this->config->user->appTitle->val; ?></span>
+                    </span>
+                </a>
+                <br /><br />
+            </div>
+            <div id="header-nav-menu">
+            <?php echo $this->render('nav.phtml'); ?>
+            </div>
+        </div>
+
+        <div id="bd" class="yui-main">
+            <div class="yui-g">
+                <div id="systemMessages" class="gradient-yellow">
+                    <ul>
+                        <?php if ($this->messages): ?>
+                            <?php foreach ($this->messages as $m) : ?>
+                                <li><?php echo $this->translate($m); ?></li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <?php if ($this->title || $this->titleBackButton || $this->titleForwardButton): ?>
+            <div class="yui-gb gradient-gray" id="pageTitle">
+                <div class="yui-u first left">
+                    <?php if ($this->titleBackButton): ?>
+                        <a href="<?php echo $this->titleBackButton['href']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->titleBackButton['text']; ?><span class="ui-icon ui-icon-carat-1-w"></span></a>
+                    <?php endif; ?>&nbsp;
+                </div>
+                <div class="yui-u center" id="pageTitleValue"><?php echo $this->truncate($this->title, 70); ?></div>
+                <div class="yui-u right">
+                    <?php if ($this->titleForwardButton): ?>
+                        <a href="<?php echo $this->titleForwardButton['href']; ?>" class="ui-state-default ui-corner-all linkButtonRight"><?php echo $this->titleForwardButton['text']; ?><span class="ui-icon ui-icon-carat-1-e"></span></a>
+                    <?php endif; ?>&nbsp;
+                </div>
+            </div>
+            <?php endif; ?>
+            <div class="yui-g" id="mainContent">
+                <div class="contentBody">
+
+                    <?php echo $this->layout()->content; ?>
+                </div>
+            </div>
+        </div>
+        <div id="ft">
+            <div id="ft-header" class="gradient-gray ui-helper-clearfix">
+                <div id="overrideTranslateWrapper"><?php $this->overrideTranslation()->link($this->translate('theme-layouts-layout:editText')); ?></div>
+            </div>
+            <?php echo $this->render('footer.phtml'); ?>
+        </div>
+    </div>
+  </body>
+</html>

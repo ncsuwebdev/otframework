@@ -1,0 +1,8 @@
+<div id="debugHeader" class="ui-corner-all debug debugModeOn">
+<div id="toggleDebugInfo"><a id="toggleDebugInfoButton" class="ui-corner-all ui-state-default linkButton">Toggle Debug Info<span class="ui-icon ui-icon-carat-2-n-s"></span></a></div>
+Site is currently in debug mode.
+<a href="<?php echo $this->url(array('controller' => 'debug'), 'ot', true); ?>">Click Here</a> to disable.
+<div id="debugInfo">
+    Database Info: Connected to <b><?php echo $this->debugInfo['database']['dbname']; ?></b> as <b><?php echo $this->debugInfo['database']['username']; ?></b> on <b><?php echo $this->debugInfo['database']['host']; ?></b>
+</div>
+</div>

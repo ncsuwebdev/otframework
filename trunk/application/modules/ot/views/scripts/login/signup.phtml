@@ -1,0 +1,8 @@
+<?php echo $this->translate("ot-login-signup:header", $this->config->user->appTitle->val); ?>  
+<a href="<?php echo $this->url(array('realm' => $this->realm), 'login', true); ?>"><?php echo $this->translate("ot-login-signup:clickHere"); ?></a> 
+<br /><br />
+<?php echo $this->translate("ot-login-signup:enterId"); ?>
+<br /><br />
+<div id="signupForm">
+    <?php echo $this->form; ?>
+</div>

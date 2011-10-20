@@ -1,0 +1,73 @@
+<?php if ($this->acl['index']): ?>
+    <a href="<?php echo $this->url(array('controller' => 'trigger'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-trigger-details:linkBack"); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a><br /><br />
+<?php endif; ?>
+<?php echo $this->translate("ot-trigger-details:header"); ?>
+<br /><br />
+<table class="form">
+    <tbody>
+        <tr>
+            <td><label><?php echo $this->translate("ot-trigger-details:trigger"); ?></label></td>
+            <td><?php echo $this->trigger->getName(); ?></td>
+        </tr>
+        <tr>
+            <td><label><?php echo $this->translate("ot-trigger-details:description"); ?></label></td>
+            <td><?php echo $this->trigger->getDescription(); ?></td>
+        </tr>
+    </tbody>
+</table><br />
+    <?php if ($this->acl['add']) : ?>
+        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'name' => $this->trigger->getName()), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-trigger-details:linkAdd"); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+        <br /><br />
+    <?php endif; ?>
+    <table class="list">
+        <tbody>
+            <tr class="ui-widget-header">
+                <th width="200"><?php echo $this->translate("ot-trigger-details:name"); ?></th>
+                <th width="300"><?php echo $this->translate("ot-trigger-details:action"); ?></th>
+                <?php if ($this->acl['edit']) : ?>
+                <th width="50"><?php echo $this->translate("table-header-edit"); ?></th>
+                <?php endif; ?>
+                <?php if ($this->acl['delete']) : ?>
+                <th width="50"><?php echo $this->translate("table-header-delete"); ?></th>
+                <?php endif; ?>
+                <?php if ($this->acl['changeStatus']) : ?>
+                <th width="100"><?php echo $this->translate("table-header-status"); ?></th>
+                <?php endif; ?>
+                <?php if ($this->acl['add']) : ?>
+                <th width="100"><?php echo $this->translate("table-header-clone"); ?></th>
+                <?php endif; ?>
+            </tr>
+            <?php if (count($this->actions) > 0) : ?>
+                <?php foreach ($this->actions as $a) : ?>
+                <tr>
+                    <td><?php echo $a['name']; ?></td>
+                    <td><?php echo $a['helper']; ?></td>
+                    <?php if ($this->acl['edit']) : ?>
+                    <td align="center">
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'edit', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
+                    </td>
+                    <?php endif; ?>
+                    <?php if ($this->acl['delete']) : ?>
+                    <td align="center">
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'delete', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>
+                    </td>
+                    <?php endif; ?>
+                    <?php if ($this->acl['changeStatus']) : ?>
+                    <td align="center">
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'change-status', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo ($a['enabled']) ? $this->translate('ot-trigger-details:disableAction') : $this->translate('ot-trigger-details:enableAction'); ?></a>
+                    </td>
+                    <?php endif; ?>
+                    <?php if ($this->acl['add']) : ?>
+                    <td align="center">
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->triggerId, 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo $this->translate('ot-trigger-clone:cloneAction'); ?></a>
+                    </td>
+                    <?php endif; ?>
+                </tr>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <tr>
+                    <td class="noResults" colspan="4"><?php echo $this->translate("ot-trigger-details:noActions"); ?></td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>

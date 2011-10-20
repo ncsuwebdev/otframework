@@ -1,0 +1,57 @@
+@CHARSET "UTF-8";
+
+.consumer {
+    margin-left: 90px;
+}
+
+.consumerIcon {
+    width: 64px;
+    height: 64px;
+    float: left;
+    margin: 0px 10px;
+}
+
+.consumerIcon img {
+    margin: 0 auto;
+}
+
+.access {
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 1px solid #CCC;
+    padding: 2px;
+    margin: 10px 0px;
+}
+
+.key {
+    margin-bottom: 20px;
+    font-family: Courier;
+}
+
+#signature {
+    padding: 20px;
+    color: #999;
+    text-align: center;
+}
+
+.options {
+    margin: 20px 0px;
+}
+
+.name {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.description {
+    color: #333;
+    margin: 10px 0px;
+}
+
+.website a {
+    color: #AAA;
+}
+
+.usage {
+    font-weight: bold;
+}

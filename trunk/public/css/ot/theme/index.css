@@ -1,0 +1,36 @@
+.themePreview {
+   display: block;
+   float: left;
+   width: 215px;
+   height: 300px;
+   text-align: center;
+   padding: 5px;
+   text-decoration: none;
+   margin: 0 5px 25px 5px;
+   cursor: pointer;
+   background-color: #EEE;
+   border: 1px solid #BBB;
+}
+
+.themePreview img {
+   margin-top: 5px;
+}
+
+.activeTheme {
+   display: block;
+   width: 215px;
+   height: 300px;
+   text-align: center;
+   padding: 5px;
+   text-decoration: none;
+   margin: 0 5px 25px 5px;
+   cursor: pointer;
+   background-color: #EEE;
+   border: 1px solid #BBB;
+}
+
+hr {
+   clear: both;
+   border: 1px solid #666;
+   height: 1px;
+}

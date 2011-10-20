@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+    <!-- Table ot_tbl_ot_account -->
+    <ot_tbl_ot_account
+        username="admin"
+        realm="local"
+        password="21232f297a57a5a743894a0e4a801fc3"
+        emailAddress="admin@admin.com"
+        firstName="Admin"
+        lastName="Mcadmin"
+        timezone="America/New_York"
+    />
+    <ot_tbl_ot_account
+        username="admin2"
+        realm="local"
+        password="21232f297a57a5a743894a0e4a801fc3"
+        emailAddress="admin@admin.com"
+        firstName="Admin"
+        lastName="Mcadmin"
+        timezone="America/New_York"
+    />
+    <ot_tbl_ot_account
+        username="admin3"
+        realm="local"
+        password="21232f297a57a5a743894a0e4a801fc3"
+        emailAddress="admin@admin.com"
+        firstName="Admin"
+        lastName="Mcadmin"
+        timezone="America/New_York"
+    />
+        
+    <!-- Table ot_tbl_ot_account_roles -->
+    <ot_tbl_ot_account_roles
+        accountId="1"
+        roleId="3"
+    />
+    <ot_tbl_ot_account_roles
+        accountId="2"
+        roleId="25"
+    />
+    <ot_tbl_ot_account_roles
+        accountId="3"
+        roleId="25"
+    />
+
+    <!-- Table ot_tbl_ot_role -->
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="1"
+        name="guest"
+        inheritRoleId="0"
+        editable="1"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="2"
+        name="administrator"
+        inheritRoleId="0"
+        editable="0"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="3"
+        name="oit_ot_staff"
+        inheritRoleId="0"
+        editable="0"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="21"
+        name="test21"
+        inheritRoleId="0"
+        editable="1"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="22"
+        name="test22"
+        inheritRoleId="0"
+        editable="1"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="23"
+        name="test23"
+        inheritRoleId="0"
+        editable="1"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="24"
+        name="test24"
+        inheritRoleId="0"
+        editable="1"
+    />
+    <ot_tbl_ot_role
+        scope="application"
+        roleId="25"
+        name="DELETEME"
+        inheritRoleId="0"
+        editable="1"
+    />
+    
+    
+    
+    
+    
+</dataset>

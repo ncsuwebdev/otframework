@@ -1,0 +1,47 @@
+<div id="navElementDialog" title="<?php echo $this->translate("ot-nav-index:addElement"); ?>">
+    <form id="navElementForm">
+        <fieldset>
+            <legend><?php echo $this->translate("ot-nav-index:display"); ?></legend>
+        
+            <span><label for="display"><?php echo $this->translate("ot-nav-index:label"); ?></label></span>
+            <div class="elm"><input id="displayBox" name="display" type="text" value="" size="25" /></div>
+            
+            <span><label for="externalLink"><?php echo $this->translate("ot-nav-index:externalLink"); ?></label></span>
+            <div class="elm"><input id="externalLink" name="externalLink" type="checkbox" value="yes" size="25" /></div>
+            
+            <span><label for="link"><?php echo $this->translate("ot-nav-index:link"); ?></label></span>
+            <div class="elm"><span id="linkPrefix"><?php echo $this->siteUrl; ?>/</span><input id="linkBox" name="link" type="text" value="" size="25" /></div>
+        </fieldset>
+        <fieldset>
+            <legend><?php echo $this->translate("ot-nav-index:permissions"); ?></legend>
+            
+            <span><label for="module"><?php echo $this->translate("ot-nav-index:module"); ?></label></span>
+            <div class="elm"><select id="moduleBox" name="module"></select></div>
+            
+            <span><label for="controller"><?php echo $this->translate("ot-nav-index:controller"); ?></label></span>
+            <div class="elm"><select id="controllerBox" name="module"></select></div>
+            
+            <span><label for="action"><?php echo $this->translate("ot-nav-index:action"); ?></label></span>
+            <div class="elm"><select id="actionBox" name="module"></select></div>
+            
+            <div class="ui-state-highlight ui-corner-all">
+                <span class="ui-icon ui-icon-info"></span>
+                <?php echo $this->translate("ot-nav-index:noPermissions"); ?>
+            </div>
+            
+        </fieldset>   
+    </form>
+</div>
+<a href="#" id="saveNavButton" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo $this->translate("ot-nav-index:linkSave"); ?></a>
+&nbsp;
+<a href="#" id="addElementButton" class="ui-state-default ui-corner-all navElementModal linkButton"><?php echo $this->translate("ot-nav-index:linkAdd"); ?><span class="ui-icon ui-icon-newwin"></span></a>
+&nbsp;
+<a href="#" id="undoMoveButton" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-nav-index:undoMove"); ?><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></a>
+<br /><br />
+<span id="undoMessage"><?php echo $this->translate('ot-nav-index:undoMoveMessage'); ?></span>
+<br /><br /> 
+<div id="navEditorContainer">
+<ul id="masterList">
+    <?php echo $this->editNavTreeHtml; ?>
+</ul>
+</div>

@@ -1,0 +1,55 @@
+<script type="text/javascript">
+$('document').ready(function() {
+    $("#allUsers").flexigrid({
+        url: '<?php echo $this->url(array('action' => 'all'), 'account', true); ?>',
+        dataType: 'json',
+        colModel : [
+            {display: '<?php echo $this->translate('model-account-username'); ?>', name : 'username', width : 80, sortable : true, align: 'left'},
+            {display: '<?php echo $this->translate('model-account-firstName'); ?>', name : 'firstName', width : 100, sortable : true, align: 'left'},
+            {display: '<?php echo $this->translate('model-account-lastName'); ?>', name : 'lastName', width : 100, sortable : true, align: 'left'},
+            {display: '<?php echo $this->translate('model-account-loginMethod'); ?>', name : 'realm', width : 100, sortable : false, align: 'center'},
+            {display: '<?php echo $this->translate('model-account-role'); ?>', name : 'role', width : 150, sortable : true, align: 'center'}<?php if ($this->acl['edit']): ?>,
+            {display: '<?php echo $this->translate('table-header-edit'); ?>', name : 'details', width : 75, sortable : false, align: 'center'}<?php endif; if ($this->acl['delete']): ?>,
+            {display: '<?php echo $this->translate('table-header-delete'); ?>', name : 'details', width : 75, sortable : false, align: 'center'}<?php endif; ?>
+            ],
+        searchitems : [
+            {display: '<?php echo $this->translate('model-account-username'); ?>', name : 'username'},
+            {display: '<?php echo $this->translate('model-account-firstName'); ?>', name : 'firstName'},
+            {display: '<?php echo $this->translate('model-account-lastName'); ?>', name : 'lastName', isdefault: true},
+            {display: '<?php echo $this->translate('model-account-role'); ?>', name : 'role'}
+            ],
+        preProcess: preProcess,
+        sortname: "username",
+        sortorder: "asc",
+        singleSelect: true,
+        usepager: true,
+        title: false,
+        useRp: true,
+        rp: 15,
+        showTableToggleBtn: false
+    });
+});
+
+function preProcess(data) {
+    $.each(data.rows, function(i,row) {
+        row.cell[0] = '<a href="<?php echo $this->url(array('action' => 'index'), 'account', true); ?>?accountId=' + row.id + '">' + row.cell[0] + '</a>';
+        <?php if ($this->acl['edit']): ?>
+        row.cell[row.cell.length] = '<a href="<?php echo $this->url(array('action' => 'edit'), 'account', true); ?>?accountId=' + row.id + '" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>';
+        <?php endif; if ($this->acl['delete']): ?>
+        row.cell[row.cell.length] = '<a href="<?php echo $this->url(array('action' => 'delete'), 'account', true); ?>?accountId=' + row.id + '" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>';
+        <?php endif; ?>
+    });
+    
+    return data;
+}
+</script>
+
+<?php if ($this->acl['add']): ?>
+<a href="<?php echo $this->url(array('action' => 'add'), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
+<?php echo $this->translate('ot-account-all:linkNewAccount'); ?>
+<span class="ui-icon ui-icon-plusthick"></span></a>
+<br /><br />
+<?php endif; ?>
+<?php echo $this->translate('ot-account-all:header'); ?>
+<br /><br />
+<table id="allUsers" style="display:none"></table>

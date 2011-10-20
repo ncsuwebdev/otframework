@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<dataset>
+    <!-- Table ot_tbl_ot_account -->
+    <ot_tbl_ot_account
+        username="admin"
+        realm="local"
+        password="21232f297a57a5a743894a0e4a801fc3"
+        apiCode="21232f297a57a5a743894a0e4a801fc3"
+        emailAddress="admin@admin.com"
+        firstName="Admin"
+        lastName="Mcadmin"
+        timezone="America/New_York"
+    />
+    
+    <!-- Table ot_tbl_ot_account_roles -->
+    <ot_tbl_ot_account_roles
+        accountId="1"
+        roleId="3"
+    />
+    
+</dataset>

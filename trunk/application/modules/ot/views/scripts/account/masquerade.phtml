@@ -1,0 +1,12 @@
+<?php if ($this->masquerading): ?>
+    <span>You are masquerading as <?php echo $this->identity->firstName . ' ' . $this->identity->lastName; ?>.
+        <br /><br />
+        <a href="<?php echo $this->url(array('action' => 'unmasquerade'), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
+            Stop Masquerading
+            <span class="ui-icon ui-icon-closethick"></span>
+        </a>
+    </span>
+<?php else: ?>
+    This allows you to masquerade as another user:
+    <?php echo $this->form; ?>
+<?php endif; ?>

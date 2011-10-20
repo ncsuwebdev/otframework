@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+
+div#opt {
+    display: none;
+    padding-top: 20px;
+}
+
+div#descriptionInput {
+    margin-top: 5px;
+}
+
+div#descriptionInput textarea {
+    width: 250px;
+    height: 100px;
+}

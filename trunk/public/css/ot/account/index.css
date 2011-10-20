@@ -1,0 +1,146 @@
+@CHARSET "UTF-8";
+
+h3 {
+    border-bottom: 1px solid #999;
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.passwordButton {
+    padding: 2px 15px 2px 20px;
+    background-image: url(../../../../images/ot/key.png);
+    background-repeat: no-repeat;
+}
+
+.noAccess {
+    border: 1px solid #C00;
+    background-color: #FFEFEF;
+    padding: 15px 15px 15px 35px;
+    background-image: url(../../../../images/ot/delete.png);
+    background-repeat: no-repeat;
+    background-position:  10px 14px;
+    width: 400px;
+}
+
+.hasAccess {
+    border: 1px solid #0C0;
+    background-color: #EFFFEF;
+    padding: 15px 15px 15px 35px;
+    background-image: url(../../../../images/ot/success.png);
+    background-repeat: no-repeat;
+    background-position:  10px 14px;
+    width: 400px;
+}
+
+.token {
+    border: 1px solid #CCC;
+    padding: 10px;
+    margin: 25px 0px;
+}
+
+.token .name {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.token .description {
+    color: #333;
+    margin: 10px 0px;
+}
+
+.token .accessToken {
+    color: #888;
+    
+}
+
+.token .revoke {
+    float: right;
+    width: 200px;
+    text-align: right;
+    padding-top: 10px;
+}
+
+.website a {
+    color: #AAA;
+}
+
+.details {
+    margin-left: 90px;
+}
+
+.consumerIcon {
+    width: 64px;
+    height: 64px;
+    float: left;
+    margin: 0px 10px;
+}
+
+.consumerIcon img {
+    margin: 0 auto;
+}
+
+
+#developers {
+    width: 200px;
+    float: right;
+    border: 1px solid #000;
+    background-color: #FFF58F;
+    padding: 4px 6px 10px 6px;
+    margin: 0px 0px 0px 20px;
+}
+
+#developers span {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.notAuthorized {
+    border: 1px solid #C00;
+    background-color: #FFEFEF;
+    background-image: url(../../../../images/ot/deny.png);
+}
+
+.notAuthorized span {
+    color: #C00;
+}
+
+.authorized {
+    border: 1px solid #0A0;
+    background-color: #EFFFEF;
+    background-image: url(../../../../images/ot/grant.png);
+}
+
+.authorized span {
+    color: #0A0;
+}
+
+.access {
+    margin: 20px auto;
+    width: 500px;
+    padding: 10px 10px 10px 70px;
+    background-repeat: no-repeat;
+    background-position: 8px 8px;
+    height: 60px;
+    text-align: center;
+}
+
+.access span {
+    font-weight: bold;
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 15px;
+}
+
+#gravatarWrapper {
+    text-align: center;
+    float: right;
+    margin: 10px 10px 0 0;
+    padding: 0;
+    width: 128px;
+    height: 128px;
+    border: 3px solid #444;
+}

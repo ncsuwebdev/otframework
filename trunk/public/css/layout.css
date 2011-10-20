@@ -1,0 +1,54 @@
+body, html {
+    background-color: #FFFFFF;
+}
+
+#hd {
+    border: 1px solid #000;
+    height: 50px;
+}
+
+#appTitle {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+#pageTitle {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;    
+}
+
+.authInfo {
+    text-align: right;
+    float: right;
+    line-height: 30px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+#nav {
+    border-top: 1px solid #999999;    
+}
+
+#bd {
+}
+
+#ft {
+    font-size: 11px;
+    border: 1px solid #000000;
+    height: 25px;
+}
+
+#ft a {
+    color: #666666;    
+}
+
+#doc4 {
+        
+}
+
+.content {
+    padding: 5px;
+    min-height: 400px;
+    background-color: #F7F7F7;
+}
