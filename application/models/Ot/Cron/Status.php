@@ -90,19 +90,21 @@ class Ot_Cron_Status extends Ot_Db_Table
 
         if ($name == 'all') {
 
-            $jobs = $this->getAvailableCronJobs();
+            $register = new Ot_Cron_Register();
+
+            $jobs = $register->getCronjobs();
 
             foreach ($jobs as $j) {
                 $data = array('status' => $status);
-                $job = $this->find($j['name']);
+                $job = $this->find($j->getName());
 
                 if (!is_null($job)) {
-                    $where = $dba->quoteInto('name = ?', $j['name']);
+                    $where = $dba->quoteInto('name = ?', $j->getName());
 
                     $this->update($data, $where);
                 } else {
 
-                    $data['name'] = $j['name'];
+                    $data['name'] = $j->getName();
 
                     $this->insert($data);
                 }

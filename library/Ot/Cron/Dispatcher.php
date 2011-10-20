@@ -51,7 +51,7 @@ class Ot_Cron_Dispatcher
 
                 $lastRunDt = $cs->getLastRunDt($thisJob->getName());
 
-                $job->getMethod()->execute($lastRunDt);
+                $thisJob->getMethod()->execute($lastRunDt);
 
                 $cs->executed($thisJob->getName(), time());
             } else {

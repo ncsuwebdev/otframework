@@ -351,6 +351,8 @@ ot-cron-index:table:execute;Execute
 ot-cron-index:table:lastRunDt;Last Run Date
 ot-cron-index:enabled;Enabled
 ot-cron-index:disabled;Disabled
+ot-cron-index:enable;Enable
+ot-cron-index:disable;Disable
 ot-cron-index:runNow;Run Now
 ot-cron-index:cannotRun;Cannot run a disabled job
 ot-cron-index:neverRun;Job has never run

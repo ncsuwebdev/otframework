@@ -1,17 +1,51 @@
-.enabled {
-    background-color: #0C0;
+div.job {
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+    margin-bottom: 20px;
 }
 
-.enabled a {
-    color: #FFF;    
+div.status {
+    width: 64px;
+    height: 64px;
+    float: left;
+    margin-right: 10px;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-position: center top;
 }
 
-.disabled {
-    background-color: #C00;
+div.status.enabled {
+    background-image: url(../../../images/ot/grant.png);
 }
 
-.disabled a {
-    color: #FFF;
+div.status.disabled {
+    background-image: url(../../../images/ot/deny.png);
+}
+
+div.name {
+    margin-left: 80px;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+div.description {
+    color: #666666;
+    margin-left: 80px;
+    margin-bottom: 10px;
+}
+
+div.schedule {
+    font-style: italic;
+    margin-left: 80px;
+}
+
+div.actions {
+    margin: 10px 0px 10px 10px;
+    text-align: right;
+
+    width: 200px;
+    float: right;
 }
 
 #alertBox {

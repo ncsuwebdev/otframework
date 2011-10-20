@@ -148,27 +148,29 @@ class Ot_CronController extends Zend_Controller_Action
         $this->view->form = $form;
     }
     
-    /*
     public function jobAction()
     {
         set_time_limit(0);
-        
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNeverRender();
-        
-        $action = $this->_request->getActionName();
-        
+
+        $name = $this->_getParam('name');
+
+        $register = new Ot_Cron_Register();
+        $dispatcher = new Ot_Cron_Dispatcher();
         $cs = new Ot_Cron_Status();
-        
-        if (!$cs->isEnabled($action)) {
-            die();
+
+        $thisJob = $register->getCronjob($name);
+
+        if (is_null($thisJob)) {
+            throw new Exception('Job not found');
         }
-        
-        $this->_lastRunDt = $cs->getLastRunDt($action);
-        
-        $cs->executed($action, time());
-        
-               
+
+        if (!$cs->isEnabled($name)) {
+            throw new Exception('Job must be enabled for it to be run');
+        }
+
+        $dispatcher->dispatch($name);
+
+        $this->_helper->flashMessenger->addMessage('Job executed successfully');
+        $this->_helper->redirector->gotoRoute(array('controller' => 'cron', 'action' => 'index'), 'ot', true);
     }
-    */
 }
