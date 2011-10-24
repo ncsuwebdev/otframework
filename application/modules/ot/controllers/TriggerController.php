@@ -171,7 +171,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                     $this->_helper->flashMessenger->addMessage('msg-info-triggerAdded');
                 } else {
                     $this->_helper->log(Zend_Log::INFO, 'Trigger Action cloned', $logOptions);
-                    $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-triggerCloned', array('clonedTriggerName' => $clonedTriggerName)));
+                    $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-triggerCloned', array('clonedTriggerName' => $data['name'])));
                 }
                     
                 $this->_helper->redirector->gotoRoute(
