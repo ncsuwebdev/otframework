@@ -178,7 +178,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                     array(
                         'controller' => 'trigger',
                         'action'     => 'details',
-                        'triggerId'  => $thisTrigger->getName(),
+                        'name'  => $thisTrigger->getName(),
                     ),
                     'ot',
                     true
