@@ -69,13 +69,6 @@ class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceA
             str_replace(Zend_Controller_Front::getInstance()->getBaseUrl(), '', $_SERVER['REQUEST_URI'])
         );
 
-        $auth = Zend_Auth::getInstance();
-
-        if (!is_null($auth->getIdentity())) {
-            $logger->setEventItem('accountId', $auth->getIdentity()->accountId);
-            $logger->setEventItem('role', $auth->getIdentity()->role);
-        }
-
         Zend_Registry::set('logger', $logger);
     }
 }

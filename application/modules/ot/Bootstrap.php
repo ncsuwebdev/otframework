@@ -22,7 +22,7 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
             0,
             strpos(strtolower($_SERVER["SERVER_PROTOCOL"]), "/")
         ) . $s;
-        $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
+        $port = ($_SERVER["SERVER_PORT"] == "80" || $_SERVER['SERVER_PORT'] == '443') ? "" : (":" . $_SERVER["SERVER_PORT"]);
         $url = $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $baseUrl;
 
         Zend_Registry::set('siteUrl', $url);

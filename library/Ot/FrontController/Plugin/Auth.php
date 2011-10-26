@@ -246,6 +246,12 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             }
         }
         
+        if ($auth->hasIdentity() && Zend_Registry::isRegistered('logger')) {
+            $logger = Zend_Registry::get('logger');
+            $logger->setEventItem('accountId', $auth->getIdentity()->accountId);
+            $logger->setEventItem('role', $auth->getIdentity()->role);
+        }
+
         if (!is_null($requestUri)) {
             $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
             $req->uri = $requestUri;
