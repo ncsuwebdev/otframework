@@ -66,6 +66,18 @@ class ErrorController extends Zend_Controller_Action
                     $message = $exception->getMessage();
                     break;
         }
+        
+        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') { // if it's an ajax request
+            $this->_helper->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
+            $ret = array(
+                'status' => 'error',
+                'message' => $this->view->translate($message),
+            );
+            echo json_encode($ret);
+        }
+        
+        
         $this->_helper->pageTitle($title);
         
         $this->view->title = $this->view->translate('default-index-error:title') . ' ' . $this->view->title;

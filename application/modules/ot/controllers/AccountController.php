@@ -59,7 +59,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
 
         $userData = array();
-
+        
         $userData['accountId'] = Zend_Auth::getInstance()->getIdentity()->accountId;
         if ($get->accountId && $this->_helper->hasAccess('editAllAccounts')) {
             $userData['accountId'] = $get->accountId;
@@ -297,7 +297,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'edit'   => $this->_helper->hasAccess('edit'),
             'delete' => $this->_helper->hasAccess('delete'),
         );
-
+//throw new Ot_Exception('WHOOOAAAA!!!');
         $this->_helper->pageTitle('ot-account-all:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->view
@@ -345,7 +345,7 @@ class Ot_AccountController extends Zend_Controller_Action
             // if they're searching by a role, you can't use the $where, since role no longer exists in the account table
             if($qtype == 'role') {
                 $accounts = $account->getAccountsForRole($query, $sortname . ' ' . $sortorder, $rp, $page * $rp);
-                $totals = $account->getAccountsForRole($querey);
+                $totals = $account->getAccountsForRole($query);
             } else{
                 $accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
                 $totals = $account->fetchAll($where);
@@ -1145,7 +1145,6 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-
         $get = Zend_Registry::get('getFilter');
 
         $roles = $get->roles;

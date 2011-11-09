@@ -580,8 +580,10 @@ class Ot_Account extends Ot_Db_Table
             $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
         }
 
+        $attributeNames = array();
         foreach ($attributes as $a) {
             $form->addElement($a['formRender']);
+            $attributeNames[] = 'custom_' . $a['attribute']['attributeId'];
         }
 
         $submit = $form->createElement('submit', 'submit', array('label' => 'form-button-save'));
@@ -615,7 +617,7 @@ class Ot_Account extends Ot_Db_Table
                     'firstName',
                     'lastName',
                     'emailAddress',
-                    'timezone'), $subformElements, array(
+                    'timezone'), $subformElements, $attributeNames, array(
                         'submit',
                         'cancel'))
                 , 'general', array('legend' => 'General Information'));
@@ -638,7 +640,17 @@ class Ot_Account extends Ot_Db_Table
                 array('HtmlTag', array('tag' => 'div', 'class' => 'accessRoles'))
             ));
         }
-
+/*
+        if(count($attributeNames) > 0 && 1) {
+            $form->addDisplayGroup($attributeNames, 'specialAttributes', array('legend' => 'Special Attributes'));
+            $attrGroup = $form->getDisplayGroup('specialAttributes');
+            $attrGroup->setDecorators(array(
+                'FormElements',
+                'Fieldset',
+                array('HtmlTag', array('tag' => 'div', 'class' => 'specialAttributes'))
+            ));
+        }
+        */
         if (isset($default['accountId'])) {
             $accountId = $form->createElement('hidden', 'accountId');
             $accountId->setValue($default['accountId']);

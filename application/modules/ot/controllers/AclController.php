@@ -264,6 +264,10 @@ class Ot_AclController extends Zend_Controller_Action
      */
     public function applicationAccessAction()
     {
+    	$this->view
+             ->headScript()
+             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
+             
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->roleId)) {
@@ -332,6 +336,10 @@ class Ot_AclController extends Zend_Controller_Action
      */
     public function remoteAccessAction()
     {
+    	$this->view
+             ->headScript()
+             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
+             
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->roleId)) {

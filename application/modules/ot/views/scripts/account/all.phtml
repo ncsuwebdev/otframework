@@ -1,3 +1,8 @@
+<?php
+/* this script is here instead of in public/.../all.js because of translations
+ * todo: should we move the translations to hidden inputs and the js to the actual place or does it not matter much?   
+ */
+?>
 <script type="text/javascript">
 $('document').ready(function() {
     $("#allUsers").flexigrid({
@@ -26,11 +31,18 @@ $('document').ready(function() {
         title: false,
         useRp: true,
         rp: 15,
-        showTableToggleBtn: false
+        showTableToggleBtn: false,
+        onError: handleError
     });
 });
 
 function preProcess(data) {
+	if(!data.rows) {
+		data.page = 1;
+		data.total = 0;
+		data.rows = [];
+	    return data;
+	}
     $.each(data.rows, function(i,row) {
         row.cell[0] = '<a href="<?php echo $this->url(array('action' => 'index'), 'account', true); ?>?accountId=' + row.id + '">' + row.cell[0] + '</a>';
         <?php if ($this->acl['edit']): ?>
@@ -41,6 +53,22 @@ function preProcess(data) {
     });
     
     return data;
+}
+
+function handleError(req, textStatus, errorThrown) {
+	$('.pReload', this.pDiv).removeClass('loading');
+	this.loading = false;
+console.log(req);
+console.log(textStatus);
+console.log(errorThrown);
+	data = $.parseJSON(req.responseText || {});
+
+    if(data.message) {
+    	$('.pPageStat', this.pDiv).html('Error: ' + data.message);
+    } else {
+ 	    $('.pPageStat', this.pDiv).html('An error occurred');
+    }
+    return false;
 }
 </script>
 
