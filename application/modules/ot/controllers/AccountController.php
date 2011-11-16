@@ -297,7 +297,6 @@ class Ot_AccountController extends Zend_Controller_Action
             'edit'   => $this->_helper->hasAccess('edit'),
             'delete' => $this->_helper->hasAccess('delete'),
         );
-//throw new Ot_Exception('WHOOOAAAA!!!');
         $this->_helper->pageTitle('ot-account-all:title');
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->view

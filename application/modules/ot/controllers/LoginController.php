@@ -141,6 +141,10 @@ class Ot_LoginController extends Zend_Controller_Action
         if (isset($get->realm) && $get->realm) {
             $realm = $get->realm;
         }
+        
+        if(!isset($loginForms[$realm]) || !isset($loginForms[$realm]['form'])) {
+            throw new Ot_Exception_Access('msg-error-authLoginFailed');
+        }
 
         if ($this->_request->isPost()) {
             $form = $loginForms[$realm]['form'];

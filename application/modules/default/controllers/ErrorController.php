@@ -67,7 +67,7 @@ class ErrorController extends Zend_Controller_Action
                     break;
         }
         
-        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') { // if it's an ajax request
+        if($this->getRequest()->isXmlHttpRequest()) { // if it's an ajax request
             $this->_helper->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
             $ret = array(
@@ -76,6 +76,17 @@ class ErrorController extends Zend_Controller_Action
             );
             echo json_encode($ret);
         }
+        
+        /*
+         * 
+        if($this->getRequest()->isXmlHttpRequest() || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) { // if it's an ajax request
+            $json = array(
+                'status' => 'error',
+                'message' => $this->view->translate($message),
+            );
+            $this->_helper->json($json);
+         * 
+         * */
         
         
         $this->_helper->pageTitle($title);

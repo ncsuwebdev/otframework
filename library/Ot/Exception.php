@@ -38,6 +38,18 @@ class Ot_Exception extends Exception
     protected $_title = '';
     
     /**
+     * 
+     * @param $message[optional]
+     * @param int $code - the response status code
+     */
+    public function __construct ($message, $code = 400) {
+    	if(!headers_sent()) {
+    	   header('Status: '. (int)$code, false, (int)$code);
+    	}
+        parent::__construct($message, $code);
+    }
+    
+    /**
      * Gets the exception title
      *
      * @return unknown

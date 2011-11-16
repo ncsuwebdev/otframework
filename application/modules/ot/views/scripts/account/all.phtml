@@ -58,15 +58,12 @@ function preProcess(data) {
 function handleError(req, textStatus, errorThrown) {
 	$('.pReload', this.pDiv).removeClass('loading');
 	this.loading = false;
-console.log(req);
-console.log(textStatus);
-console.log(errorThrown);
 	data = $.parseJSON(req.responseText || {});
 
     if(data.message) {
-    	$('.pPageStat', this.pDiv).html('Error: ' + data.message);
+    	$('.pPageStat', this.pDiv).html('An error occurred: ' + data.message);
     } else {
- 	    $('.pPageStat', this.pDiv).html('An error occurred');
+ 	    $('.pPageStat', this.pDiv).html('An error occurred.');
     }
     return false;
 }

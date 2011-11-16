@@ -95,8 +95,8 @@ class Ot_ApiController extends Zend_Controller_Action
         $server = new Zend_Rest_Server();
 
         $server->setClass($this->_class);
-        $server->returnResponse(true);
-            
+        $server->returnResponse(true); // if this is true, it doesn't send headers or echo, and returns the response instead
+        
         $jsoncallback = "";
         
         if ($request->getParameter('jsoncallback') != '') {
@@ -105,6 +105,18 @@ class Ot_ApiController extends Zend_Controller_Action
         }
         
         $response = $server->handle($request->getParameters());
+        
+        if (!headers_sent()) {
+        	// headers haven't been sent yet, but there's a Content-Type: text/xml in there because 
+        	// we're using zend rest server to grab xml to parse to json
+        	$headers = $server->getHeaders();
+            foreach ($headers as $header) {
+            	if($header == 'Content-Type: text/xml') {
+            	   $header = 'Content-Type: application/json';
+            	}
+                header($header);
+            }
+        }
 
         if ($jsoncallback == "") {
             echo Zend_Json::fromXml($response);

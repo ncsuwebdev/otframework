@@ -108,20 +108,25 @@ class Ot_Api_Access
         if ($type == self::API_SOAP) {
             return new SoapFault('Error', $message);
         } elseif($type == self::API_JSON) {
-            header($header);
-            $json = array(
-                'success' => new StdClass(),
-                'error' => $message
-            );
-            echo Zend_Json::encode($json);
-            return;
+        	if (!headers_sent()) {
+        	   header($header, true, 401);
+        	}
+        	$server = new Zend_Json_Server();
+        	echo $server->fault($message, 401);
+        	return;
         } elseif($type == self::API_XML) { // output in xml
-            header($header, true, 401);
             $rest = new Zend_Rest_Server();
             $result = $rest->fault(
                 new Zend_Rest_Server_Exception($message),
                 401
             );
+            if (!headers_sent()) {
+            	header('Content-Type: text/xml', true);
+            	$headers = $rest->getHeaders();
+                foreach ($headers as $header) {
+                    header($header);
+                }
+            }
             echo $result->saveXML();
             return;
         } else {
