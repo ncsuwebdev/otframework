@@ -583,7 +583,11 @@ class Ot_Account extends Ot_Db_Table
         $attributeNames = array();
         foreach ($attributes as $a) {
             $form->addElement($a['formRender']);
-            $attributeNames[] = 'custom_' . $a['attribute']['attributeId'];
+            if(isset($a['attribute'])) {
+                $attributeNames[] = 'custom_' . $a['attribute']['attributeId'];
+            } else {
+                $attributeNames[] = 'custom_' . $a['attributeId'];
+            }
         }
 
         $submit = $form->createElement('submit', 'submit', array('label' => 'form-button-save'));
