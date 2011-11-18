@@ -62,6 +62,8 @@ class Ot_Cron_Dispatcher
         }
 
         $now = time();
+        
+        $jobs = $register->getCronJobs();
 
     	foreach ($jobs as $job) {
             if ($this->shouldExecute($job->getSchedule(), $now)) {                
