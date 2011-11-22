@@ -35,7 +35,7 @@ class Ot_BackupController extends Zend_Controller_Action
      */
     public function indexAction()
     {                                      
-        $backup = new Ot_Backup();
+        $backup = new Ot_Model_Backup();
         
         $form = $backup->_form();
                 
@@ -90,7 +90,7 @@ class Ot_BackupController extends Zend_Controller_Action
     {
         if (!is_null(`mysqldump`)) {
             
-            $backup = new Ot_Backup();
+            $backup = new Ot_Model_Backup();
             
             $db = Zend_Db_Table::getDefaultAdapter();
             

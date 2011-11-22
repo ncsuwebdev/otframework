@@ -83,7 +83,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         $role    = (string)$config->user->defaultRole->val;
         $defaultRole = $role;
         
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
         $thisAccount = null;
         
         if ($auth->hasIdentity() && $auth->getIdentity() != '' && !is_null($auth->getIdentity())) {
@@ -120,7 +120,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 return;
             }
 
-            $authAdapter = new Ot_Auth_Adapter;
+            $authAdapter = new Ot_Model_DbTable_AuthAdapter();
             $adapter = $authAdapter->find($auth->getIdentity()->realm);
             $className = (string)$adapter->class;
             

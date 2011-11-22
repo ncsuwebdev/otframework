@@ -65,7 +65,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $userData['accountId'] = $get->accountId;
         }
 
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
         $thisAccount = $account->find($userData['accountId']);
 
         if (is_null($thisAccount)) {
@@ -75,7 +75,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $userData = array_merge($userData, (array) $thisAccount);
 
 
-        $authAdapter = new Ot_Auth_Adapter();
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapter = $authAdapter->find($userData['realm']);
         $a = $adapter;
 
@@ -105,7 +105,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $this->view->identity = $identity;
         } else {
 
-            $accountModel = new Ot_Account();
+            $accountModel = new Ot_Model_DbTable_Account();
             $form = $accountModel->masqueradeForm();
 
             if ($this->_request->isPost()) {
@@ -203,7 +203,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $attributes = $acctPlugin->get($this->_userData['accountId']);
         }
 
-        $rolesDb = new Ot_Account_Roles();
+        $rolesDb = new Ot_Model_DbTable_AccountRoles();
         $where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
         $roleIds = $rolesDb->fetchAll($where)->toArray();
 
@@ -215,7 +215,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $r = $r['roleId'];
         }
 
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         $where = $role->getAdapter()->quoteInto('roleId IN (?)', $roleIds);
         $roles = $role->fetchAll($where)->toArray();
 
@@ -224,7 +224,7 @@ class Ot_AccountController extends Zend_Controller_Action
         }
 
         $this->view->roles = $roles;
-        $custom = new Ot_Custom();
+        $custom = new Ot_Model_Custom();
 
         $data = $custom->getData('Ot_Profile', $this->_userData['accountId'], 'none', false);
         foreach ($data as $d) {
@@ -233,8 +233,8 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->view->attributes = $attributes;
 
-        $st = new Ot_Oauth_Server_Token();
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $st = new Ot_Model_DbTable_OauthServerToken();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
 
         $tokens = $st->getTokensForAccount($this->_userData['accountId'], 'access')->toArray();
 
@@ -265,7 +265,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $consumers = array();
         if ($config->app->oauth->consumers instanceof Zend_Config) {
 
-            $clientToken = new Ot_Oauth_Client_Token();
+            $clientToken = new Ot_Model_DbTable_OauthClientToken();
 
             $accessTokens = $clientToken->getTokensForAccount($this->_userData['accountId'], 'access');
 
@@ -313,7 +313,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $this->_helper->layout->disableLayout();
             $this->_helper->viewRenderer->setNeverRender();
 
-            $account = new Ot_Account();
+            $account = new Ot_Model_DbTable_Account();
 
             $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'username';
             $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'asc';
@@ -358,7 +358,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
             $config = Zend_Registry::get('config');
 
-            $otAuth = new Ot_Auth_Adapter();
+            $otAuth = new Ot_Model_DbTable_AuthAdapter();
             $adapters = $otAuth->fetchAll();
 
             $realmMap = array();
@@ -402,7 +402,7 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function addAction()
     {
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
         $config  = Zend_Registry::get('config');
 
         $defaultRole = $config->user->defaultRole->val;
@@ -478,7 +478,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 // Custom attributes
                 if (count($messages) == 0) {
 
-                    $custom = new Ot_Custom();
+                    $custom = new Ot_Model_Custom();
 
                     $attributes = $custom->getAttributesForObject('Ot_Profile');
 
@@ -504,14 +504,14 @@ class Ot_AccountController extends Zend_Controller_Action
                     $td->setVariables($accountData);
 
 
-                    $role = new Ot_Role();
+                    $role = new Ot_Model_DbTable_Role();
 
                     $roles = array();
                     foreach ($accountData['role'] as $r) {
                         $roles[] = $role->find($r)->name;
                     }
 
-                    $otAuthAdapter = new Ot_Auth_Adapter();
+                    $otAuthAdapter = new Ot_Model_DbTable_AuthAdapter();
 
                     $thisAdapter = $otAuthAdapter->find($accountData['realm']);
 
@@ -561,7 +561,7 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function importAction()
     {
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
         $form = $account->importForm();
 
         $messages = array();
@@ -619,7 +619,7 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function editAction()
     {
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
 
         $req = new Zend_Session_Namespace(
             Zend_Registry::get('siteUrl') . '_request');
@@ -628,7 +628,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $form = $account->form($this->_userData);
 
-        $rolesDb = new Ot_Account_Roles();
+        $rolesDb = new Ot_Model_DbTable_AccountRoles();
 
         $where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
 
@@ -676,7 +676,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
 
 
-                $account = new Ot_Account();
+                $account = new Ot_Model_DbTable_Account();
 
                 $thisAccount = $account->getAccount($data['username'], $data['realm']);
 
@@ -712,7 +712,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         }
                     }
 
-                    $custom = new Ot_Custom();
+                    $custom = new Ot_Model_Custom();
 
                     $attributes = $custom->getAttributesForObject('Ot_Profile');
 
@@ -797,7 +797,7 @@ class Ot_AccountController extends Zend_Controller_Action
             $dba = Zend_Db_Table::getDefaultAdapter();
             $dba->beginTransaction();
 
-            $account = new Ot_Account();
+            $account = new Ot_Model_DbTable_Account();
 
             $where = $account->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
 
@@ -821,7 +821,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 }
             }
 
-            $custom = new Ot_Custom();
+            $custom = new Ot_Model_Custom();
 
             try {
                 $custom->deleteData('Ot_Profile', $this->_userData['accountId']);
@@ -863,14 +863,14 @@ class Ot_AccountController extends Zend_Controller_Action
                     throw new Ot_Exception_Input('ot-account-revokeConnection:consumerIdNotSet');
                 }
 
-                $consumer = new Ot_Oauth_Server_Consumer();
+                $consumer = new Ot_Model_DbTable_OauthServerConsumer();
 
                 $thisConsumer = $consumer->find($get->consumerId);
                 if (is_null($thisConsumer)) {
                     throw new Ot_Exception_Data('ot-account-revokeConnection:consumerIdNotExists');
                 }
 
-                $st = new Ot_Oauth_Server_Token();
+                $st = new Ot_Model_DbTable_OauthServerToken();
 
                 $existingAccessToken = $st->getTokenByAccountAndConsumer(
                     $this->_userData['accountId'], $thisConsumer->consumerId,
@@ -905,14 +905,14 @@ class Ot_AccountController extends Zend_Controller_Action
     {
         $identity = Zend_Auth::getInstance()->getIdentity();
 
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
 
         $thisAccount = $account->getAccount($identity->username, $identity->realm);
         if (is_null($thisAccount)) {
             throw new Ot_Exception_Data('msg-error-noAccount');
         }
 
-        $otAuthAdapter = new Ot_Auth_Adapter();
+        $otAuthAdapter = new Ot_Model_DbTable_AuthAdapter();
         $thisAdapter = $otAuthAdapter->find($thisAccount->realm);
         $auth = new $thisAdapter->class();
 
@@ -1040,7 +1040,7 @@ class Ot_AccountController extends Zend_Controller_Action
     public function changeRolesAction()
     {
 
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
         $form = $account->changeRoleForm();
 
         $messages = array();

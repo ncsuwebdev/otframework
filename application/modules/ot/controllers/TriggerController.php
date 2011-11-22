@@ -76,7 +76,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         $this->view->trigger = $thisTrigger;
         $this->_helper->pageTitle('ot-trigger-details:title', $thisTrigger->getName());
         
-        $action = new Ot_Trigger_Action();
+        $action = new Ot_Model_DbTable_TriggerAction();
 
         $where = $action->getAdapter()->quoteInto('triggerId = ?', $thisTrigger->getName());
         $actions = $action->fetchAll($where)->toArray();
@@ -114,7 +114,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         $this->view->trigger = $thisTrigger;
         $this->_helper->pageTitle('ot-trigger-add:title');
         
-        $action = new Ot_Trigger_Action();
+        $action = new Ot_Model_DbTable_TriggerAction();
 
         $values = array('triggerId' => $thisTrigger->getName());
         
@@ -209,7 +209,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-triggerActionIdNotFound');
         }
         
-        $action = new Ot_Trigger_Action();
+        $action = new Ot_Model_DbTable_TriggerAction();
         
         $thisAction = $action->find($get->triggerActionId);
         
@@ -300,7 +300,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-triggerActionIdNotFound');
         }
         
-        $action = new Ot_Trigger_Action();
+        $action = new Ot_Model_DbTable_TriggerAction();
         
         $thisAction = $action->find($get->triggerActionId);
         
@@ -355,7 +355,7 @@ class Ot_TriggerController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-triggerActionIdNotFound');
         }
         
-        $action = new Ot_Trigger_Action();
+        $action = new Ot_Model_DbTable_TriggerAction();
         
         $thisAction = $action->find($get->triggerActionId);
         

@@ -52,7 +52,7 @@ class Ot_LogController extends Zend_Controller_Action
             $this->_helper->layout->disableLayout();
             $this->_helper->viewRenderer->setNeverRender();
             
-            $log = new Ot_Log();
+            $log = new Ot_Model_DbTable_Log();
             
             $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'timestamp';
             $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
@@ -89,7 +89,7 @@ class Ot_LogController extends Zend_Controller_Action
             
             $config = Zend_Registry::get('config');
                     
-            $account = new Ot_Account();
+            $account = new Ot_Model_DbTable_Account();
             $accounts = $account->fetchAll(null, array('firstName', 'lastName'));
             
             foreach ($accounts as $a) {
@@ -140,7 +140,7 @@ class Ot_LogController extends Zend_Controller_Action
 
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             
-            $log = new Ot_Log();
+            $log = new Ot_Model_DbTable_Log();
             $log->delete(true);
                         
             $this->_helper->log(Zend_Log::INFO, 'Logs were cleared.');

@@ -211,7 +211,7 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
     public function _initCronjobs()
     {
         $eq = new Ot_Cron('Ot_EmailQueue', 'Processes emails from the queue', '* * * * *');
-        $eq->setMethod(new Ot_Cronjob_EmailQueue());
+        $eq->setMethod(new Ot_Model_Cronjob_EmailQueue());
 
         $register = new Ot_Cron_Register();
         $register->registerCronjob($eq);

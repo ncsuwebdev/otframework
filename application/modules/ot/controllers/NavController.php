@@ -150,7 +150,7 @@ class Ot_NavController extends Zend_Controller_Action
             $this->_filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
             $this->_filter->addFilter(new Zend_Filter_StringToLower());
             
-            $this->_otNav = new Ot_Nav();
+            $this->_otNav = new Ot_Model_DbTable_Nav();
                         
             // Put this in a transaction to make sure nothing gets screwed up
             $this->_otNav->getAdapter()->beginTransaction();

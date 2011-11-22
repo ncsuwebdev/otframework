@@ -39,7 +39,7 @@ class Ot_Cron_Dispatcher
     public function dispatch($name = null)
     {    	
     	$register = new Ot_Cron_Register();
-        $cs = new Ot_Cron_Status();
+        $cs = new Ot_Model_DbTable_CronStatus();
 
         if (!is_null($name)) {
             $thisJob = $register->getCronjob($name);

@@ -82,7 +82,7 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
      */
     public function authenticate()
     {
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
 
         $result = $account->getAccount($this->_username, 'local');
 

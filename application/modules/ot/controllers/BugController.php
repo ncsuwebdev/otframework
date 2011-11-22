@@ -37,7 +37,7 @@ class Ot_BugController extends Zend_Controller_Action
     public function indexAction()
     {
         
-        $bug = new Ot_Bug();
+        $bug = new Ot_Model_DbTable_Bug();
 
         $bugs = $bug->getBugs();
 
@@ -71,7 +71,7 @@ class Ot_BugController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-bugIdNotFound');
         }
 
-        $bug = new Ot_Bug();
+        $bug = new Ot_Model_DbTable_Bug();
 
         $thisBug = $bug->find($get->bugId);
         
@@ -79,10 +79,10 @@ class Ot_BugController extends Zend_Controller_Action
             throw new Ot_Exception_Data('msg-error-noBug');
         }
 
-        $bt = new Ot_Bug_Text();
+        $bt = new Ot_Model_DbTable_BugText();
         $text = $bt->getBugText($get->bugId)->toArray();
         
-        $otAccount = new Ot_Account();
+        $otAccount = new Ot_Model_DbTable_Account();
         foreach ($text as &$t) {
             $t['userInfo'] = $otAccount->find($t['accountId']);
         }
@@ -103,7 +103,7 @@ class Ot_BugController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-bugIdNotFound');
         }
 
-        $bug = new Ot_Bug();
+        $bug = new Ot_Model_DbTable_Bug();
 
         $thisBug = $bug->find($get->bugId);
         
@@ -139,7 +139,7 @@ class Ot_BugController extends Zend_Controller_Action
      */
     public function addAction()
     {
-        $bug = new Ot_Bug();
+        $bug = new Ot_Model_DbTable_Bug();
         
         $form = $bug->form();         
              
@@ -208,7 +208,7 @@ class Ot_BugController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-bugIdNotFound');
         }
 
-        $bug = new Ot_Bug();
+        $bug = new Ot_Model_DbTable_Bug();
 
         $thisBug = $bug->find($get->bugId);
         
@@ -218,10 +218,10 @@ class Ot_BugController extends Zend_Controller_Action
         
         $form = $bug->form($thisBug->toArray());
 
-        $bt = new Ot_Bug_Text();
+        $bt = new Ot_Model_DbTable_BugText();
         $text = $bt->getBugText($get->bugId)->toArray();
         
-        $otAccount = new Ot_Account();
+        $otAccount = new Ot_Model_DbTable_Account();
         foreach ($text as &$t) {
             $t['userInfo'] = $otAccount->find($t['accountId']);
         }

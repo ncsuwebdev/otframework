@@ -53,7 +53,7 @@ class Ot_CronController extends Zend_Controller_Action
 
         $registry = new Ot_Cron_Register();
 
-        $status = new Ot_Cron_Status();
+        $status = new Ot_Model_DbTable_CronStatus();
         $statusMarkers = $status->fetchAll();
 
         $status = array();
@@ -76,7 +76,7 @@ class Ot_CronController extends Zend_Controller_Action
      */
     public function toggleAction()
     {
-        $cs = new Ot_Cron_Status();
+        $cs = new Ot_Model_DbTable_CronStatus();
 
         $get = Zend_Registry::get('getFilter');
         
@@ -156,7 +156,7 @@ class Ot_CronController extends Zend_Controller_Action
 
         $register = new Ot_Cron_Register();
         $dispatcher = new Ot_Cron_Dispatcher();
-        $cs = new Ot_Cron_Status();
+        $cs = new Ot_Model_DbTable_CronStatus();
 
         $thisJob = $register->getCronjob($name);
 

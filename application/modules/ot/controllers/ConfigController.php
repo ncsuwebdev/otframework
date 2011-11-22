@@ -80,7 +80,7 @@ class Ot_ConfigController extends Zend_Controller_Action
         );
         
         if ($get->key == 'timezone') {
-            $tz = Ot_Timezone::getTimezoneList();
+            $tz = Ot_Model_Timezone::getTimezoneList();
             
             $el = new Zend_Form_Element_Select('keyValue');
             $el->addMultiOptions($tz);              

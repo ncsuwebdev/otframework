@@ -50,7 +50,7 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
         $config   = Zend_Registry::get('config');
         $identity = Zend_Auth::getInstance()->getIdentity();
         
-        $nav = new Ot_Nav();
+        $nav = new Ot_Model_DbTable_Nav();
         $tabs = $nav->getNav();
         
         $role = (empty($identity->role)) ? (string)$config->user->defaultRole->val : $identity->role;

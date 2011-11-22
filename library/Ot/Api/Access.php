@@ -39,7 +39,7 @@ class Ot_Api_Access
     
     public function validate(Oauth_Request $request, $method)
     {
-        $server = new Ot_Oauth_Server();
+        $server = new Ot_Model_DbTable_OauthServer();
                         
         $remoteAcl = new Ot_Acl('remote');
         
@@ -61,8 +61,8 @@ class Ot_Api_Access
                 return false;
             }           
             
-            $account = new Ot_Account();
-            $token = new Ot_Oauth_Server_Token();
+            $account = new Ot_Model_DbTable_Account();
+            $token = new Ot_Model_DbTable_OauthServerToken();
             
             $thisToken = $token->getToken($request->getParameter('oauth_token'));
             if (is_null($thisToken)) {

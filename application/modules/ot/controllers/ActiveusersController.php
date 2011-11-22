@@ -36,9 +36,9 @@ class Ot_ActiveusersController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $activeUser = new Ot_Activeuser();
-        $otAccount = new Ot_Account();
-        $otRole = new Ot_Role();
+        $activeUser = new Ot_Model_DbTable_Activeuser();
+        $otAccount = new Ot_Model_DbTable_Account();
+        $otRole = new Ot_Model_DbTable_Role();
         
         $allActiveUsers = $activeUser->fetchAll(null, 'dt DESC')->toArray();
         

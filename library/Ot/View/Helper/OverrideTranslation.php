@@ -72,7 +72,7 @@ class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
         if ($this->_hasAccess()) {
             $translate = Zend_Registry::get('Zend_Translate');
             echo '<div id="overrideTranslate"><a href="' . $url . '" id="locale_'
-            . Ot_Language::getLanguageName($translate->getLocale()) . '">' . $text . '</a></div>';
+            . Ot_Model_Language::getLanguageName($translate->getLocale()) . '">' . $text . '</a></div>';
         }
     }
     

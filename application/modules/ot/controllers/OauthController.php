@@ -38,7 +38,7 @@ class Ot_OauthController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $owned = $consumer->getConsumersForRegisteredAccounnt(Zend_Auth::getInstance()->getIdentity()->accountId);
         
@@ -56,7 +56,7 @@ class Ot_OauthController extends Zend_Controller_Action
      */
     public function allConsumersAction()
     {
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
     
         $allConsumers = $consumer->fetchAll(null, 'name ASC');
         
@@ -83,7 +83,7 @@ class Ot_OauthController extends Zend_Controller_Action
             $this->view->all = true;
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
@@ -98,7 +98,7 @@ class Ot_OauthController extends Zend_Controller_Action
         
         $this->view->consumer = $thisConsumer;
         
-        $st = new Ot_Oauth_Server_Token();
+        $st = new Ot_Model_DbTable_OauthServerToken();
             
         $tokens = $st->getTokensForConsumerId($thisConsumer->consumerId, 'access');
         
@@ -116,7 +116,7 @@ class Ot_OauthController extends Zend_Controller_Action
     {
         $this->_helper->pageTitle('ot-oauth-add:title');
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $form = $consumer->form(array('imagePath' => $this->_getImage(0)));
         
@@ -137,7 +137,7 @@ class Ot_OauthController extends Zend_Controller_Action
                 
                 if ($imageValue != '/tmp/' && $imageValue != '') {
                             
-                    $image = new Ot_Image();                        
+                    $image = new Ot_Model_DbTable_Image();
         
                     $image->resizeImage($form->image->getFileName(), 64, 64);
         
@@ -179,7 +179,7 @@ class Ot_OauthController extends Zend_Controller_Action
             throw new Ot_Exception_Input('ot-oauth-edit:consumerIdNotSet');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
@@ -212,7 +212,7 @@ class Ot_OauthController extends Zend_Controller_Action
                 
                 if ($imageValue != '/tmp/' && $imageValue != '') {
 
-                    $image = new Ot_Image();
+                    $image = new Ot_Model_DbTable_Image();
                 
                     $image->resizeImage($form->image->getFileName(), 64, 64);
                 
@@ -247,7 +247,7 @@ class Ot_OauthController extends Zend_Controller_Action
             throw new Ot_Exception_Input('ot-oauth-delete:consumerIdNotSet');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
@@ -282,7 +282,7 @@ class Ot_OauthController extends Zend_Controller_Action
             throw new Ot_Exception_Input('ot-oauth-generateToken:consumerIdNotSet');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
@@ -298,7 +298,7 @@ class Ot_OauthController extends Zend_Controller_Action
         
         $this->view->consumer = $thisConsumer;
                         
-        $st = new Ot_Oauth_Server_Token();
+        $st = new Ot_Model_DbTable_OauthServerToken();
         
         $existingAccessToken = $st->getTokenByAccountAndConsumer(
             Zend_Auth::getInstance()->getIdentity()->accountId,
@@ -359,7 +359,7 @@ class Ot_OauthController extends Zend_Controller_Action
             throw new Ot_Exception_Input('ot-oauth-regenerateConsumerKeys:consumerIdNotSet');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {

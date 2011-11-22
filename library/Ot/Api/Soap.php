@@ -69,14 +69,14 @@ class Ot_Api_Soap
             }
         }
 
-        $access = new Ot_Api_Access();
+        $access = new Ot_Model_DbTable_ApiAccess();
         
         if ($method == '') {
             return $access->raiseError('Remote access method not found', Ot_Api_Access::API_SOAP);
         }
         
         if (!$access->validate($req, $method)) {
-            return $access->raiseError($access->getMessage(), Ot_Api_Access::API_SOAP);
+            return $access->raiseError($access->getMessage(), Ot_Model_DbTable_ApiAccess::API_SOAP);
         }
         
         $this->_authorized = true;

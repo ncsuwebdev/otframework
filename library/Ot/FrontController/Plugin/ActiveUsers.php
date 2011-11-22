@@ -36,7 +36,7 @@ class Ot_FrontController_Plugin_ActiveUsers extends Zend_Controller_Plugin_Abstr
         
             $identity = Zend_Auth::getInstance()->getIdentity();
 
-            $activeUser = new Ot_Activeuser();
+            $activeUser = new Ot_Model_DbTable_Activeuser();
             
             $thisUser = $activeUser->find($identity->accountId);
             

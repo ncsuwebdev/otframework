@@ -52,7 +52,7 @@ class Ot_LoginController extends Zend_Controller_Action
             return $this->_redirect('/');
         }
 
-        $authAdapter = new Ot_Auth_Adapter;
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapters = $authAdapter->getEnabledAdapters();
 
         if ($adapters->count() == 0) {
@@ -175,7 +175,7 @@ class Ot_LoginController extends Zend_Controller_Action
             $username = ($formUserId) ? $formUserId : $form->getValue('username');
             $password = ($formPassword) ? $formPassword : $form->getValue('password');
 
-            $authAdapter = new Ot_Auth_Adapter;
+            $authAdapter = new Ot_Model_DbTable_AuthAdapter();
             $adapter     = $authAdapter->find($realm);
             $className   = (string)$adapter->class;
 
@@ -196,7 +196,7 @@ class Ot_LoginController extends Zend_Controller_Action
                 $username = $auth->getIdentity()->username;
                 $realm    = $auth->getIdentity()->realm;
 
-                $account     = new Ot_Account();
+                $account     = new Ot_Model_DbTable_Account();
                 $thisAccount = $account->getAccount($username, $realm);
 
                 if (is_null($thisAccount)) {
@@ -319,7 +319,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $realm = $filter->realm;
 
         // Set up the auth adapter
-        $authAdapter = new Ot_Auth_Adapter;
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapter     = $authAdapter->find($realm);
         $className   = (string)$adapter->class;
         $auth        = new $className();
@@ -364,7 +364,7 @@ class Ot_LoginController extends Zend_Controller_Action
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
 
-                $account = new Ot_Account();
+                $account = new Ot_Model_DbTable_Account();
                 $realm = $form->getValue('realm');
                 $userAccount = $account->getAccount($form->getValue('username'), 'local');//$form->getValue('realm'));
 
@@ -454,7 +454,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $username = preg_replace('/@.*/', '', $userId);
 
         // Set up the auth adapter
-        $authAdapter = new Ot_Auth_Adapter;
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapter     = $authAdapter->find($realm);
         $className   = (string)$adapter->class;
         $auth        = new $className();
@@ -463,7 +463,7 @@ class Ot_LoginController extends Zend_Controller_Action
             throw new Ot_Exception_Access('msg-error-authNotSupported');
         }
 
-        $account     = new Ot_Account();
+        $account     = new Ot_Model_DbTable_Account();
         $thisAccount = $account->getAccount($username, $realm);
 
         if (is_null($thisAccount)) {
@@ -572,7 +572,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $userId = Zend_Auth::getInstance()->getIdentity();
 
         // Set up the auth adapter
-        $authAdapter = new Ot_Auth_Adapter;
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
 
         $adapter     = $authAdapter->find($userId->realm);
 
@@ -603,12 +603,12 @@ class Ot_LoginController extends Zend_Controller_Action
             throw new Ot_Exception_Access('msg-error-createAccountNotAllowed');
         }
 
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
 
         $realm = strtolower($get->realm);
         $this->view->realm = $realm;
 
-        $otAuthAdapter = new Ot_Auth_Adapter();
+        $otAuthAdapter = new Ot_Model_DbTable_AuthAdapter();
         $thisAdapter   = $otAuthAdapter->find($realm);
 
         if (is_null($thisAdapter)) {

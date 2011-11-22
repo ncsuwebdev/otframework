@@ -69,7 +69,7 @@ class Ot_AclController extends Zend_Controller_Action
             
         $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $config->user->defaultRole->val);
         
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         $this->view->defaultRole = $role->find($config->user->defaultRole->val);     
             
         $roles = $this->_acl->getAvailableRoles();
@@ -110,14 +110,12 @@ class Ot_AclController extends Zend_Controller_Action
             
         $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $config->user->defaultRole->val);
         
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         $this->view->defaultRole = $role->find($config->user->defaultRole->val);   
 
         if (!isset($get->roleId)) {
             throw new Ot_Exception_Input('msg-error-roleIdNotSet');
         }
-        
-        $role = new Ot_Role();
         
         $thisRole = $role->find($get->roleId); 
         if (is_null($thisRole)) {
@@ -162,7 +160,7 @@ class Ot_AclController extends Zend_Controller_Action
      */
     public function addAction()
     {   
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         
         $form = $role->form(); 
 
@@ -176,8 +174,7 @@ class Ot_AclController extends Zend_Controller_Action
                     'inheritRoleId' => $form->getValue('inheritRoleId'),
                     'editable'      => 1,
                 );
-        
-                $role = new Ot_Role();
+
                 $roleId = $role->insert($data);
                 
                 $logOptions = array(
@@ -211,7 +208,7 @@ class Ot_AclController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-roleIdNotSet');
         }
                 
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         
         $thisRole = $role->find($get->roleId);
         if (is_null($thisRole)) {
@@ -234,7 +231,6 @@ class Ot_AclController extends Zend_Controller_Action
                     'inheritRoleId' => $form->getValue('inheritRoleId'),
                 );
     
-                $role = new Ot_Role();
                 $role->update($data, null);
                 
                 $logOptions = array(
@@ -274,7 +270,7 @@ class Ot_AclController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-roleIdNotSet');
         }
                 
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         
         $thisRole = $role->find($get->roleId);
         if (is_null($thisRole)) {
@@ -292,7 +288,6 @@ class Ot_AclController extends Zend_Controller_Action
         if ($this->_request->isPost()) {            
             $rules = $this->_processAccessList($_POST, $thisRole->inheritRoleId);
                             
-            $role = new Ot_Role();
             $role->assignRulesForRole($get->roleId, 'application', $rules);
             
             $logOptions = array(
@@ -346,7 +341,7 @@ class Ot_AclController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-roleIdNotSet');
         }
                 
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         
         $thisRole = $role->find($get->roleId);
         if (is_null($thisRole)) {
@@ -377,7 +372,6 @@ class Ot_AclController extends Zend_Controller_Action
                 );
             }
                 
-            $role = new Ot_Role();
             $role->assignRulesForRole($thisRole->roleId, 'remote', $rules);
             
             $logOptions = array(
@@ -428,7 +422,7 @@ class Ot_AclController extends Zend_Controller_Action
             throw new Ot_Exception_Access('msg-error-unallowedRoleDelete');
         }
         
-        $account = new Ot_Account();
+        $account = new Ot_Model_DbTable_Account();
         $affectedAccounts = $account->getAccountsForRole($get->roleId);
         
         $config = Zend_Registry::get('config');
@@ -464,7 +458,7 @@ class Ot_AclController extends Zend_Controller_Action
                 throw new Ot_Exception_Data($this->view->translate('msg-error-dependedRoleCannotDelete', $roleList));
             }
 
-            $role = new Ot_Role();
+            $role = new Ot_Model_DbTable_Role();
             
             $dba = $role->getAdapter();
             $dba->beginTransaction();
@@ -476,7 +470,7 @@ class Ot_AclController extends Zend_Controller_Action
                 throw $e;
             }
             
-            $accountRoles = new Ot_Account_Roles();
+            $accountRoles = new Ot_Model_DbTable_AccountRoles();
             
             // aList is an array of all the affected accountIds
             $aList = array();

@@ -149,7 +149,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
      */
     public function dispatch($data)
     {
-        $eq = new Ot_Email_Queue();
+        $eq = new Ot_Model_DbTable_EmailQueue();
         
         $mail = new Zend_Mail();
 

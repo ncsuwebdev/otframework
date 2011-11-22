@@ -67,7 +67,7 @@ class Ot_Api
      */
     public static function getMyAccount()
     {
-       $otAccount = new Ot_Account();
+       $otAccount = new Ot_Model_DbTable_Account();
        
        if (!Zend_Auth::getInstance()->hasIdentity()) {
            throw new Ot_Exception_Access('msg-error-apiAccessDenied');
@@ -108,7 +108,7 @@ class Ot_Api
             throw new Ot_Exception_Data('msg-error-invalidTimezone');
         }
         
-        $otAccount = new Ot_Account();
+        $otAccount = new Ot_Model_DbTable_Account();
         
         $accountId = Zend_Auth::getInstance()->getIdentity()->accountId;
         
@@ -134,7 +134,7 @@ class Ot_Api
      */
     public static function getAccount($accountId)
     {
-        $otAccount = new Ot_Account();
+        $otAccount = new Ot_Model_DbTable_Account();
         $accountInfo = $otAccount->find($accountId);
         
         if (is_null($accountInfo)) {
@@ -160,11 +160,11 @@ class Ot_Api
      */
     public static function updateAccount($accountId, $firstName, $lastName, $emailAddress, $timezone)
     {        
-        if (!in_array($timezone, Ot_Timezone::getTimezoneList())) {
+        if (!in_array($timezone, Ot_Model_Timezone::getTimezoneList())) {
             throw new Ot_Exception_Data('msg-error-invalidTimezone');
         }
         
-        $otAccount = new Ot_Account();
+        $otAccount = new Ot_Model_DbTable_Account();
         
         $data = array(
                        'accountId'    => $accountId,
@@ -187,7 +187,7 @@ class Ot_Api
      */
     public static function getCronJobs()
     {
-        $cron = new Ot_Cron_Status();
+        $cron = new Ot_Model_DbTable_CronStatus();
         return $cron->getAvailableCronJobs();
     }
     
@@ -205,7 +205,7 @@ class Ot_Api
             throw new Ot_Exception_Data('msg-error-invalidStatus');
         }
         
-        $cron = new Ot_Cron_Status();
+        $cron = new Ot_Model_DbTable_CronStatus();
         return $cron->setCronStatus($name, $status);
     }
     
@@ -220,7 +220,7 @@ class Ot_Api
      */
     public static function getBugReports($status = null)
     {
-        $otBug = new Ot_Bug();
+        $otBug = new Ot_Model_DbTable_Bug();
         
         if (!is_null($status) && !in_array(strtolower($status), array('new', 'ignore', 'escalated', 'fixed'))) {
             throw new Ot_Exception_Data('msg-error-invalidStatus');
@@ -234,8 +234,8 @@ class Ot_Api
         
         $bugs = $otBug->fetchAll($where, 'submitDt DESC')->toArray();
 
-        $bugText   = new Ot_Bug_Text();
-        $otAccount = new Ot_Account();
+        $bugText   = new Ot_Model_DbTable_BugText();
+        $otAccount = new Ot_Model_DbTable_Account();
         
         foreach ($bugs as &$b) {
             

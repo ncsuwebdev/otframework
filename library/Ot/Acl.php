@@ -87,7 +87,7 @@ class Ot_Acl extends Zend_Acl
             return $this->_roles;
         }
 
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         return $role->getRoles($scope);
     }
 

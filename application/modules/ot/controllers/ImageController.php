@@ -48,7 +48,7 @@ class Ot_ImageController extends Zend_Controller_Action
             return;
         }
         
-        $image = new Ot_Image();
+        $image = new Ot_Model_DbTable_Image();
 
         $thisImage = $image->find($get->imageId);     
                 

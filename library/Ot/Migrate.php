@@ -61,7 +61,7 @@ class Ot_Migrate
         
         $this->_availableMigrations = $this->_getAvailableMigrations();
         
-        $migrations = new Ot_Migrations($this->_tablePrefix);
+        $migrations = new Ot_Model_DbTable_Migrations($this->_tablePrefix);
         $this->_messages[] = "Creating migration table if it doesn't exist.";
         $migrations->createTable(); // create the migrations table if it's needed
         $this->_messages[] = "Migration table created successfully if it needed to be.";
@@ -102,7 +102,7 @@ class Ot_Migrate
      */
     public function setlatestversion($latestVersion)
     {
-        $migrations = new Ot_Migrations($this->_tablePrefix);
+        $migrations = new Ot_Model_DbTable_Migrations($this->_tablePrefix);
         
         if (count($this->_appliedMigrations) > 0) {
             $this->_messages[] = 'You can only run this method on an empty migrations table';
@@ -149,7 +149,7 @@ class Ot_Migrate
     public function up($targetMigration)
     {
         
-        $migrations = new Ot_Migrations($this->_tablePrefix);      
+        $migrations = new Ot_Model_DbTable_Migrations($this->_tablePrefix);
         
         $migrationsIdsNotApplied = array_diff(array_keys($this->_availableMigrations), $this->_appliedMigrations);
         
@@ -201,7 +201,7 @@ class Ot_Migrate
      */
     public function down($targetMigration)
     {
-        $migrationsModel = new Ot_Migrations($this->_tablePrefix);        
+        $migrationsModel = new Ot_Model_DbTable_Migrations($this->_tablePrefix);
         
         end($this->_appliedMigrations);
         $highestExecutedMigration = current($this->_appliedMigrations);
@@ -276,7 +276,7 @@ class Ot_Migrate
      */
     public function rebuild($targetMigration = null)
     {
-        $migrations = new Ot_Migrations($this->_tablePrefix);
+        $migrations = new Ot_Model_DbTable_Migrations($this->_tablePrefix);
         
         $this->_messages[] = 'Dropping all tables';
         

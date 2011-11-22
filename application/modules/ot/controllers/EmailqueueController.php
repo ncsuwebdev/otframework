@@ -52,7 +52,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             $this->_helper->layout->disableLayout();
             $this->_helper->viewRenderer->setNeverRender();
             
-            $queue = new Ot_Email_Queue();
+            $queue = new Ot_Model_DbTable_EmailQueue();
             
             $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'queueDt';
             $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
@@ -126,7 +126,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             'delete' => $this->_helper->hasAccess('delete'),
         );
         
-        $eq = new Ot_Email_Queue();
+        $eq = new Ot_Model_DbTable_EmailQueue();
 
         $get = Zend_Registry::get('getFilter');
 
@@ -158,7 +158,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-        $eq = new Ot_Email_Queue();
+        $eq = new Ot_Model_DbTable_EmailQueue();
 
         $get = Zend_Registry::get('getFilter');
 

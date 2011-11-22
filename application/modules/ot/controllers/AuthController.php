@@ -41,7 +41,7 @@ class Ot_AuthController extends Zend_Controller_Action
             'edit'   => $this->_helper->hasAccess('edit'),
         );        
         
-        $authAdapter = new Ot_Auth_Adapter();
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapters = $authAdapter->fetchAll(null, 'displayOrder');
         $this->view->adapters = $adapters;
         
@@ -58,7 +58,7 @@ class Ot_AuthController extends Zend_Controller_Action
             throw new Ot_Exception_Data('ot-auth-toggle:keyNotSet');
         }
         
-        $authAdapter = new Ot_Auth_Adapter();
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapter = $authAdapter->find($get->key);
         if (is_null($adapter)) {
             throw new Ot_Exception_Data('ot-auth-toggle:noAdapter');
@@ -118,7 +118,7 @@ class Ot_AuthController extends Zend_Controller_Action
             throw new Ot_Exception_Input('ot-auth-edit:valueNotFound');
         }
         
-        $authAdapter = new Ot_Auth_Adapter();
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $thisAdapter = $authAdapter->find($get->key);
         if (is_null($thisAdapter)) {
             throw new Ot_Exception_Data('ot-auth-edit:noAdapter');
@@ -173,7 +173,7 @@ class Ot_AuthController extends Zend_Controller_Action
                 $key = substr($key, strpos($key, '_')+1);
             }
 
-            $adapter = new Ot_Auth_Adapter();
+            $adapter = new Ot_Model_DbTable_AuthAdapter();
             
             try {
                 $adapter->updateAdapterOrder($adapterKeys);

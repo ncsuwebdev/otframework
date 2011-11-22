@@ -77,7 +77,7 @@ class Ot_CustomController extends Zend_Controller_Action
             throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
 
-        $custom = new Ot_Custom();
+        $custom = new Ot_Model_Custom();
         $attributes = $custom->getAttributesForObject($get->objectId);
 
         $this->_helper->pageTitle('ot-custom-details:title', $get->objectId);
@@ -120,7 +120,7 @@ class Ot_CustomController extends Zend_Controller_Action
                 $id = (int)substr($id, strpos($id, '_')+1);
             }
 
-            $custom = new Ot_Custom();
+            $custom = new Ot_Model_Custom();
 
             try {
                 $custom->updateAttributeOrder($objectId, $attributeIds);
@@ -153,8 +153,8 @@ class Ot_CustomController extends Zend_Controller_Action
 
         $get = Zend_Registry::get('getFilter');
 
-        $custom = new Ot_Custom();
-        $attr   = new Ot_Custom_Attribute();
+        $custom = new Ot_Model_Custom();
+        $attr   = new Ot_Model_DbTable_CustomAttribute();
 
         if (!isset($get->attributeId)) {
             throw new Ot_Exception_Input('msg-error-attributeIdNotSet');
@@ -199,7 +199,7 @@ class Ot_CustomController extends Zend_Controller_Action
             throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
 
-        $custom = new Ot_Custom();
+        $custom = new Ot_Mode_Custom();
 
         if ($this->_request->isPost()) {
 
@@ -225,7 +225,7 @@ class Ot_CustomController extends Zend_Controller_Action
                 'order'     => 0,
             );
 
-            $attr = new Ot_Custom_Attribute();
+            $attr = new Ot_Model_DbTable_CustomAttribute();
 
             $id = $attr->insert($data);
 
@@ -263,8 +263,8 @@ class Ot_CustomController extends Zend_Controller_Action
      */
     public function editAction()
     {
-        $custom = new Ot_Custom();
-        $attr = new Ot_Custom_Attribute();
+        $custom = new Ot_Model_Custom();
+        $attr = new Ot_Model_DbTable_CustomAttribute();
 
         $get = Zend_Registry::get('getFilter');
 
@@ -359,8 +359,8 @@ class Ot_CustomController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-        $custom = new Ot_Custom();
-        $attr = new Ot_Custom_Attribute();
+        $custom = new Ot_Model_Custom();
+        $attr = new Ot_Model_DbTable_CustomAttribute();
 
         $get = Zend_Registry::get('getFilter');
 
@@ -391,7 +391,7 @@ class Ot_CustomController extends Zend_Controller_Action
             $where = $attr->getAdapter()->quoteInto('attributeId = ?', $get->attributeId);
             $attr->delete($where);
 
-            $val = new Ot_Custom_Attribute_Value();
+            $val = new Ot_Model_DbTable_CustomAttributeValue();
             $val->delete($where);
 
             $logOptions = array('attributeName' => 'objectAttributeId', 'attributeId' => $get->attributeId);

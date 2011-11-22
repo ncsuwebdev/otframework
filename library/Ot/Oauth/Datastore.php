@@ -32,7 +32,7 @@ class Ot_Oauth_Datastore implements Oauth_Datastore_Interface
 {
     public function lookupConsumer($consumerKey) 
     { 
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         $thisConsumer = $consumer->getConsumerByKey($consumerKey);
         
         if (is_null($thisConsumer)) {
@@ -49,7 +49,7 @@ class Ot_Oauth_Datastore implements Oauth_Datastore_Interface
     
     public function lookupToken($consumer, $tokenType, $token) 
     { 
-        $st = new Ot_Oauth_Server_Token();
+        $st = new Ot_Model_DbTable_OauthServerToken();
         
         $thisToken = $st->getTokenByTypeAndConsumerId($token, $tokenType, $consumer->consumerId);
         
@@ -63,7 +63,7 @@ class Ot_Oauth_Datastore implements Oauth_Datastore_Interface
     
     public function lookupNonce($consumer, $token, $nonce, $timestamp) 
     { 
-        $sn = new Ot_Oauth_Server_Nonce();
+        $sn = new Ot_Model_DbTable_OauthServerNonce();
         
         $thisNonce = $sn->getNonceByConsumerAndToken($consumer->consumerId, $token);
         
@@ -117,7 +117,7 @@ class Ot_Oauth_Datastore implements Oauth_Datastore_Interface
     
     public function newAccessToken($token, $consumer) 
     { 
-        $st = new Ot_Oauth_Server_Token();
+        $st = new Ot_Model_DbTable_OauthServerToken();
         
         $thisToken = $st->getTokenByTypeAndConsumerId($token->key, 'request', $consumer->consumerId);
         

@@ -63,7 +63,7 @@ class Ot_OauthclientController extends Zend_Controller_Action
 
         $accountId = Zend_Auth::getInstance()->getIdentity()->accountId;
         
-        $otOauthToken = new Ot_Oauth_Client_Token();
+        $otOauthToken = new Ot_Model_DbTable_OauthClientToken();
         
         $otOauthToken->storeToken(
             $accountId,
@@ -94,7 +94,7 @@ class Ot_OauthclientController extends Zend_Controller_Action
         
         $token = $get->oauthToken;
         
-        $otOauthToken = new Ot_Oauth_Client_Token();
+        $otOauthToken = new Ot_Model_DbTable_OauthClientToken();
         $requestToken = $otOauthToken->getToken($token);
         
         if ($requestToken->token != $token) {

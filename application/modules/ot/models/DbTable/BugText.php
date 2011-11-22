@@ -12,8 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_View_Helper_BaseUrl
- * @category   Library
+ * @package    Ot_Bug_Text
+ * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
@@ -21,25 +21,40 @@
  */
 
 /**
- * This view helper returns the baseUrl of the application
+ * Model to do deal with bug reports
  *
- * @package    Ot_View_Helper_BaseUrl
- * @category   Library
+ * @package    Ot_Bug_Text
+ * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
+ *
  */
-
-class Ot_View_Helper_BaseUrl extends Zend_View_Helper_Abstract
+class Ot_Model_DbTable_BugText extends Ot_Db_Table
 {
     /**
-     * Takes any number of arguments and echoes the value in the array of values
-     * at the current index.  The values are set the first time the function
-     * is called.
+     * Name of the table in the database
      *
-     * @param mixed Any number of arguments to use as cycle values
+     * @var string
      */
-    public static function baseUrl()
+    protected $_name = 'tbl_ot_bug_text';
+
+    /**
+     * Primary key of the table
+     *
+     * @var string
+     */
+    protected $_primary = 'bugTextId';
+
+    /**
+     * Gets all the bugs, with options to only show new bugs
+     *
+     * @param boolean $newOnly
+     * @return result from fetchAll
+     */
+    public function getBugText($bugId, $order = 'ASC')
     {
-        return Zend_Controller_Front::getInstance()->getBaseUrl();
+        $where = $this->getAdapter()->quoteInto('bugId = ?', $bugId);
+
+        return parent::fetchAll($where, 'postDt ' . $order);
     }
 }

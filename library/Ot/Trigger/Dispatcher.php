@@ -77,7 +77,7 @@ class Ot_Trigger_Dispatcher
      */
     public function dispatch($triggerId)
     {
-        $action = new Ot_Trigger_Action();
+        $action = new Ot_Model_DbTable_TriggerAction();
         $actions = $action->getActionsForTrigger($triggerId);
 
         foreach ($actions as $a) {

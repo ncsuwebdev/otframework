@@ -86,7 +86,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
             throw new Ot_Exception_Input('The oauthToken is not set in the query string.');
         }
         
-        $st = new Ot_Oauth_Server_Token(); 
+        $st = new Ot_Model_DbTable_OauthServerToken();
         
         $token = $st->getToken($get->oauthToken);
         
@@ -94,7 +94,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
             throw new Ot_Exception_Data('The passed request token was not found.');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($token->consumerId);
         if (is_null($thisConsumer)) {
@@ -190,7 +190,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
             throw new Ot_Exception_Input('The oauthToken is not set in the query string.');
         }
         
-        $st = new Ot_Oauth_Server_Token();
+        $st = new Ot_Model_DbTable_OauthServerToken();
         
         $token = $st->getToken($get->oauthToken);
         
@@ -206,7 +206,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
             throw new Ot_Exception_Data('This token does not belong to the user selected.');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($token->consumerId);
         if (is_null($thisConsumer)) {
@@ -242,7 +242,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
             throw new Ot_Exception_Input('consumerId not set in query string.');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
@@ -262,14 +262,14 @@ class Ot_OauthserverController extends Zend_Controller_Action
             throw new Ot_Exception_Input('The consumerId is not set in the query string.');
         }
 
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
             throw new Ot_Exception_Data('The consumer associated with your request token no longer exists');
         }
         
-        $st = new Ot_Oauth_Server_Token();
+        $st = new Ot_Model_DbTable_OauthServerToken();
         
         $existingAccessToken = $st->getTokenByAccountAndConsumer(
             Zend_Auth::getInstance()->getIdentity()->accountId,
@@ -292,7 +292,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
             throw new Ot_Exception_Input('consumerId not set in query string.');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
@@ -305,7 +305,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
         
         $this->view->consumer = $thisConsumer;
                         
-        $st = new Ot_Oauth_Server_Token();
+        $st = new Ot_Model_DbTable_OauthServerToken();
         
         $existingAccessToken = $st->getTokenByAccountAndConsumer(
             Zend_Auth::getInstance()->getIdentity()->accountId,
@@ -367,7 +367,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
             throw new Ot_Exception_Input('No consumer ID was given');
         }
         
-        $consumer = new Ot_Oauth_Server_Consumer();
+        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
         
         $thisConsumer = $consumer->find($get->consumerId);
         if (is_null($thisConsumer)) {
@@ -376,7 +376,7 @@ class Ot_OauthserverController extends Zend_Controller_Action
         
         $this->view->consumer = $thisConsumer;
                         
-        $st = new Ot_Oauth_Server_Token();
+        $st = new Ot_Model_DbTable_OauthServerToken();
         
         $existingAccessToken = $st->getTokenByAccountAndConsumer(
             Zend_Auth::getInstance()->getIdentity()->accountId,
