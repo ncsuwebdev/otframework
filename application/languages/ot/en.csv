@@ -576,6 +576,7 @@ ot-login-index:login;Login
 ot-login-index:signUp;Sign-Up Now
 ot-login-index:linkForgot;I Forgot my Password...
 ot-login-index:noAdaptersEnabled;No authentication adapters are enabled. Please contact an administrator.
+ot-login-index:alreadyLoggedIn;You are already logged in as %1$s. To log in as a different user, <a href="/otframework/login/logout">logout</a>, then return to this page.
 ot-login-forgot:linkReset;Reset My Password
 ot-login-forgot:title;Forgot My Password
 ot-login-forgot:header;If you have forgotten your password, enter your username below and we can send a reset request to the email address we have on file for you.

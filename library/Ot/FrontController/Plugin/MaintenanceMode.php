@@ -44,6 +44,10 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
         $identity = Zend_Auth::getInstance()->getIdentity();
         $role = (empty($identity->role)) ? (string)$config->user->defaultRole->val : $identity->role;
         
+        if (isset($identity->masquerading) && $identity->masquerading == true && isset($identity->realAccount) && !is_null($identity->realAccount) && isset($identity->realAccount->role)) {
+        	$role = $identity->realAccount->role;
+        }
+        
         $acl = Zend_Registry::get('acl');
         
         $view = $layout->getView();
@@ -52,7 +56,7 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
         if (is_file(APPLICATION_PATH . '/../overrides/' . $maintenanceModeFileName)
             && (!$request->isXmlHttpRequest() && !$viewRenderer->getNeverRender())
         ) {
-                
+        	
             if (!$acl->isAllowed($role, 'ot_maintenance', 'index')) {
                 if (!($request->getModuleName() == 'ot'
                     && $request->getControllerName() == 'login'

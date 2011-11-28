@@ -39,6 +39,8 @@ class Ot_LoginController extends Zend_Controller_Action
      */
     public function indexAction()
     {
+    	$messages = array();
+    	
         $this->_helper->pageTitle('ot-login-index:title');
 
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
@@ -49,7 +51,11 @@ class Ot_LoginController extends Zend_Controller_Action
         $authRealm->setExpirationHops(1);
 
         if (Zend_Auth::getInstance()->hasIdentity()) {
-            return $this->_redirect('/');
+        	$this->view->messages = $messages;
+        	$this->view->alreadyLoggedIn = true;
+        	$this->view->identity = Zend_Auth::getInstance()->getIdentity();
+        	return;
+            //return $this->_redirect('/');
         }
 
         $authAdapter = new Ot_Model_DbTable_AuthAdapter();
@@ -134,7 +140,6 @@ class Ot_LoginController extends Zend_Controller_Action
         $formUserId   = null;
         $formPassword = null;
         $validForm    = false;
-        $messages     = array();
 
         $get = Zend_Registry::get('getFilter');
 
