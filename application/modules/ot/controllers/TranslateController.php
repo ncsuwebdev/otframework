@@ -143,7 +143,7 @@ class Ot_TranslateController extends Zend_Controller_Action
             $this->view->controller       = $getFilter->c;
             $this->view->action           = $getFilter->a;
             $this->view->showSubmit       = !$this->getRequest()->isXmlHttpRequest();
-            $this->view->language         = Ot_Language::getLanguageName($translate->getLocale());
+            $this->view->language         = Ot_Model_Language::getLanguageName($translate->getLocale());
             $this->view->translationTable = $actionMessages;
         }
     }
