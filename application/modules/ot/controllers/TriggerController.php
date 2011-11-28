@@ -98,10 +98,20 @@ class Ot_TriggerController extends Zend_Controller_Action
      */
     public function addAction()
     {
+    	// TODO: refactor this because it has confusing variable names (name/triggerId are the same thing)
         $get = Zend_Registry::get('getFilter');
         
+        $action = new Ot_Model_DbTable_TriggerAction();
+        
         if (!isset($get->name)) {
-            throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
+        	if(!isset($get->triggerActionId)) {
+        		throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
+        	}
+        	$triggerInfo = $action->find($get->triggerActionId)->toArray();
+        	if(!$triggerInfo['triggerId']) {
+                throw new Ot_Exception_Data('msg-error-triggerIdNotFound');
+        	}
+        	$get->name = $triggerInfo['triggerId'];
         }
         $register = new Ot_Trigger_Register();
 
@@ -114,8 +124,6 @@ class Ot_TriggerController extends Zend_Controller_Action
         $this->view->trigger = $thisTrigger;
         $this->_helper->pageTitle('ot-trigger-add:title');
         
-        $action = new Ot_Model_DbTable_TriggerAction();
-
         $values = array('triggerId' => $thisTrigger->getName());
         
         if (isset($get->helper)) {
