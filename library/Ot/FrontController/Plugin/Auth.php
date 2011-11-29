@@ -158,20 +158,22 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 return;
             }
 
-            if(count($thisAccount->role) > 1) {
+            if (count($thisAccount->role) > 1) {
                 $roles = array();
-                
+
                 // Get role names from the list of role Ids
                 foreach ($thisAccount->role as $r) {
-                    $roles[] = $acl->getRole($r['roleId']);
+                    $roles[] = $acl->getRole($r);
                 }
-                
+
                 // Create a new role that inherits from all the returned roles
-                $thisAccount->role = new Zend_Acl_Role(implode(',', $roles));
-                
-                $acl->addRole($thisAccount->role, $roles); 
-                
-                
+                $roleName = implode(',', $roles);
+
+                $thisAccount->role = $roleName;
+
+                $acl->addRole(new Zend_Acl_Role($roleName), $roles);
+
+
             } else if (count($thisAccount->role) == 1) {
                 $thisAccount->role = $thisAccount->role[0];
             }
