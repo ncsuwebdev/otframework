@@ -128,7 +128,7 @@ class Ot_OauthclientController extends Zend_Controller_Action
             $accessToken->secret
         );
         
-        $req = new Zend_Session_Namespace(end_Registry::get('siteUrl') . '_request');
+        $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
         $this->_helper->redirector->gotoUrl($req->requestedFromUrl);
     }
 }

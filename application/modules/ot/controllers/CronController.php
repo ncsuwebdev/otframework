@@ -48,7 +48,7 @@ class Ot_CronController extends Zend_Controller_Action
             
         $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_cronjob', $config->user->defaultRole->val);
         
-        $role = new Ot_Role();
+        $role = new Ot_Model_DbTable_Role();
         $this->view->defaultRole = $role->find($config->user->defaultRole->val);
 
         $registry = new Ot_Cron_Register();

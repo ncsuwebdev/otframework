@@ -55,7 +55,6 @@ class Ot_LoginController extends Zend_Controller_Action
         	$this->view->alreadyLoggedIn = true;
         	$this->view->identity = Zend_Auth::getInstance()->getIdentity();
         	return;
-            //return $this->_redirect('/');
         }
 
         $authAdapter = new Ot_Model_DbTable_AuthAdapter();
@@ -685,7 +684,7 @@ class Ot_LoginController extends Zend_Controller_Action
                             }
                         }
 
-                        $custom = new Ot_Custom();
+                        $custom = new Ot_Model_Custom();
                         $attributes = $custom->getAttributesForObject('Ot_Profile');
 
                         $data = array();

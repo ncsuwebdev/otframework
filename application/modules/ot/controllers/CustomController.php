@@ -199,7 +199,7 @@ class Ot_CustomController extends Zend_Controller_Action
             throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
 
-        $custom = new Ot_Mode_Custom();
+        $custom = new Ot_Model_Custom();
 
         if ($this->_request->isPost()) {
 

@@ -83,7 +83,7 @@ class Ot_NavController extends Zend_Controller_Action
              ->headScript()
              ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
                                  
-        $nav = new Ot_Nav();
+        $nav = new Ot_Model_DbTable_Nav();
         $this->view->editNavTreeHtml = $nav->generateHtml(Zend_Registry::get('navArray'), true);
     }
 
