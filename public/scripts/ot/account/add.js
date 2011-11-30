@@ -69,6 +69,9 @@ function updateTables(roles) {
         $.each($controllers, function(i, controller){
             controller.update(data[controller.module][controller.name]['part']);
         });
+    }).error(function(data){
+    	error = JSON.parse(data.responseText);
+    	alert('An error occurred' + (error.message ? ': ' + error.message : '.'))
     });
 }
 

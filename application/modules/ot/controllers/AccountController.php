@@ -1026,14 +1026,6 @@ class Ot_AccountController extends Zend_Controller_Action
     }
 
     /**
-     * Allows a user to change their role and others
-     *
-     */
-    public function changeUserRoleAction()
-    {
-    }
-
-    /**
      * Change user roles in bulk
      *
      */

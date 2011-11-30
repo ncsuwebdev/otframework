@@ -7,7 +7,8 @@ $('document').ready(function() {
     });
     
     $('#saveButton').click(function() {
-        $.post($('#baseUrl').val() + '/ot/custom/save-attribute-order/', {
+        $.post(
+            $('#baseUrl').val() + '/ot/custom/save-attribute-order/', {
                 objectId: $('#objectId').val(),
                 'attributeIds[]': $('#attributeList').sortable('toArray')
             },
@@ -24,6 +25,10 @@ $('document').ready(function() {
                 setTimeout(function() { $('#orderMessage').fadeOut(); }, 2500); 
             },
             "json"
-        );
+        ).error(function(data){
+        	error = JSON.parse(data.responseText);
+        	alert(error.toSource())
+        	$('#orderMessage').text(error.message).addClass('ui-state-error').fadeIn();
+        });
     });
 });

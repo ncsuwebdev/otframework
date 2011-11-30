@@ -86,98 +86,112 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
         return $data;
     }
 
-       public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
-           try {
-               $result = parent::fetchAll($where, $order, $count, $offset);
-           } catch (Exception $e) {
-               throw $e;
-           }
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
+        try {
+            $result = parent::fetchAll($where, $order, $count, $offset);
+        } catch (Exception $e) {
+            throw $e;
+        }
 
-           if($result->count() > 0) {
-               foreach ($result as $r) {
-                   $ret[] = $this->_addExtraData($r);
-               }
+        if($result->count() > 0) {
+            foreach ($result as $r) {
+                $ret[] = $this->_addExtraData($r);
+            }
 
-               return $ret;
-           } else {
-               return null;
-           }
-       }
+            return $ret;
+        } else {
+            return null;
+        }
+    }
 
-       public function find() {
-           $result = parent::find(func_get_args());
+    public function find() {
+        $result = parent::find(func_get_args());
 
-           return $this->_addExtraData($result);
-       }
+        return $this->_addExtraData($result);
+    }
 
-
-       public function insert(array $data)
-       {
-           $roleIds = array();
-           if(isset($data['role']) && count($data['role']) > 0) {
-               $roleIds = (array)$data['role'];
-               unset($data['role']);
-           }
-           try {
-               $accountId = parent::insert($data);
-           } catch(Exception $e) {
-               throw new Ot_Exception('Account insert failed.');
-           }
+    /**
+     * inserts a new user and also takes care of account_roles if $data['role'] is set
+     */
+    public function insert(array $data)
+    {
+        $inTransaction = false; //whether or not we're in a transaction prior to this
+        $dba = $this->getAdapter();
+            try {
+                $dba->beginTransaction();
+            } catch (Exception $e) {
+                $inTransaction = true;
+            }
+          
+            $roleIds = array();
+            if(isset($data['role']) && count($data['role']) > 0) {
+                $roleIds = (array)$data['role'];
+                unset($data['role']);
+            }
+            try {
+                $accountId = parent::insert($data);
+            } catch(Exception $e) {
+                throw new Ot_Exception('Account insert failed.');
+            }
            
-           if (count($roleIds) > 0) {
-               $accountRoles = new Ot_Model_DbTable_AccountRoles();
+            if (count($roleIds) > 0) {
+                $accountRoles = new Ot_Model_DbTable_AccountRoles();
 
-               foreach($roleIds as $r) {
-                   $accountRoles->insert(array(
-                       'accountId' => $accountId,
-                       'roleId'    => $r,
-                   ));
-               }
-           }
-           return $accountId;
-       }
+                foreach($roleIds as $r) {
+                    $accountRoles->insert(array(
+                        'accountId' => $accountId,
+                        'roleId'    => $r,
+                    ));
+                }
+            }
+        return $accountId;
+    }
 
-       public function update(array $data, $where)
-       {
-           $rolesToAdd = array();
-           if (isset($data['role']) && count($data['role']) > 0) {
-               $rolesToAdd = (array)$data['role'];
-               unset($data['role']);
-           }
-           $updateCount = parent::update($data, $where);
-           if(count($rolesToAdd) < 1) {
-               return $updateCount;
-           }
-           $accountRoles = new Ot_Model_DbTable_AccountRoles();
-           $accountRolesDba = $accountRoles->getAdapter();
+    /**
+     * updates the row
+     * if you supply an array of role ids, it will update them correctly in the account_roles table
+     */
+    public function update(array $data, $where)
+    {
+        $rolesToAdd = array();
+        if (isset($data['role']) && count($data['role']) > 0) {
+            $rolesToAdd = (array)$data['role'];
+            unset($data['role']);
+        }
+        $updateCount = parent::update($data, $where);
+        if(count($rolesToAdd) < 1) {
+            return $updateCount;
+        }
+        $accountRoles = new Ot_Model_DbTable_AccountRoles();
+        $accountRolesDba = $accountRoles->getAdapter();
 
-           $accountId = $data['accountId'];
+        $accountId = $data['accountId'];
 
-           if(isset($rolesToAdd) && count($rolesToAdd) > 0) {
-               try {
-                   $where = $accountRolesDba->quoteInto('accountId = ?', $accountId);
-                   $accountRoles->delete($where);
-                   foreach($rolesToAdd as $roleId) {
-                       $d = array(
-                           'accountId' => $accountId,
-                           'roleId' => $roleId,
-                       );
-                       $accountRoles->insert($d);
-                   }
-               } catch(Exception $e) {
-                   throw $e;
-               }
-           }
-           return $updateCount;
-       }
+        if(isset($rolesToAdd) && count($rolesToAdd) > 0 && $accountId) {
+            try {
+                $where = $accountRolesDba->quoteInto('accountId = ?', $accountId);
+                $accountRoles->delete($where);
+                foreach($rolesToAdd as $roleId) {
+                    $d = array(
+                        'accountId' => $accountId,
+                        'roleId' => $roleId,
+                    );
+                    $accountRoles->insert($d);
+                }
+            } catch(Exception $e) {
+                throw $e;
+            }
+        }
+        return $updateCount;
+    }
 
-       public function delete($where)
-       {
-           $deleteCount = parent::delete($where);
-           $accountRoles = new Ot_Model_DbTable_AccountRoles();
-           $accountRoles->delete($where);
-           return $deleteCount;
-       }
+    public function delete($where)
+    {
+        $deleteCount = parent::delete($where);
+        $accountRoles = new Ot_Model_DbTable_AccountRoles();
+        $accountRoles->delete($where);
+        return $deleteCount;
+    }
 
     public function getAccount($username, $realm)
     {
@@ -236,20 +250,34 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
         }
     }
     
-    
+    /**
+     * 
+     * @param string $unityId
+     * @param array $newRoleId - integer or array of integers for the new role Ids
+     */
     public function changeAccountRoleForUnityId($unityId, $newRoleId)
     {
         $thisAccount = $this->getAccount($unityId, 'wrap');
+        $accountRoles = new Ot_Model_DbTable_AccountRoles();
  
         if (!is_null($thisAccount)) {
             $data = array(
                 'accountId' => $thisAccount->accountId,
                 'role'      => $newRoleId
             );
-                            
+            
+            $newRoleId = (array)$newRoleId;
+            
+            $dba = $this->getAdapter();
+            $dba->beginTransaction();
+            
             try {
                 $this->update($data, null);
+                
+                $dba->commit();
+                return;
             } catch (Exception $e) {
+            $dba->rollBack();
                 throw $e;
             }
         } else {
@@ -261,6 +289,7 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
     public function createNewUserForUnityId($unityId, $roleId)
     {    
         $thisAccount = $this->getAccount($unityId, 'wrap');
+        $accountRoles = new Ot_Model_DbTable_AccountRoles();
         
         if (is_null($thisAccount)) {
             
@@ -268,13 +297,23 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
                 'username'  => $unityId, 
                 'realm'     => 'wrap',
                 'password'  => md5($this->generatePassword()),
-                'timezone'  => 'America/New_York', 
+                'timezone'  => 'America/New_York',
                 'role'      => $roleId,
             );
 
+            $dba = $this->getAdapter();
+            $dba->beginTransaction();
+            
+            $accountRolesDba = $accountRoles->getAdapter();
+            
             try {
-                return $this->insert($data);
+                $newAccountId = $this->insert($data);
+                
+                $dba->commit();
+                return $newAccountId;
+                
             } catch (Exception $e) {
+            $dba->rollBack();
                 throw $e;
             }
         } else {
@@ -307,11 +346,11 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
             $roleList[$r->roleId] = $r->name;
         }
              
-        $newRoleId = $form->createElement('radio', 'newRoleId', array('label' => 'Choose a role for all accounts listed above: '));
+        $newRoleId = $form->createElement('multicheckbox', 'newRoleId', array('label' => 'Choose a role for all accounts listed above: '));
         $newRoleId->setRequired(true);
         $newRoleId->setMultiOptions($roleList);
         $newRoleId->setValue((isset($default['newRoleId'])) ? $default['newRoleId'] : '');
-              
+        
         $form->addElements(array($text, $newRoleId));
         
         $submit = $form->createElement('submit', 'saveButton', array('label' => 'Submit'));
@@ -360,7 +399,7 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
             $roleList[$r->roleId] = $r->name;
         }
              
-        $newRoleId = $form->createElement('radio', 'newRoleId', array('label' => 'Choose new role for the accounts listed above: '));
+        $newRoleId = $form->createElement('multicheckbox', 'newRoleId', array('label' => 'Choose new role for the accounts listed above: '));
         $newRoleId->setRequired(true);
         $newRoleId->setMultiOptions($roleList);
         $newRoleId->setValue((isset($default['newRoleId'])) ? $default['newRoleId'] : '');

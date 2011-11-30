@@ -73,6 +73,10 @@ div.elm {
     line-height: 20px;
 }
 
+div.elm label input {
+	margin-right: 0.5em;
+}
+
 div.zend_form {
     margin: 20px 0px;
 }
