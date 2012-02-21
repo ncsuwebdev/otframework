@@ -64,19 +64,26 @@ class Ot_Acl extends Zend_Acl
         }
 
         $roles = $this->getAvailableRoles('', $scope);
+        $notAdded = $roles;
 
-        foreach ($roles as $r) {
-            $this->addRole(new Zend_Acl_Role($r['roleId']), ($r['inheritRoleId'] != 0) ? $r['inheritRoleId'] : null);
+        foreach ($notAdded as &$r) {
+            try {
+                $this->addRole(new Zend_Acl_Role($r['roleId']), ($r['inheritRoleId'] != 0) ? $r['inheritRoleId'] : null);
 
-            foreach ($r['rules'] as $rule) {
-                if ($rule['resource'] == '*' || $this->has($rule['resource'])) {
-                    $this->{$rule['type']}($r['roleId'],
-                        ($rule['resource'] == '*') ? null : $rule['resource'],
-                        ($rule['privilege'] == '*') ? null : $rule['privilege']
-                    );
+                foreach ($r['rules'] as $rule) {
+                    if ($rule['resource'] == '*' || $this->has($rule['resource'])) {
+                        $this->{$rule['type']}($r['roleId'],
+                            ($rule['resource'] == '*') ? null : $rule['resource'],
+                            ($rule['privilege'] == '*') ? null : $rule['privilege']
+                        );
+                    }
                 }
+            } catch (Zend_Acl_Role_Registry_Exception $e) {
+                $notAdded[] = &$r;
             }
         }
+
+        unset($r);
 
         $this->_roles = $roles;
     }
