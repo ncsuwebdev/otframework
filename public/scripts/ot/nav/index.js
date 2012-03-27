@@ -56,7 +56,7 @@ $('document').ready(function() {
 
     /// setup handlers for undo support
     $('#undoMoveButton').click(sitemapHistory.restoreState);
-    $(document).bind('keypress', function(e) {
+    $(document).on('keypress', function(e) {
         
         if ((e.ctrlKey || e.metaKey) && (e.which == 122 || e.which == 26)) {
             sitemapHistory.restoreState();
@@ -231,7 +231,7 @@ $('document').ready(function() {
     });
     
     initialStructureCache = $.toJSON(serialize($('ul#masterList')));
-    $(window).bind('beforeunload', catchUnload);
+    $(window).on('beforeunload', catchUnload);
     
 });
 
@@ -450,7 +450,8 @@ function catchUnload(e) {
 	if(currentStructure != initialStructureCache) {
 		$('#saveNavButton').addClass('highlight');
 		e.preventDefault();
+		return 'Navigation edited, but not yet saved.';
 	} else {
-		$(window).unbind('beforeunload', catchUnload);
+		$(window).off('beforeunload', catchUnload);
 	}
 }
