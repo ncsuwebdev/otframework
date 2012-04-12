@@ -78,37 +78,52 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             $config = Zend_Registry::get('config');
             
             foreach ($emails as $e) {
+                if(gettype($e['zendMailObject']) == 'object' && get_class($e['zendMailObject']) == 'Zend_Mail') {
+                    if ($this->_helper->hasAccess('details')) {
+                        $recipientField = '<a href="' . $this->view->url(
+                            array(
+                                'controller' => 'emailqueue',
+                                'action'     => 'details',
+                                'queueId'    => $e['queueId'],
+                            ),
+                            'ot',
+                            true
+                        )
+                        . '">' . implode(', ', $e['zendMailObject']->getRecipients()) . '</a>';
+                    } else {
+                        $recipientField = implode(', ', $e['zendMailObject']->getRecipients());
+                    }
                     
-                if ($this->_helper->hasAccess('details')) {
-                    $recipientField = '<a href="' . $this->view->url(
-                        array(
-                            'controller' => 'emailqueue',
-                            'action'     => 'details',
-                            'queueId'    => $e['queueId'],
-                        ),
-                        'ot',
-                        true
-                    )
-                    . '">' . implode(', ', $e['zendMailObject']->getRecipients()) . '</a>';
+                    $row = array(
+                        'id'   => $e['queueId'],
+                        'cell' => array(
+                            $recipientField,
+                            $e['zendMailObject']->getSubject(),                        
+                            ucwords($e['status']),
+                            strftime($config->user->dateTimeFormat->val, $e['queueDt']), 
+                            ($e['sentDt'] == 0)
+                                ? 'Not Sent Yet' : strftime($config->user->dateTimeFormat->val, $e['sentDt']),
+                            $e['attributeName'],
+                            $e['attributeId'],
+                        )
+                    );
+                    
+                    $response['rows'][] = $row;
                 } else {
-                    $recipientField = implode(', ', $e['zendMailObject']->getRecipients());
+                    // if an email breaks, fill it with error text instead of just killing the pageload
+                    $response['rows'][] = array(
+                        'id' => '0',
+                        'cell' => array(
+                            'Email Queue Error',
+                            'Zend_Mail Error',
+                            'Corrupt',
+                            'Unknown',
+                            'Unknown',
+                            $e['attributeName'],
+                            $e['attributeId'],
+                        ),
+                    );
                 }
-                
-                $row = array(
-                    'id'   => $e['queueId'],
-                    'cell' => array(
-                        $recipientField,
-                        $e['zendMailObject']->getSubject(),                        
-                        ucwords($e['status']),
-                        strftime($config->user->dateTimeFormat->val, $e['queueDt']), 
-                        ($e['sentDt'] == 0)
-                            ? 'Not Sent Yet' : strftime($config->user->dateTimeFormat->val, $e['sentDt']),
-                        $e['attributeName'],
-                        $e['attributeId'],
-                    )
-                );
-                
-                $response['rows'][] = $row;
             }
             echo Zend_Json::encode($response);
             return;
