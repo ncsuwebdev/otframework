@@ -94,11 +94,12 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
         )->addRoute(
             'api',
             new Zend_Controller_Router_Route(
-                'api/:action/*',
+                'api/:endpoint/*',
                 array(
                     'module'     => 'ot',
                     'controller' => 'api',
                     'action'     => 'index',
+                    'endpoint'   => ''
                 )
             )
         )->addRoute(
@@ -215,5 +216,14 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
 
         $register = new Ot_Cron_Register();
         $register->registerCronjob($eq);
+    }
+    
+    public function _initApiMethods()
+    {
+        $endpoint = new Ot_Api_Endpoint('Ot_Account', 'Deals with the accounts in the system');
+        $endpoint->setMethod(new Ot_Model_Apiendpoint_Account());
+
+        $register = new Ot_Api_Register();
+        $register->registerApiEndpoint($endpoint);
     }
 }

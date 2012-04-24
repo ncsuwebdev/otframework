@@ -31,7 +31,51 @@
  */
 class Ot_ApiController extends Zend_Controller_Action
 {
+
+    public function init()
+    {
+        set_time_limit(0);
         
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNeverRender();
+        
+        parent::init();
+    }
+    
+    public function indexAction()
+    {
+        $register = new Ot_Api_Register();
+        
+        $params = $this->_getAllParams();
+        
+        $endpoint = $params['endpoint'];
+
+        if (!is_null($endpoint)) {
+            
+            $thisEndpoint = $register->getApiEndpoint($endpoint);
+
+            if (!is_null($thisEndpoint)) {
+                
+                if ($this->_request->isPost()) {
+                    $thisEndpoint->getMethod()->post($params);
+                } else if ($this->_request->isPut()) {
+                    $thisEndpoint->getMethod()->put($params);
+                } else if ($this->_request->isDelete()) {
+                    $thisEndpoint->getMethod()->delete($params);
+                } else {
+                    $thisEndpoint->getMethod()->get($params);
+                }
+                
+            } else {
+                throw new Ot_Exception('API endpoint could not be found');
+            }
+
+            return;
+        }
+    }
+    
+    
+    /*
     protected $_class = 'Internal_Api';
         
     protected $_parameters = array();
@@ -124,4 +168,5 @@ class Ot_ApiController extends Zend_Controller_Action
             echo $jsoncallback . '(' . Zend_Json::fromXml($response) . ')';
         }
     }
+    */
 }

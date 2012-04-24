@@ -62,7 +62,7 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
      */
     private function _addExtraData($data) {
 
-        if (get_Class($data) == 'Zend_Db_Table_Row') {
+        if (get_class($data) == 'Zend_Db_Table_Row') {
             $data = (object) $data->toArray();
         }
 
@@ -106,7 +106,6 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
 
     public function find() {
         $result = parent::find(func_get_args());
-
         return $this->_addExtraData($result);
     }
 
