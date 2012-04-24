@@ -32,10 +32,12 @@ class Ot_Db_Table extends Zend_Db_Table
 {
     public function __construct()
     {
-        $config = Zend_Registry::get('config');
-        
-        if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
-            $this->_name = $config->app->tablePrefix . $this->_name;
+        global $application;
+
+        $prefix = $application->getOption('tablePrefix');
+
+        if (!empty($prefix)) {
+            $this->_name = $prefix . $this->_name;
         }
         
         // cache the meta data for tables so it doesn't have to get it ever time a table is instantiated
