@@ -3,7 +3,6 @@
   <production>
     <app>
       <version>2.5.2</version>
-      <theme>default</theme>
       <tablePrefix>ot_</tablePrefix>
       <loginOptions>
           <generateAccountOnLogin>1</generateAccountOnLogin>

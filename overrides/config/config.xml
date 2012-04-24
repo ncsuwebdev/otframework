@@ -2,7 +2,6 @@
 <configData>
   <production>
     <app>
-      <theme>default</theme>
       <loginOptions>
         <generateAccountOnLogin>1</generateAccountOnLogin>
         <passwordReset>
