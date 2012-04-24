@@ -78,9 +78,10 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         if (!$acl->has($resource)) {
             $resource = null;
         }
-        
-        $config  = Zend_Registry::get('config');
-        $role    = (string)$config->user->defaultRole->val;
+
+        $registry = new Ot_Var_Register();
+
+        $role = $registry->defaultRole->getValue();
         $defaultRole = $role;
         
         $account = new Ot_Model_DbTable_Account();
@@ -179,7 +180,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             }
             
             if (!$acl->hasRole($thisAccount->role)) {
-                $thisAccount->role = (string)$config->user->defaultRole->val;
+                $thisAccount->role = $registry->defaultRole->getValue();
             }
                    
             $auth->getStorage()->write($thisAccount);
@@ -193,7 +194,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         }
         
         if ($role == '' || !$acl->hasRole($role)) {
-            $role = (string)$config->user->defaultRole->val;
+            $role = $registry->defaultRole->getValue();
         }
         
         $requestUri = null;
@@ -219,13 +220,13 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             return;
         }        
         
-        if ($auth->hasIdentity() && $config->user->requiredAccountFields->val != '') {
+        if ($auth->hasIdentity() && $registry->requiredAccountFields->getValue() != '') {
             
             if (!($request->getModuleName() == 'ot'
                 && $request->getControllerName() == 'login'
                 && $request->getActionName() == 'logout')) {
                 
-                $required = explode(',', $config->user->requiredAccountFields->val);
+                $required = explode(',', $registry->requiredAccountFields->getValue());
                 
                 $valid = true;
                 foreach ($required as $r) {

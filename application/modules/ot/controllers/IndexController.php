@@ -39,9 +39,10 @@ class Ot_IndexController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-index-index:title');
         
         $config = Zend_Registry::get('config');
+        $registry = new Ot_Var_Register();
         
         $this->view->appVersion = $config->app->version;
-        $this->view->appTitle   = $config->user->appTitle->val;
+        $this->view->appTitle   = $registry->appTitle->getValue();
         $this->view->otVersion  = Ot_Version::VERSION;
         $this->view->zfVersion  = Zend_Version::VERSION;        
        

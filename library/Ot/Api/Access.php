@@ -42,9 +42,9 @@ class Ot_Api_Access
         $server = new Ot_Model_DbTable_OauthServer();
                         
         $remoteAcl = new Ot_Acl('remote');
-        
-        $config = Zend_Registry::get('config');
-        $publicRole = $config->user->defaultRole->val;
+
+        $registry = new Ot_Var_Register();
+        $publicRole = $registry->defaultRole->getValue();
         
         if ($request->getParameter('oauth_token') != ''
             || ($remoteAcl->has($method) && !$remoteAcl->isAllowed($publicRole, $method))) {

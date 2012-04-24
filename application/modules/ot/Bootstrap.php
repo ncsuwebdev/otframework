@@ -180,33 +180,32 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
 
     public function _initVars()
     {
-        $vars = array();
+        $site = array();
 
-        $vars[] = new Ot_Var('timezone', 'The current timezone for the application.', 'America/New_York');
-        $vars[] = new Ot_Var('language', 'The default language for the application.', 'en');
-        $vars[] = new Ot_Var('appTitle', 'The title of the application.', 'OT Framework Application');
-        $vars[] = new Ot_Var('appDescription', 'The application description.', 'App description!');
-        $vars[] = new Ot_Var('metaKeywords', 'The meta keywords you would like to use for the application.', '');
-        $vars[] = new Ot_Var('fromEmailAddress', 'The global from email address.  All email from the system will come from this address.', 'admin@app.com');
-        $vars[] = new Ot_Var('fromEmailName', 'The global from email name.  This is the name that will be shown with the fromEmailAddress.', 'Admin');
-        $vars[] = new Ot_Var('fileUploadAllowableExtensions', 'The allowable extensions for files.  I would not suggest putting executable files in here...', 'pdf,doc,ppt,html,txt,zip');
-        $vars[] = new Ot_Var('headerRowRepeat', 'The number of rows displayed in a table before the header cells are repeated.', '25');
-        $vars[] = new Ot_Var('requiredAccountFields', 'When a user logs in, if these fields are not populated, they will be forced to populate the fields before continuing (separate by commas)', 'firstName, lastName, emailAddress');
-        $vars[] = new Ot_Var('defaultRole', 'Default role that a user gets if they are not logged in.', '1');
-        $vars[] = new Ot_Var('newAccountRole', 'Role which is assigned to users when a new account is created for them', '1');
-        $vars[] = new Ot_Var('dateTimeFormat', 'Date / Time formatted using PHP\'s strftime() function.', '%m/%d/%Y %I:%M %p');
-        $vars[] = new Ot_Var('medDateFormat', 'Date formatted using PHP\'s strftime() function.', '%b %e, %Y');
-        $vars[] = new Ot_Var('longDateCompactFormat', 'Date formatted using PHP\'s strftime() function.', '%a, %b %e, %Y');
-        $vars[] = new Ot_Var('timezone', 'Date formatted using PHP\'s strftime() function.', '%A, %B %e, %Y');
-        $vars[] = new Ot_Var('longDateFormat', 'Date formatted using PHP\'s strftime() function.', '%m/%d/%Y');
-        $vars[] = new Ot_Var('dayFormat', 'Date formatted using PHP\'s strftime() function.', '%d');
-        $vars[] = new Ot_Var('timeFormat', 'Time formatted using PHP\'s strftime() function.', '%I:%M %p');
-        $vars[] = new Ot_Var('minutesToKeepUserActivity', 'The number of minutes to keep the logged-in user activity.', '10');
-        $vars[] = new Ot_Var('showTrackbackOnErrors', 'Whether or not to show the trackback of the error', '1');
-        $vars[] = new Ot_Var('useMinify', 'Whether or not to use minify to combine and compress js, css, etc', '0');
+        $site[] = new Ot_Var_Type_Text('appTitle', 'Application Title', 'The title of the application.', 'OT Framework Application');
+        $site[] = new Ot_Var_Type_Text('appDescription', 'Application Description', 'The application description.', 'App description!');
+        $site[] = new Ot_Var_Type_Text('metaKeywords', 'Keywords', 'The meta keywords you would like to use for the application.', '');
+        $site[] = new Ot_Var_Type_Select('useMinify', 'Use Minify', 'Whether or not to use minify to combine and compress js, css, etc', '0', array(0 => 'No', 1 => 'Yes'));
 
+        $auth = array();
+
+        $auth[] = new Ot_Var_Type_Text('requiredAccountFields', 'Required User Account Fields', 'When a user logs in, if these fields are not populated, they will be forced to populate the fields before continuing (separate by commas)', 'firstName, lastName, emailAddress');
+        $auth[] = new Ot_Var_Type_Role('defaultRole', 'Default Role', 'Default role that a user gets if they are not logged in.', '1');
+        $auth[] = new Ot_Var_Type_Role('newAccountRole', 'New Account Role', 'Role which is assigned to users when a new account is created for them', '1');
+
+        $format = array();
+
+        $format[] = new Ot_Var_Type_Text('dateTimeFormat', 'Date/Time Format', 'Date / Time formatted using PHP\'s strftime() function.', '%m/%d/%Y %I:%M %p');
+        $format[] = new Ot_Var_Type_Text('medDateFormat', 'Medium Date Format', 'Date formatted using PHP\'s strftime() function.', '%b %e, %Y');
+        $format[] = new Ot_Var_Type_Text('longDateCompactFormat', 'Long Date Compact Format', 'Date formatted using PHP\'s strftime() function.', '%a, %b %e, %Y');
+        $format[] = new Ot_Var_Type_Text('longDateFormat', 'Long Date Format', 'Date formatted using PHP\'s strftime() function.', '%m/%d/%Y');
+        $format[] = new Ot_Var_Type_Text('dayFormat', 'Day Format', 'Date formatted using PHP\'s strftime() function.', '%d');
+        $format[] = new Ot_Var_Type_Text('timeFormat', 'Time Format', 'Time formatted using PHP\'s strftime() function.', '%I:%M %p');
+        
         $vr = new Ot_Var_Register();
-        $vr->registerVars($vars);
+        $vr->registerVars($site, 'Site Settings');
+        $vr->registerVars($auth, 'Authentication');
+        $vr->registerVars($format, 'Date/Time Formats');
     }
 
     public function _initCronjobs()

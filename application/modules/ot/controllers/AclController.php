@@ -65,12 +65,12 @@ class Ot_AclController extends Zend_Controller_Action
             'delete'             => $this->_helper->hasAccess('delete'),
         );
 
-        $config = Zend_Registry::get('config');
+        $registry = new Ot_Var_Register();
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $config->user->defaultRole->val);
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $registry->defaultRole->getValue());
         
         $role = new Ot_Model_DbTable_Role();
-        $this->view->defaultRole = $role->find($config->user->defaultRole->val);     
+        $this->view->defaultRole = $role->find($registry->defaultRole->getValue());
             
         $roles = $this->_acl->getAvailableRoles();
       
@@ -106,12 +106,12 @@ class Ot_AclController extends Zend_Controller_Action
 
         $get = Zend_Registry::get('getFilter');
         
-        $config = Zend_Registry::get('config');
+        $registry = new Ot_Var_Register();
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $config->user->defaultRole->val);
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $registry->defaultRole->getValue());
         
         $role = new Ot_Model_DbTable_Role();
-        $this->view->defaultRole = $role->find($config->user->defaultRole->val);   
+        $this->view->defaultRole = $role->find($registry->defaultRole->getValue());
 
         if (!isset($get->roleId)) {
             throw new Ot_Exception_Input('msg-error-roleIdNotSet');
@@ -425,8 +425,8 @@ class Ot_AclController extends Zend_Controller_Action
         $account = new Ot_Model_DbTable_Account();
         $affectedAccounts = $account->getAccountsForRole($get->roleId);
         
-        $config = Zend_Registry::get('config');
-        $defaultRole = $config->user->defaultRole->val;
+        $registry = new Ot_Var_Register();
+        $defaultRole = $registry->defaultRole->getValue();
         
         if (!isset($availableRoles[$defaultRole])) {
             throw new Ot_Exception_Data('msg-error-noDefaultRole');

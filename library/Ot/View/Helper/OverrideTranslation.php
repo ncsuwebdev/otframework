@@ -78,11 +78,12 @@ class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
     
     protected function _hasAccess()
     {
-        $config = Zend_Registry::get('config');
+        $registry = new Ot_Var_Register();
+
         $acl    = Zend_Registry::get('acl');
         $auth   = Zend_Auth::getInstance();
         
-        $role = (!$auth->hasIdentity()) ? (string)$config->user->defaultRole->val : $auth->getIdentity()->role;
+        $role = (!$auth->hasIdentity()) ? $registry->defaultRole->getValue() : $auth->getIdentity()->role;
         
         return $acl->isAllowed($role, 'ot_translate', 'index');
     }

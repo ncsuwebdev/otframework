@@ -46,14 +46,15 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
         $acl     = Zend_Registry::get('acl');
          
         $viewTabs = array();
-         
-        $config   = Zend_Registry::get('config');
+
+        $register = new Ot_Var_Register();
+
         $identity = Zend_Auth::getInstance()->getIdentity();
         
         $nav = new Ot_Model_DbTable_Nav();
         $tabs = $nav->getNav();
         
-        $role = (empty($identity->role)) ? (string)$config->user->defaultRole->val : $identity->role;
+        $role = (empty($identity->role)) ? $register->defaultRole->getValue() : $identity->role;
                       
         foreach ($tabs as $tab) {
             

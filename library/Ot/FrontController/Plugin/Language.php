@@ -30,7 +30,6 @@
  */
 class Ot_FrontController_Plugin_Language extends Zend_Controller_Plugin_Abstract
 {
-
     public function routeShutdown(Zend_Controller_Request_Abstract $request)
     {
         $locale = new Zend_Locale();
@@ -40,15 +39,13 @@ class Ot_FrontController_Plugin_Language extends Zend_Controller_Plugin_Abstract
             'clear' => false,
             'disableNotices' => true
         );
-        
-        $config = Zend_Registry::get('config');
-                            
+                                    
         Zend_Translate::setCache(Zend_Registry::get('cache'));
         
         if (isset($_COOKIE['language_select'])) {
             $language = $_COOKIE['language_select'];
         } else {
-            $language = $config->user->language->val;
+            $language = 'en';
         }
         
         $translate = new Zend_Translate('csv', APPLICATION_PATH . '/languages', 'auto', $options);

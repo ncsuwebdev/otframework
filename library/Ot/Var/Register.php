@@ -31,7 +31,6 @@
  */
 class Ot_Var_Register
 {
-
     const REGISTRY_KEY = 'Ot_Var_Registry';
 
     public function __construct()
@@ -41,18 +40,25 @@ class Ot_Var_Register
         }
     }
 
-    public function registerVar(Ot_Var $var)
+    public function registerVar(Ot_Var_Abstract $var, $moduleNamespace)
     {
         $registered = $this->getVars();
-        $registered[$var->getName()] = $var;
+        if (isset($registered[$var->getName()])) {
+            throw new Ot_Exception('Module var ' . $var->getName() . ' already registered');
+        }
+        
+        $registered[$var->getName()] = array(
+            'namespace' => $moduleNamespace,
+            'object'    => $var
+        );
 
         Zend_Registry::set(self::REGISTRY_KEY, $registered);
     }
 
-    public function registerVars(array $vars)
+    public function registerVars(array $vars, $moduleNamespace)
     {
         foreach ($vars as $v) {
-            $this->registerVar($v);
+            $this->registerVar($v, $moduleNamespace);
         }
     }
 
@@ -60,13 +66,18 @@ class Ot_Var_Register
     {
         $registered = $this->getVars();
 
-        return (isset($registered[$name])) ? $registered[$name] : null;
+        return (isset($registered[$name])) ? $registered[$name]['object'] : null;
 
     }
     
     public function getVars()
     {
         return Zend_Registry::get(self::REGISTRY_KEY);
+    }
+
+    public function __get($name)
+    {
+        return $this->getVar($name);
     }
 }
 

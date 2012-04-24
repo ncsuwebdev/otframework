@@ -13,7 +13,7 @@
         <?php foreach ($this->consumers as $c): ?>
         <li><a href="#tabs-<?php echo $c['consumerId']; ?>"><span><?php echo $c['name']; ?></span></a></li>
         <?php endforeach; ?>
-        <li><a href="#tabs-connections"><span><?php echo $this->translate('ot-account-index:connectionsTo', array($this->config->user->appTitle->val)); ?></span></a></li>
+        <li><a href="#tabs-connections"><span><?php echo $this->translate('ot-account-index:connectionsTo', array($this->registry->appTitle->getValue())); ?></span></a></li>
     </ul>
     <div id="tabs-data">
     <?php echo $this->translate('ot-account-index:userDataHeader'); ?>
@@ -123,7 +123,7 @@
             <div id="developers">
                 <span><?php echo $this->translate('ot-account-index:developers'); ?></span>
                 <?php if ($this->acl['oauth']) : ?>
-                    <?php echo $this->translate('ot-account-index:canSetup', '<b>' . $this->config->user->appTitle->val . '</b>'); ?>
+                    <?php echo $this->translate('ot-account-index:canSetup', '<b>' . $this->registry->appTitle->getValue() . '</b>'); ?>
                     <a href="<?php echo $this->url(array(), 'oauth', true); ?>">here</a>.
                     <br />
                 <?php endif; ?>

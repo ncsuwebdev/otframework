@@ -29,8 +29,5 @@
         </yahoo>
       </loginOptions>
     </app>
-    <user>
-      <language val="en"/>
-    </user>
   </production>
 </configData>

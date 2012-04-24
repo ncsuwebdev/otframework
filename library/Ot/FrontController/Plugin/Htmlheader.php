@@ -42,10 +42,12 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         $themeConfig = new Zend_Config_Xml(realpath(APPLICATION_PATH . '/../public/' . $view->applicationThemePath) . '/config.xml', 'production', true);
         
         $userConfig = Zend_Registry::get('config');
+
+        $registry = new Ot_Var_Register();
         
         // $useMinify decides whether to minify css, js, etc. if you don't want to minify, it creates new
         //   <link> tags for each item instead of grouping them into a single file
-        $useMinify = $userConfig->user->useMinify->val;
+        $useMinify = $registry->useMinify->getValue();
         
         if($useMinify) {
             $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');

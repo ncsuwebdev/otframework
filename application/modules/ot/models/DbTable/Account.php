@@ -428,7 +428,6 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
 
     public function masqueradeForm(array $default = array())
     {
-        $config = Zend_Registry::get('config');
         $acl    = Zend_Registry::get('acl');
 
         $form = new Zend_Form();

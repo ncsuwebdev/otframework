@@ -87,8 +87,8 @@ class Ot_LogController extends Zend_Controller_Action
                 'rows'  => array(),
             );
             
-            $config = Zend_Registry::get('config');
-                    
+            $registry = new Ot_Var_Register();
+
             $account = new Ot_Model_DbTable_Account();
             $accounts = $account->fetchAll(null, array('firstName', 'lastName'));
             
@@ -114,7 +114,7 @@ class Ot_LogController extends Zend_Controller_Action
                         implode(', ', $roleList), 
                         $l->request,
                         $l->sid, 
-                        strftime($config->user->dateTimeFormat->val, $l->timestamp),
+                        strftime($registry->dateTimeFormat->getValue(), $l->timestamp),
                         $l->message,
                         $l->priorityName,
                         $l->attributeName,

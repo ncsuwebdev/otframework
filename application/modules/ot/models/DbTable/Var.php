@@ -12,46 +12,36 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_Activeuser
+ * @package    Ot_Bug
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
- * @license    http://itdapps.ncsu.edu/bsd.txt BSD License
+ * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
 
 /**
- * Model to do deal with active users.
+ * Model to do deal with config vars
  *
- * @package    Ot_Activeuser
+ * @package    Ot_Var
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  *
  */
-class Ot_Model_DbTable_Activeuser extends Ot_Db_Table
+class Ot_Model_DbTable_Var extends Ot_Db_Table
 {
     /**
      * Name of the table in the database
      *
      * @var string
      */
-    protected $_name = 'tbl_ot_active_user';
+    protected $_name = 'tbl_ot_var';
 
     /**
      * Primary key of the table
      *
      * @var string
      */
-    protected $_primary = 'accountId';
-    
-    /**
-     * Deletes users that haven't been active in the last x minutes.
-     */
-    public function purgeInactiveUsers()
-    {
-        $time = time() - (60 * 20);
-        $where = $this->getAdapter()->quoteInto('dt < ?', $time);
-        $this->delete($where);
-    }
-}    
+    protected $_primary = 'varName';
+}

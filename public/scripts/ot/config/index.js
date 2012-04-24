@@ -1,3 +1,3 @@
 $('document').ready(function() {
-    $('.description').tipsy({gravity: 'w', fade: false});
+    $('.tips').tipsy({gravity: 'w', fade: false});
 });

@@ -35,14 +35,96 @@ class Ot_ConfigController extends Zend_Controller_Action
      */
     public function indexAction()
     {       
-        $this->view->acl = array('edit' => $this->_helper->hasAccess('edit'));
-        
-        $this->view->configList = Zend_Registry::get('config')->user;
+        $this->view->acl = array(
+            'edit' => $this->_helper->hasAccess('edit')
+        );
+
+        $register = new Ot_Var_Register();
         
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.tipsy.js');
+
+        $vars = $register->getVars();
+
+        $varsByModule = array();
+
+        foreach ($vars as $v) {
+            if (!isset($varsByModule[$v['namespace']])) {
+                $varsByModule[$v['namespace']] = array();
+            }
+
+            $varsByModule[$v['namespace']][] = $v['object'];
+
+        }
+
+
+        $form = new Zend_Form();
+        $form->setDecorators(array(
+                 'FormElements',
+                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                 'Form',
+             ));
+
+        foreach ($varsByModule as $key => $value) {
+            $group = array();
+            foreach ($value as $v) {
+                //$elm = $v->getFormElement();
+                $elm = $v->renderFormElement();
+                $elm->setDecorators(array(
+                     'ViewHelper',
+                     'Errors',
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
+                     array('Label', array('tag' => 'span')),
+                 ));
+
+                $elm->setAttrib('class', 'tips');
+                $elm->setAttrib('title', $v->getDescription());
+                
+                $group[] = $elm->getName();
+
+                $form->addElement($elm);
+            }
+
+            $form->addDisplayGroup($group, $key, array('legend' => $key, ''));
+        }
+
+        $form->setDisplayGroupDecorators(array(
+            'FormElements',
+            'Fieldset'
+        ));
+
+        $submit = $form->createElement('submit', 'saveButton', array('label' => 'Submit'));
+        $submit->setDecorators(array(
+            array('ViewHelper', array('helper' => 'formSubmit'))
+        ));
+
+        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
+        $cancel->setAttrib('id', 'cancel');
+        $cancel->setDecorators(array(
+            array('ViewHelper', array('helper' => 'formButton'))
+        ));
+
+        $form->addElements(array($submit, $cancel));
+
+        if ($this->_request->isPost()) {
+            if ($form->isValid($_POST)) {
+                foreach ($varsByModule as $key => $value) {
+                    foreach ($value as $v) {
+                        $v->setValue($form->getElement('config_' . $v->getName())->getValue());
+                    }
+                }
+
+                $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-configUpdated', ''));
+
+                $this->_helper->redirector->gotoRoute(array('controller' => 'config'), 'ot', true);
+            }
+        }
+
+        $this->view->assign(array(
+            'messages' => $this->_helper->flashMessenger->getMessages(),
+            'form' => $form,
+        ));
         
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
         $this->_helper->pageTitle('ot-config-index:title');
     }
 
@@ -51,24 +133,14 @@ class Ot_ConfigController extends Zend_Controller_Action
      *
      */
     public function editAction()
-    {       
-        $config = Zend_Registry::get('config');
-            
-        $overrideFile = APPLICATION_PATH . '/../overrides/config/config.xml';
-        
-        if (!file_exists($overrideFile)) {
-            throw new Ot_Exception_Data("msg-error-configFileNotFound");
-        }
-        
-        if (!is_writable($overrideFile)) {
-            throw new Ot_Exception_Data($this->view->translate('msg-error-configFileNotWritable', $overrideFile));
-        }
-                
+    {
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->key)) {
             throw new Ot_Exception_Input('msg-error-noKey');
         }
+
+        $register = new Ot_Var_Register();
         
         $form = new Zend_Form();
         $form->setAttrib('id', 'configEditForm')->setDecorators(
@@ -79,15 +151,13 @@ class Ot_ConfigController extends Zend_Controller_Action
             )
         );
         
-        if ($get->key == 'timezone') {
-            $tz = Ot_Model_Timezone::getTimezoneList();
-            
-            $el = new Zend_Form_Element_Select('keyValue');
-            $el->addMultiOptions($tz);              
-        } else {
-            $el = new Zend_Form_Element_Text('keyValue');
-            $el->setAttrib('size', '40');
-        }
+        $thisVar = $register->getVar($get->key);
+        
+        echo "<pre>";
+        print_r($thisVar);
+        die();
+        
+        $form->addElement($register->getVar($get->key)->render());
         
         $config = Zend_Registry::get('config');
         

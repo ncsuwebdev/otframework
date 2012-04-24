@@ -20,6 +20,8 @@
  * @version    SVN: $Id: $
  */
 
+ini_set('memory_limit', '-1');
+
 // Define path to application directory
 defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));   
 

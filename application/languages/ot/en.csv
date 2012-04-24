@@ -327,8 +327,8 @@ ot-cache-index:title;Cache Management
 ot-cache-index:header;If you are having issues with something that may be cached, you can clear the cache here.
 ot-cache-index:linkClear;Click here to clear the cache
 
-ot-config-index:title;Configuration Admin
-ot-config-index:header;This is the current configuration of the application.
+ot-config-index:title;Application Configuration
+ot-config-index:header;These are the various options that you can set to configure your application to your liking.  Edit whatever options you like, then click the "Submit" button at the bottom of the form to save your changes.
 ot-config-index:table:name;Name
 ot-config-index:table:value;Value
 ot-config-index:noDescription;No Description Provided
@@ -550,7 +550,7 @@ msg-info-bugUpdated;Bug was saved successfully.
 msg-info-bugDeleted;Bug was deleted successfully.
 msg-info-cacheCleared;Cache was cleared successfully.
 msg-info-cacheNotCleared;Cache was not cleared. Please re-try submitting this form to clear cache.
-msg-info-configUpdated;The value for %1$s has been updated successfully!
+msg-info-configUpdated;The application config data has been updated successfully!
 msg-info-newOrderSaved;New order was saved successfully.
 msg-info-attributeAdded;Attribute %1$s successfully added to %2$s.
 msg-info-attributeSaved;%1$s successfully saved.

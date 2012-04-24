@@ -55,30 +55,6 @@
          </consumers>
       </oauth>
     </app>
-    <user>
-      <timezone description="The current timezone for the application." val="America/New_York"/>
-      <language description="The default language for the application." val="en"/>
-      <appTitle description="The title of the application." val="OT Framework Application"/>
-      <appDescription description="The application description." val="App description!"/>
-      <metaKeywords description="The meta keywords you would like to use for the application." val=""/>
-      <fromEmailAddress description="The global from email address.  All email from the system will come from this address." val="admin@app.com"/>
-      <fromEmailName description="The global from email name.  This is the name that will be shown with the fromEmailAddress." val="Admin"/>
-      <fileUploadAllowableExtensions description="The allowable extensions for files.  I would not suggest putting executable files in here..." val="pdf,doc,ppt,html,txt,zip"/>
-      <headerRowRepeat description="The number of rows displayed in a table before the header cells are repeated." val="25"/>
-      <requiredAccountFields description="When a user logs in, if these fields are not populated, they will be forced to populate the fields before continuing (separate by commas)" val="firstName, lastName, emailAddress"/>
-      <defaultRole description="Default role that a user gets if they are not logged in." val="1"/>
-      <newAccountRole description="Role which is assigned to users when a new account is created for them" val="1"/>
-      <dateTimeFormat description="Date / Time formatted using PHP's strftime() function." val="%m/%d/%Y %I:%M %p"/>
-      <medDateFormat description="Date formatted using PHP's strftime() function." val="%b %e, %Y"/>
-      <longDateCompactFormat description="Date formatted using PHP's strftime() function." val="%a, %b %e, %Y"/>
-      <longDateFormat description="Date formatted using PHP's strftime() function." val="%A, %B %e, %Y"/>
-      <dateFormat description="Date formatted using PHP's strftime() function." val="%m/%d/%Y"/>
-      <dayFormat description="Date formatted using PHP's strftime() function." val="%d"/>
-      <timeFormat description="Time formatted using PHP's strftime() function." val="%I:%M %p"/>
-      <minutesToKeepUserActivity description="The number of minutes to keep the logged-in user activity." val="10"/>
-      <showTrackbackOnErrors description="Whether or not to show the trackback of the error" val="1"/>
-      <useMinify description="Whether or not to use minify to combine and compress js, css, etc" val="0"/>
-    </user>
     <api>
         <call name="getVersions" class="Ot_Version" method="getVersions" />
     </api>

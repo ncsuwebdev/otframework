@@ -75,7 +75,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
                 'rows'  => array(),
             );
             
-            $config = Zend_Registry::get('config');
+            $registry = new Ot_Var_Register();
             
             foreach ($emails as $e) {
                 if(gettype($e['zendMailObject']) == 'object' && get_class($e['zendMailObject']) == 'Zend_Mail') {
@@ -100,9 +100,9 @@ class Ot_EmailqueueController extends Zend_Controller_Action
                             $recipientField,
                             $e['zendMailObject']->getSubject(),                        
                             ucwords($e['status']),
-                            strftime($config->user->dateTimeFormat->val, $e['queueDt']), 
+                            strftime($registry->dateTimeFormat->getValue(), $e['queueDt']),
                             ($e['sentDt'] == 0)
-                                ? 'Not Sent Yet' : strftime($config->user->dateTimeFormat->val, $e['sentDt']),
+                                ? 'Not Sent Yet' : strftime($registry->dateTimeFormat->getValue(), $e['sentDt']),
                             $e['attributeName'],
                             $e['attributeId'],
                         )

@@ -46,6 +46,7 @@ class Ot_LoginController extends Zend_Controller_Action
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
         $config = Zend_Registry::get('config');
+        $registry = new Ot_Var_Register();
 
         $authRealm = new Zend_Session_Namespace('authRealm');
         $authRealm->setExpirationHops(1);
@@ -145,10 +146,6 @@ class Ot_LoginController extends Zend_Controller_Action
         if (isset($get->realm) && $get->realm) {
             $realm = $get->realm;
         }
-        
-        if(!isset($loginForms[$realm]) || !isset($loginForms[$realm]['form'])) {
-            throw new Ot_Exception_Access('msg-error-authLoginFailed');
-        }
 
         if ($this->_request->isPost()) {
             $form = $loginForms[$realm]['form'];
@@ -211,7 +208,7 @@ class Ot_LoginController extends Zend_Controller_Action
                         'username'  => $username,
                         'password'  => md5($password),
                         'realm'     => $realm,
-                        'role'      => (string)$config->user->newAccountRole->val,
+                        'role'      => $registry->newAccountRole->getValue(),
                         'lastLogin' => time(),
                     );
 
@@ -643,7 +640,7 @@ class Ot_LoginController extends Zend_Controller_Action
                         'username'     => $form->getValue('username'),
                         'password'     => md5($form->getValue('password')),
                         'realm'        => $form->getValue('realm'),
-                        'role'         => $config->user->newAccountRole->val,
+                        'role'         => $registry->newAccountRole->getValue(),
                         'emailAddress' => $form->getValue('emailAddress'),
                         'firstName'    => $form->getValue('firstName'),
                         'lastName'     => $form->getValue('lastName'),
