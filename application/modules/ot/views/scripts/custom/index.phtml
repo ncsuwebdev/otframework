@@ -11,8 +11,8 @@
         <?php if (count($this->objects) > 0) : ?>
         <?php foreach ($this->objects as $o) : ?>
         <tr class="<?php $this->cycle('row1', 'row2'); ?>">
-            <td><a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'details', 'objectId' => $o['objectId']), 'ot', true); ?>"><?php echo $o['objectId']; ?></a></td>
-            <td><?php echo $o['description']; ?></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'details', 'objectId' => $o->getObjectId()), 'ot', true); ?>"><?php echo $o->getObjectId(); ?></a></td>
+            <td><?php echo $o->getDescription(); ?></td>
         </tr>
         <?php endforeach; ?>
         <?php else : ?>

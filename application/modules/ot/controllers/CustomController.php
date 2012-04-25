@@ -36,17 +36,13 @@ class Ot_CustomController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $config = Zend_Registry::get('config');
+        $cfor = new Ot_CustomFieldObject_Register();
+
+        $objects = $cfor->getCustomFieldObjects();
 
         $this->_helper->pageTitle('ot-custom-index:title');
 
         $this->view->acl = array('details' => $this->_helper->hasAccess('details'));
-
-        $objects = array();
-        foreach ($config->app->customFieldObjects as $key => $value) {
-
-            $objects[] = array('objectId' => $key, 'description' => $value);
-        }
 
         $this->view->objects = $objects;
 
@@ -71,9 +67,11 @@ class Ot_CustomController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-objectNotFound');
         }
 
-        $config = Zend_Registry::get('config');
+        $cfor = new Ot_CustomFieldObject_Register();
 
-        if (!isset($config->app->customFieldObjects->{$get->objectId})) {
+        $object = $cfor->getCustomFieldObject($get->objectId);
+
+        if (is_null($object)) {
             throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
 
@@ -84,7 +82,7 @@ class Ot_CustomController extends Zend_Controller_Action
         
         $this->view->attributes        = $attributes;
         $this->view->objectId          = $get->objectId;
-        $this->view->objectDescription = $config->app->customFieldObjects->{$get->objectId};
+        $this->view->objectDescription = $object->getDescription();
         $this->view->messages          = $this->_helper->flashMessenger->getMessages();
     }
 
@@ -170,15 +168,17 @@ class Ot_CustomController extends Zend_Controller_Action
 
         $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
 
-        $config = Zend_Registry::get('config');
+        $cfor = new Ot_CustomFieldObject_Register();
 
-        if (!isset($config->app->customFieldObjects->{$attribute['objectId']})) {
+        $object = $cfor->getCustomFieldObject($attribute['objectId']);
+
+        if (is_null($object)) {
             throw new Ot_Exception_Input('msg-error-objectNotSetup');
         }
 
         $this->view->attribute = $attribute;
         $this->view->objectId = $attribute['objectId'];
-        $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
+        $this->view->objectDescription = $object->getDescription();
         $this->_helper->pageTitle('ot-custom-attributeDetails:title');
     }
 
@@ -193,10 +193,12 @@ class Ot_CustomController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-objectNotFound');
         }
 
-        $config = Zend_Registry::get('config');
+        $cfor = new Ot_CustomFieldObject_Register();
 
-        if (!isset($config->app->customFieldObjects->{$get->objectId})) {
-            throw new Ot_Exception_Data('msg-error-objectNotSetup');
+        $object = $cfor->getCustomFieldObject($get->objectId);
+
+        if (is_null($object)) {
+            throw new Ot_Exception_Input('msg-error-objectNotSetup');
         }
 
         $custom = new Ot_Model_Custom();
@@ -254,7 +256,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $this->view->types = $custom->getTypes();
         $this->_helper->pageTitle('ot-custom-add:title', $get->objectId);
         $this->view->objectId = $get->objectId;
-        $this->view->objectDescription = $config->app->customFieldObjects->{$get->objectId};
+        $this->view->objectDescription = $object->getDescription();
     }
 
     /**
@@ -282,9 +284,11 @@ class Ot_CustomController extends Zend_Controller_Action
 
         $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
 
-        $config = Zend_Registry::get('config');
+        $cfor = new Ot_CustomFieldObject_Register();
 
-        if (!isset($config->app->customFieldObjects->{$attribute['objectId']})) {
+        $object = $cfor->getCustomFieldObject($attribute['objectId']);
+
+        if (is_null($object)) {
             throw new Ot_Exception_Input('msg-error-objectNotSetup');
         }
 
@@ -348,7 +352,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-custom-edit:title', $attribute['objectId']);
         
         $this->view->objectId          = $attribute['objectId'];
-        $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
+        $this->view->objectDescription = $object->getDescription();
         $this->view->attribute         = $attribute;
         $this->view->types             = $custom->getTypes();
     }
@@ -378,9 +382,11 @@ class Ot_CustomController extends Zend_Controller_Action
 
         $attribute['options'] = $custom->convertOptionsToArray($attribute['options']);
 
-        $config = Zend_Registry::get('config');
+        $cfor = new Ot_CustomFieldObject_Register();
 
-        if (!isset($config->app->customFieldObjects->{$attribute['objectId']})) {
+        $object = $cfor->getCustomFieldObject($attribute['objectId']);
+
+        if (is_null($object)) {
             throw new Ot_Exception_Input('msg-error-objectNotSetup');
         }
 
@@ -417,7 +423,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $this->view->form              = $form;
         $this->view->attribute         = $attribute;
         $this->view->objectId          = $attribute['objectId'];
-        $this->view->objectDescription = $config->app->customFieldObjects->{$attribute['objectId']};
+        $this->view->objectDescription = $object->getDescription();
         
         $this->_helper->pageTitle('ot-custom-delete:title', $attribute['objectId']);
     }

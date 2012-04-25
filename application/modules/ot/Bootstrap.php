@@ -261,4 +261,14 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
         $register = new Ot_Api_Register();
         $register->registerApiEndpoint($endpoint);
     }
+
+    public function _initCustomFieldObjects()
+    {
+        $objects = array();
+
+        $objects[] = new Ot_CustomFieldObject('Ot_Profile', 'User Profile');
+
+        $cfor = new Ot_CustomFieldObject_Register();
+        $cfor->registerCustomFieldObjects($objects);
+    }
 }

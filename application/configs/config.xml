@@ -6,9 +6,6 @@
         <Ot_Trigger_Plugin_Email>Send email</Ot_Trigger_Plugin_Email>
         <Ot_Trigger_Plugin_EmailQueue>Send email via Queue</Ot_Trigger_Plugin_EmailQueue>
       </triggerPlugins>
-      <customFieldObjects>
-        <Ot_Profile>User Profile</Ot_Profile>
-      </customFieldObjects>
     </app>
   </production>
 </configData>

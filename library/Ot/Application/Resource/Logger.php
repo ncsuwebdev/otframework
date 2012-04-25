@@ -43,13 +43,15 @@ class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceA
         $this->getBootstrap()->bootstrap(array('config', 'db'));
         
         $tbl = 'tbl_ot_log';
+
+        $application = $this->getBootstrap()->getApplication();
         
-        $config = Zend_Registry::get('config');
-        
-        if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
-            $tbl = $config->app->tablePrefix . $tbl;
+        $prefix = $application->getOption('tablePrefix');
+
+        if (!empty($prefix)) {
+            $tbl = $prefix . $tbl;
         }
-        
+                
         // Setup logger
         if ($this->_useLog) {
             $adapter = Zend_Db_Table::getDefaultAdapter();
