@@ -176,11 +176,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'changePassword'  => $this->_authAdapter->manageLocally()
                 && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId
                 && $this->_helper->hasAccess('change-password'),
-            'grantAccess'     => ($this->_helper->hasAccess('index', 'ot_oauthclient')
-                && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
-            'revokeAccess'    => ($this->_helper->hasAccess('revoke', 'ot_oauthserver')
-                && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId),
-            'oauth'           => $this->_helper->hasAccess('index', 'ot_oauth'),
+            'apiApp'           => $this->_helper->hasAccess('index', 'ot_apiapp'),
             'apiDocs'         => $this->_helper->hasAccess('index', 'ot_api')
         );
 
@@ -234,36 +230,11 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->view->attributes = $attributes;
 
-        $st = new Ot_Model_DbTable_OauthServerToken();
-        $consumer = new Ot_Model_DbTable_OauthServerConsumer();
+        $apiApp = new Ot_Model_DbTable_ApiApp();
 
-        $tokens = $st->getTokensForAccount($this->_userData['accountId'], 'access')->toArray();
+        $apiApps = $apiApp->getAppsForAccount($this->_userData['accountId'], 'access')->toArray();
 
-        $consumerIds = array();
-        foreach ($tokens as $t) {
-            $consumerIds[] = $t['consumerId'];
-        }
-
-        if (count($consumerIds) != 0) {
-            $where = $consumer->getAdapter()->quoteInto('consumerId IN (?)', $consumerIds);
-            $consumers = $consumer->fetchAll($where)->toArray();
-
-            $consumerMap = array();
-            foreach ($consumers as $c) {
-                $consumerMap[$c['consumerId']] = $c;
-            }
-
-            foreach ($tokens as &$t) {
-                $t['consumer'] = $consumerMap[$t['consumerId']];
-            }
-            unset($t);
-        }
-
-        $this->view->accessTokens = $tokens;
-
-        $consumers = array();
-
-        $this->view->consumers = $consumers;
+        $this->view->apiApps = $apiApps;
 
     }
 

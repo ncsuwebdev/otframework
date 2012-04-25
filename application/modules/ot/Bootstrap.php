@@ -138,12 +138,12 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
                 )
             )
         )->addRoute(
-            'oauth',
+            'apiapp',
             new Zend_Controller_Router_Route(
-                'oauth/:action/*',
+                'apiapp/:action/*',
                 array(
                     'module'     => 'ot',
-                    'controller' => 'oauth',
+                    'controller' => 'apiapp',
                     'action'     => 'index',
                 )
             )

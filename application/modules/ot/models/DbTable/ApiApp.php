@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_Oauth_Consumer
+ * @package    Ot_Model_DbTable_ApiApp
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
@@ -21,115 +21,80 @@
  */
 
 /**
- * Model to do deal with Oauth consumers
+ * Model to do deal with Api apps
  *
- * @package    Ot_Oauth_Server_Consumer
+ * @package    Ot_Model_DbTable_ApiApp
  * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  *
  */
-class Ot_Model_DbTable_OauthServerConsumer extends Ot_Db_Table
+class Ot_Model_DbTable_ApiApp extends Ot_Db_Table
 {
     /**
      * Name of the table in the database
      *
      * @var string
      */
-    protected $_name = 'tbl_ot_oauth_server_consumer';
+    protected $_name = 'tbl_ot_api_app';
 
     /**
      * Primary key of the table
      *
      * @var string
      */
-    protected $_primary = 'consumerId';
+    protected $_primary = 'appId';
     
-    public function getConsumerByKey($consumerKey)
+    public function getAppByKey($key)
     {
-            $where = $this->getAdapter()->quoteInto('consumerKey = ?', $consumerKey);
-            
-            $result = $this->fetchAll($where);
-            
-            if ($result->count() != 1) {
-                    return null;
-            }
-            
-            return $result->current();
-    }
-    
+        $where = $this->getAdapter()->quoteInto('apiKey = ?', $key);
 
-    
-    public function getConsumersForRegisteredAccounnt($accountId)
+        $result = $this->fetchAll($where);
+
+        if ($result->count() != 1) {
+                return null;
+        }
+
+        return $result->current();
+    }    
+
+    public function getAppsForAccount($accountId)
     {
-            $where = $this->getAdapter()->quoteInto('registeredAccountId = ?', $accountId);
-            
-            return $this->fetchAll($where, 'name');
-    }
-    
-    public function deleteConsumer($consumerId)
-    {
-            $dba = $this->getAdapter();
-            
-            $dba->beginTransaction();
-            
-            $thisConsumer = $this->find($consumerId);
-            if (is_null($thisConsumer)) {
-                    return;
-            }
-            
-            $where = $dba->quoteInto('consumerId = ?', $consumerId);
-            
-            try {
-                    $this->delete($where);
-            } catch (Exception $e) {
-                    $dba->rollback();
-                    throw $e;
-            }
-            
-            $st = new Ot_Oauth_Server_Token();
-            
-            try {
-                    $st->delete($where);
-            } catch (Exception $e) {
-                    $dba->rollback();
-                    throw $e;
-            }
-            
-            if (isset($thisConsumer->imageId) && $thisConsumer->imageId != 0) {
-                    $image = new Ot_Model_DbTable_Image();
-                    try {
-                            $image->deleteImage($thisConsumer->imageId);
-                    } catch (Exception $e) {
-                            $dba->rollback();
-                            throw $e;
-                    }
-            }            
-            
-            $dba->commit();
-    }
+        $where = $this->getAdapter()->quoteInto('accountId = ?', $accountId);
+
+        return $this->fetchAll($where, 'name');
+    }    
     
     public function insert(array $data)
     {
-            $data = array_merge($data, $this->_generateConsumerKeySecret());
-            
-            return parent::insert($data);
+        $data['apiKey'] = $this->_generateApiKey();
+        
+        $data = array_merge($data);
+
+        return parent::insert($data);
     }
     
-    public function resetConsumerKeySecret($consumerId)
+    
+    public function delete($appId)
     {
-            $data = array(
-                    'consumerId' => $consumerId,
-            );
-            
-            $data = array_merge($data, $this->_generateConsumerKeySecret());
-            
-            return $this->update($data, null);
+        $where = $this->getAdapter()->quoteInto('appId = ?', $appId);
+
+        return parent::delete($where);
     }
     
-    protected function _generateConsumerKeySecret()
+    private function _generateApiKey()
     {
-            return array('consumerKey' => md5(time()), 'consumerSecret' => md5(md5(time() + time())));
+        return sha1(time() + microtime() + rand(1, 1000000));
+    }
+    
+    public function regenerateApiKey($appId)
+    {
+        $data = array(
+            'appId' => $appId,
+            'apiKey'   => $this->_generateApiKey()
+        );        
+        
+        return parent::update($data);
     }
     
     /**
@@ -141,7 +106,7 @@ class Ot_Model_DbTable_OauthServerConsumer extends Ot_Db_Table
     public function form($values = array())
     {
         $form = new Zend_Form();
-        $form->setAttrib('id', 'consumerForm')->setAttrib('enctype', 'multipart/form-data')->setDecorators(
+        $form->setAttrib('id', 'apiAppForm')->setAttrib('enctype', 'multipart/form-data')->setDecorators(
             array(
                 'FormElements',
                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
@@ -165,6 +130,7 @@ class Ot_Model_DbTable_OauthServerConsumer extends Ot_Db_Table
         $description->setRequired(true)
               ->addFilter('StringTrim')
               ->addFilter('StripTags')
+              ->setAttrib('style', 'height: 100px; width: 350px;')
               ->setValue((isset($values['description']) ? $values['description'] : ''));
               
         $website = $form->createElement('text', 'website', array('label' => 'Application Website:'));
@@ -173,13 +139,6 @@ class Ot_Model_DbTable_OauthServerConsumer extends Ot_Db_Table
               ->addFilter('StripTags')
               ->setAttrib('maxlength', '255')
               ->setValue((isset($values['website']) ? $values['website'] : ''));   
-              
-        $callbackUrl = $form->createElement('text', 'callbackUrl', array('label' => 'Callback URL:'));
-        $callbackUrl->setRequired(false)
-              ->addFilter('StringTrim')
-              ->addFilter('StripTags')
-              ->setAttrib('maxlength', '255')
-              ->setValue((isset($values['callbackUrl']) ? $values['callbackUrl'] : ''));      
 
         $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
         $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
@@ -188,7 +147,7 @@ class Ot_Model_DbTable_OauthServerConsumer extends Ot_Db_Table
         $cancel->setAttrib('id', 'cancel');
         $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
         
-        $form->addElements(array($image, $name, $description, $website, $callbackUrl));
+        $form->addElements(array($image, $name, $description, $website));
 
         $form->setElementDecorators(
             array(
@@ -199,18 +158,17 @@ class Ot_Model_DbTable_OauthServerConsumer extends Ot_Db_Table
             )
         )->addElements(array($submit, $cancel));
                 
-        
         $image->addPrefixPath('Ot_Form_Decorator', 'Ot/Form/Decorator', 'decorator');
         $image->addDecorator('File');
         $image->addDecorator('Imageupload', array('id' => 'applicationIconImage', 'src' => $values['imagePath']));
 
-        if (isset($values['consumerId'])) {
+        if (isset($values['appId'])) {
 
-            $consumerId = $form->createElement('hidden', 'consumerId');
-            $consumerId->setValue($values['consumerId']);
-            $consumerId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
+            $appId = $form->createElement('hidden', 'appId');
+            $appId->setValue($values['appId']);
+            $appId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
 
-            $form->addElement($consumerId);
+            $form->addElement($appId);
         }
         return $form;
     }

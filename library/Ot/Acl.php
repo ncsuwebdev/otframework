@@ -55,12 +55,13 @@ class Ot_Acl extends Zend_Acl
                 }
             }
         } elseif ($scope == 'remote') {
-
-            $class = new ReflectionClass('Internal_Api');
-
-            foreach ($class->getMethods() as $m) {
-                $this->add(new Zend_Acl_Resource($m->getName()));
-            }
+            
+            $register = new Ot_Api_Register();
+            $endpoints = $register->getApiEndpoints();
+            
+            foreach ($endpoints as $endpoint) {
+                $this->add(new Zend_Acl_Resource('api_' . strtolower($endpoint->getName())));
+            }   
         }
 
         $roles = $this->getAvailableRoles('', $scope);
@@ -167,44 +168,53 @@ class Ot_Acl extends Zend_Acl
         $filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
         $filter->addFilter(new Zend_Filter_StringToLower());
 
-        $class = new ReflectionClass('Internal_Api');
+        $register = new Ot_Api_Register();
+        $endpoints = $register->getApiEndpoints();
 
-        foreach ($class->getMethods() as $method) {
-            $resource = $method->getName();
-            if ($role != '') {
-                $result[$resource]['access'] = $this->isAllowed($role['roleId'], $resource);
-            } else {
-                $result[$resource]['access'] = false;
-            }
+        // the Api $key is really kind of a "fake" key in that the Api module
+        // doesn't exist...it's simply a placeholder
+        $key = "api";
 
-            $result[$resource]['description'] = $this->_getDescriptionFromCommentBlock($method->getDocComment());
+        foreach ($endpoints as $endpoint) {
+            
+            $controllerName = $endpoint->getName();
 
-            $noInheritance = (isset($role['inheritRoleId']) && $role['inheritRoleId'] == 0);
-            $inherit = (isset($role['inheritRoleId'])) ? $role['inheritRoleId'] : '';
+            $resource = strtolower($key . '_' . $controllerName);
+            //$resource = strtolower($controllerName);
 
-            $result[$resource]['inheritRoleId'] = 0;
+            $result[$key][$controllerName]['all'] = array('access' => false, 'inheritRoleId' => '');
 
+            $noInheritance = false;
+            $inherit = $roleId;
+
+            $allows = array();
             while (!$noInheritance) {
+
                 $iAllows = array();
                 $iDenys  = array();
 
                 if (isset($roles[$inherit]['rules'])) {
                     foreach ($roles[$inherit]['rules'] as $rule) {
                         if ($rule['type'] == 'allow') {
-                            $iAllows[] = $rule['resource'];
+                            $allows[$rule['resource']] = $rule['privilege'];
+                            $iAllows[$rule['resource']] = $rule['privilege'];
                         } else {
-                            $iDenys[] = $rule['resource'];
+                            $iDenys[$rule['resource']] = $rule['privilege'];
                         }
                     }
                 }
 
-                if ($result[$resource]['access'] == false) {
-                    if (in_array($resource, $iDenys) && $result[$resource]['inheritRoleId'] == 0) {
-                        $result[$resource]['inheritRoleId'] = $inherit;
-                    }
-                } else {
-                    if (in_array($resource, $iAllows) && $result[$resource]['inheritRoleId'] == 0) {
-                        $result[$resource]['inheritRoleId'] = $inherit;
+                // Checks to see if the inheriting role allows the rource
+                if (in_array('*', array_keys($allows)) || (isset($allows[$resource]) && $allows[$resource] == '*')) {
+
+                    /* Checks to see that even though the inheriting role allows the resource that the role in
+                     * question doesnt specifically deny it.
+                     */
+                    if (!(isset($denys[$resource]) && $denys[$resource] == '*')) {
+                        $result[$key][$controllerName]['all']['access'] = true;
+                        if (isset($iAllows[$resource]) && $iAllows[$resource] == '*') {
+                            $result[$key][$controllerName]['all']['inheritRoleId'] = $inherit;
+                        }
                     }
                 }
 
@@ -212,6 +222,69 @@ class Ot_Acl extends Zend_Acl
                     $inherit = $roles[$inherit]['inheritRoleId'];
                 } else {
                     $noInheritance = true;
+                }
+            }
+
+            $result[$key][$controllerName]['description'] = "API Docs";
+            if (!isset($result[$key][$controllerName]['part'])) {
+                $result[$key][$controllerName]['part'] = array();
+            }
+            
+            $methods = array('get', 'put', 'post', 'delete');
+        
+            foreach ($methods as $action) {
+                
+                if ($role != '') {
+                    $holdingVar2 = $this->isAllowed($role['roleId'], $resource, $action);
+                    $result[$key][$controllerName]['part'][$action]['access'] = $holdingVar2;
+                } else {
+                    $result[$key][$controllerName]['part'][$action]['access'] = false;
+                }
+
+                $holdingVar3 = strtoupper($action) . ' method for ' . $resource;
+                $result[$key][$controllerName]['part'][$action]['description'] = $holdingVar3;
+
+                $noInheritance = (isset($role['inheritRoleId']) && $role['inheritRoleId'] == 0);
+                $inherit = (isset($role['inheritRoleId'])) ? $role['inheritRoleId'] : '';
+
+                $result[$key][$controllerName]['part'][$action]['inheritRoleId'] = 0;
+
+                while (!$noInheritance) {
+                    
+                    $iAllows = array();
+                    $iDenys  = array();
+
+                    if (isset($roles[$inherit]['rules'])) {
+                        foreach ($roles[$inherit]['rules'] as $rule) {
+                            if ($rule['type'] == 'allow') {
+                                $iAllows[] = $rule['resource'] . '_' . $rule['privilege'];
+                            } else {
+                                $iDenys[] = $rule['resource'] . '_' . $rule['privilege'];
+                            }
+                        }
+                    }
+
+                    if ($result[$key][$controllerName]['part'][$action]['access'] == false) {
+                        if (in_array($resource . '_' . $action, $iDenys)
+                            && $result[$key][$controllerName]['part'][$action]['inheritRoleId'] == 0
+                        ) {
+                            $result[$key][$controllerName]['part'][$action]['inheritRoleId'] = $inherit;
+                        }
+                    } else {
+                        if (in_array($resource . '_' . $action, $iAllows)
+                            && $result[$key][$controllerName]['part'][$action]['inheritRoleId'] == 0
+                        ) {
+                            $result[$key][$resource]['part'][$action]['inheritRoleId'] = $inherit;
+                        }
+                    }
+
+                    if (isset($roles[$inherit]['inheritRoleId'])
+                        && $roles[$inherit]['inheritRoleId'] != 0
+                    ) {
+                        $inherit = $roles[$inherit]['inheritRoleId'];
+                    } else {
+                        $noInheritance = true;
+                    }
                 }
             }
         }
@@ -244,8 +317,6 @@ class Ot_Acl extends Zend_Acl
 
             $role = $roles[$roleId];
         }
-
-
 
         // Sets the denys for the role
         $denys = array();

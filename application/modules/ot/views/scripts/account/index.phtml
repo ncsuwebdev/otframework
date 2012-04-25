@@ -10,8 +10,8 @@
 <div id="oauth">
     <ul>
         <li><a href="#tabs-data"><span><?php echo $this->translate('ot-account-index:account'); ?></span></a></li>
-        <?php foreach ($this->consumers as $c): ?>
-        <li><a href="#tabs-<?php echo $c['consumerId']; ?>"><span><?php echo $c['name']; ?></span></a></li>
+        <?php foreach ($this->apiApps as $c): ?>
+        <li><a href="#tabs-<?php echo $c['appId']; ?>"><span><?php echo $c['name']; ?></span></a></li>
         <?php endforeach; ?>
         <li><a href="#tabs-connections"><span><?php echo $this->translate('ot-account-index:connectionsTo', array($this->registry->appTitle->getValue())); ?></span></a></li>
     </ul>
@@ -89,8 +89,8 @@
         </table>
         * To change your account's picture, signup for an account at <a href="http://gravatar.com" target="_blank">Gravatar.com</a> and associate a picture with your account's email address (<?php echo $this->userData['emailAddress']; ?>).
     </div>
-    <?php foreach ($this->consumers as $c): ?>
-    <div id="tabs-<?php echo $c['consumerId']; ?>">
+    <?php foreach ($this->apiApps as $c): ?>
+    <div id="tabs-<?php echo $c['appId']; ?>">
         <?php echo $this->translate('ot-account-index;interact', array($this->config->user->appTitle->val, '<b>' . $c['name'] . '</b>')); ?>
         <?php if ($c['authorized']): ?>
             <div class="access authorized">
@@ -106,7 +106,7 @@
             <div class="access notAuthorized">
                 <span><?php echo $this->tramslate('ot-account-index;notAuthorized', array($c['name'])); ?></span>
                 <?php if ($this->acl['grantAccess']): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'oauthclient', 'consumerId' => $c['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
+                    <a href="<?php echo $this->url(array('controller' => 'oauthclient', 'appId' => $c['appId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
                     <?php echo $this->translate('ot-account-index:authorizeAccess'); ?>
                     <span class="ui-icon ui-icon-key"></span></a>
                 <?php endif; ?>
@@ -119,18 +119,18 @@
     </div>
     <?php endforeach; ?>    
     <div id="tabs-connections"> 
-        <?php if ($this->acl['oauth'] || $this->acl['apiDocs']) : ?>
+        <?php if ($this->acl['apiApp'] || $this->acl['apiDocs']) : ?>
             <div id="developers">
                 <span><?php echo $this->translate('ot-account-index:developers'); ?></span>
-                <?php if ($this->acl['oauth']) : ?>
+                <?php if ($this->acl['apiApp']) : ?>
                     <?php echo $this->translate('ot-account-index:canSetup', '<b>' . $this->registry->appTitle->getValue() . '</b>'); ?>
-                    <a href="<?php echo $this->url(array(), 'oauth', true); ?>">here</a>.
+                    <a href="<?php echo $this->url(array(), 'apiapp', true); ?>">here</a>.
                     <br />
                 <?php endif; ?>
                 <?php if ($this->acl['apiDocs']) : ?>
                     <br />
                     <div style="text-align: center">
-                        <a href="<?php echo $this->url(array(), 'api', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:viewApiDocumentation'); ?><span class="ui-icon ui-icon-gear"></span></a>
+                        <a href="<?php echo $this->url(array('action' => 'docs'), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:viewApiDocumentation'); ?><span class="ui-icon ui-icon-gear"></span></a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -149,7 +149,7 @@
             </div>
             <?php if ($this->acl['revokeAccess']): ?>
             <div class="revoke">
-                <a href="<?php echo $this->url(array('controller' => 'oauthserver', 'action' => 'revoke', 'consumerId' => $t['consumerId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
+                <a href="<?php echo $this->url(array('controller' => 'apiapp', 'action' => 'revoke', 'appId' => $t['appId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
                     <?php echo $this->translate('ot-account-index:consumerHasAccessButton'); ?>
                 <span class="ui-icon ui-icon-minusthick"></span></a>            
             </div>

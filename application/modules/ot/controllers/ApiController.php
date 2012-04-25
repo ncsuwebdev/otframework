@@ -44,34 +44,104 @@ class Ot_ApiController extends Zend_Controller_Action
     
     public function indexAction()
     {
+        
         $register = new Ot_Api_Register();
         
         $params = $this->_getAllParams();
         
         $endpoint = $params['endpoint'];
-
-        if (!is_null($endpoint)) {
+           
+        $thisEndpoint = $register->getApiEndpoint($endpoint);
+        
+        if (!isset($params['key']) || empty($params['key'])) {
+            throw new Ot_Exception('You must provide an API key');
+        }
+        
+        $apiApp = new Ot_Model_DbTable_ApiApp();
+        
+        $thisApp = $apiApp->getAppByKey($params['key']);
+        
+        $otAccount = new Ot_Model_DbTable_Account();
+        $thisAccount = $otAccount->find($thisApp->accountId);
+        
+        $acl = new Ot_Acl('remote');
+        
+        if (count($thisAccount->role) > 1) {
             
-            $thisEndpoint = $register->getApiEndpoint($endpoint);
-
-            if (!is_null($thisEndpoint)) {
-                
-                if ($this->_request->isPost()) {
-                    $thisEndpoint->getMethod()->post($params);
-                } else if ($this->_request->isPut()) {
-                    $thisEndpoint->getMethod()->put($params);
-                } else if ($this->_request->isDelete()) {
-                    $thisEndpoint->getMethod()->delete($params);
-                } else {
-                    $thisEndpoint->getMethod()->get($params);
-                }
-                
-            } else {
-                throw new Ot_Exception('API endpoint could not be found');
+            $roles = array();
+            // Get role names from the list of role Ids
+            foreach ($thisAccount->role as $r) {
+                $roles[] = $acl->getRole($r);
             }
 
-            return;
+            // Create a new role that inherits from all the returned roles
+            $roleName = implode(',', $roles);
+
+            $thisAccount->role = $roleName;
+
+            $acl->addRole(new Zend_Acl_Role($roleName), $roles);
+
+        } else if (count($thisAccount->role) == 1) {
+            $thisAccount->role = $thisAccount->role[0];
         }
+
+        if (!$acl->hasRole($thisAccount->role)) {
+            $thisAccount->role = (string)$config->user->defaultRole->val;
+        }
+
+        $role = $thisAccount->role;
+        
+        if ($role == '' || !$acl->hasRole($role)) {
+            $role = (string)$config->user->defaultRole->val;
+        }
+        
+        // the api "module" here is really a kind of placeholder
+        $aclResource = 'api_' . strtolower($thisEndpoint->getName());
+
+        if (!is_null($thisEndpoint)) {
+
+            $data = array();
+
+            if ($this->_request->isPost()) {
+                
+                if (!$acl->isAllowed($role, $aclResource, 'post')) {
+                    throw new Ot_Exception('You do not have permission to access this endpoint with POST');
+                }
+                                
+                $data = $thisEndpoint->getMethod()->post($params);
+                
+            } else if ($this->_request->isPut()) {
+                
+                if (!$acl->isAllowed($role, $aclResource, 'put')) {
+                    throw new Ot_Exception('You do not have permission to access this endpoint with PUT');
+                }
+                
+                $data = $thisEndpoint->getMethod()->put($params);
+                
+                
+            } else if ($this->_request->isDelete()) {
+                
+                if (!$acl->isAllowed($role, $aclResource, 'delete')) {
+                    throw new Ot_Exception('You do not have permission to access this endpoint with DELETE');
+                }
+                
+                $data = $thisEndpoint->getMethod()->delete($params);
+                
+            } else {
+                
+                if (!$acl->isAllowed($role, $aclResource, 'get')) {
+                    throw new Ot_Exception('You do not have permission to access this endpoint with GET');
+                }
+                
+                $data = $thisEndpoint->getMethod()->get($params);
+            }
+
+        } else {
+            throw new Ot_Exception('API endpoint could not be found');
+        }
+
+        header('Content-Type: application/json');
+        echo Zend_Json::encode($data);
     }
     
     
@@ -88,21 +158,6 @@ class Ot_ApiController extends Zend_Controller_Action
         $this->view->api = $allMethods;
         
         $this->_helper->pageTitle('ot-api-index:title');
-    }
-    
-    public function sampleAction()
-    {
-        
-    }
-        
-    public function soapAction()
-    {
-        $this->_helper->viewRenderer->setNeverRender();
-        $this->_helper->layout->disableLayout();
-        
-        $server = new SoapServer(null, array('uri' => "soapservice"));
-        $server->setClass('Ot_Api_Soap');
-        $server->handle();
     }
     
     public function xmlAction()

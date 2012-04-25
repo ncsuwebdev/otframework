@@ -136,12 +136,27 @@ class Ot_AclController extends Zend_Controller_Action
                 }
             }
         }
+        unset($r);
         
         $this->view->resources = $resources;
         
         $remoteAcl = new Ot_Acl('remote');
         
-        $this->view->remoteResources = $remoteAcl->getRemoteResources($thisRole['roleId']);
+        $remoteResources = $remoteAcl->getRemoteResources($thisRole['roleId']);
+        
+        foreach ($remoteResources as &$r) {
+            foreach ($r as &$c) {
+                $c['someAccess'] = false;
+                foreach ($c['part'] as $p) {
+                    if ($p['access']) {
+                        $c['someaccess'] = true;
+                    }
+                }
+            }
+        }
+        unset($r);
+        
+        $this->view->remoteResources = $remoteResources;
         
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
@@ -285,7 +300,8 @@ class Ot_AclController extends Zend_Controller_Action
             $this->view->inheritRole = $role->find($thisRole->inheritRoleId);
         }
         
-        if ($this->_request->isPost()) {            
+        if ($this->_request->isPost()) {
+            
             $rules = $this->_processAccessList($_POST, $thisRole->inheritRoleId);
                             
             $role->assignRulesForRole($get->roleId, 'application', $rules);
@@ -361,16 +377,7 @@ class Ot_AclController extends Zend_Controller_Action
         if ($this->_request->isPost()) {
 
             $rules = array();
-            
-            foreach ($_POST['access'] as $resource => $type) {
-                $rules[] = array(
-                    'roleId'    => $thisRole->roleId,
-                    'type'      => $type,
-                    'resource'  => $resource,
-                    'privilege' => '*',
-                    'scope'     => 'remote',
-                );
-            }
+            $rules = $this->_processAccessList($_POST, $thisRole->inheritRoleId, 'remote');
                 
             $role->assignRulesForRole($thisRole->roleId, 'remote', $rules);
             
@@ -388,6 +395,17 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->children = $this->_acl->getChildrenOfRole($thisRole->roleId);
 
         $resources = $remoteAcl->getRemoteResources($thisRole->roleId);
+        
+        foreach ($resources as &$r) {
+            foreach ($r as &$c) {
+                $c['someAccess'] = false;
+                foreach ($c['part'] as $p) {
+                    if ($p['access']) {
+                        $c['someaccess'] = true;
+                    }
+                }
+            }
+        }
                 
         $this->view->resources = $resources;
         $this->view->role = $thisRole;
@@ -527,6 +545,7 @@ class Ot_AclController extends Zend_Controller_Action
     }
 
 
+      
     
     /**
      * Processes the access list passed through adding and editing a role
@@ -535,16 +554,23 @@ class Ot_AclController extends Zend_Controller_Action
      * @param string $inheritRoleName
      * @return array
      */
-    protected function _processAccessList($data, $inheritRoleId)
+    protected function _processAccessList($data, $inheritRoleId, $scope = 'application')
     {
-        $resources = $this->_acl->getResources($inheritRoleId);
+        if ($scope == 'remote') {
+            $acl = new Ot_Acl('remote');
+            $resources = $acl->getRemoteResources($inheritRoleId);
+            
+        } else {
+            $resources = $acl->getResources($inheritRoleId);
+            $acl = $this->_acl;
+        }
        
         if ($inheritRoleId == 0) {
             $inheritRoleId = null;
         }
         
         $rules = array();
-
+        
         foreach ($resources as $module => $controllers) {
             foreach ($controllers as $controller => $actions) {
 
@@ -552,8 +578,7 @@ class Ot_AclController extends Zend_Controller_Action
 
                 if (isset($data[$module][$controller]['all'])) {
                     if ($data[$module][$controller]['all'] == 'allow') {
-                        if (!$this->_acl
-                                  ->isAllowed($inheritRoleId, $resource)) {
+                        if (!$acl->isAllowed($inheritRoleId, $resource)) {
                             $rules[] = array(
                                 'type'      => 'allow',
                                 'resource'  => $resource,
@@ -575,7 +600,7 @@ class Ot_AclController extends Zend_Controller_Action
                             }
                         }
                     } else {
-                        if ($this->_acl->isAllowed($inheritRoleId, $resource)) {
+                        if ($acl->isAllowed($inheritRoleId, $resource)) {
                             $rules[] = array(
                                 'type'      => 'deny',
                                 'resource'  => $resource,
@@ -588,7 +613,7 @@ class Ot_AclController extends Zend_Controller_Action
                         foreach ($parts as $action) {
                             if (isset($data[$module][$controller]['part'][$action])) {
                                 if ($data[$module][$controller]['part'][$action] == 'allow'
-                                    && !$this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
+                                    && !$acl->isAllowed($inheritRoleId, $resource, $action)) {
                                     $rules[] = array(
                                         'type'      => 'allow',
                                         'resource'  => $resource,
@@ -604,7 +629,7 @@ class Ot_AclController extends Zend_Controller_Action
                     foreach ($parts as $action) {                       
                         if (isset($data[$module][$controller]['part'][$action])) {
                             if ($data[$module][$controller]['part'][$action] == 'allow'
-                                && !$this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
+                                && !$acl->isAllowed($inheritRoleId, $resource, $action)) {
                                 $rules[] = array(
                                     'type'      => 'allow',
                                     'resource'  => $resource,
@@ -613,7 +638,7 @@ class Ot_AclController extends Zend_Controller_Action
                             }
 
                             if ($data[$module][$controller]['part'][$action] == 'deny'
-                                && $this->_acl->isAllowed($inheritRoleId, $resource, $action)) {
+                                && $acl->isAllowed($inheritRoleId, $resource, $action)) {
                                 $rules[] = array(
                                     'type'      => 'deny',
                                     'resource'  => $resource,
