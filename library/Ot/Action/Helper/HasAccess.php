@@ -30,12 +30,12 @@
  */
 class Ot_Action_Helper_HasAccess extends Zend_Controller_Action_Helper_Abstract
 {
-    protected $_config;
+    protected $_registry;
     protected $_identity;
     
     public function init()
     {
-        $this->_config = Zend_Registry::get('config');
+        $this->_registry = new Ot_Var_Register();
         $this->_identity = Zend_Auth::getInstance()->getIdentity();
         
         parent::init();
@@ -47,7 +47,7 @@ class Ot_Action_Helper_HasAccess extends Zend_Controller_Action_Helper_Abstract
         
         if (is_null($role)) {
             $role = (empty($this->_identity->role))
-                  ? (string)$this->_config->user->defaultRole->val
+                  ? $this->_registry->defaultRole->getValue()
                   : $this->_identity->role;
         }
         

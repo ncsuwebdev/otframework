@@ -31,7 +31,7 @@
  */
 class Ot_CustomFieldObject_Register
 {
-    const REGISTRY_KEY = 'Ot_CustomField_Registry';
+    const REGISTRY_KEY = 'Ot_CustomField_Register';
 
     public function __construct()
     {

@@ -42,7 +42,15 @@ class Ot_Model_Backup
      * Name of table to get
      */
     protected $_tableName = '';
-    
+
+    protected $_prefix = '';
+
+    public function __construct()
+    {
+        global $application;
+
+        $this->_prefix = $application->getOption('tablePrefix');
+    }
     /**
      * Does some sanity checking to make sure there's a prefix and the user is
      * only access the tables in their application and that the cache is 
@@ -55,15 +63,13 @@ class Ot_Model_Backup
     public function getBackup($db, $tableName, $type)
     {
         $this->_db = $db;
-        $this->_tableName = $tableName;
+        $this->_tableName = $tableName;                
         
-        $config = Zend_Registry::get('config');
-        
-        if (!(isset($config->app->tablePrefix) && !empty($config->app->tablePrefix))) {
+        if (empty($this->_prefix)) {
             throw new Ot_Exception_Access('No table prefix is defined, therefore you cannot make any backups.');
         }
         
-        if ($type != 'sqlAll' && !preg_match('/^' . $config->app->tablePrefix . '/i', $this->_tableName)) {
+        if ($type != 'sqlAll' && !preg_match('/^' . $this->_prefix . '/i', $this->_tableName)) {
             throw new Ot_Exception_Access('You are attempting to access a table outside your application.
                 This is not allowed.');
         }
@@ -159,7 +165,7 @@ class Ot_Model_Backup
         $path = APPLICATION_PATH . '/../cache';
                 
         if ($allTables) {            
-            $fileName = $dbConfig['dbname'] . '_' . $config->app->tablePrefix . '.backup-' . date('Ymd-B') . '.sql';
+            $fileName = $dbConfig['dbname'] . '_' . $this->_prefix . '.backup-' . date('Ymd-B') . '.sql';
             $tables = implode(' ', $this->_getTables());
             $cmd = "mysqldump $dbName --host=$dbHost --user=$dbUser
                 --password=$dbPass --extended-insert $tables > $path/$fileName";
@@ -188,10 +194,8 @@ class Ot_Model_Backup
         $tables = $db->listTables();
         $tableList = array();
         
-        $config = Zend_Registry::get('config');
-        
         foreach ($tables as $t) {
-            if (preg_match('/^' . $config->app->tablePrefix . '/i', $t)) {
+            if (preg_match('/^' . $this->_prefix . '/i', $t)) {
                 $tableList[$t] = $t;
             }
         }
@@ -206,9 +210,7 @@ class Ot_Model_Backup
     {
         $form = new Zend_Form();
         
-        $config = Zend_Registry::get('config');
-        
-        if (!(isset($config->app->tablePrefix) && !empty($config->app->tablePrefix))) {
+        if (empty($this->_prefix)) {
             throw new Ot_Exception_Access('No table prefix is definied, therefore you cannot make any backups.');
         }
         

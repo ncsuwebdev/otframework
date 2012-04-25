@@ -63,12 +63,14 @@ class Ot_Model_DbTable_TriggerAction extends Ot_Db_Table
      * @param Array $values The default values to set for the form
      */
     public function form($values = array()) 
-    {        
-        $config = Zend_Registry::get('config');
+    {
+        $tpr = new Ot_Trigger_PluginRegister();
+        $plugins = $tpr->getTriggerPlugins();
+
         $helperTypes = array();
         
-        foreach ($config->app->triggerPlugins as $key => $value) {
-            $helperTypes[$key] = $value;
+        foreach ($plugins as $p) {
+            $helperTypes[$p->getPluginId()] = $p->getDescription();
         }
         
         if (count($helperTypes) == 0) {

@@ -16,7 +16,7 @@
     </tbody>
 </table><br />
     <?php if ($this->acl['add']) : ?>
-        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'name' => $this->trigger->getName()), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-trigger-details:linkAdd"); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->trigger->getName()), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate("ot-trigger-details:linkAdd"); ?><span class="ui-icon ui-icon-plusthick"></span></a>
         <br /><br />
     <?php endif; ?>
     <table class="list">
@@ -41,7 +41,7 @@
                 <?php foreach ($this->actions as $a) : ?>
                 <tr>
                     <td><?php echo $a['name']; ?></td>
-                    <td><?php echo $a['helper']; ?></td>
+                    <td><?php echo $a['helper']->getDescription(); ?></td>
                     <?php if ($this->acl['edit']) : ?>
                     <td align="center">
                         <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'edit', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
@@ -59,7 +59,7 @@
                     <?php endif; ?>
                     <?php if ($this->acl['add']) : ?>
                     <td align="center">
-                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->triggerId, 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo $this->translate('ot-trigger-clone:cloneAction'); ?></a>
+                        <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->trigger->getName(), 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo $this->translate('ot-trigger-clone:cloneAction'); ?></a>
                     </td>
                     <?php endif; ?>
                 </tr>

@@ -32,7 +32,7 @@
 class Ot_Trigger_Register
 {
 
-    const REGISTRY_KEY = 'Ot_Trigger_Registry';
+    const REGISTRY_KEY = 'Ot_Trigger_Register';
 
     public function __construct()
     {

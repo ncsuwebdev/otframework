@@ -81,10 +81,10 @@ class Ot_TriggerController extends Zend_Controller_Action
         $where = $action->getAdapter()->quoteInto('triggerId = ?', $thisTrigger->getName());
         $actions = $action->fetchAll($where)->toArray();
         
-        $config = Zend_Registry::get('config');
+        $tpr = new Ot_Trigger_PluginRegister();
         
         foreach ($actions as &$a) {
-            $a['helper'] = $config->app->triggerPlugins->{$a['helper']};
+            $a['helper'] = $tpr->getTriggerPlugin($a['helper']);
         }
         
         $this->view->actions = $actions;
@@ -102,20 +102,10 @@ class Ot_TriggerController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         $action = new Ot_Model_DbTable_TriggerAction();
-        
-        if (!isset($get->name)) {
-        	if(!isset($get->triggerActionId)) {
-        		throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
-        	}
-        	$triggerInfo = $action->find($get->triggerActionId)->toArray();
-        	if(!$triggerInfo['triggerId']) {
-                throw new Ot_Exception_Data('msg-error-triggerIdNotFound');
-        	}
-        	$get->name = $triggerInfo['triggerId'];
-        }
+
         $register = new Ot_Trigger_Register();
 
-        $thisTrigger = $register->getTrigger($get->name);
+        $thisTrigger = $register->getTrigger($get->triggerId);
 
         if (is_null($thisTrigger)) {
             throw new Ot_Exception_Data('msg-error-noTrigger');
@@ -130,18 +120,21 @@ class Ot_TriggerController extends Zend_Controller_Action
             $values['helper'] = $get->helper;
         }
         
-        if (isset($get->triggerActionId)) {
+        if (isset($get->triggerActionId) && $get->triggerActionId != '') {
+
             $actionToClone = $action->find($get->triggerActionId);
             
             if (!is_null($actionToClone)) {
+
                 $values = array_merge($values, $actionToClone->toArray());
+
                 $this->_helper->pageTitle('ot-trigger-add:cloneTitle', array('triggerName' => $values['name']));
+                
                 $clonedTriggerName = $values['name'];
                 if (strpos($values['name'], 'clone-') === false) {
                    $values['name'] = 'clone-' . $values['name'];
                 }
-            }
-            
+            }            
         }
         
         $form = $action->form($values);
@@ -155,7 +148,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                     'name'      => $form->getValue('name'),
                     'helper'    => $form->getValue('helper'),
                 );
-                
+
                 $triggerActionId = $action->insert($data);
                     
                 $subForm = $form->getSubForm($form->getValue('helper'));
@@ -237,9 +230,11 @@ class Ot_TriggerController extends Zend_Controller_Action
         
         $this->_helper->pageTitle('ot-trigger-edit:title');
 
-        $config = Zend_Registry::get('config');
-        
-        if (!isset($config->app->triggerPlugins->{$thisAction->helper})) {
+        $tpr = new Ot_Trigger_PluginRegister();
+
+        $thisPlugin = $tpr->getTriggerPlugin($thisAction->helper);
+
+        if (is_null($thisPlugin)) {
             throw new Ot_Exception_Data('msg-error-triggerHelperNotFound');
         }
         
@@ -248,6 +243,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         
         $form = $action->form($values);
         $messages = array();
+        
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
                 

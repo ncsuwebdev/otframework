@@ -57,8 +57,6 @@ class Ot_MaintenanceController extends Zend_Controller_Action
      */
     public function toggleAction()
     { 
-        $config = Zend_Registry::get('config');
-        
         $path = realpath(APPLICATION_PATH . '/../overrides');
         
         if (!is_writable($path)) {

@@ -55,7 +55,6 @@ class Ot_AccountController extends Zend_Controller_Action
     {
         parent::init();
 
-        $config = Zend_Registry::get('config');
         $get = Zend_Registry::get('getFilter');
 
         $userData = array();
@@ -79,7 +78,6 @@ class Ot_AccountController extends Zend_Controller_Action
         $adapter = $authAdapter->find($userData['realm']);
         $a = $adapter;
 
-        //$a = $config->app->authentication->{$userData['realm']};
         $this->_authAdapter = new $a->class;
         $userData['authAdapter'] = array(
            'realm'       => $userData['realm'],
@@ -263,28 +261,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->view->accessTokens = $tokens;
 
-        $config = Zend_Registry::get('config');
-
         $consumers = array();
-        /*
-        if ($config->app->oauth->consumers instanceof Zend_Config) {
-
-            $clientToken = new Ot_Model_DbTable_OauthClientToken();
-
-            $accessTokens = $clientToken->getTokensForAccount($this->_userData['accountId'], 'access');
-
-            $authorized = array();
-            foreach ($accessTokens as $a) {
-                $authorized[] = $a->consumerId;
-            }
-
-            foreach ($config->app->oauth->consumers as $key => $value) {
-                $data = $value->toArray();
-                $data['consumerId'] = $key;
-                $data['authorized'] = (in_array($key, $authorized));
-                $consumers[] = $data;
-            }
-        }*/
 
         $this->view->consumers = $consumers;
 
@@ -359,8 +336,6 @@ class Ot_AccountController extends Zend_Controller_Action
                 'total' => count($totals),
                 'rows'  => array(),
             );
-
-            $config = Zend_Registry::get('config');
 
             $otAuth = new Ot_Model_DbTable_AuthAdapter();
             $adapters = $otAuth->fetchAll();

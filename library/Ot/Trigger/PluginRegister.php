@@ -29,9 +29,10 @@
  *             Information Technology
  *
  */
-class Ot_Var_Register
+class Ot_Trigger_PluginRegister
 {
-    const REGISTRY_KEY = 'Ot_Var_Register';
+
+    const REGISTRY_KEY = 'Ot_Trigger_PluginRegister';
 
     public function __construct()
     {
@@ -40,44 +41,38 @@ class Ot_Var_Register
         }
     }
 
-    public function registerVar(Ot_Var_Abstract $var, $moduleNamespace)
+    public function registerTriggerPlugin(Ot_TriggerPlugin $plugin)
     {
-        $registered = $this->getVars();
-        if (isset($registered[$var->getName()])) {
-            throw new Ot_Exception('Module var ' . $var->getName() . ' already registered');
-        }
-        
-        $registered[$var->getName()] = array(
-            'namespace' => $moduleNamespace,
-            'object'    => $var
-        );
+        $registered = $this->getTriggerPlugins();
+        $registered[$plugin->getPluginId()] = $plugin;
 
         Zend_Registry::set(self::REGISTRY_KEY, $registered);
     }
 
-    public function registerVars(array $vars, $moduleNamespace)
+    public function registerTriggerPlugins(array $plugins)
     {
-        foreach ($vars as $v) {
-            $this->registerVar($v, $moduleNamespace);
+        foreach ($plugins as $p) {
+            $this->registerTriggerPlugin($p);
         }
     }
 
-    public function getVar($name)
+    public function getTriggerPlugin($pluginId)
     {
-        $registered = $this->getVars();
+        $registered = $this->getTriggerPlugins();
 
-        return (isset($registered[$name])) ? $registered[$name]['object'] : null;
+        foreach ($registered as $r) {
+            if ($r->getPluginId() == $pluginId) {
+                return $r;
+            }
+        }
+
+        return null;
 
     }
     
-    public function getVars()
+    public function getTriggerPlugins()
     {
         return Zend_Registry::get(self::REGISTRY_KEY);
-    }
-
-    public function __get($name)
-    {
-        return $this->getVar($name);
     }
 }
 

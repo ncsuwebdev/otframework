@@ -65,10 +65,12 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
      */
     public function __construct($username = '', $password = '')
     {
-        $config = Zend_Registry::get('config');
-        
-        if (isset($config->app->tablePrefix) && !empty($config->app->tablePrefix)) {
-            $this->_name = $config->app->tablePrefix . $this->_name;
+        global $application;
+
+        $prefix = $application->getOption('tablePrefix');
+
+        if (!empty($prefix)) {
+            $this->_name = $prefix . $this->_name;
         }
         
         $this->_username = $username;

@@ -40,7 +40,7 @@ class Ot_Application_Resource_Logger extends Zend_Application_Resource_ResourceA
     
     public function init()
     {
-        $this->getBootstrap()->bootstrap(array('config', 'db'));
+        $this->getBootstrap()->bootstrap(array('db'));
         
         $tbl = 'tbl_ot_log';
 

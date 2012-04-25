@@ -170,6 +170,19 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
         );
     }
 
+    public function _initTriggerPlugins()
+    {
+        $plugins = array();
+
+        $plugins[] = new Ot_TriggerPlugin('Ot_Trigger_Plugin_EmailQueue', 'Send email via Queue');
+        $plugins[] = new Ot_TriggerPlugin('Ot_Trigger_Plugin_Email', 'Send email');
+        //$plugins[] = new Ot_TriggerPlugin('Ot_Trigger_Plugin_Txt', 'Send text message');
+        //$plugins[] = new Ot_TriggerPlugin('Ot_Trigger_Plugin_TxtQueue', 'Send text message via Queue');
+
+        $tpr = new Ot_Trigger_PluginRegister();
+        $tpr->registerTriggerPlugins($plugins);
+    }
+
     public function _initTriggers()
     {
         $forgotTrigger = new Ot_Trigger('Login_Index_Forgot', 'When a user has forgotten their password, they ask for a reset email to be sent to their registered email address.');
