@@ -1,12 +1,12 @@
 <?php echo $this->translate('ot-oauth-allConsumers:header', $this->config->user->appTitle->val); ?>
 <br /><br />
-<?php if (count($this->allConsumers) != 0): ?>
+<?php if (count($this->allApps) != 0): ?>
     <?php echo $this->translate('ot-oauth-allConsumers:applicationListText'); ?>
     <br />
-    <?php foreach ($this->allConsumers as $c): ?>
+    <?php foreach ($this->allApps as $c): ?>
     <div class="consumer">
         <div class="options">
-            <a href="<?php echo $this->url(array('action' => 'details', 'consumerId' => $c['consumerId'], 'all' => 'true'), 'oauth', true); ?>" class="ui-state-default ui-corner-all linkButton">
+            <a href="<?php echo $this->url(array('action' => 'details', 'appId' => $c['appId'], 'all' => 'true'), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton">
                 <?php echo $this->translate('ot-oauth-allConsumers:detailsButton'); ?>
             <span class="ui-icon ui-icon-triangle-1-e"></span></a>          
         </div>      
