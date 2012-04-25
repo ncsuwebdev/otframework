@@ -71,19 +71,19 @@ class Ot_Auth_Adapter_Yahoo implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
         $this->_username = $username;
         $this->_password = $password;
         
-        if (Zend_Registry::isRegistered('config')) {
-            $config = Zend_Registry::get('config');
+        if (Zend_Registry::isRegistered('applicationLoginOptions')) {
+            $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
-            if ($config->app->loginOptions->yahoo->consumerKey == '' || $config->app->loginOptions->yahoo->consumerSecret == '') {
+            if (!isset($loginOptions['adapteroptions']['yahoo']['consumerKey']) || $loginOptions['adapteroptions']['yahoo']['consumerKey'] == '' || !isset($loginOptions['adapteroptions']['yahoo']['consumerSecret']) || $loginOptions['adapteroptions']['yahoo']['consumerSecret'] == '') {
                 throw new Exception('Yahoo authentication options must be set in the application configuration.');
             }
             
             if (!defined('AUTH_YAHOO_CONSUMER_KEY')) {
-                define('AUTH_YAHOO_CONSUMER_KEY', (string)$config->app->loginOptions->yahoo->consumerKey);
+                define('AUTH_YAHOO_CONSUMER_KEY', $loginOptions['adapteroptions']['yahoo']['consumerKey']);
             }
             
             if (!defined('AUTH_YAHOO_CONSUMER_SECRET')) {
-                define('AUTH_YAHOO_CONSUMER_SECRET', (string)$config->app->loginOptions->yahoo->consumerSecret);
+                define('AUTH_YAHOO_CONSUMER_SECRET', $loginOptions['adapteroptions']['yahoo']['consumerSecret']);
             }           
         }
     }

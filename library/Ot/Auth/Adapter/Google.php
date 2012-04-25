@@ -71,19 +71,19 @@ class Ot_Auth_Adapter_Google implements Zend_Auth_Adapter_Interface, Ot_Auth_Ada
         $this->_username = $username;
         $this->_password = $password;
         
-        if (Zend_Registry::isRegistered('config')) {
-            $config = Zend_Registry::get('config');
+        if (Zend_Registry::isRegistered('applicationLoginOptions')) {
+            $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
-            if ($config->app->loginOptions->google->consumerKey == '' || $config->app->loginOptions->google->consumerSecret == '') {
+            if (!isset($loginOptions['adapteroptions']['google']['consumerKey']) || $loginOptions['adapteroptions']['google']['consumerKey'] == '' || !isset($loginOptions['adapteroptions']['google']['consumerSecret']) || $loginOptions['adapteroptions']['google']['consumerSecret'] == '') {
                 throw new Exception('Google authentication options must be set in the application configuration.');
             }
             
             if (!defined('AUTH_GOOGLE_CONSUMER_KEY')) {
-                define('AUTH_GOOGLE_CONSUMER_KEY', (string)$config->app->loginOptions->google->consumerKey);
+                define('AUTH_GOOGLE_CONSUMER_KEY', $loginOptions['adapteroptions']['google']['consumerKey']);
             }
             
             if (!defined('AUTH_GOOGLE_CONSUMER_SECRET')) {
-                define('AUTH_GOOGLE_CONSUMER_SECRET', (string)$config->app->loginOptions->google->consumerSecret);
+                define('AUTH_GOOGLE_CONSUMER_SECRET', $loginOptions['adapteroptions']['google']['consumerSecret']);
             }           
         }
     }

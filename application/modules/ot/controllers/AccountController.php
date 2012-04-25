@@ -169,7 +169,6 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $config = Zend_Registry::get('config');
         $registry = new Ot_Var_Register();
 
         $this->view->acl = array(
@@ -200,8 +199,10 @@ class Ot_AccountController extends Zend_Controller_Action
             )
         );
 
-        if (isset($config->app->accountPlugin)) {
-            $acctPlugin = new $config->app->accountPlugin;
+        $loginOptions = Zend_Registry::get('applicationLoginOptions');
+
+        if (isset($loginOptions['accountPlugin'])) {
+            $acctPlugin = new $loginOptions['accountPlugin'];
             $attributes = $acctPlugin->get($this->_userData['accountId']);
         }
 
@@ -265,6 +266,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $config = Zend_Registry::get('config');
 
         $consumers = array();
+        /*
         if ($config->app->oauth->consumers instanceof Zend_Config) {
 
             $clientToken = new Ot_Model_DbTable_OauthClientToken();
@@ -282,7 +284,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 $data['authorized'] = (in_array($key, $authorized));
                 $consumers[] = $data;
             }
-        }
+        }*/
 
         $this->view->consumers = $consumers;
 
@@ -406,7 +408,7 @@ class Ot_AccountController extends Zend_Controller_Action
     {
         $account = new Ot_Model_DbTable_Account();
         $registry = new Ot_Var_Register();
-        $config = Zend_Registry::get('config');
+        $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
         $defaultRole = $registry->defaultRole->getValue();
         $values = array('role' => $defaultRole);
@@ -459,8 +461,8 @@ class Ot_AccountController extends Zend_Controller_Action
                 $accountData['password'] = $password;
 
                 // Account plugin
-                if (count($messages) == 0 && isset($config->accountPlugin)) {
-                    $acctPlugin = new $config->app->accountPlugin;
+                if (count($messages) == 0 && isset($loginOptions['accountPlugin'])) {
+                    $acctPlugin = new $loginOptions['accountPlugin'];
 
                     $subform = $acctPlugin->addSubForm();
 
@@ -626,8 +628,8 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
-        $config = Zend_Registry::get('config');
         $registry = new Ot_Var_Register();
+        $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
         $form = $account->form($this->_userData);
 
@@ -696,8 +698,8 @@ class Ot_AccountController extends Zend_Controller_Action
                         throw $e;
                     }
 
-                    if (isset($config->app->accountPlugin)) {
-                        $acctPlugin = new $config->app->accountPlugin();
+                    if (isset($loginOptions['accountPlugin'])) {
+                        $acctPlugin = new $loginOptions['accountPlugin']();
 
                         $subform = $acctPlugin->editSubForm($this->_userData['accountId']);
 
@@ -811,10 +813,10 @@ class Ot_AccountController extends Zend_Controller_Action
                 throw $e;
             }
 
-            $config = Zend_Registry::get('config');
+            $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
-            if (isset($config->app->accountPlugin)) {
-                $acctPlugin = new $config->app->accountPlugin();
+            if (isset($loginOptions['accountPlugin'])) {
+                $acctPlugin = new $loginOptions['accountPlugin']();
 
                 try {
                     $acctPlugin->deleteProcess($this->_userData['accountId']);

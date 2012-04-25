@@ -472,8 +472,7 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
     
     public function form($default = array(), $signup = false)
     {
-        $config = Zend_Registry::get('config');
-        $acl    = Zend_Registry::get('acl');
+        $acl = Zend_Registry::get('acl');
 
         $form = new Zend_Form();
         $form->setAttrib('id', 'account')->setDecorators(
@@ -594,8 +593,10 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
 
         $subformElements = array();
 
-        if (isset($config->app->accountPlugin)) {
-            $acctPlugin = new $config->app->accountPlugin;
+        $loginOptions = Zend_Registry::get('applicationLoginOptions');
+
+        if (isset($loginOptions['accountPlugin'])) {
+            $acctPlugin = new $loginOptions['accountPlugin'];
 
             if (isset($default['accountId'])) {
                 $subform = $acctPlugin->editSubForm($default['accountId']);

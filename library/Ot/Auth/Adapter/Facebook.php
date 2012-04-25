@@ -73,21 +73,20 @@ class Ot_Auth_Adapter_Facebook implements Zend_Auth_Adapter_Interface, Ot_Auth_A
         $this->_username = $username;
         $this->_password = $password;
         
-        if (Zend_Registry::isRegistered('config')) {
-            $config = Zend_Registry::get('config');
+        if (Zend_Registry::isRegistered('applicationLoginOptions')) {
+            $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
-            if ($config->app->loginOptions->fbConnect->appId == '' || $config->app->loginOptions->fbConnect->secret == '') {
+            if (!isset($loginOptions['adapteroptions']['facebook']['appId']) || $loginOptions['adapteroptions']['facebook']['appId'] == '' || !isset($loginOptions['adapteroptions']['facebook']['secret']) || $loginOptions['adapteroptions']['facebook']['secret'] == '') {
                 throw new Exception('Facebook Connect options must be set in the application configuration.');
             }
             
             if (!defined('AUTH_FB_APPID')) {
-                define('AUTH_FB_APPID', (string)$config->app->loginOptions->fbConnect->appId);
+                define('AUTH_FB_APPID', $loginOptions['adapteroptions']['facebook']['appId']);
             }
             
             if (!defined('AUTH_FB_SECRET')) {
-                define('AUTH_FB_SECRET', (string)$config->app->loginOptions->fbConnect->secret);
-            }
-            
+                define('AUTH_FB_SECRET', $loginOptions['adapteroptions']['facebook']['secret']);
+            }            
         }
     }
 

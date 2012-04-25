@@ -45,7 +45,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
-        $config = Zend_Registry::get('config');
+        $loginOptions = Zend_Registry::get('applicationLoginOptions');
         $registry = new Ot_Var_Register();
 
         $authRealm = new Zend_Session_Namespace('authRealm');
@@ -226,7 +226,7 @@ class Ot_LoginController extends Zend_Controller_Action
                         $acctData['emailAddress'] = $identity->emailAddress;
                     }
 
-                    if ($config->app->loginOptions->generateAccountOnLogin != 1) {
+                    if ($loginOptions['generateAccountOnLogin'] != 1) {
                         $auth->clearIdentity();
                         $authAdapter->autoLogout();
                         throw new Ot_Exception_Access('msg-error-createAccountNotAllowed');
@@ -305,7 +305,6 @@ class Ot_LoginController extends Zend_Controller_Action
      */
     public function forgotAction()
     {
-        $config = Zend_Registry::get('config');
         $filter = Zend_Registry::get('getFilter');
 
         if (Zend_Auth::getInstance()->hasIdentity()) {
@@ -373,9 +372,9 @@ class Ot_LoginController extends Zend_Controller_Action
 
                     // Generate key
                     $text   = $userAccount->username . '@' . $userAccount->realm . '-' . time();
-                    $key    = (string)$config->app->loginOptions->passwordReset->cryptKey;
-                    $iv     = (string)$config->app->loginOptions->passwordReset->iv;
-                    $cipher = constant((string)$config->app->loginOptions->passwordReset->cipher);
+                    $key    = $loginOptions['forgotpassword']['key'];
+                    $iv     = $loginOptions['forgotpassword']['iv'];
+                    $cipher = constant($loginOptions['forgotpassword']['cipher']);
 
                     $code = bin2hex(mcrypt_encrypt($cipher, $key, $text, MCRYPT_MODE_CBC, $iv));
 
@@ -390,7 +389,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
                     $dt->resetUrl = Zend_Registry::get('siteUrl') . '/login/password-reset/?key=' . $code;
 
-                    $dt->loginMethod = $config->app->authentication->$realm->name;
+                    $dt->loginMethod = '';
 
                     $dt->dispatch('Login_Index_Forgot');
 
@@ -414,8 +413,6 @@ class Ot_LoginController extends Zend_Controller_Action
      */
     public function passwordResetAction()
     {
-        $config = Zend_Registry::get('config');
-
         if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_helper->redirector->gotoRoute(array(), 'default', true);
             return;
@@ -427,9 +424,11 @@ class Ot_LoginController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-noKeyFound');
         }
 
-        $key    = (string)$config->app->loginOptions->passwordReset->cryptKey;
-        $iv     = (string)$config->app->loginOptions->passwordReset->iv;
-        $cipher = constant((string)$config->app->loginOptions->passwordReset->cipher);
+        $loginOptions = Zend_Registry::get('loginOptions');
+
+        $key    = $loginOptions['forgotpassword']['key'];
+        $iv     = $loginOptions['forgotpassword']['iv'];
+        $cipher = constant($loginOptions['forgotpassword']['cipher']);
         $string = pack("H*", $filter->key);
 
         $decryptKey = trim(mcrypt_decrypt($cipher, $key, $string, MCRYPT_MODE_CBC, $iv));
@@ -445,7 +444,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
         $now = new Zend_Date();
 
-        $now->subMinute((int)$config->app->loginOptions->passwordReset->numberMinutesKeyIsActive);
+        $now->subMinute((int)$loginOptions['forgotpassword']['numberMinutesKeyIsActive']);
 
         if ($timestamp->getTimestamp() < $now->getTimestamp()) {
             throw new Ot_Exception_Input('msg-error-keyExpired');
@@ -568,8 +567,6 @@ class Ot_LoginController extends Zend_Controller_Action
      */
     public function logoutAction()
     {
-        $config = Zend_Registry::get('config');
-
         $userId = Zend_Auth::getInstance()->getIdentity();
 
         // Set up the auth adapter
@@ -593,14 +590,15 @@ class Ot_LoginController extends Zend_Controller_Action
      */
     public function signupAction()
     {
-        $config = Zend_Registry::get('config');
         $get = Zend_Registry::get('getFilter');
 
         if (!$get->realm) {
             throw new Ot_Exception_Input('msg-error-realmNotFound');
         }
 
-        if ($config->app->loginOptions->generateAccountOnLogin != 1) {
+        $loginOptions = Zend_Registry::get('applicationLoginOptions');
+
+        if ($loginOptions['generateAccountOnLogin'] != 1) {
             throw new Ot_Exception_Access('msg-error-createAccountNotAllowed');
         }
 
@@ -662,8 +660,8 @@ class Ot_LoginController extends Zend_Controller_Action
                             throw $e;
                         }
 
-                        if (isset($config->app->accountPlugin)) {
-                            $acctPlugin = new $config->app->accountPlugin;
+                        if (isset($loginOptions['accountPlugin'])) {
+                            $acctPlugin = new $loginOptions['accountPlugin'];
 
                             $subform = $acctPlugin->addSubForm();
 

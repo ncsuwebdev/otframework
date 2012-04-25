@@ -2,32 +2,6 @@
 <configData>
   <production>
     <app>
-      <loginOptions>
-          <generateAccountOnLogin>1</generateAccountOnLogin>
-        <passwordReset>
-          <key>tl30fkvERtili</key>
-          <iv>39v09v90fef094gj</iv>
-          <cipher>MCRYPT_RIJNDAEL_128</cipher>
-          <numberMinutesKeyIsActive>30</numberMinutesKeyIsActive>
-        </passwordReset>
-        <fbConnect>
-            <appId></appId>
-            <secret></secret>
-        </fbConnect>
-        <twitter>
-            <consumerKey></consumerKey>
-            <consumerSecret></consumerSecret>
-        </twitter>
-        <google>
-            <consumerKey></consumerKey>
-            <consumerSecret></consumerSecret>
-        </google>
-        <yahoo>
-            <consumerKey></consumerKey>
-            <consumerSecret></consumerSecret>
-        </yahoo>
-      </loginOptions>
-      <accountPlugin>Internal_Account_Plugin_Attributes</accountPlugin>
       <triggerPlugins>
         <Ot_Trigger_Plugin_Email>Send email</Ot_Trigger_Plugin_Email>
         <Ot_Trigger_Plugin_EmailQueue>Send email via Queue</Ot_Trigger_Plugin_EmailQueue>
@@ -35,25 +9,6 @@
       <customFieldObjects>
         <Ot_Profile>User Profile</Ot_Profile>
       </customFieldObjects>
-      <oauth>
-          <consumers>    
-      <!-- use 
-            <{consumerId}>
-                <name></name>
-                <description></description>
-                <website></website>
-                <consumerKey></consumerKey>
-                <consumerSecret></consumerSecret>
-                <requestTokenUrl></requestTokenUrl>
-                <accessTokenUrl></accessTokenUrl>
-                <authorizeUrl></authorizeUrl>
-            </{consumerId}> 
-     -->
-         </consumers>
-      </oauth>
     </app>
-    <api>
-        <call name="getVersions" class="Ot_Version" method="getVersions" />
-    </api>
   </production>
 </configData>

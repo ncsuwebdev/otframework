@@ -73,19 +73,19 @@ class Ot_Auth_Adapter_Twitter implements Zend_Auth_Adapter_Interface, Ot_Auth_Ad
         $this->_username = $username;
         $this->_password = $password;
         
-        if (Zend_Registry::isRegistered('config')) {
-            $config = Zend_Registry::get('config');
+        if (Zend_Registry::isRegistered('applicationLoginOptions')) {
+            $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
-            if ($config->app->loginOptions->twitter->consumerKey == '' || $config->app->loginOptions->twitter->consumerSecret == '') {
+            if (!isset($loginOptions['adapteroptions']['google']['consumerKey']) || $loginOptions['adapteroptions']['google']['consumerKey'] == '' || !isset($loginOptions['adapteroptions']['google']['consumerSecret']) || $loginOptions['adapteroptions']['google']['consumerSecret'] == '') {
                 throw new Exception('Twitter authentication options must be set in the application configuration.');
             }
             
             if (!defined('AUTH_TWITTER_CONSUMER_KEY')) {
-                define('AUTH_TWITTER_CONSUMER_KEY', (string)$config->app->loginOptions->twitter->consumerKey);
+                define('AUTH_TWITTER_CONSUMER_KEY', $loginOptions['adapteroptions']['google']['consumerKey']);
             }
             
             if (!defined('AUTH_TWITTER_CONSUMER_SECRET')) {
-                define('AUTH_TWITTER_CONSUMER_SECRET', (string)$config->app->loginOptions->twitter->consumerSecret);
+                define('AUTH_TWITTER_CONSUMER_SECRET', $loginOptions['adapteroptions']['google']['consumerSecret']);
             }           
         }
     }
