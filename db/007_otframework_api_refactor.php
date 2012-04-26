@@ -21,6 +21,16 @@ class Db_007_otframework_api_refactor extends Ot_Migrate_Migration_Abstract
             ) ENGINE = INNODB DEFAULT CHARSET = utf8 AUTO_INCREMENT =3;
         ";
         $dba->query($query);
+        
+        
+        $query = "DROP TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_consumer`";
+        $dba->query($query);
+        
+        $query = "DROP TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_nonce`";
+        $dba->query($query);
+        
+        $query = "DROP TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_token`";
+        $dba->query($query);
     }
     
     public function down($dba)

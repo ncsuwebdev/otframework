@@ -1,18 +1,18 @@
 <?php if ($this->all) : ?>
-<a href="<?php echo $this->url(array('action' => 'all-apps'), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-oauth-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<a href="<?php echo $this->url(array('action' => 'all-apps'), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-apiapp-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
 <?php else : ?>
-<a href="<?php echo $this->url(array(), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-oauth-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
+<a href="<?php echo $this->url(array(), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-apiapp-details:back'); ?><span class="ui-icon ui-icon-triangle-1-w"></span></a>
 <?php endif ;?>
 <br /><br /><br />
 <div class="options">
     <a id="regenerateKeyBtn" href="<?php echo $this->url(array('action' => 'regenerate-key', 'appId' => $this->apiApp->appId), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton">
-       <?php echo $this->translate('ot-oauth-details:consumerRegenerateButton'); ?>
+       <?php echo $this->translate('ot-apiapp-details:appRegenerateButton'); ?>
     <span class="ui-icon ui-icon-refresh"></span></a>
     <a href="<?php echo $this->url(array('action' => 'delete', 'appId' => $this->apiApp->appId), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton">
-       <?php echo $this->translate('ot-oauth-details:consumerDeleteButton'); ?>
+       <?php echo $this->translate('ot-apiapp-details:appDeleteButton'); ?>
     <span class="ui-icon ui-icon-minusthick"></span></a>    
     <a href="<?php echo $this->url(array('action' => 'edit', 'appId' => $this->apiApp->appId), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton">
-       <?php echo $this->translate('ot-oauth-details:consumerEditButton'); ?>
+       <?php echo $this->translate('ot-apiapp-details:appEditButton'); ?>
     <span class="ui-icon ui-icon-pencil"></span></a>
 </div>
 <br /><br />
@@ -30,5 +30,5 @@
     <?php endif; ?>
     <div class="description"><?php echo nl2br($this->apiApp->description); ?></div>
 </div>
-<div class="access"><?php echo $this->translate('ot-oauth-details:consumerKey'); ?></div>
-<div class="key"><?php echo $this->apiApp->key; ?></div>
+<div class="access"><?php echo $this->translate('ot-apiapp-details:apiKey'); ?></div>
+<div class="key"><?php echo $this->apiApp->apiKey; ?></div>

@@ -87,94 +87,43 @@ ot-auth-edit:noAdapter;No authentication adapter exists with the given key.
 ot-auth-edit:problemSubmitting;There was a problem submitting the form
 ot-auth-edit:title;Edit Authentication Adapter
 
-ot-oauth-add:title;Register Application for Remote Access
-ot-oauth-add:header;This page allows you to register your application to use this application's API.
-ot-oauth-add:successfullyRegistered;Your application was successfully registered.
-ot-oauth-add:problemSubmitting;There was a problem submitting your form.
-ot-oauth-delete:title;Remove Application from Remote Access
-ot-oauth-delete:header;You have selected to remove <b>%1$s</b> as a registered application from this system.  All access tokens for this application will be removed, and no more access will be granted to %1$s.
-ot-oauth-delete:consumerIdNotSet;The consumerId not set in query string.
-ot-oauth-delete:consumerNotFound;The consumer was not found.
-ot-oauth-delete:notAllowedtoEdit;You are not allowed to edit other users applications.
-ot-oauth-delete:deleteLabel;Delete Application
-ot-oauth-delete:applicationRemoved;Your application was successfully removed.
-ot-oauth-details:back;Back to Applications
-ot-oauth-details:consumerEditButton;Edit Application
-ot-oauth-details:consumerRegenerateButton;Reset Consumer Key/Secret
-ot-oauth-details:consumerDeleteButton;Delete Application
-ot-oauth-details:header;Header
-ot-oauth-details:title;Connection Details for %1$s
-ot-oauth-details:generateTokenButton;Make a New Connection
-ot-oauth-details:callbackUrl;Callback URL
-ot-oauth-details:consumerKey;Consumer Key
-ot-oauth-details:consumerSecret;Consumer Secret
-ot-oauth-details:requestTokenUrl;Request Token URL
-ot-oauth-details:accessTokenUrl;Access Token URL
-ot-oauth-details:authorizeUrl;Authorize URL
-ot-oauth-details:encryptionNotice;We only support hmac-sha1 signatures. We do not support the plaintext signature method.
-ot-oauth-details:consumerIdNotSet;The consumerId not set in query string.
-ot-oauth-details:consumerNotFound;Consumer not found.
-ot-oauth-details:notAllowedToEdit;You are not allowed to edit other users applications.
-ot-oauth-details:activeUsers;There are %1$s active users.
-ot-oauth-details:activeUser;There is 1 active user.
-ot-oauth-edit:title;Edit Consumer Application's Details
-ot-oauth-edit:header;Change the details of the consumer application below.
-ot-oauth-edit:consumerIdNotSet;The consumerId is not set in the query string.
-ot-oauth-edit:consumerNotfound;Consumer not found.
-ot-oauth-edit:notAllowedToEdit;You are not allowed to edit other users applications.
-ot-oauth-edit:successfullyModified;Your application was successfully modified.
-ot-oauth-edit:problemSubmitting;There was a problem submitting your form.
-ot-oauth-generateToken:title;Manually create a connection
-ot-oauth-generateToken:header;If your application does not require each user to register access to this application, you can create a single access token and use that in your application.  Beware that any API access to this application will be done so under <b>your</b> username, so make sure your application doesn't need user-level access granted.<br /><br />Because you are registering your application manually, some methods that rely on the logged-in-user's credentials will not work as you may expect.  Remember that on every request, you are the logged-in-user.<br /><br />If you are sure that you would like to setup your application this way, you can generate an access token and a token secret.  These keys will only be displayed once, so please record these keys as you will need them when sending API requests to this application.
-ot-oauth-generateToken:alert;Alert
-ot-oauth-generateToken:alertPost;Record these tokens as this is the only time you will see them!
-ot-oauth-generateToken:alertPre;Read carefully before proceeding!
-ot-oauth-generateToken:headerSubmit;Here are your access token/secret combination. Using this, in addition to the Consumer Key/Secret will allow your application to have remote access to this application
-ot-oauth-generateToken:accessToken;Access Token
-ot-oauth-generateToken:accessSecret;Token Secret
-ot-oauth-generateToken:back;Back to %1$s Details
-ot-oauth-generateToken:consumerIdNotSet;The consumerId not set in query string.
-ot-oauth-generateToken:consumerNotFound;The consumer was not found.
-ot-oauth-generateToken:notAllowedToEdit;You are not allowed to edit other users applications.
-ot-oauth-generateToken:alreadyHaveToken;You already have an existing access token for this consumer. Remove that token to create a new one.
-ot-oauth-generateToken:generateButton;Generate Access Token/Secret
-ot-oauth-index:title;Applications using %1$s
-ot-oauth-index:header;If you are a developer and would like your application to access this application, you will need to register your application here.<br /><Br />This application uses OAuth to manage its remote access.  Once you register, you will be given a Consumer Key/Secret which you will use to access our data.  If you are new to OAuth or would like to set your application up to access our API, you can find out more from the <a href="http://oauth.net">OAuth Website</a>.
-ot-oauth-index:addButton;Register an Application
-ot-oauth-index:detailsButton;Get Application Details
-ot-oauth-index:applicationListText;You have registered the following applications:
-ot-oauth-index:noApplications;You have not setup any applications to access this application's data remotely.
-ot-oauth-allConsumers:title;All Applications using %1$s 
-ot-oauth-allConsumers:header;This list consists of every consumer application that has been registered to use %1$s.
-ot-oauth-allConsumers:detailsButton;Get Application Details
-ot-oauth-allConsumers:applicationListText;The following applications have been registered:
-ot-oauth-allConsumers:noApplications;No applications have been setup to access this application's data remotely.
-ot-oauth-regenerateConsumerKeys:title;Reset Consumer Key/Secret
-ot-oauth-regenerateConsumerKeys:header;You have selected to reset the consumer secret/key for <b>%1$s</b>. This will require you to update the secret/key in your application before it will be allowed to communicate with this app.
-ot-oauth-regenerateConsumerKeys:consumerIdNotSet;The consumerId is not set in the query string.
-ot-oauth-regenerateConsumerKeys:notAllowedToEdit;You are not allowed to edit other users applications.
-ot-oauth-regenerateConsumerKeys:resetButton;Reset Consumer Key/Secret
-ot-oauth-regenerateConsumerKeys:consumerKeyReset;The consumer key and secret was reset for your application. Please update your application to allow access.
-
-ot-oauthclient-index:noIdGiven;No consumer ID was given.
-ot-oauthclient-callback:notAuthorized;You were not authorized.
-ot-oauthclient-callback:tokensDontMatch;Tokens do not match!
-
-ot-oauthserver-authorize:title;Authorize Consumer
-ot-oauthserver-authorize:header;The application <b>%1$s</b> would like to have access to this application on your behalf.  If you agree to allowing %1$s access, click the button below authorizing it access.
-ot-oauthserver-grant:title;Application Authorized...Redirecting
-ot-oauthserver-grant:header;Access granted to %1$s
-ot-oauthserver-grant:redirectMessage;You will now be redirected back to %1$s.  If you are not redirected, you may <a id="callbackUrl" href="%2$s">click here</a> as well.
-ot-oauthserver-grant:accessNotGranted;You have chosen to allow %1$s access to your account.  You may now return to %1$s and proceed with the authorization process.
-ot-oauthserver-deny:title;Application Denied Access
-ot-oauthserver-deny:header;Access denied to %1$s
-ot-oauthserver-deny:info;The access token passed from %1$s has been removed.  The requesting application will not be granted access.  If you would like to grant this access in the future, you can use %1$s to request access again. 
-ot-oauthserver-revoke:title;Revoke access to %1$s
-ot-oauthserver-revoke:header;The application <b>%1$s</b> currently has access to this application on your behalf.  Would you like to revoke access from %1$s?
-ot-oauthserver-alreadyAuthorized:title;Application Already Authorized
-ot-oauthserver-alreadyAuthorized:hasAccess;%1$s Has Access.
-ot-oauthserver-alreadyAuthorized:info;You have already granted access to %1$s.  If you no longer wish to allow %1$s access to your account, you should remove the access via <b><a href="%2$s/account/">My Account</a></b>.
-ot-oauthserver-generateToken:title;Manually create a connection
+ot-apiapp-add:title;Register Application for API Access
+ot-apiapp-add:header;This page allows you to register your application to use this application's API.
+ot-apiapp-add:successfullyRegistered;Your application was successfully registered.
+ot-apiapp-add:problemSubmitting;There was a problem submitting your form.
+ot-apiapp-delete:title;Remove Application from Remote Access
+ot-apiapp-delete:header;You have selected to remove <b>%1$s</b> as a registered application from this system.  The API key for this %1$s no longer work.
+ot-apiapp-delete:appIdNotSet;The appId not set in query string.
+ot-apiapp-delete:appNotFound;The API app was not found.
+ot-apiapp-delete:notAllowedtoEdit;You are not allowed to edit other user's applications.
+ot-apiapp-delete:deleteLabel;Delete API Application
+ot-apiapp-delete:applicationRemoved;Your application was successfully removed.
+ot-apiapp-details:back;Back to Applications
+ot-apiapp-details:appEditButton;Edit Application
+ot-apiapp-details:appRegenerateButton;Generate New API Key
+ot-apiapp-details:appDeleteButton;Delete Application
+ot-apiapp-details:header;Header
+ot-apiapp-details:apiKey;API Key
+ot-apiapp-details:appIdNotSet;The appId not set in query string.
+ot-apiapp-details:appNotFound;API App not found.
+ot-apiapp-details:notAllowedToEdit;You are not allowed to edit other user's applications.
+ot-apiapp-edit:title;Edit Application's Details
+ot-apiapp-edit:header;Change the details of the aplication below.
+ot-apiapp-edit:appIdNotSet;The appId is not set in the query string.
+ot-apiapp-edit:appNotfound;API App not found.
+ot-apiapp-edit:notAllowedToEdit;You are not allowed to edit other user's applications.
+ot-apiapp-edit:successfullyModified;Your application was successfully modified.
+ot-apiapp-edit:problemSubmitting;There was a problem submitting your form.
+ot-apiapp-index:header;If you are a developer and would like your application to access this application's API, you will need to register your application here.<br /><br />This application uses API keys to manage REST-like access to its API endpoints.  Once you register, you will be given an API key which you will use to access the application's endpoints.
+ot-apiapp-index:addButton;Register an Application
+ot-apiapp-index:detailsButton;Get Application Details
+ot-apiapp-index:applicationListText;You have registered the following applications:
+ot-apiapp-index:noApplications;You have not setup any applications to access this application's data remotely.
+ot-apiapp-allApps:title;All Applications using %1$s 
+ot-apiapp-allApps:header;This list consists of every API application that has been registered to use %1$s.
+ot-apiapp-allApps:detailsButton;Get Application Details
+ot-apiapp-allApps:applicationListText;The following applications have been registered:
+ot-apiapp-allApps:noApplications;No applications have been setup to access this application's data remotely.
 
 model-account-username;Username
 model-account-loginMethod;Login Method

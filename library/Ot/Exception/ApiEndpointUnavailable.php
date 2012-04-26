@@ -12,8 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Internal_Api
- * @category   Api
+ * @package    Ot_Exception_ApiEndpointUnavailable
+ * @category   Exception
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
@@ -21,13 +21,14 @@
  */
 
 /**
- * Allows users to access API calls remotely
+ * Exception to be thrown when there is an error with user input
  *
- * @package    Internal_Api
- * @category   API Class
+ * @package    Ot_Exception_ApiEndpointUnavailable
+ * @category   Exception
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Internal_Api extends Ot_Api
+class Ot_Exception_ApiEndpointUnavailable extends Ot_Exception
 {
+    protected $_title = 'msg-error-otExceptionApiEndpointUnavailable:title';
 }

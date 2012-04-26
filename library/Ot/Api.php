@@ -30,18 +30,7 @@
  */
 class Ot_Api
 {
-    /**
-     * Gets the versions of the available frameworks
-     *
-     * @return Array key => value array of frameworkName => Version
-     */
-    public static function getVersions()
-    {
-        return array(
-            'OTFramework' => Ot_Version::VERSION,
-            'ZendFramework' => Zend_Version::VERSION,
-        );
-    }
+    
     
     /**
      * Gets the value of a user config variable

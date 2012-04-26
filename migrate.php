@@ -69,14 +69,11 @@ $dbConfig = array(
     'dbname'   => $applicationIni->resources->db->params->dbname
 );
 
-$configXml = new Zend_Config_Xml($configFilePath . '/config.xml', 'production');
-Zend_Registry::set('config', $configXml);
-
 if (($opts->cmd == 'up' || $opts->cmd == 'down' || $opts->cmd == 'setlatestversion') && !isset($opts->version)) {
     Ot_Migrate_Cli::error('Version must be specified' . "\n\n" . $opts->getUsageMessage());
 }
 
-$tablePrefix = $configXml->app->tablePrefix;
+$tablePrefix = $applicationIni->tablePrefix;
 
 try {
     $migration = new Ot_Migrate($dbConfig, $pathToMigrateFiles, $tablePrefix);

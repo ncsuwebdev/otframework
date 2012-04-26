@@ -50,11 +50,17 @@ class Ot_ApiController extends Zend_Controller_Action
         $params = $this->_getAllParams();
         
         $endpoint = $params['endpoint'];
-           
+                  
         $thisEndpoint = $register->getApiEndpoint($endpoint);
         
         if (!isset($params['key']) || empty($params['key'])) {
             throw new Ot_Exception('You must provide an API key');
+        }
+        
+        
+        $returnType = 'json';
+        if (isset($params['type']) && in_array(strtolower($returnType), array('json', 'php'))) {
+            $returnType = strtolower($params['type']);
         }
         
         $apiApp = new Ot_Model_DbTable_ApiApp();
@@ -105,43 +111,85 @@ class Ot_ApiController extends Zend_Controller_Action
             if ($this->_request->isPost()) {
                 
                 if (!$acl->isAllowed($role, $aclResource, 'post')) {
-                    throw new Ot_Exception('You do not have permission to access this endpoint with POST');
+                    return $this->_output(array('error' => 'You do not have permission to access this endpoint with POST', 'status' => 'failure'), $returnType);
                 }
-                                
-                $data = $thisEndpoint->getMethod()->post($params);
+                       
+                try {
+                    $data = $thisEndpoint->getMethod()->post($params);
+                } catch (Ot_Exception_ApiEndpointUnavailable $e) {
+                    return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
+                }
                 
             } else if ($this->_request->isPut()) {
                 
                 if (!$acl->isAllowed($role, $aclResource, 'put')) {
-                    throw new Ot_Exception('You do not have permission to access this endpoint with PUT');
+                    return $this->_output(array('error' => 'You do not have permission to access this endpoint with PUT', 'status' => 'failure'), $returnType);
                 }
                 
-                $data = $thisEndpoint->getMethod()->put($params);
+                try {
+                    $data = $thisEndpoint->getMethod()->put($params);
+                } catch (Ot_Exception_ApiEndpointUnavailable $e) {
+                    return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
+                }
                 
                 
             } else if ($this->_request->isDelete()) {
                 
                 if (!$acl->isAllowed($role, $aclResource, 'delete')) {
-                    throw new Ot_Exception('You do not have permission to access this endpoint with DELETE');
+                    return $this->_output(array('error' => 'You do not have permission to access this endpoint with DELETE', 'status' => 'failure'), $returnType);
                 }
                 
-                $data = $thisEndpoint->getMethod()->delete($params);
+                try {
+                    $data = $thisEndpoint->getMethod()->delete($params);
+                }  catch (Ot_Exception_ApiEndpointUnavailable $e) {
+                    return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
+                }
                 
             } else {
                 
                 if (!$acl->isAllowed($role, $aclResource, 'get')) {
-                    throw new Ot_Exception('You do not have permission to access this endpoint with GET');
+                    return $this->_output(array('error' => 'You do not have permission to access this endpoint with GET', 'status' => 'failure'), $returnType);
                 }
                 
-                $data = $thisEndpoint->getMethod()->get($params);
+                try {
+                    $data = $thisEndpoint->getMethod()->get($params);
+                }  catch (Ot_Exception_ApiEndpointUnavailable $e) {
+                    return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
+                }
             }
 
         } else {
-            throw new Ot_Exception('API endpoint could not be found');
+            return $this->_output(array('error' => 'API endpoint could not be found', 'status' => 'failure'));
         }
 
-        header('Content-Type: application/json');
-        echo Zend_Json::encode($data);
+        if (!is_array($data)) {
+            $data = (array)$data;
+        }
+        
+        
+        $ret = array(
+            'data' => $data,
+            'status' => 'success'
+        );
+        
+        return $this->_output($ret, $returnType);
+    }
+    
+    
+    protected function _output($data, $returnType) {
+        
+        switch ($returnType) {
+            case 'php':
+                header('Content-type: text/php');
+                echo serialize($data);
+                break;
+            default:
+                header('Content-Type: application/json');
+                echo Zend_Json::encode($data);
+                break;
+        }
+        
+        return true;
     }
     
     

@@ -268,11 +268,18 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
     
     public function _initApiMethods()
     {
+        $register = new Ot_Api_Register();
+        
         $endpoint = new Ot_Api_Endpoint('Ot_Account', 'Deals with the accounts in the system');
         $endpoint->setMethod(new Ot_Model_Apiendpoint_Account());
-
-        $register = new Ot_Api_Register();
         $register->registerApiEndpoint($endpoint);
+        
+        
+        $endpoint = new Ot_Api_Endpoint('Ot_Version', 'Returns the OT Framework version numbers');
+        $endpoint->setMethod(new Ot_Model_Apiendpoint_Version());
+        $register->registerApiEndpoint($endpoint);
+        
+        
     }
 
     public function _initCustomFieldObjects()

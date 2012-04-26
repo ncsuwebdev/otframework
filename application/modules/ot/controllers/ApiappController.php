@@ -44,9 +44,11 @@ class Ot_ApiappController extends Zend_Controller_Action
         
         $this->view->apiApps = $apps->toArray();
         
-        $config = Zend_Registry::get('config');
+        $varRegistry = new Ot_Var_Register();
 
-        $this->_helper->pageTitle('ot-oauth-index:title', $config->user->appTitle->val);
+        $title = $varRegistry->appTitle->getValue();
+        $this->view->title = $title;        
+        $this->_helper->pageTitle('ot-apiapp-index:title', $title);
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
         
@@ -54,22 +56,25 @@ class Ot_ApiappController extends Zend_Controller_Action
      * Displays a list of all the api apps registered with application
      * regardless of the user who registered the app
      */
-    public function allApiAppsAction()
+    public function allAppsAction()
     {
         $apiApp = new Ot_Model_DbTable_ApiApp();
     
         $allApps = $apiApp->fetchAll(null, 'name ASC');
         
-        $this->view->allApiApps = $allApps->toArray();
+        $this->view->allApps = $allApps->toArray();
         
-        $config = Zend_Registry::get('config');
+        $varRegistry = new Ot_Var_Register();
         
-        $this->_helper->pageTitle('ot-oauth-allConsumers:title', $config->user->appTitle->val);
+        $this->_helper->pageTitle('ot-apiapp-allApps:title', $varRegistry->appTitle->getValue());
     }
     
     public function apiDocsAction()
     {
+        $apiRegistry = new Ot_Api_Register();
         
+        echo '<PRE>';
+        print_r($apiRegistry->getApiEndpoints());
     } 
            
         
@@ -82,7 +87,7 @@ class Ot_ApiappController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->appId)) {
-            throw new Ot_Exception_Input('ot-oauth-details:consumerIdNotSet');
+            throw new Ot_Exception_Input('ot-apiapp-details:appIdNotSet');
         }
         
         if (isset($get->all)) {
@@ -93,17 +98,17 @@ class Ot_ApiappController extends Zend_Controller_Action
         
         $thisApp = $apiApp->find($get->appId);
         if (is_null($thisApp)) {
-            throw new Ot_Exception_Data('ot-oauth-details:consumerNotFound');
+            throw new Ot_Exception_Data('ot-apiapp-details:appNotFound');
         }
         
         if ($thisApp->accountId != Zend_Auth::getInstance()->getIdentity()->accountId
             && !$this->_helper->hasAccess('allApiApps')) {
-                throw new Ot_Exception_Access('ot-oauth-details:notAllowedToEdit');
+                throw new Ot_Exception_Access('ot-apiapp-details:notAllowedToEdit');
         }
         
         $this->view->apiApp = $thisApp;
         
-        $this->_helper->pageTitle('ot-oauth-details:title', $thisApp->name);
+        $this->_helper->pageTitle('ot-apiapp-details:title', $thisApp->name);
         $this->view->messages = $this->_helper->flashMessenger->getMessages();
     }
         
@@ -113,7 +118,7 @@ class Ot_ApiappController extends Zend_Controller_Action
      */
     public function addAction()
     {
-        $this->_helper->pageTitle('ot-oauth-add:title');
+        $this->_helper->pageTitle('ot-apiapp-add:title');
         
         $apiApp = new Ot_Model_DbTable_ApiApp();
         
@@ -144,12 +149,12 @@ class Ot_ApiappController extends Zend_Controller_Action
                     
                 $appId = $apiApp->insert($data);
                 
-                $this->_helper->flashMessenger->addMessage('ot-oauth-add:successfullyRegistered');
+                $this->_helper->flashMessenger->addMessage('ot-apiapp-add:successfullyRegistered');
                 
                 $this->_helper->redirector->gotoRoute(array('action' => 'details', 'appId' => $appId), 'apiapp', true);
                 
             } else {
-                $messages[] = $this->view->translate('ot-oauth-add:problemSubmitting');
+                $messages[] = $this->view->translate('ot-apiapp-add:problemSubmitting');
             }
         }
         
@@ -162,18 +167,18 @@ class Ot_ApiappController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->appId)) {
-            throw new Ot_Exception_Input('ot-oauth-edit:consumerIdNotSet');
+            throw new Ot_Exception_Input('ot-apiapp-edit:appIdNotSet');
         }
         
         $apiApp = new Ot_Model_DbTable_ApiApp();
         
         $thisApp = $apiApp->find($get->appId);
         if (is_null($thisApp)) {
-            throw new Ot_Exception_Data('ot-oauth-edit:consumerNotfound');
+            throw new Ot_Exception_Data('ot-apiapp-edit:appNotfound');
         }
         
         if ($thisApp->accountId != Zend_Auth::getInstance()->getIdentity()->accountId && !$this->_helper->hasAccess('allApiApps')) {
-            throw new Ot_Exception_Access('ot-oauth-edit:notAllowedToEdit');
+            throw new Ot_Exception_Access('ot-apiapp-edit:notAllowedToEdit');
         }
         
         $apiApp->regenerateApiKey($get->appId);
@@ -188,23 +193,23 @@ class Ot_ApiappController extends Zend_Controller_Action
      */
     public function editAction()
     {
-        $this->_helper->pageTitle('ot-oauth-edit:title');
+        $this->_helper->pageTitle('ot-apiapp-edit:title');
         
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->appId)) {
-            throw new Ot_Exception_Input('ot-oauth-edit:consumerIdNotSet');
+            throw new Ot_Exception_Input('ot-apiapp-edit:appIdNotSet');
         }
         
         $apiApp = new Ot_Model_DbTable_ApiApp();
         
         $thisApp = $apiApp->find($get->appId);
         if (is_null($thisApp)) {
-            throw new Ot_Exception_Data('ot-oauth-edit:consumerNotfound');
+            throw new Ot_Exception_Data('ot-apiapp-edit:appNotfound');
         }
         
         if ($thisApp->accountId != Zend_Auth::getInstance()->getIdentity()->accountId && !$this->_helper->hasAccess('allApiApps')) {
-            throw new Ot_Exception_Access('ot-oauth-edit:notAllowedToEdit');
+            throw new Ot_Exception_Access('ot-apiapp-edit:notAllowedToEdit');
         }
         
         $form = $apiApp->form(
@@ -241,11 +246,11 @@ class Ot_ApiappController extends Zend_Controller_Action
                         
                 $apiApp->update($data, null);
                 
-                $this->_helper->flashMessenger->addMessage('ot-oauth-edit:successfullyModified');
+                $this->_helper->flashMessenger->addMessage('ot-apiapp-edit:successfullyModified');
                 $this->_helper->redirector->gotoRoute(array('action' => 'details', 'appId' => $thisApp->appId), 'apiapp', true);
                 
             } else {
-                $messages[] = 'ot-oauth-edit:problemSubmitting';
+                $messages[] = 'ot-apiapp-edit:problemSubmitting';
             }
         }
         
@@ -255,31 +260,31 @@ class Ot_ApiappController extends Zend_Controller_Action
         
     public function deleteAction()
     {
-        $this->_helper->pageTitle('ot-oauth-delete:title');
+        $this->_helper->pageTitle('ot-apiapp-delete:title');
         
         $get = Zend_Registry::get('getFilter');
         
         if (!isset($get->appId)) {
-            throw new Ot_Exception_Input('ot-oauth-delete:consumerIdNotSet');
+            throw new Ot_Exception_Input('ot-apiapp-delete:appIdNotSet');
         }
         
         $apiApp = new Ot_Model_DbTable_ApiApp();
         
         $thisApp = $apiApp->find($get->appId);
         if (is_null($thisApp)) {
-            throw new Ot_Exception_Data('ot-oauth-delete:consumerNotFound');
+            throw new Ot_Exception_Data('ot-apiapp-delete:appNotFound');
         }
         
         if ($thisApp->accountId != Zend_Auth::getInstance()->getIdentity()->accountId && !$this->_helper->hasAccess('allApiApps')) {
-            throw new Ot_Exception_Access('ot-oauth-delete:notAllowedtoEdit');
+            throw new Ot_Exception_Access('ot-apiapp-delete:notAllowedtoEdit');
         }
         
-        $form = Ot_Form_Template::delete('deleteApiApp', 'ot-oauth-delete:deleteLabel');
+        $form = Ot_Form_Template::delete('deleteApiApp', 'ot-apiapp-delete:deleteLabel');
         
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             $apiApp->delete($thisApp->appId);
                                     
-            $this->_helper->flashMessenger->addMessage('ot-oauth-delete:applicationRemoved');
+            $this->_helper->flashMessenger->addMessage('ot-apiapp-delete:applicationRemoved');
             
             $this->_helper->redirector->gotoRoute(array(), 'apiapp', true);
         }
