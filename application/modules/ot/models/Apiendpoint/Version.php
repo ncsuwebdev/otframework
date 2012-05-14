@@ -1,6 +1,7 @@
 <?php
 class Ot_Model_Apiendpoint_Version implements Ot_Api_EndpointInterface
 {
+    
     public function get($params)
     {
         return array(

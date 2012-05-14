@@ -1,20 +1,12 @@
 <?php
-// Path to the application config folder where application.ini and config.xml live
-$configFilePath = dirname(__FILE__) . '/application/configs';
+
+require_once 'utils/Config.php';
+require_once 'Zend/Console/Getopt.php';
 
 // Path to where the database migration files live
 $pathToMigrateFiles = dirname(__FILE__) . '/db';
 
-// we want to see any errors
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-set_include_path(dirname(__FILE__) . '/library' . PATH_SEPARATOR . dirname(__FILE__) . '/application/models' . PATH_SEPARATOR . get_include_path());
-
-require_once 'Zend/Loader/Autoloader.php';
-$loader = Zend_Loader_Autoloader::getInstance();
-$loader->setFallbackAutoloader(true);
-
+// A list of all possible environments the user can specify
 $possibleEnvironments = array(
     'production',
     'staging',
@@ -23,6 +15,7 @@ $possibleEnvironments = array(
     'testing'
 );
 
+// A list of all possible commands the user can give the migrator
 $possibleCommands = array(
     'up',
     'down',
@@ -32,14 +25,16 @@ $possibleCommands = array(
     'setlatestversion'
 );
 
+// Sets up the expected options
 $opts = new Zend_Console_Getopt(
-    array(
+    array (
         'cmd|c=s'         => 'Command to execute (' . implode($possibleCommands, ', ') . ')',
         'environment|e=s' => 'Environment to migrate (' . implode($possibleEnvironments, ', ') . ')',
         'version|v=s'     => 'Version to migrate to'
     )
 );
 
+// Get all available options and does some validity checking
 try {
     $opts->parse();
 } catch (Exception $e) {
@@ -54,34 +49,23 @@ if (!isset($opts->cmd) || !in_array($opts->cmd, $possibleCommands)) {
     Ot_Migrate_Cli::error('Command not sepecified or not available' . "\n\n" . $opts->getUsageMessage());
 }
 
-$applicationIni = new Zend_Config_Ini($configFilePath . '/application.ini', $opts->environment);
+// Start the application
+$application = startApplication($opts->environment);
 
-if (!isset($applicationIni->resources->db)) {
-    Ot_Migrate_Cli::error('DB resources not found in application.ini');
-}
+// Get the database configs
+$tablePrefix = $application->getOption('tablePrefix');
+$dbAdapter = $application->getBootstrap()->getPluginResource('db')->getDbAdapter();
 
-$dbConfig = array(
-    'adapter'  => $applicationIni->resources->db->adapter,
-    'username' => $applicationIni->resources->db->params->username,
-    'password' => $applicationIni->resources->db->params->password,
-    'host'     => $applicationIni->resources->db->params->host,
-    'port'     => $applicationIni->resources->db->params->port,
-    'dbname'   => $applicationIni->resources->db->params->dbname
-);
-
-if (($opts->cmd == 'up' || $opts->cmd == 'down' || $opts->cmd == 'setlatestversion') && !isset($opts->version)) {
-    Ot_Migrate_Cli::error('Version must be specified' . "\n\n" . $opts->getUsageMessage());
-}
-
-$tablePrefix = $applicationIni->tablePrefix;
-
+// Run the migrator
 try {
-    $migration = new Ot_Migrate($dbConfig, $pathToMigrateFiles, $tablePrefix);
+    $migration = new Ot_Migrate($dbAdapter, $pathToMigrateFiles, $tablePrefix);
     $result = $migration->migrate($opts->cmd, $opts->version);
 } catch (Exception $e) {
     Ot_Migrate_Cli::error($e->getMessage());
 }
 
+// Display the results
 Ot_Migrate_Cli::status($result);
 
+// Exit without any errors
 exit;

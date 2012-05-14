@@ -14,7 +14,7 @@
  *
  * @package    Api_IndexController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
@@ -23,10 +23,10 @@
 /**
  * Handles calls to the API
  *
- * @package    
+ * @package
  * @subpackage Api_IndexController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  */
 class Ot_ApiController extends Zend_Controller_Action
@@ -116,7 +116,7 @@ class Ot_ApiController extends Zend_Controller_Action
                        
                 try {
                     $data = $thisEndpoint->getMethod()->post($params);
-                } catch (Ot_Exception_ApiEndpointUnavailable $e) {
+                } catch (Ot_Exception $e) {
                     return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
                 }
                 
@@ -128,7 +128,7 @@ class Ot_ApiController extends Zend_Controller_Action
                 
                 try {
                     $data = $thisEndpoint->getMethod()->put($params);
-                } catch (Ot_Exception_ApiEndpointUnavailable $e) {
+                } catch (Ot_Exception $e) {
                     return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
                 }
                 
@@ -141,7 +141,7 @@ class Ot_ApiController extends Zend_Controller_Action
                 
                 try {
                     $data = $thisEndpoint->getMethod()->delete($params);
-                }  catch (Ot_Exception_ApiEndpointUnavailable $e) {
+                }  catch (Ot_Exception $e) {
                     return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
                 }
                 
@@ -153,7 +153,7 @@ class Ot_ApiController extends Zend_Controller_Action
                 
                 try {
                     $data = $thisEndpoint->getMethod()->get($params);
-                }  catch (Ot_Exception_ApiEndpointUnavailable $e) {
+                }  catch (Ot_Exception $e) {
                     return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
                 }
             }
@@ -223,7 +223,7 @@ class Ot_ApiController extends Zend_Controller_Action
         
         $server = new Zend_Rest_Server();
         $server->setClass($this->_class);
-        $server->handle($request->getParameters()); 
+        $server->handle($request->getParameters());
     }
     
     public function jsonAction()
@@ -254,7 +254,7 @@ class Ot_ApiController extends Zend_Controller_Action
         $response = $server->handle($request->getParameters());
         
         if (!headers_sent()) {
-        	// headers haven't been sent yet, but there's a Content-Type: text/xml in there because 
+        	// headers haven't been sent yet, but there's a Content-Type: text/xml in there because
         	// we're using zend rest server to grab xml to parse to json
         	$headers = $server->getHeaders();
             foreach ($headers as $header) {

@@ -14,7 +14,7 @@
  *
  * @package    Ot_Cron_Status
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
@@ -25,7 +25,7 @@
  *
  * @package    Ot_Cron_Status
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  *
  */
@@ -81,8 +81,8 @@ class Ot_Model_DbTable_CronStatus extends Ot_Db_Table
             return 0;
         }
 
-        return $result->lastRunDt;      
-    }    
+        return $result->lastRunDt;
+    }
 
     public function setCronStatus($name, $status)
     {

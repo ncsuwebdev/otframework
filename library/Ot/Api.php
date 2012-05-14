@@ -14,7 +14,7 @@
  *
  * @package    Ot_Api
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
@@ -51,7 +51,7 @@ class Ot_Api
     
     /**
      * Returns the account information for the currently authenticated user.
-     * 
+     *
      * @return array The account info
      */
     public static function getMyAccount()
@@ -79,12 +79,12 @@ class Ot_Api
     /**
      * Update the account of the currently logged in user.  This is the user
      * that the API is being used as, not the consumer itself.
-     * 
+     *
      * @param string $firstName The new first name
      * @param string $lastName The new last name
      * @param string $emailAddress The new email address
      * @param string $timezone A valid timezone string
-     * 
+     *
      * @return boolean
      */
     public static function updateMyAccount($firstName, $lastName, $emailAddress, $timezone)
@@ -116,9 +116,9 @@ class Ot_Api
     
     /**
      * Gets an account from the system
-     * 
+     *
      * @param int $accountId The account to fetch
-     * 
+     *
      * @return array
      */
     public static function getAccount($accountId)
@@ -138,17 +138,17 @@ class Ot_Api
     
     /**
      * Update an account's info
-     * 
+     *
      * @param int $accountId The id of the account to update
      * @param string $firstName The new first name
      * @param string $lastName The new last name
      * @param string $emailAddress The new email address
      * @param string $timezone A valid timezone string
-     * 
+     *
      * @return boolean
      */
     public static function updateAccount($accountId, $firstName, $lastName, $emailAddress, $timezone)
-    {        
+    {
         if (!in_array($timezone, Ot_Model_Timezone::getTimezoneList())) {
             throw new Ot_Exception_Data('msg-error-invalidTimezone');
         }
@@ -171,7 +171,7 @@ class Ot_Api
     /**
      * Returns all the cron jobs in the system, their last run date, and
      * their status
-     * 
+     *
      * @return array of cron jobs
      */
     public static function getCronJobs()
@@ -182,7 +182,7 @@ class Ot_Api
     
     /**
      * Sets the status for a cron job
-     * 
+     *
      * @param string $name The name of the cron job
      * @param string $status The status to set the cron job to (enabled or disabled)
      * @return boolean
@@ -201,10 +201,10 @@ class Ot_Api
     /**
      * Returns the bug reports in the system.  You can optionally specify the
      * types of bugs to return
-     * 
+     *
      * @param array $status The bug type to return.  Can be (new, ignore, escalated, fixed).
-     *                      null will return all bugs. 
-     * 
+     *                      null will return all bugs.
+     *
      * @return array
      */
     public static function getBugReports($status = null)
@@ -244,9 +244,9 @@ class Ot_Api
                 $b['text'] = $t;
             }
             
-        }       
+        }
         
-        return $bugs;  
+        return $bugs;
     }
     
     /**
@@ -293,6 +293,6 @@ class Ot_Api
         
         usort($ret, create_function('$a, $b', "return strnatcasecmp(\$a['method'], \$b['method']);"));
         
-        return $ret;        
+        return $ret;
     }
 }

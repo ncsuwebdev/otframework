@@ -14,7 +14,7 @@
  *
  * @package    Ot_Exception_ApiEndpointUnavailable
  * @category   Exception
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
@@ -25,7 +25,7 @@
  *
  * @package    Ot_Exception_ApiEndpointUnavailable
  * @category   Exception
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  */
 class Ot_Exception_ApiEndpointUnavailable extends Ot_Exception

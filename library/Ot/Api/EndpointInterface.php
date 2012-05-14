@@ -8,4 +8,5 @@ interface Ot_Api_EndpointInterface
     public function post($params);
     
     public function delete($params);
+
 }

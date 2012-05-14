@@ -143,6 +143,7 @@ model-trigger-action:noHelpersDefined;No helpers are defined in the application 
 msg-error-otExceptionAccess:title;You do not have access
 msg-error-otExceptionData:title;Error accessing data
 msg-error-otExceptionInput:title;Error processing application input
+msg-error-otExceptionApiMissingParams:title;Error processing api input
 msg-error-noAccount;User Account Not Found
 msg-error-apiAccessDenied;You must be authenticated to use this method
 msg-error-invalidTimezone;Timezone is invalid
@@ -493,6 +494,7 @@ msg-error-noTrigger;Trigger does not exist in configuration file.
 msg-error-triggerActionIdNotFound;Trigger Action ID not found in query string.
 msg-error-noTriggerActionId;Trigger action does not exist.
 msg-error-triggerHelperNotFound;Trigger Helper not found.
+msg-error-missingParam;Missing expected parameter: (%1$s)
 
 msg-info-bugSubmitted;Bug was submitted successfully.
 msg-info-bugUpdated;Bug was saved successfully.

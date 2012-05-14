@@ -49,7 +49,7 @@ class Ot_Model_DbTable_Migrations extends Zend_Db_Table
     {
         $tableList = $this->_getTables();
         
-        foreach ($tableList as &$table) {        
+        foreach ($tableList as &$table) {
             $table = '`' . $table . '`';
         }
         
@@ -71,5 +71,5 @@ class Ot_Model_DbTable_Migrations extends Zend_Db_Table
         }
         
         return $tableList;
-    }    
+    }
 }

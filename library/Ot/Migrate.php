@@ -1,30 +1,33 @@
 <?php
+
+require_once(APPLICATION_PATH . '/modules/ot/models/DbTable/Migrations.php');
+
 class Ot_Migrate
 {
     /**
      * Zend_Db Adapter Object
-     * 
+     *
      * @var Zend_Db adapter
      */
     protected $_db;
     
     /**
      * Array of available migration files
-     * 
+     *
      * @var array
      */
     protected $_availableMigrations = array();
     
     /**
      * Array of applied migrations
-     * 
+     *
      * @var array
      */
     protected $_appliedMigrations = array();
     
     /**
      * File path to the folder where the migrations reside
-     * 
+     *
      * @var string
      */
     protected $_migrationsPath = '';
@@ -41,17 +44,12 @@ class Ot_Migrate
     
     /**
      * Constructor, which initializes the DB connection, available migrations, and applied migrations
-     * 
+     *
      * @param array $dbConfig
      */
-    public function __construct(array $dbConfig, $pathToMigrations, $tablePrefix = '')
+    public function __construct($dbAdapter, $pathToMigrations, $tablePrefix = '')
     {
-        $this->_db = Zend_Db::factory($dbConfig['adapter'], array(
-            'host'     => $dbConfig['host'],
-            'username' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'dbname'   =>  $dbConfig['dbname']
-        ));
+        $this->_db = Zend_Db::factory('pdo_mysql', $dbAdapter->getConfig());
         
         Zend_Db_Table::setDefaultAdapter($this->_db);
         
@@ -60,7 +58,7 @@ class Ot_Migrate
         $this->_migrationsPath = $pathToMigrations;
         
         $this->_availableMigrations = $this->_getAvailableMigrations();
-        
+
         $migrations = new Ot_Model_DbTable_Migrations($this->_tablePrefix);
         $this->_messages[] = "Creating migration table if it doesn't exist.";
         $migrations->createTable(); // create the migrations table if it's needed
@@ -71,7 +69,7 @@ class Ot_Migrate
     
     /**
      * Runs the given command (method) passed from the commandline
-     * 
+     *
      * @param string The method to run
      * @param string The version to migrate to, if applicable
      */
@@ -93,11 +91,11 @@ class Ot_Migrate
     
     /**
      * This method is used to start from a specific version rather than from 001.
-     * So if your database is already at 001 and you want to run the migrations 
-     * from 002 up to the latest, this will insert the migration ids from 001 up 
+     * So if your database is already at 001 and you want to run the migrations
+     * from 002 up to the latest, this will insert the migration ids from 001 up
      * to the version passed in.  You can only use this method if the migrations
      * table is empty.  This doesn't actually apply the migrations.
-     * 
+     *
      * @param $latestVersion The version the migration system should think it's at.
      */
     public function setlatestversion($latestVersion)
@@ -107,7 +105,7 @@ class Ot_Migrate
         if (count($this->_appliedMigrations) > 0) {
             $this->_messages[] = 'You can only run this method on an empty migrations table';
             return;
-        }     
+        }
         
         $migrationsIdsNotApplied = array_diff(array_keys($this->_availableMigrations), $this->_appliedMigrations);
         
@@ -115,7 +113,7 @@ class Ot_Migrate
         
         foreach ($migrationsIdsNotApplied as $migrationId) {
             if ($migrationId <= $latestVersion) {
-                $migrationsToApply[] = $this->_availableMigrations[$migrationId];   
+                $migrationsToApply[] = $this->_availableMigrations[$migrationId];
             }
         }
         
@@ -143,12 +141,11 @@ class Ot_Migrate
     
     /**
      * Migrates the database from its existing migration version to the $targetMigration
-     * 
+     *
      * @param $targetMigration
      */
     public function up($targetMigration)
     {
-        
         $migrations = new Ot_Model_DbTable_Migrations($this->_tablePrefix);
         
         $migrationsIdsNotApplied = array_diff(array_keys($this->_availableMigrations), $this->_appliedMigrations);
@@ -157,7 +154,7 @@ class Ot_Migrate
         
         foreach ($migrationsIdsNotApplied as $migrationId) {
             if ($migrationId <= $targetMigration) {
-                $migrationsToApply[] = $this->_availableMigrations[$migrationId];   
+                $migrationsToApply[] = $this->_availableMigrations[$migrationId];
             }
         }
         
@@ -196,7 +193,7 @@ class Ot_Migrate
     
     /**
      * Migrates the database from its existing migration down to the $targetMigration
-     * 
+     *
      * @param $targetMigration
      */
     public function down($targetMigration)
@@ -253,12 +250,12 @@ class Ot_Migrate
             $this->_messages[] = 'Down migration of ' . $m . ' was successful.';
         }
         
-        $this->_db->commit();   
+        $this->_db->commit();
     }
     
     /**
      * Migrates the database from its existing migration to the latest available migration
-     * 
+     *
      */
     public function latest()
     {
@@ -271,7 +268,7 @@ class Ot_Migrate
     /**
      * Executes the down() method to the earliest possible migration, then rebuilds the
      * database to the latest version unless another $targetMigration is specified
-     * 
+     *
      * @param mixed $targetMigration
      */
     public function rebuild($targetMigration = null)
@@ -331,7 +328,7 @@ class Ot_Migrate
     
     /**
      * Gets the id of a migration from its filename
-     * 
+     *
      * @param string The filename to extract the id from
      * @return string The id of the migration
      */

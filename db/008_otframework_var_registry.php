@@ -4,7 +4,7 @@
  * Updates the site to use a variable registry as opposed to xml files
  */
 
-class Db_006_otframework_var_registry extends Ot_Migrate_Migration_Abstract
+class Db_008_otframework_var_registry extends Ot_Migrate_Migration_Abstract
 {
     public function up($dba)
     {
@@ -16,7 +16,7 @@ class Db_006_otframework_var_registry extends Ot_Migrate_Migration_Abstract
         $dba->query($query);
     }
     
-    public function down($dba) {    
+    public function down($dba) {
     }
     
 }
