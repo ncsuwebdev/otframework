@@ -130,6 +130,11 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
             try {
                 $accountId = parent::insert($data);
             } catch(Exception $e) {
+                
+                if (!$inTransaction) {
+                    $dba->rollback();
+                }
+                
                 throw new Ot_Exception('Account insert failed.');
             }
            
@@ -143,6 +148,11 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
                     ));
                 }
             }
+            
+        if (!$inTransaction) {
+            $dba->commit();
+        }
+            
         return $accountId;
     }
 
