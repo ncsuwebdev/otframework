@@ -20,10 +20,6 @@
                 <td><label><?php echo $this->translate("ot-emailqueue-details:sentDate"); ?></label></td>
                 <td><?php echo ($this->email['status'] == 'sent') ? $this->dateFormat($this->email['sentDt'], $this->registry->dateTimeFormat->getValue()) : $this->translate("ot-emailqueue-details:notSent"); ?></td>
             </tr>
-            <tr>
-                <td><label><?php echo $this->translate("ot-emailqueue-details:affected"); ?></label></td>
-                <td><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'attributeName' => $this->email['attributeName'], 'attributeId' => $this->email['attributeId']), 'ot', true); ?>"><?php echo $this->email['attributeName']; ?> = <?php echo $this->email['attributeId']; ?></a></td>
-            </tr>
         </tbody>
     </table>
     <br />
