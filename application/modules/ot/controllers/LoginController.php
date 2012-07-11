@@ -370,11 +370,13 @@ class Ot_LoginController extends Zend_Controller_Action
 
                 if (!is_null($userAccount)) {
 
+                    $loginOptions = Zend_Registry::get('applicationLoginOptions');
+                                        
                     // Generate key
                     $text   = $userAccount->username . '@' . $userAccount->realm . '-' . time();
                     $key    = $loginOptions['forgotpassword']['key'];
                     $iv     = $loginOptions['forgotpassword']['iv'];
-                    $cipher = constant($loginOptions['forgotpassword']['cipher']);
+                    $cipher = $loginOptions['forgotpassword']['cipher'];
 
                     $code = bin2hex(mcrypt_encrypt($cipher, $key, $text, MCRYPT_MODE_CBC, $iv));
 
@@ -385,11 +387,14 @@ class Ot_LoginController extends Zend_Controller_Action
                     $this->_helper->log(Zend_Log::INFO, 'User ' . $username->getValue() . ' sent a password reset request.', $loggerOptions);
 
                     $dt = new Ot_Trigger_Dispatcher();
-                    $dt->setVariables($userAccount->toArray());
-
-                    $dt->resetUrl = Zend_Registry::get('siteUrl') . '/login/password-reset/?key=' . $code;
-
-                    $dt->loginMethod = '';
+                    $dt->setVariables(array(
+                        'firstName'    => $userAccount->firstName,
+                        'lastName'     => $userAccount->lastName,
+                        'emailAddress' => $userAccount->emailAddress,
+                        'username'     => $userAccount->username,
+                        'resetUrl'     => Zend_Registry::get('siteUrl') . '/login/password-reset/?key=' . $code,
+                        'loginMethod'  => $userAccount->realm,
+                    ));
 
                     $dt->dispatch('Login_Index_Forgot');
 

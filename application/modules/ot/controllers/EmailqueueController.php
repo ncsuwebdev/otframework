@@ -164,6 +164,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
         );
 
         $this->view->email = $email;
+        $this->view->registry = new Ot_Var_Register();
         $this->_helper->pageTitle('ot-emailqueue-details:title');
     }
     

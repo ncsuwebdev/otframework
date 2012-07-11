@@ -1,59 +1,66 @@
-.enabled {
-    background-color: #0C0;
+ul#adapterList {
+    margin: 0px;
+    padding: 0px;
 }
 
-.disabled {
-    background-color: #C00;
-    color: #FFF;
-}
-
-a.linkButton {
-    font-weight: normal;
-    padding: 0.3em 1em;
-}
-
-#adapterList tr.header td {
-    margin: 3px;
-    padding: 0.4em;
-    font-weight: bold;
-}
-
-#adapterList tbody {
-    border: 1px solid #DDD;
-}
-
-#adapterList {
-    list-style-type: none;
-    width: 500px;
-    margin-left: 0px;
-}
-
-#adapterList li table {
-    width: 100%;
-    height: inherit;
-    background-color: #FFF;
-}
-
-#adapterList li table tr td {
-    border: 0;
-    padding: 0;
-    margin: 0;
-}
-
-#adapterList li table tbody tr td {
+li.adapter {
+    border: 1px solid #CCCCCC;
     padding: 5px;
+    margin: 0 0 20px 0;
+    background-color: #FFFFFF;
+    list-style: none;
 }
 
+div.status {
+    width: 64px;
+    height: 64px;
+    float: left;
+    margin-right: 10px;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-position: center top;
+}
 
-#adapterList li table td.controlButtons {
+div.status.enabled {
+    background-image: url(../../../images/ot/grant.png);
+}
+
+div.status.disabled {
+    background-image: url(../../../images/ot/deny.png);
+}
+
+div.name {
+    margin-left: 80px;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+div.description {
+    color: #666666;
+    margin-left: 80px;
+    margin-bottom: 10px;
+}
+
+div.schedule {
+    font-style: italic;
+    margin-left: 80px;
+}
+
+div.actions {
+    margin: 10px 0px 10px 10px;
     text-align: right;
+
+    width: 200px;
+    float: right;
 }
 
-#orderMessage {
-    padding: 3px 10px;
+#message {
+    margin-bottom: 20px;
+    height: 30px;
 }
 
-p {
-    height: 25px;
-    padding-left: 15px;
+.dragIndicator {
+    float: left;
+    margin-right: 10px;
 }
