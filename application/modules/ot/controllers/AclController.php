@@ -177,9 +177,7 @@ class Ot_AclController extends Zend_Controller_Action
     {   
         $role = new Ot_Model_DbTable_Role();
         
-        $form = $role->form(); 
-
-        $messages = array();
+        $form = $role->form();
         
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -201,11 +199,10 @@ class Ot_AclController extends Zend_Controller_Action
     
                 $this->_helper->redirector->gotoUrl('/ot/acl/details?roleId=' . $roleId);
             } else {
-                $messages[] = 'msg-error-invalidForm';
+                $this->_helper->messenger->addError('msg-error-invalidForm');
             }
         }
         
-        $this->view->messages = $messages;
         $this->view->form = $form;
 
         $this->_helper->pageTitle("ot-acl-add:title");
@@ -236,7 +233,7 @@ class Ot_AclController extends Zend_Controller_Action
         
         $form = $role->form($thisRole->toArray());
         
-        $messages = array();
+        
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
                 
@@ -257,14 +254,13 @@ class Ot_AclController extends Zend_Controller_Action
     
                 $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $data['roleId']);
             } else {
-                $messages[] = 'msg-error-invalidForm';
+                $this->_helper->messenger->addError('msg-error-invalidForm');
             }
 
         }
 
         $this->view->role = $thisRole;
         $this->view->form = $form;
-        $this->view->messages = $messages;
                               
         $this->_helper->pageTitle("ot-acl-edit:title");
     }

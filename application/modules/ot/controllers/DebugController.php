@@ -47,7 +47,7 @@ class Ot_DebugController extends Zend_Controller_Action
     {
         $this->view->debugMode = (isset($_COOKIE[$this->_debugModeCookieName])) ? true : false;
         $this->_helper->pageTitle('ot-debug-index:title');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
 
     /**
@@ -61,11 +61,9 @@ class Ot_DebugController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-statusNotFound');
         }
         $status = $get->status;
-               
-        $messages = array();
         
         if ($status == 'on') {
-            setcookie($this->_debugModeCookieName, '1', time()+60*60*24*30, $this->view->baseUrl());
+            setcookie($this->_debugModeCookieName, '1', time() + 60 * 60 * 24 * 30, $this->view->baseUrl());
         } else {
             setcookie($this->_debugModeCookieName, '', time()-1, $this->view->baseUrl()); 
         }
@@ -74,16 +72,14 @@ class Ot_DebugController extends Zend_Controller_Action
         
         if ($status == 'on') {
             $logMsg = "Application was put into debug mode";
-            $this->_helper->flashMessenger->addMessage('msg-info-debugOn');
+            $this->_helper->messenger->addInfo('msg-info-debugOn');
         } else {
             $logMsg = "Application was taken out of debug mode";
-            $this->_helper->flashMessenger->addMessage('msg-info-debugOff');
+            $this->_helper->messenger->addInfo('msg-info-debugOff');
         }
         
         $this->_helper->log(Zend_Log::INFO, $logMsg, $logOptions);
 
         $this->_helper->redirector->gotoRoute(array('controller' => 'debug'), 'ot', true);
-        
-        $this->view->messages = $messages;
     }
 }

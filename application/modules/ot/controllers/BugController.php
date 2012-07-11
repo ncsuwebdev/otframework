@@ -50,7 +50,7 @@ class Ot_BugController extends Zend_Controller_Action
 
         $this->view->bugs = $bugs->toArray();
         $this->_helper->pageTitle('ot-bug-index:title');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
 
     /**
@@ -123,7 +123,7 @@ class Ot_BugController extends Zend_Controller_Action
             );
                     
             $this->_helper->log(Zend_Log::INFO, 'Bug was deleted', $logOptions);
-            $this->_helper->flashMessenger->addMessage('msg-info-bugDeleted');
+            $this->_helper->messenger->addInfo('msg-info-bugDeleted');
             
             $this->_helper->redirector->gotoRoute(array('controller' => 'bug'), 'ot', true);
             
@@ -141,9 +141,7 @@ class Ot_BugController extends Zend_Controller_Action
     {
         $bug = new Ot_Model_DbTable_Bug();
         
-        $form = $bug->form();         
-             
-        $messages = array();
+        $form = $bug->form();
         
         if ($this->_request->isPost()) {
 
@@ -173,7 +171,7 @@ class Ot_BugController extends Zend_Controller_Action
                 );
                     
                 $this->_helper->log(Zend_Log::INFO, 'Bug was added', $logOptions);
-                $this->_helper->flashMessenger->addMessage('msg-info-bugSubmitted');
+                $this->_helper->messenger->addSuccess('msg-info-bugSubmitted');
         
                 $this->_helper->redirector->gotoRoute(
                     array(
@@ -185,14 +183,13 @@ class Ot_BugController extends Zend_Controller_Action
                     true
                 );
             } else {
-                $messages[] = 'msg-error-formError';
+                $this->_helper->messenger->addError('msg-error-formError');
             }
         }
         
-        $this->view->messages = $messages;
         $this->_helper->pageTitle('ot-bug-add:title');
         $this->view->form = $form;
-
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
     
     /**
@@ -227,8 +224,6 @@ class Ot_BugController extends Zend_Controller_Action
         }
         
         $this->view->text = $text;
-                     
-        $messages = array();
         
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -265,7 +260,7 @@ class Ot_BugController extends Zend_Controller_Action
                 );
                 
                 $this->_helper->log(Zend_Log::INFO, 'Bug was modified', $logOptions);
-                $this->_helper->flashMessenger->addMessage('msg-info-bugUpdated');
+                $this->_helper->messenger->addSuccess('msg-info-bugUpdated');
                 
                 $this->_helper->redirector->gotoRoute(
                     array('controller' => 'bug', 'action' => 'details', 'bugId' => $get->bugId),
@@ -273,13 +268,12 @@ class Ot_BugController extends Zend_Controller_Action
                     true
                 );
             } else {
-                $messages[] = 'msg-error-formError';
+                $this->_helper->messenger->addError('msg-error-formError');
             }
 
         }
         
         $this->_helper->pageTitle('ot-bug-edit:title');
-        $this->view->messages = $messages;
-        $this->view->form     = $form;
+        $this->view->form = $form;
     }    
 }

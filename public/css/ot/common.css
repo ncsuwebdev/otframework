@@ -109,6 +109,41 @@ ul.errors li {
     background-color: #FFCFCF;
 }
 
+.alert {
+    padding:4px 1px 4px 4px;
+    margin:4px auto;
+    border-radius:4px;
+}
+
+.alert-error {
+    background:#fcc;
+    border:2px solid #b00;
+}
+
+.alert-success {
+    background:#cfc;
+    border:2px solid #0b0;
+}
+
+.alert-warning {
+    background:#ffc;
+    border:2px solid #fd0;
+}
+
+.alert-info {
+	color:#363636;
+    background:#fbf9ee;
+    border:1px solid #fcefa1;
+}
+
+.alert .ui-icon {
+	margin:0 0.5em 0 0;
+}
+
+.alert-error::before { content: 'Error: '; font-weight:bold; }
+g.alert-warning::before { content: 'Warning: '; font-weight:bold; }
+g.alert-info::before { content: 'Notice: '; font-weight:bold; }
+
 span.required {
     color: #C00;
 }
@@ -258,7 +293,7 @@ div#translationInstructions {
     margin-bottom: 20px;
 }
 
-div#systemMessageCloseButton {
+div.systemMessageCloseButton {
     text-align: right;
     width: 30px;
     float: right;

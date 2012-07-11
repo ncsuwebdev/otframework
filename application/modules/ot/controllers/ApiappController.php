@@ -49,7 +49,7 @@ class Ot_ApiappController extends Zend_Controller_Action
         $title = $varRegistry->appTitle->getValue();
         $this->view->title = $title;        
         $this->_helper->pageTitle('ot-apiapp-index:title', $title);
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
         
     /**
@@ -109,7 +109,7 @@ class Ot_ApiappController extends Zend_Controller_Action
         $this->view->apiApp = $thisApp;
         
         $this->_helper->pageTitle('ot-apiapp-details:title', $thisApp->name);
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
         
     /**
@@ -124,7 +124,7 @@ class Ot_ApiappController extends Zend_Controller_Action
         
         $form = $apiApp->form(array('imagePath' => $this->_getImage(0)));
         
-        $messages = array();
+        
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
                 $data = array(
@@ -149,17 +149,16 @@ class Ot_ApiappController extends Zend_Controller_Action
                     
                 $appId = $apiApp->insert($data);
                 
-                $this->_helper->flashMessenger->addMessage('ot-apiapp-add:successfullyRegistered');
+                $this->_helper->messenger->addSuccess('ot-apiapp-add:successfullyRegistered');
                 
                 $this->_helper->redirector->gotoRoute(array('action' => 'details', 'appId' => $appId), 'apiapp', true);
                 
             } else {
-                $messages[] = $this->view->translate('ot-apiapp-add:problemSubmitting');
+                $this->_helper->messenger->addError('ot-apiapp-add:problemSubmitting');
             }
         }
         
-        $this->view->messages = $messages;
-        $this->view->form     = $form;
+        $this->view->form = $form;
     }
     
     public function regenerateKeyAction()
@@ -216,7 +215,6 @@ class Ot_ApiappController extends Zend_Controller_Action
             array_merge($thisApp->toArray(), array('imagePath' => $this->_getImage($thisApp->imageId)))
         );
         
-        $messages = array();
         if ($this->_request->isPost()) {
             
             if ($form->isValid($_POST)) {
@@ -246,16 +244,15 @@ class Ot_ApiappController extends Zend_Controller_Action
                         
                 $apiApp->update($data, null);
                 
-                $this->_helper->flashMessenger->addMessage('ot-apiapp-edit:successfullyModified');
+                $this->_helper->messenger->addSuccess('ot-apiapp-edit:successfullyModified');
                 $this->_helper->redirector->gotoRoute(array('action' => 'details', 'appId' => $thisApp->appId), 'apiapp', true);
                 
             } else {
-                $messages[] = 'ot-apiapp-edit:problemSubmitting';
+                $this->_helper->messenger->addError('ot-apiapp-edit:problemSubmitting');
             }
         }
         
-        $this->view->messages = $messages;
-        $this->view->form     = $form;
+        $this->view->form = $form;
     }
         
     public function deleteAction()
@@ -284,7 +281,7 @@ class Ot_ApiappController extends Zend_Controller_Action
         if ($this->_request->isPost() && $form->isValid($_POST)) {
             $apiApp->delete($thisApp->appId);
                                     
-            $this->_helper->flashMessenger->addMessage('ot-apiapp-delete:applicationRemoved');
+            $this->_helper->messenger->addSuccess('ot-apiapp-delete:applicationRemoved');
             
             $this->_helper->redirector->gotoRoute(array(), 'apiapp', true);
         }

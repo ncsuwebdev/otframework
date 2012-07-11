@@ -36,7 +36,7 @@ class Ot_LogController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
         $this->_helper->pageTitle('ot-log-index:title');  
         $this->view
              ->headScript()
@@ -145,7 +145,7 @@ class Ot_LogController extends Zend_Controller_Action
                         
             $this->_helper->log(Zend_Log::INFO, 'Logs were cleared.');
 
-            $this->_helper->flashMessenger->addMessage('msg-info-logsCleared');
+            $this->_helper->messenger->addSuccess('msg-info-logsCleared');
             
             $this->_helper->redirector->gotoRoute(array('controller' => 'log', 'action' => 'index'), 'ot', true);
         }

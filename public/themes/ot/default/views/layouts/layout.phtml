@@ -47,14 +47,40 @@ echo "\n";
             
             <div class="yui-g">
                 <div class="content">
-                    <?php if (!empty($this->messages) != 0) : ?>
-                        <div id="systemMessages" class="ui-state-highlight ui-corner-all">
-                            <span class="ui-icon ui-icon-info"></span>
-                                <?php foreach ($this->messages as $m) : ?>
-                                    <?php echo $this->translate($m); ?><br />
-                                <?php endforeach; ?>
-                        </div>
-                   <?php endif; ?>
+                    <?php
+                        $zrMessages = array();
+                        $fmMessages = array();
+                        $mMessages = array();
+                        
+                        if(Zend_Registry::isRegistered('flashMessages')) {
+                            $zrMessages = Zend_Registry::get('flashMessages');
+                        }
+                        
+                        $mMessages = (isset($this->messages) && is_array($this->messages)) ? $this->messages : array();
+                        $messages = array_merge($zrMessages, $fmMessages, $mMessages);
+                        
+                        
+                        if(count($messages) > 0) {
+                            echo '<div id="systemMessages">';
+                            $sprites = array(
+                                'error' => 'alert',
+                                'info' => 'info',
+                                'warning' => 'notice',
+                                'success' => 'check',
+                            );
+                            if(count($messages) != 0) {
+                                foreach($messages as $m) {
+                                    $type = (is_object($m)) ? $m->type : 'info';
+                                    $message = (is_object($m)) ? $m->message : $m;
+                                    echo '<div class="alert alert-' . $type . '">'
+                                    . '<span class="ui-icon ui-icon-' . (isset($sprites[$type]) ? $sprites[$type] : 'info') . '" style="float:left;"></span>'
+                                    . $this->translate($message)
+                                    . '</div>'
+                                    ;
+                                }
+                            }
+                        }
+                        ?>
 
                     <div id="pageTitle"><?php echo $this->title; ?></div>
 

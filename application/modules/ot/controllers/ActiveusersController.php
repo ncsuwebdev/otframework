@@ -60,6 +60,6 @@ class Ot_ActiveusersController extends Zend_Controller_Action
         $this->view->roleMap = $roleMap;
         
         $this->_helper->pageTitle('ot-activeusers-index:title');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
 }

@@ -35,7 +35,9 @@ class Ot_IndexController extends Zend_Controller_Action
      *
      */
     public function indexAction()
-    {       
+    {   
+    	
+    	
         $this->_helper->pageTitle('ot-index-index:title');
         
         $registry = new Ot_Var_Register();

@@ -126,7 +126,7 @@ class Ot_AuthController extends Zend_Controller_Action
 
         $form = $authAdapter->form($thisAdapter->toArray());
         
-        $messages = array();
+        
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
                 $data = array(
@@ -139,12 +139,11 @@ class Ot_AuthController extends Zend_Controller_Action
                 
                 $this->_helper->redirector->gotoRoute(array('controller' => 'auth'), 'ot', true);
             } else {
-                $messages[] = $this->view->translate('ot-auth-edit:problemSubmitting');
+                $this->_helper->messenger->addError('ot-auth-edit:problemSubmitting');
             }
         }
         
         $this->view->form = $form;
-        $this->view->messages = $messages;
         $this->_helper->pageTitle('ot-auth-edit:title');
     }
     

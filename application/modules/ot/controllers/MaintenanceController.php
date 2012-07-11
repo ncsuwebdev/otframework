@@ -48,7 +48,7 @@ class Ot_MaintenanceController extends Zend_Controller_Action
             is_file(APPLICATION_PATH . '/../overrides/'. $this->_maintenanceModeFileName)
         ) ? true : false;
         $this->_helper->pageTitle('ot-maintenance-index:title');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
 
     /**
@@ -68,8 +68,6 @@ class Ot_MaintenanceController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-statusNotFound');
         }
         $status = $get->status;
-               
-        $messages = array();
         
         if ($status == 'on') {
             file_put_contents($path . '/' . $this->_maintenanceModeFileName, '');
@@ -84,16 +82,14 @@ class Ot_MaintenanceController extends Zend_Controller_Action
         
         if ($status == 'on') {
             $logMsg = "Application was put into maintenance mode";
-            $this->_helper->flashMessenger->addMessage('msg-info-maintenanceOn');
+            $this->_helper->messenger->addInfo('msg-info-maintenanceOn');
         } else {
             $logMsg = "Application was taken out of maintenance mode";
-            $this->_helper->flashMessenger->addMessage('msg-info-maintenanceOff');
+            $this->_helper->messenger->addInfo('msg-info-maintenanceOff');
         }
         
         $this->_helper->log(Zend_Log::INFO, $logMsg, $logOptions);
 
         $this->_helper->redirector->gotoRoute(array('controller' => 'maintenance'), 'ot', true);
-        
-        $this->view->messages = $messages;
     }
 }

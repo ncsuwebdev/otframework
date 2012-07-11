@@ -64,7 +64,7 @@ class Ot_CronController extends Zend_Controller_Action
             );
         }
 
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
         $this->view->cronjobs = $registry->getCronjobs();
         $this->view->status = $status;
         $this->_helper->pageTitle('ot-cron-index:title');
@@ -170,7 +170,7 @@ class Ot_CronController extends Zend_Controller_Action
 
         $dispatcher->dispatch($name);
 
-        $this->_helper->flashMessenger->addMessage('Job executed successfully');
+        $this->_helper->messenger->addSuccess('Job executed successfully');
         $this->_helper->redirector->gotoRoute(array('controller' => 'cron', 'action' => 'index'), 'ot', true);
     }
 }

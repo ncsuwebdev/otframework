@@ -39,7 +39,7 @@ class Ot_CacheController extends Zend_Controller_Action
                 
         $this->view->acl = array('clearCache' => $this->_helper->hasAccess('clear'));
 
-        $this->view->messages = array_merge($this->_helper->flashMessenger->getMessages(), $messages);
+        $this->view->messages = array_merge($this->_helper->messenger->getMessages(), $messages);
         $this->_helper->pageTitle('ot-cache-index:title');
     }
     
@@ -53,7 +53,7 @@ class Ot_CacheController extends Zend_Controller_Action
         
         $post = Zend_Registry::get('postFilter');
         if(!$post->clearCache) {
-            $this->_helper->flashMessenger->addMessage('msg-info-cacheNotCleared');
+            $this->_helper->messenger->addError('msg-info-cacheNotCleared');
             $this->_helper->redirector->gotoRoute(array('controller' => 'cache'), 'ot', true);
         }
 
@@ -64,7 +64,7 @@ class Ot_CacheController extends Zend_Controller_Action
             
         $this->_helper->log(Zend_Log::INFO, 'Cache was cleared', $logOptions);
         
-        $this->_helper->flashMessenger->addMessage('msg-info-cacheCleared');
+        $this->_helper->messenger->addSuccess('msg-info-cacheCleared');
         
         $this->_helper->redirector->gotoRoute(array('controller' => 'cache'), 'ot', true);
     }

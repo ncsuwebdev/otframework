@@ -39,11 +39,12 @@ class Ot_LoginController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-    	$messages = array();
-    	
+        $messages = array();
+        
         $this->_helper->pageTitle('ot-login-index:title');
 
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
+        //var_dump($req->requestUri, $req->uri, $req->requestedFromUrl);exit;
 
         $loginOptions = Zend_Registry::get('applicationLoginOptions');
         $registry = new Ot_Var_Register();
@@ -52,16 +53,16 @@ class Ot_LoginController extends Zend_Controller_Action
         $authRealm->setExpirationHops(1);
 
         if (Zend_Auth::getInstance()->hasIdentity()) {
-        	$this->view->messages = $messages;
-        	$this->view->alreadyLoggedIn = true;
-        	$this->view->identity = Zend_Auth::getInstance()->getIdentity();
-        	return;
+            $this->view->messages = $messages;
+            $this->view->alreadyLoggedIn = true;
+            $this->view->identity = Zend_Auth::getInstance()->getIdentity();
+            return;
         }
 
         $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapters = $authAdapter->getEnabledAdapters();
-
-        if ($adapters->count() == 0) {
+        
+        if (!$adapters || $adapters->count() == 0) {
             throw new Ot_Exception_Data('ot-login-index:noAdaptersEnabled');
         }
 
@@ -119,13 +120,22 @@ class Ot_LoginController extends Zend_Controller_Action
 
                 $form->addElement($signupButton);
             }
+            
+            $redirectUriHidden = $form->createElement('hidden', 'redirectUri');
+            $redirectUriHidden->setValue($_SERVER['REQUEST_URI']);
+            $redirectUriHidden->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
+            $form->addElement($redirectUriHidden);
 
             $realmHidden = $form->createElement('hidden', 'realm');
             $realmHidden->setValue($adapter->adapterKey);
             $realmHidden->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
 
             $form->addElement($realmHidden);
-
+            
+            if(!$adapter->adapterKey) {
+                throw new Ot_Exception_Data('ot-login-index:adapterMissingKey');
+            }
+            
             $loginForms[$adapter->adapterKey] = array(
                 'form'        => $form,
                 'realm'       => $adapter->adapterKey,
@@ -133,6 +143,9 @@ class Ot_LoginController extends Zend_Controller_Action
                 'description' => $adapter->description,
                 'autoLogin'   => $a->autoLogin(),
             );
+        }
+        if(count($loginForms) == 0) {
+            throw new Ot_Exception('No login adapters found.');
         }
 
         $this->view->loginForms = $loginForms;
@@ -157,7 +170,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     $formPassword = '';
                     $validForm = true;
                 }
-                $messages[] = 'msg-error-invalidFormInfo';
+                $this->_helper->messenger->addError('msg-error-invalidFormInfo');
             } else {
                 $validForm = true;
             }
@@ -175,13 +188,14 @@ class Ot_LoginController extends Zend_Controller_Action
 
             $username = ($formUserId) ? $formUserId : $form->getValue('username');
             $password = ($formPassword) ? $formPassword : $form->getValue('password');
+            $redirectUri = ($form->getValue('redirectUri'));
 
             $authAdapter = new Ot_Model_DbTable_AuthAdapter();
             $adapter     = $authAdapter->find($realm);
             $className   = (string)$adapter->class;
 
             // Set up the authentication adapter
-            $authAdapter = new $className($username, $password);
+            $authAdapter = new $className($username, $password, $redirectUri);
 
             $auth = Zend_Auth::getInstance();
             $authRealm->realm = $realm;
@@ -193,10 +207,9 @@ class Ot_LoginController extends Zend_Controller_Action
             $authRealm->unsetAll();
 
             if ($result->isValid()) {
-
                 $username = $auth->getIdentity()->username;
+                
                 $realm    = $auth->getIdentity()->realm;
-
                 $account     = new Ot_Model_DbTable_Account();
                 $thisAccount = $account->getAccount($username, $realm);
 
@@ -261,16 +274,20 @@ class Ot_LoginController extends Zend_Controller_Action
 
                 if (isset($req->uri) && $req->uri != '') {
                     $uri = $req->uri;
-
+                    if(!strstr($uri, 'oauth_verif')) {
+//var_dump('redir to ', $req->requestUri, $req->uri, $req->requestedFromUrl);exit;
+                    }
                     $req->unsetAll();
-
+                    
+                    
+                    
                     return $this->_helper->redirector->gotoUrl($uri);
                 } else {
                     return $this->_helper->redirector->gotoRoute(array(), 'default', true);
                 }
             } else {
                 if (count($result->getMessages()) == 0) {
-                    $messages[] = 'msg-error-invalidUsername';
+                    $this->_helper->messenger->addError('msg-error-invalidUsername');
                 } else {
                     $messages = array_merge($messages, $result->getMessages());
                 }
@@ -291,11 +308,11 @@ class Ot_LoginController extends Zend_Controller_Action
         }
 
         if (isset($req->uri) && $req->uri != '') {
-            $messages[] = 'msg-info-loginBeforeContinuing';
+            $this->_helper->messenger->addError('msg-info-loginBeforeContinuing');
         }
 
         $this->view->realm = $realm;
-        $this->view->messages = array_merge($this->_helper->flashMessenger->getMessages(), $messages);
+        $this->view->messages = array_merge($this->_helper->messenger->getMessages(), $messages);
 
     }
 
@@ -359,8 +376,6 @@ class Ot_LoginController extends Zend_Controller_Action
             )
         )->addElements(array($hidden, $submit, $cancel));
 
-        $messages = array();
-
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
 
@@ -369,7 +384,7 @@ class Ot_LoginController extends Zend_Controller_Action
                 $userAccount = $account->getAccount($form->getValue('username'), 'local');//$form->getValue('realm'));
 
                 if (!is_null($userAccount)) {
-
+                    $loginOptions = array();
                     $loginOptions = Zend_Registry::get('applicationLoginOptions');
                                         
                     // Generate key
@@ -380,7 +395,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
                     $code = bin2hex(mcrypt_encrypt($cipher, $key, $text, MCRYPT_MODE_CBC, $iv));
 
-                    $this->_helper->flashMessenger->addMessage('msg-info-passwordResetRequest');
+                    $this->_helper->messenger->addSuccess('msg-info-passwordResetRequest');
 
                     $loggerOptions = array('attributeName' => 'accountId', 'attributeId' => $userAccount->accountId);
 
@@ -400,14 +415,13 @@ class Ot_LoginController extends Zend_Controller_Action
 
                     $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
                 } else {
-                    $messages[] = 'msg-error-userAccountNotFound';
+                    $this->_helper->messenger->addError('msg-error-userAccountNotFound');
                 }
             } else {
-                $messages[] = 'msg-error-invalidFormInfo';
+                $this->_helper->messenger->addError('msg-error-invalidFormInfo');
             }
         }
 
-        $this->view->messages = $messages;
         $this->_helper->pageTitle('ot-login-forgot:title');
         $this->view->form = $form;
     }
@@ -527,8 +541,6 @@ class Ot_LoginController extends Zend_Controller_Action
             )
         )->addElements(array($submit, $cancel));
 
-        $messages = array();
-
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
                 if ($form->getValue('password') == $form->getValue('passwordConf')) {
@@ -540,7 +552,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
                     $account->update($data, null);
 
-                    $this->_helper->flashMessenger->addMessage('msg-info-passwordReset');
+                    $this->_helper->messenger->addSuccess('msg-info-passwordReset');
 
                     $loggerOptions = array(
                         'attributeName' => 'accountId',
@@ -551,14 +563,13 @@ class Ot_LoginController extends Zend_Controller_Action
 
                     $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
                 } else {
-                    $messages[] = 'msg-error-passwordsNotMatch';
+                    $this->_helper->messenger->addError('msg-error-passwordsNotMatch');
                 }
             } else {
-                $messages[] = 'msg-error-invalidFormInfo';
+                $this->_helper->messenger->addError('msg-error-invalidFormInfo');
             }
         }
-
-        $this->view->messages = $messages;
+        
         $this->_helper->pageTitle('ot-login-passwordReset:title');
         $this->view->form = $form;
         $this->view
@@ -633,7 +644,6 @@ class Ot_LoginController extends Zend_Controller_Action
         }
 
         $form = $account->form(array('realm' => $realm), true);
-        $messages = array();
 
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -652,7 +662,7 @@ class Ot_LoginController extends Zend_Controller_Action
                     $thisAccount = $account->getAccount($accountData['username'], $accountData['realm']);
 
                     if (!is_null($thisAccount)) {
-                        $messages[] = 'msg-error-usernameTaken';
+                        $this->_helper->messenger->addError('msg-error-usernameTaken');
                     } else {
 
                         $dba = Zend_Db_Table::getDefaultAdapter();
@@ -701,7 +711,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
                         $dba->commit();
 
-                        $this->_helper->flashMessenger->addMessage('msg-info-accountCreated');
+                        $this->_helper->messenger->addSuccess('msg-info-accountCreated');
 
                         $loggerOptions = array(
                             'attributeName' => 'accountId',
@@ -721,14 +731,13 @@ class Ot_LoginController extends Zend_Controller_Action
                         return $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
                     }
                 } else {
-                    $messages[] = 'msg-error-passwordsNotMatch';
+                    $this->_helper->messenger->addError('msg-error-passwordsNotMatch');
                 }
             } else {
-                $messages[] = 'msg-error-invalidFormInfo';
+                $this->_helper->messenger->addError('msg-error-invalidFormInfo');
             }
         }
-
-        $this->view->messages = $messages;
+        
         $this->view->form = $form;
         $this->_helper->pageTitle('ot-login-signup:title');
         $this->view

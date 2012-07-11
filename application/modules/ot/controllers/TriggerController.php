@@ -89,7 +89,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         
         $this->view->actions = $actions;
         
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
     
     /**
@@ -138,8 +138,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         }
         
         $form = $action->form($values);
-             
-        $messages = array();
+        
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
                 
@@ -169,10 +168,10 @@ class Ot_TriggerController extends Zend_Controller_Action
                 $logOptions = array('attributeName' => 'triggerActionId', 'attributeId'   => $triggerActionId);
                 if (!$clonedTriggerName) {
                     $this->_helper->log(Zend_Log::INFO, 'Trigger Action added', $logOptions);
-                    $this->_helper->flashMessenger->addMessage('msg-info-triggerAdded');
+                    $this->_helper->messenger->addSuccess('msg-info-triggerAdded');
                 } else {
                     $this->_helper->log(Zend_Log::INFO, 'Trigger Action cloned', $logOptions);
-                    $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-triggerCloned', array('clonedTriggerName' => $data['name'])));
+                    $this->_helper->messenger->addSuccess($this->view->translate('msg-info-triggerCloned', array('clonedTriggerName' => $data['name'])));
                 }
                     
                 $this->_helper->redirector->gotoRoute(
@@ -186,7 +185,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                 );
                     
             } else {
-                $messages[] = 'msg-error-formError';
+                $this->_helper->messenger->addError('msg-error-formError');
             }
         }
         
@@ -194,7 +193,6 @@ class Ot_TriggerController extends Zend_Controller_Action
             $this->view->clonedTriggerName = $clonedTriggerName;
         }
         
-        $this->view->messages     = $messages; 
         $this->view->form         = $form;
     }
 
@@ -242,7 +240,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         $values = array_merge($values, $thisAction->toArray());
         
         $form = $action->form($values);
-        $messages = array();
+        
         
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -273,7 +271,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                     
                 $this->_helper->log(Zend_Log::INFO, 'Trigger Action modified', $logOptions);
             
-                $this->_helper->flashMessenger->addMessage('msg-info-triggerUpdated');
+                $this->_helper->messenger->addSuccess('msg-info-triggerUpdated');
                 
                 $this->_helper->redirector->gotoRoute(
                     array(
@@ -283,11 +281,10 @@ class Ot_TriggerController extends Zend_Controller_Action
                 );
                 
             } else {
-                $messages[] = 'msg-error-formError';
+                $this->_helper->messenger->addError('msg-error-formError');
             }
         }
-        
-        $this->view->messages = $messages;       
+            
         $this->view->form = $form;
     }
     
@@ -332,7 +329,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                     
             $this->_helper->log(Zend_Log::INFO, 'Trigger Action deleted', $logOptions);
         
-            $this->_helper->flashMessenger->addMessage('msg-info-triggerDeleted');
+            $this->_helper->messenger->addNotice('msg-info-triggerDeleted');
             
             $this->_helper->redirector->gotoRoute(
                 array('controller' => 'trigger', 'action' => 'details', 'name' => $triggerId),
@@ -390,7 +387,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                     
             $this->_helper->log(Zend_Log::INFO, 'Trigger Action deleted', $logOptions);
         
-            $this->_helper->flashMessenger->addMessage('msg-info-triggerActionStatus');
+            $this->_helper->messenger->addNotice('msg-info-triggerActionStatus');
             
             $this->_helper->redirector->gotoRoute(
                 array('controller' => 'trigger', 'action' => 'details', 'name' => $triggerId),

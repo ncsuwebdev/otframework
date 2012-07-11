@@ -114,14 +114,14 @@ class Ot_ConfigController extends Zend_Controller_Action
                     }
                 }
 
-                $this->_helper->flashMessenger->addMessage($this->view->translate('msg-info-configUpdated', ''));
+                $this->_helper->messenger->addSuccess($this->view->translate('msg-info-configUpdated', ''));
 
                 $this->_helper->redirector->gotoRoute(array('controller' => 'config'), 'ot', true);
             }
         }
 
         $this->view->assign(array(
-            'messages' => $this->_helper->flashMessenger->getMessages(),
+            'messages' => $this->_helper->messenger->getMessages(),
             'form' => $form,
         ));
         

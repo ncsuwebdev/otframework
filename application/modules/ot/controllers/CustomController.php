@@ -83,7 +83,7 @@ class Ot_CustomController extends Zend_Controller_Action
         $this->view->attributes        = $attributes;
         $this->view->objectId          = $get->objectId;
         $this->view->objectDescription = $object->getDescription();
-        $this->view->messages          = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages          = $this->_helper->messenger->getMessages();
     }
 
     /**
@@ -239,7 +239,7 @@ class Ot_CustomController extends Zend_Controller_Action
                     
             $this->_helper->log(Zend_Log::INFO, $data['label'] . ' added', $logOptions);
             
-            $this->_helper->flashMessenger->addMessage(
+            $this->_helper->messenger->addSuccess(
                 $this->view->translate('msg-info-attributeAdded', array($data['label'], $data['objectId']))
             );
 
@@ -335,8 +335,8 @@ class Ot_CustomController extends Zend_Controller_Action
                     
             $this->_helper->log(Zend_Log::INFO, 'Attribute ' . $data['label'] . ' was modified.', $logOptions);
             $this->_helper
-                 ->flashMessenger
-                 ->addMessage($this->view->translate('msg-info-attributeSaved', array($data['label'])));
+                 ->messenger
+                 ->addSuccess($this->view->translate('msg-info-attributeSaved', array($data['label'])));
 
             $this->_helper->redirector->gotoRoute(
                 array(
@@ -405,8 +405,8 @@ class Ot_CustomController extends Zend_Controller_Action
             $this->_helper->log(Zend_Log::INFO, 'Attribute and all values were deleted', $logOptions);
 
             $this->_helper
-                 ->flashMessenger
-                 ->addMessage($this->view->translate('msg-info-attributeDeleted', array($attribute['label'])));
+                 ->messenger
+                 ->addInfo($this->view->translate('msg-info-attributeDeleted', array($attribute['label'])));
 
             $this->_helper->redirector->gotoRoute(
                 array(

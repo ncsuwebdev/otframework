@@ -43,7 +43,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
         $this->view
              ->headLink()
              ->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages(); 
+        $this->view->messages = $this->_helper->messenger->getMessages(); 
         
         if ($this->_request->isXmlHttpRequest()) {
                 
@@ -195,7 +195,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             $where = $eq->getAdapter()->quoteInto('queueId = ?', $get->queueId);
             $eq->delete($where);
             
-            $this->_helper->flashMessenger->addMessage('ot-emailqueue-delete:success');
+            $this->_helper->messenger->addSuccess('ot-emailqueue-delete:success');
             $this->_helper->redirector->gotoRoute(array('controller' => 'emailqueue'), 'ot', true);
         }
         

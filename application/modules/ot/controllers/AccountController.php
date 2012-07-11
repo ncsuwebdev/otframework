@@ -93,7 +93,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->_helper->pageTitle('Masquerade');
 
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
         $this->view->masquerading = false;
 
         $identity = Zend_Auth::getInstance()->getIdentity();
@@ -128,7 +128,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
                     Zend_Auth::getInstance()->getStorage()->write($mAccount);
 
-                    $this->_helper->flashMessenger->addMessage('You are now masquerading as ' . $mAccount->firstName . ' ' . $mAccount->lastName . ' (' . $mAccount->username . ' in ' . $mAccount->realm . ' realm).');
+                    $this->_helper->messenger->addInfo('You are now masquerading as ' . $mAccount->firstName . ' ' . $mAccount->lastName . ' (' . $mAccount->username . ' in ' . $mAccount->realm . ' realm).');
 
                     $this->_helper->redirector->gotoRoute(array('action' => 'index', 'controller' => 'index'), 'default', true);
 
@@ -141,6 +141,8 @@ class Ot_AccountController extends Zend_Controller_Action
 
     public function unmasqueradeAction()
     {
+    	$this->view->messages = $this->_helper->messenger->getMessages();
+    	
         $identity = Zend_Auth::getInstance()->getIdentity();
 
         if (!$identity->masquerading) {
@@ -155,7 +157,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
         Zend_Auth::getInstance()->getStorage()->write($realIdentity);
 
-        $this->_helper->flashMessenger->addMessage('You are no longer masquerading.');
+        $this->_helper->messenger->addInfo('You are no longer masquerading.');
 
         $this->_helper->redirector->gotoRoute(array('action' => 'masquerade'), 'account', true);
 
@@ -180,7 +182,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'apiDocs'         => $this->_helper->hasAccess('index', 'ot_api')
         );
 
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
         $this->view->userData = $this->_userData;
         $this->view->registry = $registry;
 
@@ -250,7 +252,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'delete' => $this->_helper->hasAccess('delete'),
         );
         $this->_helper->pageTitle('ot-account-all:title');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
         $this->view
              ->headScript()
              ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
@@ -352,6 +354,8 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function addAction()
     {
+    	$this->view->messages = $this->_helper->messenger->getMessages();
+    	
         $account = new Ot_Model_DbTable_Account();
         $registry = new Ot_Var_Register();
         $loginOptions = Zend_Registry::get('applicationLoginOptions');
@@ -360,8 +364,6 @@ class Ot_AccountController extends Zend_Controller_Action
         $values = array('role' => $defaultRole);
 
         $form = $account->form($values);
-
-        $messages = array();
 
         $acl = Zend_Registry::get('acl');
 
@@ -400,14 +402,14 @@ class Ot_AccountController extends Zend_Controller_Action
                         throw $e;
                     }
                 } else {
-                    $messages[] = 'msg-error-accountTaken';
+                    $this->_helper->messenger->addError('msg-error-accountTaken');
                 }
 
 
                 $accountData['password'] = $password;
 
                 // Account plugin
-                if (count($messages) == 0 && isset($loginOptions['accountPlugin'])) {
+                if ($this->_helper->messenger->count('error') == 0 && isset($loginOptions['accountPlugin'])) {
                     $acctPlugin = new $loginOptions['accountPlugin'];
 
                     $subform = $acctPlugin->addSubForm();
@@ -427,7 +429,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 }
 
                 // Custom attributes
-                if (count($messages) == 0) {
+                if ($this->_helper->messenger->count('error') == 0) {
 
                     $custom = new Ot_Model_Custom();
 
@@ -446,10 +448,10 @@ class Ot_AccountController extends Zend_Controller_Action
                     }
                 }
 
-                if (count($messages) == 0) {
+                if ($this->_helper->messenger->count('error') == 0) {
                     $dba->commit();
 
-                    $this->_helper->flashMessenger->addMessage('msg-info-accountCreated');
+                    $this->_helper->messenger->addSuccess('msg-info-accountCreated');
 
                     $td = new Ot_Trigger_Dispatcher();
                     $td->setVariables($accountData);
@@ -472,7 +474,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     $authAdapter = new $thisAdapter->class;
 
                     if ($authAdapter->manageLocally()) {
-                        $this->_helper->flashMessenger->addMessage('msg-info-accountPasswordCreated');
+                        $this->_helper->messenger->addSuccess('msg-info-accountPasswordCreated');
 
                         $td->dispatch('Admin_Account_Create_Password');
                     } else {
@@ -483,13 +485,13 @@ class Ot_AccountController extends Zend_Controller_Action
                         'attributeName' => 'accountId',
                         'attributeId'   => $accountData['accountId'],
                     );
-
+                    
                     $this->_helper->log(Zend_Log::INFO, 'Account was added', $logOptions);
 
                     $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true);
                 }
             } else {
-                $messages[] = 'msg-error-invalidForm';
+                $this->_helper->messenger->addError('msg-error-invalidForm');
             }
         }
 
@@ -498,8 +500,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.tooltip.min.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
         $this->_helper->pageTitle('ot-account-add:title');
-
-        $this->view->messages = $messages;
+        
         $this->view->form = $form;
         $this->view->permissions = $permissions;
         $this->view->permissionList = Zend_Json::encode($permissions);
@@ -514,8 +515,6 @@ class Ot_AccountController extends Zend_Controller_Action
     {
         $account = new Ot_Model_DbTable_Account();
         $form = $account->importForm();
-
-        $messages = array();
 
         if ($this->_request->isPost()) {
 
@@ -544,24 +543,24 @@ class Ot_AccountController extends Zend_Controller_Action
                 }
 
                 if (count($success)) {
-                    $this->_helper->flashMessenger->addMessage('Successfully imported account(s) for ' . implode(', ', $success) . '.');
+                    $this->_helper->messenger->addSuccess('Successfully imported account(s) for ' . implode(', ', $success) . '.');
                 }
 
                 if (count($failure)) {
-                    $this->_helper->flashMessenger->addMessage('Failed to import account(s) for ' . implode(', ', $failure) . '.');
+                    $this->_helper->messenger->addError('Failed to import account(s) for ' . implode(', ', $failure) . '.');
                 }
 
                 $this->_helper->redirector->setPrependBase('')
                      ->gotoUrl($this->view->url(array('module' => 'ot', 'controller' => 'account', 'action' => 'import'), 'default', true));
             } else {
-                $messages[] = 'There was an error processing the form.';
+                $this->_helper->messenger->addError('There was an error processing the form.');
             }
 
         }
 
         $this->view->form = $form;
         $this->_helper->pageTitle('Batch Create Accounts from Unity ID List');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
     }
 
     /**
@@ -598,8 +597,6 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $permissions = $this->mergeResources($resources);
 
-        $messages = array();
-
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
 
@@ -632,7 +629,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 $thisAccount = $account->getAccount($data['username'], $data['realm']);
 
                 if (!is_null($thisAccount) && $thisAccount->accountId != $data['accountId']) {
-                    $messages[] = 'msg-error-accountTaken';
+                    $this->_helper->messenger->addError('msg-error-accountTaken');
                 } else {
 
                     $dba->beginTransaction();
@@ -693,7 +690,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         $req->unsetAll();
                         $this->_helper->redirector->gotoUrl($uri);
                     } else {
-                        $this->_helper->flashMessenger->addMessage('msg-info-accountUpdated');
+                        $this->_helper->messenger->addSuccess('msg-info-accountUpdated');
                         $this->_helper->redirector->gotoRoute(
                             array(
                                 'accountId' => $this->_userData['accountId']
@@ -704,23 +701,23 @@ class Ot_AccountController extends Zend_Controller_Action
                     }
                 }
             } else {
-                $messages[] = 'msg-error-invalidForm';
+                $this->_helper->messenger->addError('msg-error-invalidForm');
             }
         }
 
         if (isset($req->uri) && $req->uri != '') {
-            $messages[] = 'msg-info-requiredDataBeforeContinuing';
+            $this->_helper->messenger->addError('msg-info-requiredDataBeforeContinuing');
         }
 
         if ($this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId) {
-            $messages[] = 'msg-info-editAccountSelf';
+            $this->_helper->messenger->addInfo('msg-info-editAccountSelf');
         }
 
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.tooltip.min.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
-        $this->view->messages = $messages;
+
         $this->view->form = $form;
         $this->view->permissions = $permissions;
         $this->view->permissionList = Zend_Json::encode($permissions);
@@ -790,7 +787,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
             $this->_helper->log(Zend_Log::INFO, 'ot-account-delete:accountDeleted', $loggerOptions);
 
-            $this->_helper->flashMessenger->addMessage('msg-info-accountDeleted');
+            $this->_helper->messenger->addSuccess('msg-info-accountDeleted');
 
             $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true);
         }
@@ -836,7 +833,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 if ($this->_request->isPost() && $form->isValid($_POST)) {
                     $st->removeToken($existingAccessToken->token);
 
-                    $this->_helper->flashMessenge->addMessage(
+                    $this->_helper->flashMessenge->addInfo(
                         //'Token has been removed. ' . $thisConsumer->name . ' no longer has access to your account.'
                         $this->view->translate('ot-account-revokeConnection:tokenremoved', array($thisConsumer->name))
                     );
@@ -854,6 +851,7 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function changePasswordAction()
     {
+    	$this->view->messages = $this->_helper->messenger->getCurrentMessages();
         $identity = Zend_Auth::getInstance()->getIdentity();
 
         $account = new Ot_Model_DbTable_Account();
@@ -930,21 +928,20 @@ class Ot_AccountController extends Zend_Controller_Action
             )
         )->addElements(array($submit, $cancel));
 
-        $messages = array();
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
 
                 if ($form->getValue('newPassword')
                     != $form->getValue('newPasswordConf')) {
-                    $messages[] = 'msg-error-passwordMismatch';
+                    $this->_helper->messenger->addError('msg-error-passwordMismatch');
                 }
 
                 if (md5($form->getValue('oldPassword'))
                     != $thisAccount->password) {
-                    $messages[] = 'msg-error-passwordInvalidOriginal';
+                    $this->_helper->messenger->addError('msg-error-passwordInvalidOriginal');
                 }
 
-                if (count($messages) == 0) {
+                if ($this->_helper->messenger->count('error') == 0) {
                     $data = array(
                         'accountId' => $thisAccount->accountId,
                         'password'  => md5($form->getValue('newPassword'))
@@ -952,7 +949,8 @@ class Ot_AccountController extends Zend_Controller_Action
 
                     $account->update($data, null);
 
-                    $this->_helper->flashMessenger->addMessage('msg-info-passwordChanged');
+                    $this->_helper->messenger->addSuccess('msg-info-passwordChanged');
+                    $this->_helper->messenger->addSuccess('tesingggg');
 
                     $loggerOptions = array(
                         'attributeName' => 'accountId',
@@ -964,14 +962,14 @@ class Ot_AccountController extends Zend_Controller_Action
                     $this->_helper->redirector->gotoRoute(array(), 'account', true);
                 }
             } else {
-                $messages[] = 'msg-error-invalidForm';
+                $this->_helper->messenger->addError('msg-error-invalidForm');
             }
         }
 
         $this->view->headScript()->appendFile(
             $this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.passStrength.js'
         );
-        $this->view->messages = $messages;
+        
         $this->_helper->pageTitle('ot-account-changePassword:title');
         $this->view->form  = $form;
     }
@@ -985,8 +983,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $account = new Ot_Model_DbTable_Account();
         $form = $account->changeRoleForm();
-
-        $messages = array();
+        
 
         if ($this->_request->isPost()) {
 
@@ -1015,24 +1012,24 @@ class Ot_AccountController extends Zend_Controller_Action
                 }
 
                 if (count($success)) {
-                    $this->_helper->flashMessenger->addMessage('Successfully changed role(s) for ' . implode(', ', $success) . '.');
+                    $this->_helper->messenger->addSuccess('Successfully changed role(s) for ' . implode(', ', $success) . '.');
                 }
 
                 if (count($failure)) {
-                    $this->_helper->flashMessenger->addMessage('Failed to change role(s) for ' . implode(', ', $failure) . '.');
+                    $this->_helper->messenger->addError('Failed to change role(s) for ' . implode(', ', $failure) . '.');
                 }
 
                 $this->_helper->redirector->setPrependBase('')
                      ->gotoUrl($this->view->url(array('module' => 'ot', 'controller' => 'account', 'action' => 'change-roles'), 'default', true));
             } else {
-                $messages[] = 'There was an error processing the form.';
+                $this->_helper->messenger->addError('There was an error processing the form.');
             }
 
         }
 
         $this->view->form = $form;
         $this->_helper->pageTitle('Change Roles for Unity ID List');
-        $this->view->messages = $this->_helper->flashMessenger->getMessages();
+        $this->view->messages = $this->_helper->messenger->getMessages();
 
     }
 
