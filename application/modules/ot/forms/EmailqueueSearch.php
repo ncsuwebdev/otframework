@@ -27,7 +27,7 @@ class Ot_Form_EmailqueueSearch extends Zend_Form
         
         $ta = new Ot_Model_DbTable_TriggerAction();
         
-        $actions = $ta->fetchAll();
+        $actions = $ta->fetchAll(null, array('triggerId', 'name'));
         
         foreach ($actions as $a) {
             $trigger->addMultiOption($a->triggerActionId, $a->triggerId . ' (' . $a->name . ')');
