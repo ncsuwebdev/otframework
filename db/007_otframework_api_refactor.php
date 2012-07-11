@@ -31,6 +31,14 @@ class Db_007_otframework_api_refactor extends Ot_Migrate_Migration_Abstract
         
         $query = "DROP TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_token`";
         $dba->query($query);
+        
+        $query = "DELETE FROM `" . $this->tablePrefix . "tbl_ot_nav` WHERE controller='oauth'";
+        $dba->query($query);
+        
+        $query = "DELETE FROM `" . $this->tablePrefix . "tbl_ot_role_rule` WHERE resource LIKE '%oauth%'";
+        $dba->query($query);
+        
+        
     }
     
     public function down($dba)
