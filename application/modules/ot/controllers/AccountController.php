@@ -251,15 +251,86 @@ class Ot_AccountController extends Zend_Controller_Action
             'edit'   => $this->_helper->hasAccess('edit'),
             'delete' => $this->_helper->hasAccess('delete'),
         );
+        
         $this->_helper->pageTitle('ot-account-all:title');
         $this->view->messages = $this->_helper->messenger->getMessages();
-        $this->view
-             ->headScript()
-             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
-        $this->view
-             ->headLink()
-             ->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css');
 
+        $filterUsername = $this->_getParam('username');
+        $filterFirstName = $this->_getParam('firstName');
+        $filterLastName = $this->_getParam('lastName');
+        $filterRole = $this->_getParam('role', 'any');
+
+        $filterSort = $this->_getParam('sort', 'username');
+        $filterDirection = $this->_getParam('direction', 'asc');
+
+        $form = new Ot_Form_UserSearch();
+        $form->populate($_GET);
+        
+        $account = new Ot_Model_DbTable_Account();
+        $accountTbl = $account->info('name');
+            
+
+        $select = new Zend_Db_Table_Select($account);
+        $select->from($accountTbl);
+
+        if ($filterUsername != '') {
+            $select->where($accountTbl . '.username LIKE ?', '%' . $filterUsername . '%');
+        }
+        
+        if ($filterFirstName != '') {
+            $select->where($accountTbl . '.firstName LIKE ?', '%' . $filterFirstName . '%');
+        }
+
+        if ($filterLastName != '') {
+            $select->where($accountTbl . '.lastName LIKE ?', '%' . $filterLastName . '%');
+        }
+
+        if ($filterRole != '' && $filterRole != 'any') {
+            $otRole = new Ot_Model_DbTable_AccountRoles();
+            
+            $roleTbl = $otRole->info('name');
+            
+            $select->join($roleTbl, $accountTbl . '.accountId = ' . $roleTbl . '.accountId', array());
+            
+            $select->where($roleTbl . '.roleId = ?', $filterRole);
+            $select->distinct();
+        }
+
+
+        if ($filterSort == 'name') {
+            $select->order('firstName ' . $filterDirection);
+            $select->order('lastName ' . $filterDirection);
+        } else {
+            $select->order($filterSort . ' ' . $filterDirection);
+        }
+        
+        
+        $adapter = new Zend_Paginator_Adapter_DbSelect($select);
+
+        $paginator = new Zend_Paginator($adapter);
+        $paginator->setCurrentPageNumber($this->_getParam('page', 1));
+        
+                
+        $aa = new Ot_Model_DbTable_AuthAdapter();
+        
+        $adapters = $aa->fetchAll();
+        
+        $adapterMap = array();
+        
+        foreach ($adapters as $a) {
+            $adapterMap[$a->adapterKey] = $a;
+        }
+        
+        $this->view->assign(array(
+            'paginator'     => $paginator,
+            'form'          => $form,
+            'interface'     => true,
+            'sort'          => $filterSort,
+            'direction'     => $filterDirection,
+            'adapters'      => $adapterMap,
+        ));
+        
+        /*
         if ($this->_request->isXmlHttpRequest()) {
 
             $filter = Zend_Registry::get('postFilter');
@@ -345,7 +416,8 @@ class Ot_AccountController extends Zend_Controller_Action
 
             echo Zend_Json::encode($response);
             return;
-        }
+        }         
+         */
     }
 
     /**

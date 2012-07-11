@@ -1,3 +1,65 @@
 <?php echo $this->translate("ot-emailqueue-index:header"); ?>
 <br /><br />
-<table id="queueResults"></table>
+
+<?php echo $this->form; ?>
+
+<div class="results">
+<?php if (count($this->paginator)): ?>
+
+    <h4><?php echo $this->paginator->getTotalItemCount(); ?> Email<?php echo ($this->paginator->getTotalItemCount() != 1) ? 's' : ''; ?> Found</h4>
+    
+    <table class="list">    
+        <thead>
+            <tr class="ui-widget-header">
+                <th>Message</th>
+                <th>Dates</th>
+                <th>Trigger</th>                
+                <th>Details</th>                
+            </tr>
+        </thead>        
+        <tbody>        
+            <?php foreach ($this->paginator as $message): ?>   
+                <?php $mo = unserialize($message['zendMailObject']); ?>
+                <tr>
+                    <td>
+                        <b><?php echo $mo->getSubject() ?></b><br />
+                        <i>To: <?php echo implode(', ', $mo->getRecipients()); ?></i>
+                    </td>
+                    <td>
+                        <b>Queued On:</b> <?php echo $this->dateFormat($message['queueDt'], $this->registry->dateTimeFormat->getValue()); ?><br />
+                        <?php 
+                        if ($message['status'] == 'sent') {
+                            echo "<b>Sent On:</b> " . $this->dateFormat($message['sentDt'], $this->registry->dateTimeFormat->getValue());
+                        } elseif ($message['status'] == 'error') {
+                            echo '<b class="red">Not Sent Because Of Error</b>';
+                        } elseif ($message['status'] == 'waiting') {
+                            echo '<b>Waiting To Be Sent</b>';
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <?php 
+                        if ($message['attributeName'] == 'triggerActionId') {
+                            $t = $this->triggers[$message['attributeId']];
+
+                            echo "<b>" . $t->triggerId . "</b><br />" . $t->name;
+                        } else {
+                            echo "No Trigger";
+                        }
+
+                        ?>
+                    </td>
+                        
+                    <td style="text-align:center"><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'action' => 'details', 'queueId' => $message['queueId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">Details</a></td>
+                </tr>                
+            <?php endforeach; ?>                    
+        </tbody>    
+    </table>
+    
+    <div id="itemFooter">
+        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'searchPaginationControl.phtml'); ?>
+    </div>
+<?php else: ?>    
+   <div class="noItems">There are no requests at the moment.</div>    
+<?php endif; ?>
+</div>

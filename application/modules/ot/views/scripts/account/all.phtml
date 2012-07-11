@@ -1,74 +1,6 @@
-<?php
-/* this script is here instead of in public/.../all.js because of translations
- * todo: should we move the translations to hidden inputs and the js to the actual place or does it not matter much?   
- */
-?>
-<script type="text/javascript">
-$('document').ready(function() {
-    $("#allUsers").flexigrid({
-        url: '<?php echo $this->url(array('action' => 'all'), 'account', true); ?>',
-        dataType: 'json',
-        colModel : [
-            {display: '<?php echo $this->translate('model-account-username'); ?>', name : 'username', width : 80, sortable : true, align: 'left'},
-            {display: '<?php echo $this->translate('model-account-firstName'); ?>', name : 'firstName', width : 100, sortable : true, align: 'left'},
-            {display: '<?php echo $this->translate('model-account-lastName'); ?>', name : 'lastName', width : 100, sortable : true, align: 'left'},
-            {display: '<?php echo $this->translate('model-account-loginMethod'); ?>', name : 'realm', width : 100, sortable : false, align: 'center'},
-            {display: '<?php echo $this->translate('model-account-role'); ?>', name : 'role', width : 150, sortable : true, align: 'center'}<?php if ($this->acl['edit']): ?>,
-            {display: '<?php echo $this->translate('table-header-edit'); ?>', name : 'details', width : 75, sortable : false, align: 'center'}<?php endif; if ($this->acl['delete']): ?>,
-            {display: '<?php echo $this->translate('table-header-delete'); ?>', name : 'details', width : 75, sortable : false, align: 'center'}<?php endif; ?>
-            ],
-        searchitems : [
-            {display: '<?php echo $this->translate('model-account-username'); ?>', name : 'username'},
-            {display: '<?php echo $this->translate('model-account-firstName'); ?>', name : 'firstName'},
-            {display: '<?php echo $this->translate('model-account-lastName'); ?>', name : 'lastName', isdefault: true},
-            {display: '<?php echo $this->translate('model-account-role'); ?>', name : 'role'}
-            ],
-        preProcess: preProcess,
-        sortname: "username",
-        sortorder: "asc",
-        singleSelect: true,
-        usepager: true,
-        title: false,
-        useRp: true,
-        rp: 15,
-        showTableToggleBtn: false,
-        onError: handleError
-    });
-});
 
-function preProcess(data) {
-	if(!data.rows) {
-		data.page = 1;
-		data.total = 0;
-		data.rows = [];
-	    return data;
-	}
-    $.each(data.rows, function(i,row) {
-        row.cell[0] = '<a href="<?php echo $this->url(array('action' => 'index'), 'account', true); ?>?accountId=' + row.id + '">' + row.cell[0] + '</a>';
-        <?php if ($this->acl['edit']): ?>
-        row.cell[row.cell.length] = '<a href="<?php echo $this->url(array('action' => 'edit'), 'account', true); ?>?accountId=' + row.id + '" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>';
-        <?php endif; if ($this->acl['delete']): ?>
-        row.cell[row.cell.length] = '<a href="<?php echo $this->url(array('action' => 'delete'), 'account', true); ?>?accountId=' + row.id + '" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>';
-        <?php endif; ?>
-    });
-    
-    return data;
-}
-
-function handleError(req, textStatus, errorThrown) {
-	$('.pReload', this.pDiv).removeClass('loading');
-	this.loading = false;
-	data = $.parseJSON(req.responseText || {});
-
-    if(data.message) {
-    	$('.pPageStat', this.pDiv).html('An error occurred: ' + data.message);
-    } else {
- 	    $('.pPageStat', this.pDiv).html('An error occurred.');
-    }
-    return false;
-}
-</script>
-
+   
+  
 <?php if ($this->acl['add']): ?>
 <a href="<?php echo $this->url(array('action' => 'add'), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
 <?php echo $this->translate('ot-account-all:linkNewAccount'); ?>
@@ -77,4 +9,42 @@ function handleError(req, textStatus, errorThrown) {
 <?php endif; ?>
 <?php echo $this->translate('ot-account-all:header'); ?>
 <br /><br />
-<table id="allUsers" style="display:none"></table>
+
+<?php echo $this->form; ?>
+
+<div class="results">
+<?php if (count($this->paginator)): ?>
+
+    <h4><?php echo $this->paginator->getTotalItemCount(); ?> User<?php echo ($this->paginator->getTotalItemCount() != 1) ? 's' : ''; ?> Found</h4>
+    
+    <table class="list">    
+        <thead>
+            <tr class="ui-widget-header">
+                <th data-sort="name" data-direction="<?php echo ($this->sort == 'name') ? (($this->direction == 'asc') ? 'desc' : 'asc') : ''; ?>" class="<?php echo ($this->sort == 'name') ? $this->direction : ''; ?>">Name</th>                
+                <th data-sort="username" data-direction="<?php echo ($this->sort == 'username') ? (($this->direction == 'asc') ? 'desc' : 'asc') : ''; ?>" class="<?php echo ($this->sort == 'username') ? $this->direction : ''; ?>">Username</th>
+                <th>Login Method</th>
+                <th>Actions</th>                
+            </tr>
+        </thead>        
+        <tbody>        
+            <?php foreach ($this->paginator as $user): ?>    
+                <tr>
+                    <td><?php echo $user['firstName'] . ' ' . $user['lastName']; ?></td>
+                    <td><?php echo $user['username']; ?></td>
+                    <td style="text-align:center">
+                        <?php echo $this->adapters[$user['realm']]->name; ?>
+                        <?php echo ($this->adapters[$user['realm']]->enabled == 0) ? ' (<b class="red">DISABLED</b>)' : ''; ?>
+                    </td>
+                    <td style="text-align:center"><a href="<?php echo $this->url(array('accountId' => $user['accountId']), 'account', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">Details</a></td>
+                </tr>                
+            <?php endforeach; ?>                    
+        </tbody>    
+    </table>
+    
+    <div id="itemFooter">
+        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'searchPaginationControl.phtml'); ?>
+    </div>
+<?php else: ?>    
+   <div class="noItems">There are no requests at the moment.</div>    
+<?php endif; ?>
+</div>

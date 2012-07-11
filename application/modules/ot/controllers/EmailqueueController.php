@@ -36,98 +36,57 @@ class Ot_EmailqueueController extends Zend_Controller_Action
      */
     public function indexAction()
     {            
-        $this->_helper->pageTitle('ot-emailqueue-index:title');  
-        $this->view
-             ->headScript()
-             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.flexigrid.pack.js');
-        $this->view
-             ->headLink()
-             ->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.flexigrid.css');
+        $this->_helper->pageTitle('ot-emailqueue-index:title');          
         $this->view->messages = $this->_helper->messenger->getMessages(); 
         
-        if ($this->_request->isXmlHttpRequest()) {
-                
-            $filter = Zend_Registry::get('postFilter');
+        $filterStatus = $this->_getParam('status', 'any');
+        $filterTrigger = $this->_getParam('trigger', 'any');
+
+        $filterSort = $this->_getParam('sort', 'queueDt');
+        $filterDirection = $this->_getParam('direction', 'asc');
+
+        $form = new Ot_Form_EmailqueueSearch();
+        $form->populate($_GET);
+        
+        $eq = new Ot_Model_DbTable_EmailQueue();
             
-            $this->_helper->layout->disableLayout();
-            $this->_helper->viewRenderer->setNeverRender();
-            
-            $queue = new Ot_Model_DbTable_EmailQueue();
-            
-            $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'queueDt';
-            $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'desc';
-            $rp        = (isset($filter->rp)) ? $filter->rp : 40;
-            $page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
-            $qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
-            $query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
-            
-            
-            $where = null;
-            if (!is_null($query)) {
-                $where = $queue->getAdapter()->quoteInto($qtype . ' = ?', $query);
-            }
-                            
-            $emails = $queue->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
-                            
-            $response = array(
-                'page' => $page + 1,
-                'total' => count($queue->fetchAll($where)),
-                'rows'  => array(),
-            );
-            
-            $registry = new Ot_Var_Register();
-            
-            foreach ($emails as $e) {
-                if(gettype($e['zendMailObject']) == 'object' && get_class($e['zendMailObject']) == 'Zend_Mail') {
-                    if ($this->_helper->hasAccess('details')) {
-                        $recipientField = '<a href="' . $this->view->url(
-                            array(
-                                'controller' => 'emailqueue',
-                                'action'     => 'details',
-                                'queueId'    => $e['queueId'],
-                            ),
-                            'ot',
-                            true
-                        )
-                        . '">' . implode(', ', $e['zendMailObject']->getRecipients()) . '</a>';
-                    } else {
-                        $recipientField = implode(', ', $e['zendMailObject']->getRecipients());
-                    }
-                    
-                    $row = array(
-                        'id'   => $e['queueId'],
-                        'cell' => array(
-                            $recipientField,
-                            $e['zendMailObject']->getSubject(),                        
-                            ucwords($e['status']),
-                            strftime($registry->dateTimeFormat->getValue(), $e['queueDt']),
-                            ($e['sentDt'] == 0)
-                                ? 'Not Sent Yet' : strftime($registry->dateTimeFormat->getValue(), $e['sentDt']),
-                            $e['attributeName'],
-                            $e['attributeId'],
-                        )
-                    );
-                    
-                    $response['rows'][] = $row;
-                } else {
-                    // if an email breaks, fill it with error text instead of just killing the pageload
-                    $response['rows'][] = array(
-                        'id' => '0',
-                        'cell' => array(
-                            'Email Queue Error',
-                            'Zend_Mail Error',
-                            'Corrupt',
-                            'Unknown',
-                            'Unknown',
-                            $e['attributeName'],
-                            $e['attributeId'],
-                        ),
-                    );
-                }
-            }
-            echo Zend_Json::encode($response);
-            return;
+        $select = new Zend_Db_Table_Select($eq);
+
+        if ($filterStatus != '' && $filterStatus != 'any') {
+            $select->where('status = ?', $filterStatus);
         }
+        
+        if ($filterTrigger != '' && $filterTrigger != 'any') {
+            $select->where('attributeName = ?', 'triggerActionId');
+            $select->where('attributeId = ?', $filterTrigger);
+        }
+
+        $select->order($filterSort . ' ' . $filterDirection);        
+        
+        $adapter = new Zend_Paginator_Adapter_DbSelect($select);
+
+        $paginator = new Zend_Paginator($adapter);
+        $paginator->setCurrentPageNumber($this->_getParam('page', 1));
+                                
+        
+        $ta = new Ot_Model_DbTable_TriggerAction();
+        
+        $actions = $ta->fetchAll();
+        
+        $triggers = array();
+        foreach ($actions as $a) {
+            $triggers[$a->triggerActionId] = $a;
+        }
+        
+        $this->view->assign(array(
+            'paginator'     => $paginator,
+            'form'          => $form,
+            'interface'     => true,
+            'sort'          => $filterSort,
+            'direction'     => $filterDirection,
+            'registry'      => new Ot_Var_Register(),
+            'triggers'      => $triggers,
+        ));        
     }        
     
     /**
