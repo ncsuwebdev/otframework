@@ -226,7 +226,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 && $request->getControllerName() == 'login'
                 && $request->getActionName() == 'logout')) {
                 
-                $required = explode(',', $registry->requiredAccountFields->getValue());
+                $required = $registry->requiredAccountFields->getValue();
                 
                 $valid = true;
                 foreach ($required as $r) {

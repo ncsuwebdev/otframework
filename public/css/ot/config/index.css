@@ -12,3 +12,45 @@ fieldset {
     margin-bottom: 30px;
 }
 
+.field-label {
+    width: 300px;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.field-description {
+    width: 300px;
+    color: #666;
+}
+
+.fields {
+    clear: both;
+    display: inline;
+    width: 600px;
+    float: right;
+    margin-left: 10px;
+}
+
+.fields * {
+    display: inline;
+}
+
+.field-group {
+    clear: both;
+    border-bottom: 1px dashed #CCC;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    width: 900px;
+    
+}
+
+.select-label {
+    display: block;
+    width: 230px;
+    float: left;
+    font-size: 1.2em;
+}
+
+.select-header {
+    padding: 10px;
+}

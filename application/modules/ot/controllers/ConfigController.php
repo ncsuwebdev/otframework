@@ -64,36 +64,54 @@ class Ot_ConfigController extends Zend_Controller_Action
                  array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
                  'Form',
              ));
-
+        
+        $section = new Zend_Form_Element_Select('section', array('label' => 'Select Configuration Section:'));
+        $section->setDecorators(array(
+                    'ViewHelper',
+                    array(array('wrapperField' => 'HtmlTag'), array('tag' => 'div', 'class' => 'select-control')),                
+                    array('Label', array('placement' => 'prepend', 'class' => 'select-label')),                   
+                    array(array('wrapperAll' => 'HtmlTag'), array('tag' => 'div', 'class' => 'select-header ui-widget-header')),                    
+                ))
+                ->setValue($this->_getParam('selected'));
+        $form->addElement($section);
+        
+        $sectionOptions = array();
+        
         foreach ($varsByModule as $key => $value) {
             $group = array();
             foreach ($value as $v) {
                 //$elm = $v->getFormElement();
                 $elm = $v->renderFormElement();
                 $elm->setDecorators(array(
-                     'ViewHelper',
-                     'Errors',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                     array('Label', array('tag' => 'span')),
-                 ));
-
-                $elm->setAttrib('class', 'tips');
-                $elm->setAttrib('title', $v->getDescription());
+                    'ViewHelper',
+                    array('Errors', array('class' => 'help-inline')),
+                    array(array('wrapperField' => 'HtmlTag'), array('tag' => 'div', 'class' => 'fields')),                
+                    array('Label', array('placement' => 'append', 'class' => 'field-label')),      
+                    array('Description', array('placement' => 'append', 'tag' => 'div', 'class' => 'field-description')),                     
+                    array(array('empty' => 'HtmlTag'), array('placement' => 'append', 'tag' => 'div', 'class' => 'ui-helper-clearfix')),
+                    array(array('wrapperAll' => 'HtmlTag'), array( 'tag' => 'div', 'class' => 'field-group')),                    
+                ));
                 
                 $group[] = $elm->getName();
 
                 $form->addElement($elm);
             }
 
-            $form->addDisplayGroup($group, $key, array('legend' => $key, ''));
+            $sectionOptions[preg_replace('/[^a-z]/i', '', $key)] = $key;
+                        
+            $form->addDisplayGroup($group, $key);
         }
+        
+        asort($sectionOptions);
+        
+        $section->setMultiOptions($sectionOptions);
 
         $form->setDisplayGroupDecorators(array(
             'FormElements',
             'Fieldset'
         ));
 
-        $submit = $form->createElement('submit', 'saveButton', array('label' => 'Submit'));
+        $submit = $form->createElement('submit', 'saveButton', array('label' => 'Save Configuration'));
         $submit->setDecorators(array(
             array('ViewHelper', array('helper' => 'formSubmit'))
         ));
@@ -108,6 +126,7 @@ class Ot_ConfigController extends Zend_Controller_Action
 
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
+                                
                 foreach ($varsByModule as $key => $value) {
                     foreach ($value as $v) {
                         $v->setValue($form->getElement('config_' . $v->getName())->getValue());
@@ -116,13 +135,13 @@ class Ot_ConfigController extends Zend_Controller_Action
 
                 $this->_helper->messenger->addSuccess($this->view->translate('msg-info-configUpdated', ''));
 
-                $this->_helper->redirector->gotoRoute(array('controller' => 'config'), 'ot', true);
+                $this->_helper->redirector->gotoRoute(array('controller' => 'config', 'selected' => $form->getElement('section')->getValue()), 'ot', true);
             }
         }
 
         $this->view->assign(array(
             'messages' => $this->_helper->messenger->getMessages(),
-            'form' => $form,
+            'form'     => $form,
         ));
         
         $this->_helper->pageTitle('ot-config-index:title');
