@@ -9,7 +9,7 @@ class Ot_View_Helper_FormDb extends Zend_View_Helper_FormElement
         $port = '';
         $username = '';
         $password = '';
-        $database = '';
+        $dbname = '';
 
         if (!is_array($value)) {
             $value = unserialize($value);
@@ -19,7 +19,7 @@ class Ot_View_Helper_FormDb extends Zend_View_Helper_FormElement
         $port = (isset($value['port'])) ? $value['port'] : '';
         $username = (isset($value['username'])) ? $value['username'] : '';
         $password = (isset($value['password'])) ? $value['password'] : '';
-        $database = (isset($value['database'])) ? $value['database'] : '';            
+        $dbname = (isset($value['dbname'])) ? $value['dbname'] : '';            
 
         // return the 3 selects separated by &nbsp;
         return 
@@ -47,11 +47,11 @@ class Ot_View_Helper_FormDb extends Zend_View_Helper_FormElement
                 $name . '[password]',
                 $password, array('class' => 'subelement mask')) . '<br />' . 
             
-            $this->view->formLabel($name . '[database]', 'Database:', array('class' => 'sublabel')) . 
+            $this->view->formLabel($name . '[dbname]', 'Database:', array('class' => 'sublabel')) . 
             
             $this->view->formText(
-                $name . '[database]',
-                $database, array('class' => 'subelement')
+                $name . '[dbname]',
+                $dbname, array('class' => 'subelement')
             );
     }
 
