@@ -146,12 +146,10 @@ a#homeLink {
 }
 
 #systemMessages, .systemMessages {
-    border-bottom: 1px solid #bbb;
     line-height: 24px;
     padding: 5px 10px !important;
     text-shadow: 1px 1px 1px #fff;
     margin: 0 !important;
-    display: none;
 }
 
 #systemMessages ul {

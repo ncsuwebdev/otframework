@@ -26,12 +26,6 @@ $('document').ready(function() {
         $(this).append('<span style="padding-left: 5px;" class="required">*</span>');
     });
     
-    $('#systemMessages .alert').prepend('<div class="systemMessageCloseButton"><a class="ui-state-default ui-corner-all linkButtonNoText"><span class="ui-icon ui-icon-closethick"></span></a></div>');
-        
-    $('.systemMessageCloseButton').click(function() {
-        $(this).closest('.alert').slideUp();
-    });
-
     $("#authLogoutDialog").dialog({ 
         modal: true, 
         autoOpen: false,
