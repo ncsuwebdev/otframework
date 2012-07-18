@@ -554,9 +554,12 @@ class Ot_AclController extends Zend_Controller_Action
     {
         if ($scope == 'remote') {
             $acl = new Ot_Acl('remote');
+            
             $resources = $acl->getRemoteResources($inheritRoleId);
             
         } else {
+            $acl = new Ot_Acl();
+            
             $resources = $acl->getResources($inheritRoleId);
             $acl = $this->_acl;
         }

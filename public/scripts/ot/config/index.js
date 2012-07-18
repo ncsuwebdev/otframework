@@ -6,4 +6,6 @@ $('document').ready(function() {
         $('fieldset').hide();
         $('#fieldset-' + $('#section').val()).show();
     }).change();
+    
+    $('.mask').iphonePassword();
 });

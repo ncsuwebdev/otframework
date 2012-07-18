@@ -241,7 +241,7 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
         $auth[] = new Ot_Var_Type_MultiSelect('requiredAccountFields', 'Required User Account Fields', 'When a user logs in, if these fields are not populated, they will be forced to populate the fields before continuing', array('firstName', 'lastName', 'emailAddress'), array('firstName' => 'First Name', 'lastName' => 'Last Name', 'emailAddress' => 'Email Address'));
         $auth[] = new Ot_Var_Type_Role('defaultRole', 'Default Role', 'Default role that a user gets if they are not logged in.', '1');
         $auth[] = new Ot_Var_Type_Role('newAccountRole', 'New Account Role', 'Role which is assigned to users when a new account is created for them', '1');
-
+        
         $format = array();
 
         $format[] = new Ot_Var_Type_Text('dateTimeFormat', 'Date/Time Format', 'Date / Time formatted using PHP\'s strftime() function.', '%m/%d/%Y %I:%M %p');

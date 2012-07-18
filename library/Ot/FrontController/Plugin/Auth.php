@@ -229,10 +229,13 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 $required = $registry->requiredAccountFields->getValue();
                 
                 $valid = true;
-                foreach ($required as $r) {
-                    if (isset($thisAccount->$r) && empty($thisAccount->$r)) {
-                        $valid = false;
-                        break;
+                
+                if (is_array($required)) {
+                    foreach ($required as $r) {
+                        if (isset($thisAccount->$r) && empty($thisAccount->$r)) {
+                            $valid = false;
+                            break;
+                        }
                     }
                 }
                 

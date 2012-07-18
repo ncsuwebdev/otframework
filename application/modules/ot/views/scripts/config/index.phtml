@@ -1,3 +1,6 @@
 <?php echo $this->translate('ot-config-index:header'); ?>
 <br /><br />
+
+<a class="ui-state-default ui-corner-all linkButtonNoText" href="<?php echo $this->url(array('controller' => 'config', 'action' => 'export'), 'ot', true); ?>">Export to CSV</a>
+<a class="ui-state-default ui-corner-all linkButtonNoText" href="<?php echo $this->url(array('controller' => 'config', 'action' => 'import'), 'ot', true); ?>">Import from CSV</a>
 <?php echo $this->form; ?>

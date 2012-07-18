@@ -60,3 +60,16 @@ label.field-label {
 .select-header {
     padding: 10px;
 }
+
+.sublabel {
+    padding-right: 10px;
+    display: block;
+    float: left;
+    height: 19px;
+    width: 80px;
+    margin-bottom: 5px;
+}
+
+.subelement {
+    margin-bottom: 5px;
+}

@@ -43,6 +43,8 @@ class Ot_ConfigController extends Zend_Controller_Action
         
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.tipsy.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.iphone.password.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/caret.js');
 
         $vars = $register->getVars();
 
@@ -145,6 +147,103 @@ class Ot_ConfigController extends Zend_Controller_Action
         ));
         
         $this->_helper->pageTitle('ot-config-index:title');
+    }
+    
+    public function importAction()
+    {
+        $form = new Ot_Form_ImportConfigCsv();
+        
+        if ($this->_request->isPost()) {
+            if ($form->isValid($_POST)) {
+                if (!$form->config->receive()) {
+                    throw new Exception("Error receiving the file");
+                }
+ 
+                $location = $form->config->getFileName();
+                
+                $options = array();
+                
+                if (($handle = fopen($location, "r")) !== FALSE) {
+                    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {              
+                        $options[] = $data;
+                    }
+                    
+                    fclose($handle);
+                }                                
+                
+                unlink($location);
+                
+                $vr = new Ot_Var_Register();
+                
+                foreach ($options as $o) {
+                    list($key, $value) = $o;
+                    
+                    $var = $vr->getVar($key);
+                    
+                    if (!is_null($var)) {
+                        $unserialized = unserialize($value);
+                        
+                        $value = ($unserialized) ? $unserialized : $value;
+                        
+                        $var->setValue($value);
+                    }
+                }
+                
+
+                $this->_helper->messenger->addSuccess($this->view->translate('msg-info-configUpdated', ''));
+
+                $this->_helper->redirector->gotoRoute(array('controller' => 'config'), 'ot', true);
+                
+            }
+        }
+        
+        $this->_helper->pageTitle('Import CSV Config File');
+        
+        $this->view->assign(array(
+            'form'     => $form,            
+            'messages' => $this->_helper->messenger->getMessages(),
+        ));
+    }
+    
+    public function exportAction()
+    {
+        $this->_helper->viewRenderer->setNeverRender();
+        $this->_helper->layout->disableLayout();
+        
+        header('Content-type: text/csv');
+        header('Content-disposition: attachment;filename=configExport-' . date('c') . '.csv');
+
+        $vr = new Ot_Var_Register();
+        
+        $options = $vr->getVars();
+        
+        $data = array();
+        
+        foreach ($options as $key => $o) {
+
+            $value = $o['object']->getValue();
+            
+            if (is_array($value) || is_object($value)) {
+                $value = serialize($value);
+            }
+                
+            $data[] = array($key, $value);
+        }
+        
+        $tmpfname = tempnam("/tmp", "FOO");
+
+        $handle = fopen($tmpfname, "w");
+        
+        foreach ($data as $d) {
+            fputcsv($handle, $d);
+        }
+        
+        echo file_get_contents($tmpfname);
+        
+        fclose($handle);               
+
+        unlink($tmpfname);
+        
     }
 
 }
