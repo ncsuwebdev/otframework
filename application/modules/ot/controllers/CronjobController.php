@@ -30,7 +30,7 @@
  * @copyright  Copyright (c) 2007 NC State University Information Technology Division
  */
 class Ot_CronjobController extends Zend_Controller_Action
-{    
+{
     /**
      * Initialization function
      *
@@ -39,14 +39,14 @@ class Ot_CronjobController extends Zend_Controller_Action
     {
         set_time_limit(0);
         
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNeverRender();
+//         $this->_helper->layout->disableLayout();
+//         $this->_helper->viewRenderer->setNeverRender();
         
         parent::init();
     }
 
     public function indexAction()
-    {           
+    {
         $dispatcher = new Ot_Cron_Dispatcher();
 
         $dispatcher->dispatch();
