@@ -3,14 +3,12 @@
 <head>
 
 <?php
-$register = new Ot_Var_Register();
-
-$this->headMeta()->appendName('keywords', $register->metaKeywords->getValue())
+$this->headMeta()->appendName('keywords', $this->varReg('metaKeywords'))
                  ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
                  ->appendHttpEquiv('Content-Language', 'en-US');
 
 echo $this->headMeta() . "\n";
-$this->headTitle($register->appTitle->getValue())
+$this->headTitle($this->varReg('appTitle'))
      ->headTitle(strip_tags($this->title))
      ->headTitle()->setSeparator(' - ');
 
@@ -62,7 +60,7 @@ Your browser does not support inline frames or is currently configured  not to d
                 <div class="ui-helper-clearfix"></div>
                 <a id="homeLink" href="<?php echo $this->baseUrl(); ?>">
                     <span id="oitLogo">
-                        <span class="title"><?php echo $register->appTitle->getValue(); ?></span>
+                        <span class="title"><?php echo $this->varReg('appTitle'); ?></span>
                     </span>
                 </a>
                 <br /><br />

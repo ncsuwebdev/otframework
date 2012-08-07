@@ -61,7 +61,7 @@ class ErrorController extends Zend_Controller_Action
                             $title = 'default-index-error:generic';
                     }
                     
-                    $this->view->showTrackback = (isset($registry->showTrackbackOnErrors)) ? $registry->showTrackbackOnErrors->getValue() : '1';
+                    $this->view->showTrackback = ($this->_helper->varReg('showTrackbackOnErrors')!= '') ? $this->_helper->varReg('showTrackbackOnErrors') : '1';
                     $this->view->trackback     = $exception->getTrace();
                     $message = $exception->getMessage();
                     break;

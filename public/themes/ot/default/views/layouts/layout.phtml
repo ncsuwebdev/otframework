@@ -4,14 +4,12 @@
 <head>
 <?php
 
-$register = new Ot_Var_Register();
-
-$this->headMeta()->appendName('keywords', $register->metaKeywords->getValue())
+$this->headMeta()->appendName('keywords', $this->varReg('metaKeywords'))
                  ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
                  ->appendHttpEquiv('Content-Language', 'en-US');             
                  
 echo $this->headMeta() . "\n";
-$this->headTitle($register->appTitle->getValue())
+$this->headTitle($this->varReg('appTitle'))
      ->headTitle(strip_tags($this->title))
      ->headTitle()->setSeparator(' - ');
 
@@ -38,7 +36,7 @@ echo "\n";
     <div id="doc4" class="yui-t7">
         <div id="hd" class="ui-widget-header ui-corner-top">
             <div class="authInfo"><?php echo $this->render('auth.phtml'); ?></div>
-            <span id="appTitle"><?php echo $register->appTitle->getValue(); ?></span>
+            <span id="appTitle"><?php echo $this->varReg('appTitle'); ?></span>
         </div>
         <div id="bd">
             <div class="yui-g" id="navBar">

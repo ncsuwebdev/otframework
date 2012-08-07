@@ -17,9 +17,12 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `accountId` int(10) unsigned NOT NULL DEFAULT '0',
           `age` varchar(10) NOT NULL DEFAULT '',
           PRIMARY KEY (`accountId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_api_log` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_api_log` (
           `apiLogId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `userId` varchar(16) NOT NULL DEFAULT '',
           `function` varchar(64) NOT NULL DEFAULT '',
@@ -30,9 +33,12 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `timestamp` int(11) NOT NULL DEFAULT '0',
           PRIMARY KEY (`apiLogId`),
           KEY `userId` (`userId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_account` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_account` (
           `accountId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `username` varchar(64) NOT NULL DEFAULT '',
           `realm` varchar(64) NOT NULL DEFAULT '',
@@ -46,12 +52,18 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `lastLogin` int(10) unsigned NOT NULL DEFAULT '0',
           PRIMARY KEY (`accountId`),
           UNIQUE KEY `username` (`username`,`realm`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
         
-        INSERT INTO `" . $this->tablePrefix . "tbl_ot_account` (`accountId`, `username`, `realm`, `password`, `apiCode`, `role`, `emailAddress`, `firstName`, `lastName`, `timezone`, `lastLogin`) VALUES
-        (31, 'admin', 'local', '21232f297a57a5a743894a0e4a801fc3', '', 3, 'admin@admin.com', 'Admin', 'Mcadmin', 'America/New_York', 1264710990);
+        $dba->query($query);
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_auth_adapter` (
+        
+        $query = "INSERT INTO `" . $this->tablePrefix . "tbl_ot_account` (`accountId`, `username`, `realm`, `password`, `apiCode`, `role`, `emailAddress`, `firstName`, `lastName`, `timezone`, `lastLogin`) VALUES
+        (31, 'admin', 'local', '21232f297a57a5a743894a0e4a801fc3', '', 3, 'admin@admin.com', 'Admin', 'Mcadmin', 'America/New_York', 1264710990);";
+        
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_auth_adapter` (
           `adapterKey` varchar(24) NOT NULL,
           `class` varchar(64) NOT NULL,
           `name` varchar(64) NOT NULL,
@@ -59,13 +71,19 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `enabled` tinyint(1) NOT NULL,
           `displayOrder` int(11) NOT NULL,
           PRIMARY KEY (`adapterKey`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         
-        INSERT INTO `" . $this->tablePrefix . "tbl_ot_auth_adapter` (`adapterKey`, `class`, `name`, `description`, `enabled`, `displayOrder`) VALUES
+        $dba->query($query);
+        
+        
+        $query = "INSERT INTO `" . $this->tablePrefix . "tbl_ot_auth_adapter` (`adapterKey`, `class`, `name`, `description`, `enabled`, `displayOrder`) VALUES
         ('local', 'Ot_Auth_Adapter_Local', 'Local Auth', 'Authentication using a local ID and Password created by the user.', 1, 1),
-        ('wrap', 'Ot_Auth_Adapter_Wrap', 'NCSU Wrap', 'Authentication using your Unity ID and Password', 1, 2);
+        ('wrap', 'Ot_Auth_Adapter_Wrap', 'NCSU Wrap', 'Authentication using your Unity ID and Password', 1, 2);";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_bug` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_bug` (
           `bugId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `title` varchar(64) NOT NULL DEFAULT '',
           `submitDt` int(10) unsigned NOT NULL DEFAULT '0',
@@ -74,9 +92,12 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `priority` enum('low','medium','high','critical') NOT NULL DEFAULT 'low',
           `status` enum('new','ignore','escalated','fixed') NOT NULL DEFAULT 'new',
           PRIMARY KEY (`bugId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_bug_text` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_bug_text` (
           `bugTextId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `bugId` int(10) unsigned NOT NULL DEFAULT '0',
           `accountId` int(10) unsigned NOT NULL DEFAULT '0',
@@ -84,16 +105,22 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `text` text NOT NULL,
           PRIMARY KEY (`bugTextId`),
           KEY `bugId` (`bugId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_cron_status` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_cron_status` (
           `name` varchar(255) NOT NULL DEFAULT '',
           `status` enum('enabled','disabled') NOT NULL DEFAULT 'enabled',
           `lastRunDt` int(11) NOT NULL DEFAULT '0',
           PRIMARY KEY (`name`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_custom_attribute` (
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+        
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_custom_attribute` (
           `attributeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `objectId` varchar(64) NOT NULL DEFAULT '',
           `label` varchar(255) NOT NULL DEFAULT '',
@@ -103,17 +130,23 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `direction` enum('vertical','horizontal') NOT NULL DEFAULT 'vertical',
           `order` int(10) unsigned NOT NULL DEFAULT '0',
           PRIMARY KEY (`attributeId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_custom_attribute_value` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_custom_attribute_value` (
           `objectId` varchar(64) NOT NULL DEFAULT '',
           `parentId` varchar(255) NOT NULL DEFAULT '',
           `attributeId` int(11) NOT NULL DEFAULT '0',
           `value` text,
           PRIMARY KEY (`objectId`,`parentId`,`attributeId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_email_queue` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_email_queue` (
           `queueId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `attributeName` varchar(128) NOT NULL DEFAULT '',
           `attributeId` int(10) unsigned NOT NULL DEFAULT '0',
@@ -124,18 +157,24 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           PRIMARY KEY (`queueId`),
           KEY `attributeName` (`attributeName`),
           KEY `attributeId` (`attributeId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_image` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_image` (
           `imageId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `source` longblob NOT NULL,
           `alt` varchar(64) NOT NULL DEFAULT '',
           `name` varchar(64) NOT NULL DEFAULT '',
           `contentType` varchar(64) NOT NULL DEFAULT '',
           PRIMARY KEY (`imageId`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_log` (
+        ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
+        
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_log` (
           `logId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `accountId` int(10) unsigned NOT NULL DEFAULT '0',
           `role` varchar(128) CHARACTER SET utf8 NOT NULL DEFAULT '',
@@ -151,9 +190,12 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           KEY `userId` (`accountId`),
           KEY `attributeName` (`attributeName`),
           KEY `attributeId` (`attributeId`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_nav` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_nav` (
           `id` int(11) NOT NULL DEFAULT '0',
           `parent` int(11) NOT NULL DEFAULT '0',
           `display` varchar(255) NOT NULL DEFAULT '',
@@ -163,9 +205,12 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `link` varchar(255) NOT NULL DEFAULT '',
           `target` varchar(64) NOT NULL DEFAULT '',
           PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         
-        INSERT INTO `" . $this->tablePrefix . "tbl_ot_nav` (`id`, `parent`, `display`, `module`, `controller`, `action`, `link`, `target`) VALUES
+        $dba->query($query);
+        
+        
+        $query = "INSERT INTO `" . $this->tablePrefix . "tbl_ot_nav` (`id`, `parent`, `display`, `module`, `controller`, `action`, `link`, `target`) VALUES
         (1, 0, 'Home', 'default', 'index', '', 'index/index', '_self'),
         (2, 0, 'Admin', 'ot', 'index', 'index', '/otframeworktest', '_self'),
         (3, 2, 'Users', 'ot', 'account', 'index', '', '_self'),
@@ -191,18 +236,24 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
         (23, 2, 'Email Queue', 'ot', 'emailqueue', 'index', 'ot/emailqueue/index', '_self'),
         (24, 2, 'Registered Applications', 'ot', 'oauth', 'all-consumers', 'ot/oauth/all-consumers', '_self'),
         (25, 2, 'Logs', 'ot', 'log', 'index', 'ot/log/index', '_self'),
-        (26, 2, 'Version Information', 'ot', 'index', 'index', 'ot/index/index', '_self');
+        (26, 2, 'Version Information', 'ot', 'index', 'index', 'ot/index/index', '_self');";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_oauth_client_token` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_oauth_client_token` (
           `consumerId` varchar(32) NOT NULL DEFAULT '',
           `accountId` int(10) unsigned NOT NULL DEFAULT '0',
           `token` varchar(255) NOT NULL DEFAULT '',
           `tokenSecret` varchar(255) NOT NULL DEFAULT '',
           `tokenType` enum('request','access') NOT NULL DEFAULT 'request',
           PRIMARY KEY (`consumerId`,`accountId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_consumer` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_consumer` (
           `consumerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `name` varchar(128) NOT NULL DEFAULT '',
           `imageId` int(10) unsigned NOT NULL DEFAULT '0',
@@ -213,9 +264,12 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `consumerKey` varchar(255) NOT NULL DEFAULT '',
           `consumerSecret` varchar(255) NOT NULL DEFAULT '',
           PRIMARY KEY (`consumerId`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
- 
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_nonce` (
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+        
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_nonce` (
           `nonceId` int(11) NOT NULL AUTO_INCREMENT,
           `consumerId` int(11) NOT NULL DEFAULT '0',
           `token` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
@@ -223,9 +277,12 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `nonce` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
           PRIMARY KEY (`nonceId`),
           UNIQUE KEY `osn_consumer_key` (`consumerId`,`token`,`timestamp`,`nonce`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_token` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_oauth_server_token` (
           `tokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `consumerId` int(10) unsigned NOT NULL DEFAULT '0',
           `accountId` int(10) unsigned NOT NULL DEFAULT '0',
@@ -235,23 +292,32 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `requestDt` int(10) unsigned NOT NULL DEFAULT '0',
           `authorized` tinyint(1) NOT NULL DEFAULT '0',
           PRIMARY KEY (`tokenId`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_role` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_role` (
           `scope` enum('application','remote') NOT NULL DEFAULT 'application',
           `roleId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `name` varchar(64) NOT NULL DEFAULT '',
           `inheritRoleId` int(10) unsigned NOT NULL DEFAULT '0',
           `editable` tinyint(1) NOT NULL DEFAULT '0',
           PRIMARY KEY (`roleId`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
         
-        INSERT INTO `" . $this->tablePrefix . "tbl_ot_role` (`scope`, `roleId`, `name`, `inheritRoleId`, `editable`) VALUES
+        $dba->query($query);
+        
+        
+        $query = "INSERT INTO `" . $this->tablePrefix . "tbl_ot_role` (`scope`, `roleId`, `name`, `inheritRoleId`, `editable`) VALUES
         ('application', 1, 'guest', 0, 1),
         ('application', 2, 'administrator', 0, 0),
-        ('application', 3, 'oit_ot_staff', 0, 0);
+        ('application', 3, 'oit_ot_staff', 0, 0);";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_role_rule` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_role_rule` (
           `ruleId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `roleId` int(11) NOT NULL DEFAULT '0',
           `type` enum('allow','deny') NOT NULL DEFAULT 'allow',
@@ -260,9 +326,12 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
           `scope` enum('application','remote') NOT NULL DEFAULT 'application',
           PRIMARY KEY (`ruleId`),
           KEY `scope` (`scope`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
         
-        INSERT INTO `" . $this->tablePrefix . "tbl_ot_role_rule` (`ruleId`, `roleId`, `type`, `resource`, `privilege`, `scope`) VALUES
+        $dba->query($query);
+        
+        
+        $query = "INSERT INTO `" . $this->tablePrefix . "tbl_ot_role_rule` (`ruleId`, `roleId`, `type`, `resource`, `privilege`, `scope`) VALUES
         (8, 2, 'allow', '*', '*', 'application'),
         (9, 3, 'allow', '*', '*', 'application'),
         (111, 2, 'allow', '*', '*', 'remote'),
@@ -287,40 +356,54 @@ class Db_001_otframework_initial_setup extends Ot_Migrate_Migration_Abstract
         (369, 1, 'allow', 'ot_image', '*', 'application'),
         (370, 1, 'allow', 'ot_login', '*', 'application'),
         (371, 1, 'allow', 'ot_oauthserver', 'access-token', 'application'),
-        (372, 1, 'allow', 'ot_oauthserver', 'request-token', 'application');
-
+        (372, 1, 'allow', 'ot_oauthserver', 'request-token', 'application');";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_trigger_action` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_trigger_action` (
           `triggerActionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `triggerId` varchar(64) NOT NULL DEFAULT '',
           `name` varchar(64) NOT NULL DEFAULT '',
           `helper` varchar(64) NOT NULL DEFAULT '',
           `enabled` tinyint(1) NOT NULL DEFAULT '1',
           PRIMARY KEY (`triggerActionId`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;";
         
-        INSERT INTO `" . $this->tablePrefix . "tbl_ot_trigger_action` (`triggerActionId`, `triggerId`, `name`, `helper`, `enabled`) VALUES
+        $dba->query($query);
+        
+        
+        $query = "INSERT INTO `" . $this->tablePrefix . "tbl_ot_trigger_action` (`triggerActionId`, `triggerId`, `name`, `helper`, `enabled`) VALUES
         (14, 'Login_Index_Signup', 'Signup for an account', 'Ot_Trigger_Plugin_Email', 1),
         (15, 'Login_Index_Forgot', 'User forgot password', 'Ot_Trigger_Plugin_Email', 1),
         (16, 'Admin_Account_Create_Password', 'Admin created account', 'Ot_Trigger_Plugin_Email', 1),
-        (17, 'Admin_Account_Create_NoPassword', 'When a WRAP account gets created', 'Ot_Trigger_Plugin_Email', 1);
+        (17, 'Admin_Account_Create_NoPassword', 'When a WRAP account gets created', 'Ot_Trigger_Plugin_Email', 1);";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_trigger_helper_email` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_trigger_helper_email` (
           `triggerActionId` int(11) NOT NULL DEFAULT '0',
           `to` varchar(255) NOT NULL DEFAULT '',
           `from` varchar(255) NOT NULL DEFAULT '',
           `subject` varchar(255) NOT NULL DEFAULT '',
           `body` text NOT NULL,
           PRIMARY KEY (`triggerActionId`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         
-        INSERT INTO `" . $this->tablePrefix . "tbl_ot_trigger_helper_email` (`triggerActionId`, `to`, `from`, `subject`, `body`) VALUES
+        $dba->query($query);
+        
+        
+        $query = "INSERT INTO `" . $this->tablePrefix . "tbl_ot_trigger_helper_email` (`triggerActionId`, `to`, `from`, `subject`, `body`) VALUES
         (14, '[[emailAddress]]', 'admin@webapps.ncsu.edu', 'Thanks for signing up!', 'Hey [[firstName]]!  Welcome to The System.\r\n\r\nYour user id:  [[username]]\r\nYou password: [[password]]'),
         (15, '[[emailAddress]]', 'admin@webapps.ncsu.edu', 'Your password has been reset', 'Thanks [[firstName]] [[lastName]]\r\n\r\nYou password for [[username]] has been reset.  Go here [[resetUrl]] to change your password.'),
         (16, '[[emailAddress]]', 'admin@webapps.ncsu.edu', 'You''ve been given an account', 'Hey [[firstName]], You''ve been given a(n) [[role]] account!\r\n\r\n[[username]]\r\n[[password]]'),
-        (17, '[[emailAddress]]', 'admin@webapps.ncsu.edu', 'You''ve got a new account!', 'Hey [[firstName]] [[lastName]]\r\n\r\nYou''ve been given a new [[role]] [[loginMethod]] account.\r\n\r\nYour username is [[username]]');
+        (17, '[[emailAddress]]', 'admin@webapps.ncsu.edu', 'You''ve got a new account!', 'Hey [[firstName]] [[lastName]]\r\n\r\nYou''ve been given a new [[role]] [[loginMethod]] account.\r\n\r\nYour username is [[username]]');";
         
-        CREATE TABLE `" . $this->tablePrefix . "tbl_ot_trigger_helper_emailqueue` (
+        $dba->query($query);
+        
+        
+        $query = "CREATE TABLE `" . $this->tablePrefix . "tbl_ot_trigger_helper_emailqueue` (
           `triggerActionId` int(11) NOT NULL DEFAULT '0',
           `to` varchar(255) NOT NULL DEFAULT '',
           `from` varchar(255) NOT NULL DEFAULT '',

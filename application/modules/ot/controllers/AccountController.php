@@ -120,8 +120,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         throw new Ot_Exception('The account was not found.');
                     }
 
-                    $registry = new Ot_Var_Register();
-                    $mAccount->role = $registry->newAccountRole->getValue();
+                    $mAccount->role = $this->_helper->varReg('newAccountRole');
 
                     $mAccount->realAccount = $identity;
                     $mAccount->masquerading = true;
@@ -169,8 +168,6 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $registry = new Ot_Var_Register();
-
         $this->view->acl = array(
             'edit'            => $this->_helper->hasAccess('edit'),
             'delete'          => ($this->_helper->hasAccess('delete')
@@ -184,7 +181,6 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->view->messages = $this->_helper->messenger->getMessages();
         $this->view->userData = $this->_userData;
-        $this->view->registry = $registry;
 
         $this->_helper->pageTitle(
             'ot-account-index:title',
@@ -429,10 +425,9 @@ class Ot_AccountController extends Zend_Controller_Action
     	$this->view->messages = $this->_helper->messenger->getMessages();
     	
         $account = new Ot_Model_DbTable_Account();
-        $registry = new Ot_Var_Register();
         $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
-        $defaultRole = $registry->defaultRole->getValue();
+        $defaultRole = $this->_helper->varReg('defaultRole');
         $values = array('role' => $defaultRole);
 
         $form = $account->form($values);
@@ -457,7 +452,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     'role'         => (array)$form->getValue('roleSelect'),
                 );
                 if(!isset($accountData['role']) || count($accountData['role']) < 1) {
-                    $accountData['role'] = $registry->defaultRole->getValue();
+                    $accountData['role'] = $this->_helper->varReg('defaultRole');
                 }
 
                 $dba = Zend_Db_Table::getDefaultAdapter();
@@ -645,7 +640,6 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
-        $registry = new Ot_Var_Register();
         $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
         $form = $account->form($this->_userData);
@@ -688,7 +682,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     $data['role']     = (array)$form->getValue('roleSelect');
 
                     if(!isset($data['role']) || count($data['role']) < 1) {
-                        $data['role'] = $registry->defaultRole->getValue();
+                        $data['role'] = $this->_helper->varReg('defaultRole');
                     }
 
                     $data['username'] = $form->getValue('username');
@@ -1161,8 +1155,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $roles = $get->roles;
 
         if (!isset($roles) || count($roles) < 1) {
-            $registry = new Ot_Var_Register();
-            $roles = array($registry->defaultRole->getValue());
+            $roles = array($this->_helper->varReg('defaultRole'));
         }
 
         $acl = Zend_Registry::get('acl');

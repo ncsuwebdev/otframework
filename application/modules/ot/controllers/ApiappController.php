@@ -43,10 +43,8 @@ class Ot_ApiappController extends Zend_Controller_Action
         $apps = $apiApp->getAppsForAccount(Zend_Auth::getInstance()->getIdentity()->accountId);
         
         $this->view->apiApps = $apps->toArray();
-        
-        $varRegistry = new Ot_Var_Register();
 
-        $title = $varRegistry->appTitle->getValue();
+        $title = $this->_helper->varReg('appTitle');
         $this->view->title = $title;        
         $this->_helper->pageTitle('ot-apiapp-index:title', $title);
         $this->view->messages = $this->_helper->messenger->getMessages();
@@ -64,9 +62,7 @@ class Ot_ApiappController extends Zend_Controller_Action
         
         $this->view->allApps = $allApps->toArray();
         
-        $varRegistry = new Ot_Var_Register();
-        
-        $this->_helper->pageTitle('ot-apiapp-allApps:title', $varRegistry->appTitle->getValue());
+        $this->_helper->pageTitle('ot-apiapp-allApps:title', $this->_helper->varReg('appTitle'));
     }
     
     public function apiDocsAction()
