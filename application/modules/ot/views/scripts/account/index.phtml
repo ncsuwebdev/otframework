@@ -104,7 +104,7 @@
             </div>            
         <?php else: ?>
             <div class="access notAuthorized">
-                <span><?php echo $this->tramslate('ot-account-index;notAuthorized', array($c['name'])); ?></span>
+                <span><?php echo $this->translate('ot-account-index;notAuthorized', array($c['name'])); ?></span>
                 <?php if ($this->acl['grantAccess']): ?>
                     <a href="<?php echo $this->url(array('controller' => 'oauthclient', 'appId' => $c['appId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
                     <?php echo $this->translate('ot-account-index:authorizeAccess'); ?>

@@ -57,7 +57,6 @@ class Ot_ApiController extends Zend_Controller_Action
             throw new Ot_Exception('You must provide an API key');
         }
         
-        
         $returnType = 'json';
         if (isset($params['type']) && in_array(strtolower($returnType), array('json', 'php'))) {
             $returnType = strtolower($params['type']);
@@ -103,6 +102,8 @@ class Ot_ApiController extends Zend_Controller_Action
         
         // the api "module" here is really a kind of placeholder
         $aclResource = 'api_' . strtolower($thisEndpoint->getName());
+        
+        Zend_Auth::getInstance()->getStorage()->write($thisAccount);
 
         if (!is_null($thisEndpoint)) {
 

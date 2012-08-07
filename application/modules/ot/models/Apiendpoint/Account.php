@@ -3,24 +3,35 @@ class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
 {
     
     public function get($params)
-    {
-        
-        if (!isset($params['accountId'])) {
-            throw new Ot_Exception_Input('No account ID provided');
+    {  
+        if (!isset($params['accountId']) && (!isset($params['username']) && !isset($params['realm']))) {
+            throw new Ot_Exception_Input('You must provide either an account ID or a username and realm.');
         }
-        
-        $accountId = $params['accountId'];
         
         $otAccount = new Ot_Model_DbTable_Account();
         
-        $accountInfo = $otAccount->find($accountId);
+        if (isset($params['accountId'])) {
         
-        if (is_null($accountInfo)) {
-           throw new Ot_Exception_Data('msg-error-noAccount');
+            $accountId = $params['accountId'];
+            $accountInfo = (array)$otAccount->find($accountId);
+            
+        } else {
+            
+            $username = trim($params['username']);
+            $realm = trim($params['realm']);
+            
+            $where = $otAccount->getAdapter()->quoteInto('username = ?', $username);
+            $where .= ' AND ' . $otAccount->getAdapter()->quoteInto('realm = ?', $realm);
+            
+            $accountInfo = $otAccount->fetchRow($where)->toArray();
+        }
+
+        if (is_null($accountInfo) || empty($accountInfo)) {
+            throw new Ot_Exception_Data('msg-error-noAccount');
         }
         
-        $accountInfo->password = '';
-        unset($accountInfo->password);
+        unset($accountInfo['password']);
+        unset($accountInfo['role']);
         return $accountInfo;
     }
     
@@ -69,11 +80,36 @@ class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
                 throw new Ot_Exception_ApiMissingParams('Missing required parameter:' . $e);
             }
         }
-    
     }
     
     public function delete($params){
-        throw new Ot_Exception_ApiEndpointUnavailable('DELETE is unavailable for this endpoint');
+        
+        if (!isset($params['accountId'])) {
+            throw new Ot_Exception_Input('You must provide an account ID.');
+        }
+        
+        $otAccount = new Ot_Model_DbTable_Account();
+        
+        $accountId = trim($params['accountId']);
+        $accountInfo = $otAccount->find($accountId);
+        
+        if (is_null($accountInfo)) {
+            throw new Ot_Exception_Data('msg-error-noAccount');
+        }
+        
+        if ($accountId == Zend_Auth::getInstance()->getIdentity()->accountId) {
+            throw new Ot_Exception_Data('You cannot delete your own account');
+        }
+        
+        $where = $otAccount->getAdapter()->quoteInto('accountId = ?', $accountId);
+        
+        try {
+            $deleteCount = $otAccount->delete($where);
+        } catch (Exception $e) {
+            throw new Ot_Exception_Data('There was an error deleting the user account. ' . $e->getMessage());
+        }
+              
+        return array('msg' => 'Account successfully deleted');
     }
     
     public function post($params){

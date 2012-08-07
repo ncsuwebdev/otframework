@@ -82,6 +82,13 @@ class Ot_Model_DbTable_ApiApp extends Ot_Db_Table
         return parent::delete($where);
     }
     
+    public function deleteAppsForAccountId($accountId)
+    {
+        $where = $this->getAdapter()->quoteInto('accountId = ?', $accountId);
+
+        return parent::delete($where);
+    }
+    
     private function _generateApiKey()
     {
         return sha1(time() + microtime() + rand(1, 1000000));

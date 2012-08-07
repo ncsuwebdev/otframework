@@ -5,7 +5,7 @@ class Ot_Model_Apiendpoint_MyAccount implements Ot_Api_EndpointInterface
     
     public function get($params)
     {
-        $otAccount = new Ot_Model_DbTable_Account();
+       $otAccount = new Ot_Model_DbTable_Account();
        
        if (!Zend_Auth::getInstance()->hasIdentity()) {
            throw new Ot_Exception_Access('msg-error-apiAccessDenied');
@@ -20,11 +20,13 @@ class Ot_Model_Apiendpoint_MyAccount implements Ot_Api_EndpointInterface
        }
        
        unset($accountInfo->password);
+       unset($accountInfo->role);
        
        return $accountInfo;
     }
 
     public function put($params){
+        
         if (!Zend_Auth::getInstance()->hasIdentity()) {
             throw new Ot_Exception_Access('msg-error-apiAccessDenied');
         }
@@ -40,12 +42,12 @@ class Ot_Model_Apiendpoint_MyAccount implements Ot_Api_EndpointInterface
         $accountId = Zend_Auth::getInstance()->getIdentity()->accountId;
         
         $data = array(
-                       'accountId'    => $accountId,
-                       'firstName'    => $params['firstName'],
-                       'lastName'     => $params['lastName'],
-                       'emailAddress' => $params['emailAddress'],
-                       'timezone'     => $params['timezone']
-                     );
+                    'accountId'    => $accountId,
+                    'firstName'    => $params['firstName'],
+                    'lastName'     => $params['lastName'],
+                    'emailAddress' => $params['emailAddress'],
+                    'timezone'     => $params['timezone']
+                );
                      
         $otAccount->update($data, null);
         

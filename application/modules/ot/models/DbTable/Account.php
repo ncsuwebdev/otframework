@@ -196,9 +196,58 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
 
     public function delete($where)
     {
-        $deleteCount = parent::delete($where);
+        $inTransaction = false; //whether or not we're in a transaction prior to this
+        $dba = $this->getAdapter();
+        
+        try {
+            $dba->beginTransaction();
+        } catch (Exception $e) {
+            $inTransaction = true;
+        }
+        
+        $thisAccount = $this->fetchRow($where)->toArray();
+        
+        try {
+            $deleteCount = parent::delete($where);
+        } catch(Exception $e) {
+                
+            if (!$inTransaction) {
+                $dba->rollback();
+            }
+
+            throw new Ot_Exception('Account insert failed.');
+        }
+        
         $accountRoles = new Ot_Model_DbTable_AccountRoles();
-        $accountRoles->delete($where);
+        
+        try {
+            $accountRoles->delete($where);
+        } catch(Exception $e) {
+
+            if (!$inTransaction) {
+                $dba->rollback();
+            }
+
+            throw new Ot_Exception('Account insert failed.');
+        }
+        
+        $apiApps = new Ot_Model_DbTable_ApiApp();
+        
+        try {
+            $apiApps->deleteAppsForAccountId($thisAccount['accountId']);
+        } catch(Exception $e) {
+
+            if (!$inTransaction) {
+                $dba->rollback();
+            }
+
+            throw new Ot_Exception('Account insert failed.');
+        }
+        
+        if (!$inTransaction) {
+            $dba->commit();
+        }
+        
         return $deleteCount;
     }
 
