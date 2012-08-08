@@ -308,7 +308,7 @@ class Ot_LoginController extends Zend_Controller_Action
         }
 
         if (isset($req->uri) && $req->uri != '') {
-            $this->_helper->messenger->addError('msg-info-loginBeforeContinuing');
+            $messages[] = 'msg-info-loginBeforeContinuing';
         }
 
         $this->view->realm = $realm;

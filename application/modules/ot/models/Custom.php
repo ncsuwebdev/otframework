@@ -104,7 +104,16 @@ class Ot_Model_Custom
     {
         $options = unserialize($options);
         
-        return (is_array($options)) ? $options : array();
+        if (!is_array($options)) {
+            return array();            
+        }
+        
+        $opt = array();
+        foreach ($options as $key => $value) {
+            $opt['option_' . $key] = $value;
+        }
+        
+        return $opt;
     }
     
     /**
@@ -153,9 +162,7 @@ class Ot_Model_Custom
         $opts = array();
         
         $name = 'custom_' . $attribute['attributeId'];
-        
-        $formField = '';
-        
+                
         switch ($attribute['type']) {
             
             case 'description':
@@ -181,7 +188,7 @@ class Ot_Model_Custom
                     $listsep = "&nbsp;";
                 }          
 
-                $elm->setSeparator($listsep);
+                $elm->setSeparator($listsep);                
                 break;
             case 'checkbox':
                 $elm = new Zend_Form_Element_Checkbox($name);
@@ -213,11 +220,16 @@ class Ot_Model_Custom
                 return '';
         }
         
-        if (!is_null($value) && !empty($value)) {
+        if (!is_null($value) && $value != '') {
+            
             if (is_array($value)) {
                 $elm->setValue(array_keys($value));
-            } else if ($attribute['type'] == 'description') {
-              $elm->setValue(true);
+            
+                
+            } elseif ($attribute['type'] == 'description') {
+                $elm->setValue(true);
+            
+              
             } else {
                 $elm->setValue($value);
             }
@@ -313,7 +325,7 @@ class Ot_Model_Custom
      * @param array $data
      */
     public function saveData($objectId, $parentId, array $data) 
-    {
+    {        
         $av = new Ot_Model_DbTable_CustomAttributeValue();
         $dba = $av->getAdapter();
         
@@ -328,6 +340,16 @@ class Ot_Model_Custom
         foreach ($data as $key => $value) {
             if (is_array($value)) { 
                 $value = serialize($value);
+                
+                foreach ($value as &$v) {
+                    $v = str_replace('option_', '', $v);
+                }
+                
+                unset($v);
+            }
+            
+            if (preg_match('/option\_/', $value)) {
+                $value = str_replace('option_', '', $value);
             }
             
             $d = array(
@@ -428,6 +450,7 @@ class Ot_Model_Custom
             
             $a['options'] = $this->convertOptionsToArray($a['options']);
             
+            $displayValue = $value;
             
             switch ($a['type']) {
                 case 'multicheckbox':
@@ -440,7 +463,7 @@ class Ot_Model_Custom
                         $displayValue = array();
                         
                         foreach ($value as $key => $v) {
-                            $displayValue[$key] = (isset($a['options'][$v])) ? $a['options'][$v] : $v;
+                            $displayValue[$key] = (isset($a['options']['option_' . $v])) ? $a['options']['option_' . $v] : $v;
                         }
                         
                         $value = $displayValue;
@@ -449,17 +472,18 @@ class Ot_Model_Custom
                     break;
                 case 'select':
                 case 'radio':
-                    $value = (isset($a['options'][$value])) ? $a['options'][$value] : '';
+                    $displayValue = (isset($a['options']['option_' . $value])) ? $a['options']['option_' . $value] : '';
+                    $value = 'option_' . $value;
                     break;
             }
             
            if ($a['type'] == 'description') {
-               $value = isset($a['options'][0]) ? $a['options'][0] : '';    
+               $displayValue = isset($a['options']['option_']) ? $a['options']['option_0'] : '';    
            }
             
             $temp = array(
                 'attribute'  => $a,
-                'value'      => $value,
+                'value'      => $displayValue,
                 'formRender' => '',
             );
             
