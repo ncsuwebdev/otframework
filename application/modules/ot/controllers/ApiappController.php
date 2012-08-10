@@ -69,9 +69,32 @@ class Ot_ApiappController extends Zend_Controller_Action
     {
         $apiRegistry = new Ot_Api_Register();
         
-        echo '<PRE>';
-        print_r($apiRegistry->getApiEndpoints());
-    } 
+        $endpoints = $apiRegistry->getApiEndpoints();
+        
+        $apiMethods = array('get', 'put', 'post', 'delete');
+        
+        $data = array();
+        
+        foreach ($endpoints as &$e) {
+            
+            $data[$e->getName()] = array();
+            
+            $classname = get_class($e->getMethod());
+            
+            $reflection = new ReflectionClass($classname);
+
+            $methods = $reflection->getMethods();
+            
+            foreach ($methods as $m) {
+                
+                if (in_array($m->getName(), $apiMethods)) {
+                    $data[$e->getName()][$m->getName()] = $m->getDocComment();
+                }
+            }
+        }
+        
+        $this->view->endpoints = $data;
+    }
            
         
     /**

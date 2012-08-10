@@ -1,0 +1,14 @@
+.apiEndpoint {
+    border: 1px solid #BBB;
+    background-color: #EDEDED;
+    width: 800px;
+    padding: 10px 15px;
+    margin-bottom: 25px;
+}
+
+.httpMethod {
+    background-color: #FFF58F;
+    border: 1px solid #CCC;
+    padding: 10px;
+    width: 90%;
+}

@@ -2,12 +2,28 @@
 
 class Ot_Model_Apiendpoint_Cron implements Ot_Api_EndpointInterface
 {
+    /**
+     * Returns the list of cron jobs and their statuses.
+     * 
+     * No params required
+     *
+     */
     public function get($params)
     {
         $cron = new Ot_Model_DbTable_CronStatus();
         return $cron->fetchAll()->toArray();
     }
     
+    /**
+     * Allows a cron job to be set to enabled or disabled
+     * 
+     * Params
+     * ===========================    
+     * Required:
+     *   - name: The name of the cron job
+     *   - status: Either 'enabled' or 'disabled'
+     *
+     */
     public function put($params){
         $this->checkForEmptyParams(array('name', 'status'), $params);
         
@@ -39,7 +55,7 @@ class Ot_Model_Apiendpoint_Cron implements Ot_Api_EndpointInterface
     protected function checkForEmptyParams(array $expected, array $params) {
     
         foreach ($expected as $e) {
-            if (!isset($params[$e])) {
+            if (!isset($params[$e]) || empty($params[$e])) {
                 throw new Ot_Exception_ApiMissingParams('Missing required parameter:' . $e);
             }
         }

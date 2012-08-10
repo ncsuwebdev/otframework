@@ -2,6 +2,19 @@
 class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
 {
     
+    /**
+     * Gets the account information for a user.  You can either lookup a user
+     * by accountId or by username and realm.
+     *  
+     * Params
+     * ===========================    
+     * Required:
+     *   - accountId: The account ID of the user to lookup
+     *   OR
+     *   - username: The username to lookup
+     *   - realm: The realm of the username (wrap, local, etc.)
+     * 
+     */
     public function get($params)
     {  
         if (!isset($params['accountId']) && (!isset($params['username']) && !isset($params['realm']))) {
@@ -35,9 +48,23 @@ class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
         return $accountInfo;
     }
     
-    public function put($params){
+    /**
+     * Updates a user's account information.
+     * 
+     * Params
+     * ===========================    
+     * Required:
+     *   - accountId: The accountId of the user to update
+     *   - firstName: The first name of the user
+     *   - lastName: The last name of the user
+     *   - emailAddress: The email address of the user
+     *   - timezone: The timezone of the user (America/New_York, etc.)
+     *
+     */
+    public function put($params) {
 
         $expectedParams = array(
+                'accountId',
                 'firstName',
                 'lastName',
                 'emailAddress',
@@ -76,12 +103,22 @@ class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
     protected function checkForEmptyParams(array $expected, array $params) {
     
         foreach ($expected as $e) {
-            if (!isset($params[$e])) {
+            if (!isset($params[$e]) || empty($params[$e])) {
                 throw new Ot_Exception_ApiMissingParams('Missing required parameter:' . $e);
             }
         }
     }
     
+    
+    /**
+     * Delete a user's account completely.  You cannot delete your own account.
+     * 
+     * Params
+     * ===========================    
+     * Required:
+     *   - accountId: The accountId of the user to update
+     *
+     */
     public function delete($params){
         
         if (!isset($params['accountId'])) {
@@ -112,6 +149,9 @@ class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
         return array('msg' => 'Account successfully deleted');
     }
     
+    /**
+     * Unavailable
+     */
     public function post($params){
         throw new Ot_Exception_ApiEndpointUnavailable('POST is unavailable for this endpoint');
     }

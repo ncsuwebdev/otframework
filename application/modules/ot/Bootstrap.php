@@ -285,10 +285,6 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
         $endpoint = new Ot_Api_Endpoint('Ot_MyAccount', 'Deals with the current API account');
         $endpoint->setMethod(new Ot_Model_Apiendpoint_MyAccount());
         $register->registerApiEndpoint($endpoint);
-        
-        $endpoint = new Ot_Api_Endpoint('Ot_Bug', 'Deal with bug reports');
-        $endpoint->setMethod(new Ot_Model_Apiendpoint_Bug());
-        $register->registerApiEndpoint($endpoint);
     }
 
     public function _initCustomFieldObjects()
