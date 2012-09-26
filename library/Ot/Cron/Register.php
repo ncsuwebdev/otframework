@@ -51,7 +51,7 @@ class Ot_Cron_Register
     public function registerCronjobs(array $cronJobs)
     {
         foreach ($cronJobs as $job) {
-            $this->registerCron($job);
+            $this->registerCronjob($job);
         }
     }
 

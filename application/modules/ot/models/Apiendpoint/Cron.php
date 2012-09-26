@@ -36,10 +36,16 @@ class Ot_Model_Apiendpoint_Cron implements Ot_Api_EndpointInterface
         return $cron->setCronStatus($params['name'], $status);
     }
     
+    /**
+     * Unavailable
+     */
     public function delete($params){
         throw new Ot_Exception_ApiEndpointUnavailable('DELETE is unavailable for this endpoint');
     }
     
+    /**
+     * Unavailable
+     */
     public function post($params){
         throw new Ot_Exception_ApiEndpointUnavailable('POST is unavailable for this endpoint');
     }
