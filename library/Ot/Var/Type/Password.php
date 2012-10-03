@@ -11,7 +11,7 @@ class Ot_Var_Type_Password extends Ot_Var_Abstract
     
     public function setValue($value)
     {           
-        return parent::setValue($this->_encrypt($value));        
+        return parent::setValue($this->_encrypt($value));
     }
 
     public function getValue()

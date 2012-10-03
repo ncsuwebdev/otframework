@@ -1,6 +1,7 @@
 /**
  * jQuery Caret Range plugin is needed to run
  */
+
 String.prototype.repeat = function( num ) {
     return new Array(num + 1).join(this);
 }
@@ -12,6 +13,7 @@ $.fn.iphonePassword = function(options) {
     var values = Array();
     this.each(function() {
         var ret = {
+            isMasked: true,
             pass:null,
             text:null,
             focused:false,
@@ -53,8 +55,36 @@ $.fn.iphonePassword = function(options) {
                 ret.text.val(ret.pass.val());
             }
         }
+              
         ret.opts = $.extend(defaults, options);
         ret.pass = $(this);
+        
+        var $link = $('<a style="margin-left: 5px;" class="toggleLink" href="">Unmask</a>');
+        
+        ret.pass.after($link);
+        
+        $link.click(function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            if (ret.isMasked) {
+                ret.unMask();   
+                $link.text('Remask');
+                ret.isMasked = false;
+                
+            } else {
+                
+                $link.text('Unmask');
+                
+                ret.opts.mask = '\u25CF';
+                var t = ret.opts.mask.repeat(ret.text.val().length);
+                ret.text.removeAttr('lastpos').val(t);
+                
+                ret.maskNow();
+                ret.isMasked = true;
+            }
+        });
+        
         var caretMoved = true;
         function sel(ev) {
             if(!caretMoved && (jQuery.browser.safari || jQuery.browser.webkit)) {
@@ -80,7 +110,10 @@ $.fn.iphonePassword = function(options) {
             ret.pass.closest("form").submit(function() {
                 ret.text.attr("disabled", "disabled");
             });
-        } else ret.text = ret.pass.clone().attr("type", "text");
+        } else {
+            ret.text = ret.pass.clone().attr("type", "text");
+        }
+        
         var last = null;
         ret.text.attr("autocomplete", "off").removeAttr("name").change(function(evt) {
         	if(last==ret.text.val()) return;
@@ -108,10 +141,12 @@ $.fn.iphonePassword = function(options) {
             if(jQuery.browser.opera || jQuery.browser.mozilla) ret.text.change();
             else caretMoved = false;
          })
-        .focus(function() { ret.focused = true; }).blur(function() { ret.focused = false; })
+        .focus(function() {ret.focused = true;}).blur(function() {ret.focused = false;})
         ret.pass.after(ret.text).hide().removeAttr("id");
         ret.reMask();
+        
         values.push(ret);
+        
     });
     values = $(values);
     values.$ = this;
