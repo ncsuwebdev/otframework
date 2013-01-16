@@ -106,9 +106,9 @@ class Ot_Model_DbTable_EmailQueue extends Ot_Db_Table
      * @param string|array $order OPTIONAL An SQL ORDER clause.
      * @return Zend_Db_Table_Row The row results per the Zend_Db_Adapter_Abstract fetch mode.
      */
-    public function fetchRow($where = null, $order = null)
+    public function fetchRow($where = null, $order = null, $offset = null)
     {
-        $result = parent::fetchRow($where, $order)->toArray();
+        $result = parent::fetchRow($where, $order, $offset)->toArray();
 
         $result['zendMailObject'] = unserialize($result['zendMailObject']);
 

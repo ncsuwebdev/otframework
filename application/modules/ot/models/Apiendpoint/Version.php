@@ -12,7 +12,7 @@ class Ot_Model_Apiendpoint_Version implements Ot_Api_EndpointInterface
         return array(
             'OTFramework'   => Ot_Version::VERSION,
             'ZendFramework' => Zend_Version::VERSION,
-            'Application'   => Zend_Registry::get('applicationVersion')
+            'Application'   => Ot_Application_Version::getVersion(),
         );
     }
     

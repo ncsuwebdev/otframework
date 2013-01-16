@@ -329,7 +329,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                     
             $this->_helper->log(Zend_Log::INFO, 'Trigger Action deleted', $logOptions);
         
-            $this->_helper->messenger->addNotice('msg-info-triggerDeleted');
+            $this->_helper->messenger->addWarning('msg-info-triggerDeleted');
             
             $this->_helper->redirector->gotoRoute(
                 array('controller' => 'trigger', 'action' => 'details', 'name' => $triggerId),
@@ -387,7 +387,7 @@ class Ot_TriggerController extends Zend_Controller_Action
                     
             $this->_helper->log(Zend_Log::INFO, 'Trigger Action deleted', $logOptions);
         
-            $this->_helper->messenger->addNotice('msg-info-triggerActionStatus');
+            $this->_helper->messenger->addWarning('msg-info-triggerActionStatus');
             
             $this->_helper->redirector->gotoRoute(
                 array('controller' => 'trigger', 'action' => 'details', 'name' => $triggerId),

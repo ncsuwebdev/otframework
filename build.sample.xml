@@ -1,0 +1,246 @@
+<?xml version="1.0"?>
+
+<project name="OTFrameworkApp" default="main" basedir=".">
+
+    <property name="zendframework.repoPath" value="http://framework.zend.com/svn/framework/standard/tags"/>
+
+    <!--  These are the default versions of the frameworks to use.  These need to be changed when we move to new versions by default -->
+    <property name="defaultOtFrameworkVersion" value="2.7.4rc9"/>
+    <property name="defaultZendFrameworkVersion" value="1.11.12"/>
+    <property name="defaultPHPNcstateVersion" value="1.0.4" />
+
+    <!-- These are the installed version (if they are already installed) of the needed frameworks -->
+    <property name="installedOtFrameworkVersion" value="" />
+    <property name="insatlledZendFrameworkVersion" value="" />
+    <property name="installedPHPNcstateVersion" value="" />
+    
+    <!-- Only svnexport is currently allowed -->
+    <property name="otframework.retrieval.mode" value="svnexport"/>
+
+    <property name="otframework.repoPath" value="https://svn.unity.ncsu.edu/svn/otframework/tags"/>
+
+    <target name="main">                
+        <phingcall target="frameworksExport" />
+        <phingcall target="setPermissions" />
+    </target>
+
+    <!--
+    /**
+     * Determines the path to SVN for you.  This is to help be OS agnostic, but some
+     * of the tasks use unix commands.  Sorry...use OS X for now
+     */
+    -->
+    <target name="setDefaultSvnPath" description="Sets the default path to the Svn binary">
+        <!-- Detect OS and set default/common ${svn.path}  -->
+        <if>
+            <or>
+                <equals arg1="${host.os}" arg2="WINNT" />
+                <equals arg1="${host.os}" arg2="WIN32" />
+            </or>
+        <then>
+            <property name="svn.path" value="C:/Subversion/bin/svn.exe"/>
+        </then>
+        <else>
+            <property name="svn.path" value="/usr/bin/svn"/>
+        </else>
+        </if>
+
+        <echo msg="Path to SVN is ${svn.path}"/>
+    </target>
+
+    <target name="frameworksExport" depends="setDefaultSvnPath">
+                
+        <includepath classpath="${project.basedir}/library" />
+        
+        <!-- initialize ZF -->
+        <if>
+            <available file="${project.basedir}/library/Zend/Version.php" property="testZfExists" value="Yes"/>
+            <then>
+                <php expression="require_once 'Zend/Version.php';" />
+                <php expression="Zend_Version::VERSION;" returnProperty="installedZendFrameworkVersion" />                        
+            </then>
+        </if>
+        
+        <echo msg="ZF Install:  ${defaultZendFrameworkVersion} required, ${installedZendFrameworkVersion} detected" />
+        <if>
+            <not>
+                <equals arg1="${installedZendFrameworkVersion}" arg2="${defaultZendFrameworkVersion}" />
+            </not>
+            <then>
+                <delete dir="${project.basedir}/library/Zend" includeemptydirs="true" verbose="false" failonerror="false" />
+                
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${zendframework.repoPath}/release-${defaultZendFrameworkVersion}/library/Zend"
+                    todir="${project.basedir}/library/Zend"
+                />
+            </then>
+            <else>
+                <echo message="Skipped re-install of Zend Framework because ${installedZendFrameworkVersion} already installed." />
+            </else>            
+        </if>
+        
+        
+        <!-- initialize OTF -->
+        <if>
+            <available file="${project.basedir}/library/Ot/Version.php" property="testOtfExists" value="Yes"/>
+            <then>
+                <php expression="require_once 'Ot/Version.php';" />
+               <php expression="Ot_Version::VERSION;" returnProperty="installedOtFrameworkVersion" />                        
+            </then>
+        </if>
+        <echo msg="OTF Install:  ${defaultOtFrameworkVersion} required, ${installedOtFrameworkVersion} detected" />        
+        <if>
+            <not>
+                <equals arg1="${installedOtFrameworkVersion}" arg2="${defaultOtFrameworkVersion}" />
+            </not>
+            <then>
+                <delete dir="${project.basedir}/library/Ot" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/library/Oauth" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/application/modules/ot" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/application/languages/ot" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/public/css/ot" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/public/scripts/ot" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/public/images/ot" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/public/themes/ot" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/public/min" includeemptydirs="true" verbose="false" failonerror="false" />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/library/Ot"
+                    todir="${project.basedir}/library/Ot"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/library/Oauth"
+                    todir="${project.basedir}/library/Oauth"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/application/modules/ot"
+                    todir="${project.basedir}/application/modules/ot"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/application/languages/ot"
+                    todir="${project.basedir}/application/languages/ot"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/public/css/ot"
+                    todir="${project.basedir}/public/css/ot"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/public/scripts/ot"
+                    todir="${project.basedir}/public/scripts/ot"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/public/images/ot"
+                    todir="${project.basedir}/public/images/ot"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/public/themes/ot"
+                    todir="${project.basedir}/public/themes/ot"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/public/min"
+                    todir="${project.basedir}/public/min/ot"
+                />
+            </then>
+            <else>
+                <echo message="Skipped re-install of OT Framework because ${installedOtFrameworkVersion} already installed." />
+            </else>            
+        </if>        
+        
+        
+        <!-- initialize NCState PHP Lib --> 
+        <if>
+            <available file="${project.basedir}/library/Ncstate/Version.php" property="test_txt_exists" value="Yes"/>
+            <then>
+                <php expression="require_once 'Ncstate/Version.php';" />
+                <php expression="Ncstate_Version::VERSION;" returnProperty="installedPHPNcstateVersion" />                        
+            </then>
+        </if>        
+        <echo msg="PHPNcstate Install:  ${defaultPHPNcstateVersion} required, ${installedPHPNcstateVersion} detected" />                        
+        <if>
+            <not>
+                <equals arg1="${installedPHPNcstateVersion}" arg2="${defaultPHPNcstateVersion}" />
+            </not>
+            <then>
+                <delete dir="${project.basedir}/_phingtmp" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/library/Ncstate" includeemptydirs="true" verbose="false" failonerror="false" />
+                <mkdir dir="${project.basedir}/_phingtmp" />
+                <mkdir dir="${project.basedir}/library/Ncstate" />
+
+                <httpget url="https://github.com/ncsuwebdev/PHP-Ncstate/archive/${defaultPHPNcstateVersion}.zip" dir="${project.basedir}/_phingtmp" sslVerifyPeer="false" followRedirects="true" />
+
+                <unzip file="${project.basedir}/_phingtmp/${defaultPHPNcstateVersion}.zip" todir="${project.basedir}/_phingtmp" />
+
+                <copy todir="${project.basedir}/library/Ncstate" >
+                    <fileset dir="${project.basedir}/_phingtmp/PHP-Ncstate-${defaultPHPNcstateVersion}/Ncstate">
+                        <include name="**" />
+                    </fileset>
+                </copy>
+
+                <delete dir="${project.basedir}/_phingtmp" includeemptydirs="true" verbose="false" failonerror="false" />
+            </then>
+            <else>
+                <echo message="Skipped re-install of PHP-Ncstate because ${installedPHPNcstateVersion} already installed." />
+            </else>            
+        </if>
+        
+    </target>
+
+     <!--  Called by initProject to setup the correct file system permissions -->
+    <target name="setPermissions" description="Sets the file system permissions for the project">
+        <chmod file="${project.basedir}/cache" mode="0757"/>
+        <chmod file="${project.basedir}/overrides" mode="0757">
+            <fileset dir="${project.basedir}/overrides">
+                <include name="**"/>
+            </fileset>
+        </chmod>
+
+    </target>
+
+    <!--
+    /**
+     * Initializes a new project.  It assumes the project directory has already been
+     * connected to SVN and is empty.  It will export the specified version of the OT Framework
+     * and then do all the work of creating the externals and committing the initial
+     * layout for you.
+     */
+    -->
+
+</project>
