@@ -1,10 +1,25 @@
 <?php
+ini_set('memory_limit', '-1');
 
-require_once 'utils/Config.php';
+// Define path to application directory
+defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+
+$paths = array(
+        realpath(APPLICATION_PATH . '/../library'),
+        get_include_path(),
+);
+
+// Ensure library/ is on include_path
+set_include_path(implode(PATH_SEPARATOR, $paths));
+
+
 require_once 'Zend/Console/Getopt.php';
+require_once 'Zend/Application.php';
+require_once 'Ot/Cli/Output.php';
+
 
 // Path to where the database migration files live
-$pathToMigrateFiles = dirname(__FILE__) . '/db';
+$pathToMigrateFiles = dirname(__FILE__) . '/../db';
 
 // A list of all possible environments the user can specify
 $possibleEnvironments = array(
@@ -38,19 +53,28 @@ $opts = new Zend_Console_Getopt(
 try {
     $opts->parse();
 } catch (Exception $e) {
-    Ot_Migrate_Cli::error($opts->getUsageMessage());
+    Ot_Cli_Output::error($opts->getUsageMessage());
 }
 
 if (!isset($opts->environment) || !in_array($opts->environment, $possibleEnvironments)) {
-    Ot_Migrate_Cli::error('Environment not sepecified or not available' . "\n\n" . $opts->getUsageMessage());
+    Ot_Cli_Output::error('Environment not sepecified or not available' . "\n\n" . $opts->getUsageMessage());
 }
 
 if (!isset($opts->cmd) || !in_array($opts->cmd, $possibleCommands)) {
-    Ot_Migrate_Cli::error('Command not sepecified or not available' . "\n\n" . $opts->getUsageMessage());
+    Ot_Cli_Output::error('Command not sepecified or not available' . "\n\n" . $opts->getUsageMessage());
 }
 
-// Start the application
-$application = startApplication($opts->environment);
+// Define application environment
+defined('APPLICATION_ENV') || define('APPLICATION_ENV', $opts->environment);
+
+// Create application, bootstrap, and run
+$application = new Zend_Application(
+        APPLICATION_ENV,
+        APPLICATION_PATH . '/configs/application.ini'
+);
+
+$application->bootstrap('db');
+    
 
 // Get the database configs
 $tablePrefix = $application->getOption('tablePrefix');
@@ -61,11 +85,11 @@ try {
     $migration = new Ot_Migrate($dbAdapter, $pathToMigrateFiles, $tablePrefix);
     $result = $migration->migrate($opts->cmd, $opts->version);
 } catch (Exception $e) {
-    Ot_Migrate_Cli::error($e->getMessage());
+    Ot_Cli_Output::error($e->getMessage());
 }
 
 // Display the results
-Ot_Migrate_Cli::status($result);
+Ot_Cli_Output::success($result);
 
 // Exit without any errors
 exit;

@@ -5,8 +5,8 @@
     <property name="zendframework.repoPath" value="http://framework.zend.com/svn/framework/standard/tags"/>
 
     <!--  These are the default versions of the frameworks to use.  These need to be changed when we move to new versions by default -->
-    <property name="defaultOtFrameworkVersion" value="2.7.4rc9"/>
-    <property name="defaultZendFrameworkVersion" value="1.11.12"/>
+    <property name="defaultOtFrameworkVersion" value="2.7.4rc11"/>
+    <property name="defaultZendFrameworkVersion" value="1.12.1"/>
     <property name="defaultPHPNcstateVersion" value="1.0.4" />
 
     <!-- These are the installed version (if they are already installed) of the needed frameworks -->
@@ -106,6 +106,7 @@
                 <delete dir="${project.basedir}/public/images/ot" includeemptydirs="true" verbose="false" failonerror="false" />
                 <delete dir="${project.basedir}/public/themes/ot" includeemptydirs="true" verbose="false" failonerror="false" />
                 <delete dir="${project.basedir}/public/min" includeemptydirs="true" verbose="false" failonerror="false" />
+                <delete dir="${project.basedir}/otutils" includeemptydirs="true" verbose="false" failonerror="false" />
 
                 <svnexport svnpath="${svn.path}"
                     username=""
@@ -176,7 +177,15 @@
                     password=""
                     nocache="true"
                     repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/public/min"
-                    todir="${project.basedir}/public/min/ot"
+                    todir="${project.basedir}/public/min"
+                />
+
+                <svnexport svnpath="${svn.path}"
+                    username=""
+                    password=""
+                    nocache="true"
+                    repositoryurl="${otframework.repoPath}/${defaultOtFrameworkVersion}/otutils"
+                    todir="${project.basedir}/otutils"
                 />
             </then>
             <else>
