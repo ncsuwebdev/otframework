@@ -14,7 +14,7 @@
  *
  * @package    Ot_Version
  * @category   Library
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
@@ -35,8 +35,8 @@ class Ot_Version
      *
      * @var string
      */
-    const VERSION = '2.7.4rc10';
-    
+    const VERSION = '2.7.4rc12';
+
     public function getVersions()
     {
         return array(

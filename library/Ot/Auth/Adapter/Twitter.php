@@ -20,8 +20,6 @@
  * @version    SVN: $Id: $
  */
 
-require_once 'Facebook/facebook.php';
-
 /**
  * This adapter users the WRAP authentication mechanism that is provided on campus
  * webservers at NC State.  The default username and password passed to the constructor
