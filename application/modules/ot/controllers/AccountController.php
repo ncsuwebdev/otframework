@@ -218,7 +218,6 @@ class Ot_AccountController extends Zend_Controller_Action
              $r = $r['name'];
         }
 
-        $this->view->roles = $roles;
         $custom = new Ot_Model_Custom();
 
         $data = $custom->getData('Ot_Profile', $this->_userData['accountId'], 'none', false);
@@ -226,13 +225,16 @@ class Ot_AccountController extends Zend_Controller_Action
             $attributes[$d['attribute']['label']] = $d['value'];
         }
 
-        $this->view->attributes = $attributes;
-
         $apiApp = new Ot_Model_DbTable_ApiApp();
 
         $apiApps = $apiApp->getAppsForAccount($this->_userData['accountId'], 'access')->toArray();
 
-        $this->view->apiApps = $apiApps;
+        $this->view->assign(array(
+            'attributes' => $attributes,
+            'roles'      => $roles, 
+            'apiApps'    => $apiApps,
+            'tab'        => $this->_getParam('tab', 'account'),
+        ));
 
     }
 

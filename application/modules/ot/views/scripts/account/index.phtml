@@ -9,11 +9,8 @@
 
 <div id="oauth">
     <ul>
-        <li><a href="#tabs-data"><span><?php echo $this->translate('ot-account-index:account'); ?></span></a></li>
-        <?php foreach ($this->apiApps as $c): ?>
-        <li><a href="#tabs-<?php echo $c['appId']; ?>"><span><?php echo $c['name']; ?></span></a></li>
-        <?php endforeach; ?>
-        <li><a href="#tabs-connections"><span><?php echo $this->translate('ot-account-index:connectionsTo', array($this->varReg('appTitle'))); ?></span></a></li>
+        <li<?php echo ($this->tab == 'account') ? ' class="ui-tabs-selected"' : ''; ?>><a href="#tabs-data"><span><?php echo $this->translate('ot-account-index:account'); ?></span></a></li>
+        <li<?php echo ($this->tab == 'apps') ? ' class="ui-tabs-selected"' : ''; ?>><a href="#tabs-apps"><span><?php echo $this->translate('ot-account-index:apps'); ?></span></a></li>
     </ul>
     <div id="tabs-data">
     <?php echo $this->translate('ot-account-index:userDataHeader'); ?>
@@ -88,87 +85,43 @@
             </tbody>
         </table>
         * To change your account's picture, signup for an account at <a href="http://gravatar.com" target="_blank">Gravatar.com</a> and associate a picture with your account's email address (<?php echo $this->userData['emailAddress']; ?>).
-    </div>
-    <?php foreach ($this->apiApps as $c): ?>
-    <div id="tabs-<?php echo $c['appId']; ?>">
-        <?php echo $this->translate('ot-account-index;interact', array($this->config->user->appTitle->val, '<b>' . $c['name'] . '</b>')); ?>
-        <?php if ($c['authorized']): ?>
-            <div class="access authorized">
-                <span><?php echo $this->translate('ot-account-index:authorizedOn', array($c['name'])); ?></span>
-                <?php echo $this->translate('ot-account-index:revokeAccess'); ?> 
-                <?php if ($c['website'] == ''): ?>
-                    <?php echo $c['name']; ?>.
-                <?php else: ?>
-                    <a href="<?php echo $c['website']; ?>"><?php echo $c['name']; ?></a>.
-                <?php endif; ?>
-            </div>            
-        <?php else: ?>
-            <div class="access notAuthorized">
-                <span><?php echo $this->translate('ot-account-index;notAuthorized', array($c['name'])); ?></span>
-                <?php if ($this->acl['grantAccess']): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'oauthclient', 'appId' => $c['appId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
-                    <?php echo $this->translate('ot-account-index:authorizeAccess'); ?>
-                    <span class="ui-icon ui-icon-key"></span></a>
-                <?php endif; ?>
-            </div>        
-        <?php endif; ?>
-        <h2><?php echo $this->translate('ot-account-index:serviceDescription'); ?></h2>
-        <div class="description">
-            <?php echo nl2br($c['description']); ?>
-        </div>
-    </div>
-    <?php endforeach; ?>    
-    <div id="tabs-connections"> 
-        <?php if ($this->acl['apiApp'] || $this->acl['apiDocs']) : ?>
-            <div id="developers">
-                <span><?php echo $this->translate('ot-account-index:developers'); ?></span>
-                <?php if ($this->acl['apiApp']) : ?>
-                    <?php echo $this->translate('ot-account-index:canSetup', '<b>' . $this->varReg('appTitle') . '</b>'); ?>
-                    <a href="<?php echo $this->url(array(), 'apiapp', true); ?>">here</a>.
-                    <br />
-                <?php endif; ?>
-                <?php if ($this->acl['apiDocs']) : ?>
-                    <br />
-                    <div style="text-align: center">
-                        <a href="<?php echo $this->url(array('action' => 'api-docs'), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:viewApiDocumentation'); ?><span class="ui-icon ui-icon-gear"></span></a>
+    </div> 
+    
+    <div id="tabs-apps"> 
+        <?php echo $this->translate('ot-account-index:apiapp-header'); ?>
+        <br /><br />
+        <a href="<?php echo $this->url(array('action' => 'api-docs'), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:viewApiDocumentation'); ?><span class="ui-icon ui-icon-gear"></span></a>
+        <a href="<?php echo $this->url(array('action' => 'add'), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:apiapp-addButton'); ?><span class="ui-icon ui-icon-plusthick"></span></a>   
+        <br /><br />
+        <?php if (count($this->apiApps) != 0): ?>
+            <?php foreach ($this->apiApps as $c): ?>
+            <div class="consumer" style="background-image:url(<?php echo ($c['imageId'] != 0) ? $this->url(array('imageId' => $c['imageId']), 'image', true) : ''; ?>">
+                
+                <div class="options">
+                    <a href="<?php echo $this->url(array('action' => 'edit', 'appId' => $c['appId']), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-apiapp-details:appEditButton'); ?><span class="ui-icon ui-icon-pencil"></span></a>
+                    <br /><br />
+                    <a href="<?php echo $this->url(array('action' => 'delete', 'appId' => $c['appId']), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-apiapp-details:appDeleteButton'); ?><span class="ui-icon ui-icon-minusthick"></span></a>    
+                    <br /><br />
+                </div>
+                
+                <div class="details">    
+                    <div class="name">
+                        <?php echo $c['name']; ?>
+                        <?php if ($c['website'] != ''): ?>
+                            <span class="website">(<a target="_blank" href="<?php echo $c['website']; ?>"><?php echo $c['website']; ?></a>)</span>
+                        <?php endif; ?>
                     </div>
-                <?php endif; ?>
+                    <div class="description"><?php echo nl2br($c['description']); ?></div>                                                            
+                    <div class="key"><b><?php echo $this->translate('ot-account-index:apiapp-apiKey'); ?>:</b> <?php echo $c['apiKey']; ?></div>
+                </div>
+                
+                <div class="ui-helper-clearfix"></div>
             </div>
-        <?php endif; ?>    
-        <?php echo $this->translate('ot-account-index:connectionHeader'); ?>
-        <div class="ui-helper-clearfix"></div>
-    <?php if (count($this->accessTokens) != 0): ?>
-        <?php foreach ($this->accessTokens as $t): ?>
-        <div class="token">
-            <div class="consumerIcon">
-                <?php if ($t['consumer']['imageId'] != 0): ?>
-                <img src="<?php echo $this->url(array('imageId' => $t['consumer']['imageId']), 'image', true); ?>" />
-                <?php else: ?>
-                <img src="<?php echo $this->baseUrl(); ?>/images/ot/consumer.png" alt="consumer" />
-                <?php endif; ?>
-            </div>
-            <?php if ($this->acl['revokeAccess']): ?>
-            <div class="revoke">
-                <a href="<?php echo $this->url(array('controller' => 'apiapp', 'action' => 'revoke', 'appId' => $t['appId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
-                    <?php echo $this->translate('ot-account-index:consumerHasAccessButton'); ?>
-                <span class="ui-icon ui-icon-minusthick"></span></a>            
-            </div>
-            <?php endif; ?>
-            <div class="name">
-                <a href="<?php echo $t['consumer']['website']; ?>"><?php echo $t['consumer']['name']; ?></a> has access.
-            </div>
-            <div class="description">
-                <?php echo nl2br($t['consumer']['description']); ?>
-            </div>    
-            <div class="accessToken">
-                <?php echo $this->translate('ot-account-index:accessTokenGenerated', array ($this->dateFormat($t['requestDt'], $this->config->user->dateTimeFormat->val))); ?>
-            </div>
-            <div class="ui-helper-clearfix"></div>
-        </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-    <b><?php echo $this->translate('ot-account-index:noConnectionsMade'); ?></b>
-    <?php endif; ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+        <?php echo $this->translate('ot-account-index:apiapp-noApplications'); ?>
+        <?php endif; ?>           
+        
     </div>
 </div>
 <br /><br />

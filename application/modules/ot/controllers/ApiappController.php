@@ -31,25 +31,6 @@
  */
 class Ot_ApiappController extends Zend_Controller_Action
 {
-        
-    /**
-     * Displays a list of all a user's registered consumers
-     *
-     */
-    public function indexAction()
-    {
-        $apiApp = new Ot_Model_DbTable_ApiApp();
-        
-        $apps = $apiApp->getAppsForAccount(Zend_Auth::getInstance()->getIdentity()->accountId);
-        
-        $this->view->apiApps = $apps->toArray();
-
-        $title = $this->_helper->varReg('appTitle');
-        $this->view->title = $title;        
-        $this->_helper->pageTitle('ot-apiapp-index:title', $title);
-        $this->view->messages = $this->_helper->messenger->getMessages();
-    }
-        
     /**
      * Displays a list of all the api apps registered with application
      * regardless of the user who registered the app
@@ -85,8 +66,7 @@ class Ot_ApiappController extends Zend_Controller_Action
 
             $methods = $reflection->getMethods();
             
-            foreach ($methods as $m) {
-                
+            foreach ($methods as $m) {                
                 if (in_array($m->getName(), $apiMethods)) {
                     $data[$e->getName()][$m->getName()] = $m->getDocComment();
                 }
@@ -94,41 +74,6 @@ class Ot_ApiappController extends Zend_Controller_Action
         }
         
         $this->view->endpoints = $data;
-    }
-           
-        
-    /**
-     * Displays the details about a registered consumer
-     *
-     */
-    public function detailsAction()
-    {                
-        $get = Zend_Registry::get('getFilter');
-        
-        if (!isset($get->appId)) {
-            throw new Ot_Exception_Input('ot-apiapp-details:appIdNotSet');
-        }
-        
-        if (isset($get->all)) {
-            $this->view->all = true;
-        }
-        
-        $apiApp = new Ot_Model_DbTable_ApiApp();
-        
-        $thisApp = $apiApp->find($get->appId);
-        if (is_null($thisApp)) {
-            throw new Ot_Exception_Data('ot-apiapp-details:appNotFound');
-        }
-        
-        if ($thisApp->accountId != Zend_Auth::getInstance()->getIdentity()->accountId
-            && !$this->_helper->hasAccess('allApiApps')) {
-                throw new Ot_Exception_Access('ot-apiapp-details:notAllowedToEdit');
-        }
-        
-        $this->view->apiApp = $thisApp;
-        
-        $this->_helper->pageTitle('ot-apiapp-details:title', $thisApp->name);
-        $this->view->messages = $this->_helper->messenger->getMessages();
     }
         
     /**
@@ -170,7 +115,7 @@ class Ot_ApiappController extends Zend_Controller_Action
                 
                 $this->_helper->messenger->addSuccess('ot-apiapp-add:successfullyRegistered');
                 
-                $this->_helper->redirector->gotoRoute(array('action' => 'details', 'appId' => $appId), 'apiapp', true);
+                $this->_helper->redirector->gotoRoute(array('tab' => 'apps'), 'account', true);
                 
             } else {
                 $this->_helper->messenger->addError('ot-apiapp-add:problemSubmitting');
@@ -178,31 +123,6 @@ class Ot_ApiappController extends Zend_Controller_Action
         }
         
         $this->view->form = $form;
-    }
-    
-    public function regenerateKeyAction()
-    {
-        $get = Zend_Registry::get('getFilter');
-        
-        if (!isset($get->appId)) {
-            throw new Ot_Exception_Input('ot-apiapp-edit:appIdNotSet');
-        }
-        
-        $apiApp = new Ot_Model_DbTable_ApiApp();
-        
-        $thisApp = $apiApp->find($get->appId);
-        if (is_null($thisApp)) {
-            throw new Ot_Exception_Data('ot-apiapp-edit:appNotfound');
-        }
-        
-        if ($thisApp->accountId != Zend_Auth::getInstance()->getIdentity()->accountId && !$this->_helper->hasAccess('allApiApps')) {
-            throw new Ot_Exception_Access('ot-apiapp-edit:notAllowedToEdit');
-        }
-        
-        $apiApp->regenerateApiKey($get->appId);
-        
-        $this->_helper->redirector->gotoRoute(array('action' => 'details', 'appId' => $get->appId), 'apiapp', true);
-        
     }
         
     /**
@@ -264,7 +184,7 @@ class Ot_ApiappController extends Zend_Controller_Action
                 $apiApp->update($data, null);
                 
                 $this->_helper->messenger->addSuccess('ot-apiapp-edit:successfullyModified');
-                $this->_helper->redirector->gotoRoute(array('action' => 'details', 'appId' => $thisApp->appId), 'apiapp', true);
+                $this->_helper->redirector->gotoRoute(array('tab' => 'apps'), 'account', true);
                 
             } else {
                 $this->_helper->messenger->addError('ot-apiapp-edit:problemSubmitting');
@@ -302,7 +222,7 @@ class Ot_ApiappController extends Zend_Controller_Action
                                     
             $this->_helper->messenger->addSuccess('ot-apiapp-delete:applicationRemoved');
             
-            $this->_helper->redirector->gotoRoute(array(), 'apiapp', true);
+            $this->_helper->redirector->gotoRoute(array('tab' => 'apps'), 'account', true);
         }
         
         $this->view->form = $form;
