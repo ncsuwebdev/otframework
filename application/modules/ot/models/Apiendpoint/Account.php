@@ -1,5 +1,5 @@
 <?php
-class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
+class Ot_Model_Apiendpoint_Account extends Ot_Api_EndpointTemplate
 {
     
     /**
@@ -90,25 +90,7 @@ class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
         $otAccount->update($data, null);
         return true;
         
-    }
-    
-    /**
-     * Helper class that compares an array of expected parameters and the received list.
-     * Throws an Ot_Exception_Data if a parameter is missing.
-     *
-     * @param array $expected
-     * @param array $params
-     * @throws Ot_Exception_Data
-     */
-    protected function checkForEmptyParams(array $expected, array $params) {
-    
-        foreach ($expected as $e) {
-            if (!isset($params[$e]) || empty($params[$e])) {
-                throw new Ot_Exception_ApiMissingParams('Missing required parameter:' . $e);
-            }
-        }
-    }
-    
+    }    
     
     /**
      * Delete a user's account completely.  You cannot delete your own account.
@@ -147,12 +129,5 @@ class Ot_Model_Apiendpoint_Account implements Ot_Api_EndpointInterface
         }
               
         return array('msg' => 'Account successfully deleted');
-    }
-    
-    /**
-     * Unavailable
-     */
-    public function post($params){
-        throw new Ot_Exception_ApiEndpointUnavailable('POST is unavailable for this endpoint');
     }
 }

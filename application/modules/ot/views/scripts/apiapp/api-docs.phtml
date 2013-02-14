@@ -1,30 +1,53 @@
 <p>
-A key parameter is always required in the query string.  For example, if you
-wanted to get the information for an account you'd make a GET request to the 
-following URL:
+    An API key is required to access the API.  You may sign up for a key
+    from your <b><a href="<?php echo $this->url(array(), 'account', true); ?>">My Account</a></b>
+    page.
 </p>
 
 <p>
-<code style="background-color: #DDD; padding: 5px 25px;"><?php echo Zend_Registry::get('siteUrl'); ;?>/api/Ot_Account/accountId/[[accountId]]?key=[[yourApiKey]]</code>
+    Your API key if required on every request.  You will append your key in the
+    query string of your request.  For example, if you wanted to get the version 
+    information for this application you'd make a GET request  to the following URL:
 </p>
 
 <p>
-    Below are all of the available endpoints for this application.
-    <br /><br />
-    For POST, PUT, and DELETE 
-    methods, put all parameters (except the api key) as a URL encoded string in 
-    the post body of the request.
+<code style="background-color: #DDD; padding: 5px 25px;"><?php echo Zend_Registry::get('siteUrl'); ;?>/api/ot-version?key=[[yourApiKey]]</code>
 </p>
+<br />
+<p>
+    For POST, PUT, and DELETE methods, put all parameters (except your api key) 
+    as a URL encoded string in the post body of the request.
+</p>
+<a name="apitop"></a>
+<br />
 
-<?php foreach ($this->endpoints as $endpoint => $methods) : ?>
+<div id="jump">
+    <select id="jumpbox">
+        <option value="">Jump to endpoint...</option>
+        <?php foreach ($this->endpoints as $e): ?>
+            <option><?php echo $e['name']; ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
 
+<h2>API Methods Available</h2>
+
+<?php foreach ($this->endpoints as $endpoint) : ?>
 <div class="apiEndpoint">
-    <h2><?php echo $endpoint; ?></h2>
-    <?php foreach ($methods as $method => $doc) : ?>
+    <a class="backToTop" href="#apitop">Back to top</a>
+    <h2><a name="<?php echo $endpoint['name']; ?>"></a><?php echo Zend_Registry::get('siteUrl'); ;?>/api/<?php echo $endpoint['name']; ?></h2>
+    <div class="endpointDescription">
+        <?php echo $endpoint['description']; ?>
+    </div>
 
-    <h3 class="httpMethod"><?php echo strtoupper($method); ?></h3>
+    <?php foreach ($endpoint['methods'] as $method => $doc) : ?>
+    <div class="method">
+        <div class="protocol">
+            <b><?php echo strtoupper($method); ?> Request</b>
+        </div>
 
-    <div><pre><?php echo '    ' . trim($doc); ?></pre></div>
+        <div class="methodDescription"><?php echo $doc; ?></div>   
+    </div>
 
     <?php endforeach; ?>
 </div>

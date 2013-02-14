@@ -1,0 +1,52 @@
+@CHARSET "UTF-8";
+
+.consumer {
+    background-image: url(../../../../images/ot/consumer.png);
+    background-repeat: no-repeat;
+    background-position: 10px 10px;
+    border: 1px solid #CCC;
+    padding: 10px 10px 10px 85px;
+    margin: 25px 0px;
+}
+
+.consumer .name {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.consumer .name .website {
+    color: #AAAAAA;
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+.consumer .name .website a {
+    color: #AAAAAA;
+}
+
+.consumer .description {
+    color: #333;
+    margin: 10px 0px;
+}
+
+.consumer .options {
+    float: right;
+    width: 200px;
+    text-align: right;
+    padding-top: 10px;
+}
+
+
+
+.access {
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 1px solid #CCC;
+    padding: 2px;
+    margin: 10px 0px;
+}
+
+.key {
+    margin-bottom: 20px;
+    font-family: Courier;
+}

@@ -33,7 +33,7 @@ class Ot_Api_Endpoint
         return $this->_description;
     }
 
-    public function setMethod(Ot_Api_EndpointInterface $_method)
+    public function setMethod(Ot_Api_EndpointTemplate $_method)
     {
         $this->_method = $_method;
         return $this;

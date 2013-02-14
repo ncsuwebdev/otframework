@@ -38,10 +38,20 @@ class Ot_ApiappController extends Zend_Controller_Action
     public function allAppsAction()
     {
         $apiApp = new Ot_Model_DbTable_ApiApp();
-    
-        $allApps = $apiApp->fetchAll(null, 'name ASC');
+        $account = new Ot_Model_DbTable_Account();
         
-        $this->view->allApps = $allApps->toArray();
+        $allApps = $apiApp->fetchAll(null, 'name ASC')->toArray();
+        
+        foreach ($allApps as &$a) {
+            $user = $account->find($a['accountId']);
+            
+            if (!is_null($user)) {
+                $a['user'] = $user;
+            }
+        }
+        unset($a);
+        
+        $this->view->allApps = $allApps;
         
         $this->_helper->pageTitle('ot-apiapp-allApps:title', $this->_helper->varReg('appTitle'));
     }
@@ -58,22 +68,35 @@ class Ot_ApiappController extends Zend_Controller_Action
         
         foreach ($endpoints as &$e) {
             
-            $data[$e->getName()] = array();
+            $data[$e->getName()] = array(
+                'name'        => $e->getName(),
+                'methods'     => array(),
+                'description' => $e->getDescription(),
+            );
             
             $classname = get_class($e->getMethod());
             
             $reflection = new ReflectionClass($classname);
 
             $methods = $reflection->getMethods();
-            
-            foreach ($methods as $m) {                
-                if (in_array($m->getName(), $apiMethods)) {
-                    $data[$e->getName()][$m->getName()] = $m->getDocComment();
+                        
+            foreach ($methods as $m) {                        
+                
+                if (in_array($m->name, $apiMethods) && $m->class == $classname) {
+                    
+                    $instructions = 'No instructions provided';
+                    
+                    if ($m->getDocComment() != '') {
+                        $instructions = $this->_cleanComment($m->getDocComment());
+                    }
+                    
+                    $data[$e->getName()]['methods'][$m->getName()] = $instructions;
                 }
             }
         }
         
         $this->view->endpoints = $data;
+        $this->_helper->pageTitle('API Documentation');
     }
         
     /**
@@ -237,4 +260,20 @@ class Ot_ApiappController extends Zend_Controller_Action
         
         return $this->view->url(array('imageId' => $imageId), 'image');
     }
+    
+    protected function _cleanComment($comment)
+    {
+        $comment = trim(
+            preg_replace('/[ \t]*(?:\/\*\*|\*\/|\*)?[ \t]{0,1}(.*)?/i', '$1', $comment)
+        );
+        
+        if (substr($comment, -2) == '*/') {
+            $comment = trim(substr($comment, 0, -2));        
+        }
+        
+        $comment = str_replace(array("\r\n", "\r"), "\n", $comment);
+        
+        return $comment;
+    }
+    
 }

@@ -1,6 +1,6 @@
 <?php
 
-class Ot_Model_Apiendpoint_MyAccount implements Ot_Api_EndpointInterface
+class Ot_Model_Apiendpoint_MyAccount extends Ot_Api_EndpointTemplate
 {
  
     /**
@@ -72,37 +72,5 @@ class Ot_Model_Apiendpoint_MyAccount implements Ot_Api_EndpointInterface
         $otAccount->update($data, null);
         
         return true;
-    }
-
-    /**
-     * Unavailable
-     */
-    public function delete($params){
-        throw new Ot_Exception_ApiEndpointUnavailable('DELETE is unavailable for this endpoint');
-    }
-
-    /**
-     * Unavailable
-     */
-    public function post($params){
-        throw new Ot_Exception_ApiEndpointUnavailable('POST is unavailable for this endpoint');
-    }
-    
-    /**
-     * Helper class that compares an array of expected parameters and the received list.
-     * Throws an Ot_Exception_Data if a parameter is missing.
-     *
-     * @param array $expected
-     * @param array $params
-     * @throws Ot_Exception_Data
-     */
-    protected function checkForEmptyParams(array $expected, array $params) {
-    
-        foreach ($expected as $e) {
-            if (!isset($params[$e]) || empty($params[$e])) {
-                throw new Ot_Exception_ApiMissingParams('Missing required parameter:' . $e);
-            }
-        }
-    
     }
 }

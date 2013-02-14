@@ -1,14 +1,41 @@
 .apiEndpoint {
     border: 1px solid #BBB;
     background-color: #EDEDED;
-    width: 800px;
     padding: 10px 15px;
     margin-bottom: 25px;
 }
 
-.httpMethod {
+.endpointDescription {
+    margin-bottom: 20px;
+}
+
+.protocol {
     background-color: #FFF58F;
     border: 1px solid #CCC;
-    padding: 10px;
-    width: 90%;
+    padding: 10px 5px 10px 10px;
+}
+
+.methodDescription {
+    margin-bottom: 20px;
+    padding: 5px 5px 20px 10px;
+    border: 1px solid #CCC;
+    background-color: #FFFFFF;
+    border-top: 0px;
+    font-family: Courier;
+    white-space: pre;
+}
+
+div#jump {
+    width: 300px;
+    float: right;
+    margin-top: 10px;
+    text-align: right;
+}
+
+#jumpbox {
+    width: 200px;
+}
+
+.backToTop {
+    float: right;
 }
