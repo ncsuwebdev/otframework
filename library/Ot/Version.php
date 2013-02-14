@@ -35,8 +35,8 @@ class Ot_Version
      *
      * @var string
      */
-    const VERSION = '2.7.4rc12';
-
+    const VERSION = '2.7.4rc13';
+    
     public function getVersions()
     {
         return array(
