@@ -43,21 +43,24 @@ class Ot_ApiappController extends Zend_Controller_Action
 
         $userData = array();
 
-        $userData['accountId'] = Zend_Auth::getInstance()->getIdentity()->accountId;
+        if (Zend_Auth::getInstance()->hasIdentity()) {
 
-        if ($get->accountId && $this->_helper->hasAccess('allApps')) {
-            $userData['accountId'] = $get->accountId;
+            $userData['accountId'] = Zend_Auth::getInstance()->getIdentity()->accountId;
+
+            if ($get->accountId && $this->_helper->hasAccess('allApps')) {
+                $userData['accountId'] = $get->accountId;
+            }
+
+            $account = new Ot_Model_DbTable_Account();
+            $thisAccount = $account->find($userData['accountId']);
+
+            if (is_null($thisAccount)) {
+                throw new Ot_Exception_Data('msg-error-noAccount');
+            }
+
+            $userData = array_merge($userData, (array) $thisAccount);
+            $this->_userData = $userData;
         }
-
-        $account = new Ot_Model_DbTable_Account();
-        $thisAccount = $account->find($userData['accountId']);
-
-        if (is_null($thisAccount)) {
-            throw new Ot_Exception_Data('msg-error-noAccount');
-        }
-
-        $userData = array_merge($userData, (array) $thisAccount);
-        $this->_userData = $userData;
     }
 
     /**
@@ -95,7 +98,6 @@ class Ot_ApiappController extends Zend_Controller_Action
 
         $data = array();
 
-        $thisAccount = Zend_Auth::getInstance()->getIdentity();
 
         $acl = new Ot_Acl('remote');
 
@@ -103,27 +105,32 @@ class Ot_ApiappController extends Zend_Controller_Action
 
         $role = $vr->getVar('defaultRole')->getValue();
 
-        if (count($thisAccount->role) > 1) {
 
-            $roles = array();
-            // Get role names from the list of role Ids
-            foreach ($thisAccount->role as $r) {
-                $roles[] = $acl->getRole($r);
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+            $thisAccount = Zend_Auth::getInstance()->getIdentity();
+
+            if (count($thisAccount->role) > 1) {
+
+                $roles = array();
+                // Get role names from the list of role Ids
+                foreach ($thisAccount->role as $r) {
+                    $roles[] = $acl->getRole($r);
+                }
+
+                // Create a new role that inherits from all the returned roles
+                $roleName = implode(',', $roles);
+
+                $role = $roleName;
+
+                $acl->addRole(new Zend_Acl_Role($roleName), $roles);
+
+            } elseif (count($thisAccount->role) == 1) {
+                $role = $thisAccount->role[0];
             }
 
-            // Create a new role that inherits from all the returned roles
-            $roleName = implode(',', $roles);
-
-            $role = $roleName;
-
-            $acl->addRole(new Zend_Acl_Role($roleName), $roles);
-
-        } elseif (count($thisAccount->role) == 1) {
-            $role = $thisAccount->role[0];
-        }
-
-        if ($role == '' || !$acl->hasRole($role)) {
-            $role = $vr->getVar('defaultRole')->getValue();
+            if ($role == '' || !$acl->hasRole($role)) {
+                $role = $vr->getVar('defaultRole')->getValue();
+            }
         }
 
         foreach ($endpoints as &$e) {
@@ -326,7 +333,7 @@ class Ot_ApiappController extends Zend_Controller_Action
     protected function _getImage($imageId)
     {
         if ($imageId == 0) {
-                return $this->view->baseUrl() . '/ot/images/consumer.png';
+            return $this->view->baseUrl() . '/ot/images/consumer.png';
         }
 
         return $this->view->url(array('imageId' => $imageId), 'image');
