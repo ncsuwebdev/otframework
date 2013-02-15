@@ -58,7 +58,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $get = Zend_Registry::get('getFilter');
 
         $userData = array();
-        
+
         $userData['accountId'] = Zend_Auth::getInstance()->getIdentity()->accountId;
         if ($get->accountId && $this->_helper->hasAccess('editAllAccounts')) {
             $userData['accountId'] = $get->accountId;
@@ -141,7 +141,7 @@ class Ot_AccountController extends Zend_Controller_Action
     public function unmasqueradeAction()
     {
     	$this->view->messages = $this->_helper->messenger->getMessages();
-    	
+
         $identity = Zend_Auth::getInstance()->getIdentity();
 
         if (!$identity->masquerading) {
@@ -169,15 +169,19 @@ class Ot_AccountController extends Zend_Controller_Action
     public function indexAction()
     {
         $this->view->acl = array(
-            'edit'            => $this->_helper->hasAccess('edit'),
-            'delete'          => ($this->_helper->hasAccess('delete')
+            'edit'           => $this->_helper->hasAccess('edit'),
+            'delete'         => ($this->_helper->hasAccess('delete')
                 && $this->_userData['accountId'] != Zend_Auth::getInstance()->getIdentity()->accountId),
-            'changePassword'  => $this->_authAdapter->manageLocally()
+            'changePassword' => $this->_authAdapter->manageLocally()
                 && $this->_userData['accountId'] == Zend_Auth::getInstance()->getIdentity()->accountId
                 && $this->_helper->hasAccess('change-password'),
-            'apiApp'           => $this->_helper->hasAccess('index', 'ot_apiapp'),
-            'apiDocs'         => $this->_helper->hasAccess('index', 'ot_api')
+            'apiAppAdd'      => $this->_helper->hasAccess('add', 'ot_apiapp'),
+            'apiAppDelete'   => $this->_helper->hasAccess('delete', 'ot_apiapp'),
+            'apiAppEdit'     => $this->_helper->hasAccess('edit', 'ot_apiapp'),
+            'apiDocs'        => $this->_helper->hasAccess('api-docs', 'ot_apiapp'),
+            'guestApiAccess' => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->varReg('defaultRole')),
         );
+
 
         $this->view->messages = $this->_helper->messenger->getMessages();
         $this->view->userData = $this->_userData;
@@ -231,7 +235,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->view->assign(array(
             'attributes' => $attributes,
-            'roles'      => $roles, 
+            'roles'      => $roles,
             'apiApps'    => $apiApps,
             'tab'        => $this->_getParam('tab', 'account'),
         ));
@@ -244,12 +248,13 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function allAction()
     {
+
         $this->view->acl = array(
             'add'    => $this->_helper->hasAccess('add'),
             'edit'   => $this->_helper->hasAccess('edit'),
             'delete' => $this->_helper->hasAccess('delete'),
         );
-        
+
         $this->_helper->pageTitle('ot-account-all:title');
         $this->view->messages = $this->_helper->messenger->getMessages();
 
@@ -263,10 +268,10 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $form = new Ot_Form_UserSearch();
         $form->populate($_GET);
-        
+
         $account = new Ot_Model_DbTable_Account();
         $accountTbl = $account->info('name');
-            
+
 
         $select = new Zend_Db_Table_Select($account);
         $select->from($accountTbl);
@@ -274,7 +279,7 @@ class Ot_AccountController extends Zend_Controller_Action
         if ($filterUsername != '') {
             $select->where($accountTbl . '.username LIKE ?', '%' . $filterUsername . '%');
         }
-        
+
         if ($filterFirstName != '') {
             $select->where($accountTbl . '.firstName LIKE ?', '%' . $filterFirstName . '%');
         }
@@ -285,11 +290,11 @@ class Ot_AccountController extends Zend_Controller_Action
 
         if ($filterRole != '' && $filterRole != 'any') {
             $otRole = new Ot_Model_DbTable_AccountRoles();
-            
+
             $roleTbl = $otRole->info('name');
-            
+
             $select->join($roleTbl, $accountTbl . '.accountId = ' . $roleTbl . '.accountId', array());
-            
+
             $select->where($roleTbl . '.roleId = ?', $filterRole);
             $select->distinct();
         }
@@ -301,24 +306,24 @@ class Ot_AccountController extends Zend_Controller_Action
         } else {
             $select->order($filterSort . ' ' . $filterDirection);
         }
-        
-        
+
+
         $adapter = new Zend_Paginator_Adapter_DbSelect($select);
 
         $paginator = new Zend_Paginator($adapter);
         $paginator->setCurrentPageNumber($this->_getParam('page', 1));
-        
-                
+
+
         $aa = new Ot_Model_DbTable_AuthAdapter();
-        
+
         $adapters = $aa->fetchAll();
-        
+
         $adapterMap = array();
-        
+
         foreach ($adapters as $a) {
             $adapterMap[$a->adapterKey] = $a;
         }
-        
+
         $this->view->assign(array(
             'paginator'     => $paginator,
             'form'          => $form,
@@ -327,7 +332,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'direction'     => $filterDirection,
             'adapters'      => $adapterMap,
         ));
-        
+
         /*
         if ($this->_request->isXmlHttpRequest()) {
 
@@ -414,7 +419,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
             echo Zend_Json::encode($response);
             return;
-        }         
+        }
          */
     }
 
@@ -425,7 +430,7 @@ class Ot_AccountController extends Zend_Controller_Action
     public function addAction()
     {
     	$this->view->messages = $this->_helper->messenger->getMessages();
-    	
+
         $account = new Ot_Model_DbTable_Account();
         $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
@@ -554,7 +559,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         'attributeName' => 'accountId',
                         'attributeId'   => $accountData['accountId'],
                     );
-                    
+
                     $this->_helper->log(Zend_Log::INFO, 'Account was added', $logOptions);
 
                     $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true);
@@ -569,7 +574,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.tooltip.min.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
         $this->_helper->pageTitle('ot-account-add:title');
-        
+
         $this->view->form = $form;
         $this->view->permissions = $permissions;
         $this->view->permissionList = Zend_Json::encode($permissions);
@@ -1037,7 +1042,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->headScript()->appendFile(
             $this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.passStrength.js'
         );
-        
+
         $this->_helper->pageTitle('ot-account-changePassword:title');
         $this->view->form  = $form;
     }
@@ -1051,7 +1056,7 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $account = new Ot_Model_DbTable_Account();
         $form = $account->changeRoleForm();
-        
+
 
         if ($this->_request->isPost()) {
 

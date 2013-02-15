@@ -3,7 +3,7 @@
 <?php if (count($this->allApps) != 0): ?>
     <?php foreach ($this->allApps as $c): ?>
     <div class="consumer" style="background-image:url(<?php echo ($c['imageId'] != 0) ? $this->url(array('imageId' => $c['imageId']), 'image', true) : ''; ?>">
-        <div class="details">    
+        <div class="details">
             <div class="name">
                 <?php echo $c['name']; ?>
                 <?php if ($c['website'] != ''): ?>
@@ -11,8 +11,8 @@
                 <?php endif; ?>
             </div>
             <div class="description">
-                Owned by <a href="<?php echo $this->url(array('accountId' => $c['accountId']), 'account', true); ?>"><?php echo (isset($c['user'])) ? $c['user']->firstName . ' ' . $c['user']->lastName . ' (' . $c['user']->username . ')' : 'Unknown User'; ?></a><br /><br />
-                <?php echo nl2br($c['description']); ?></div>                                                            
+                Owned by <a href="<?php echo $this->url(array('tab' => 'apps', 'accountId' => $c['accountId']), 'account', true); ?>"><?php echo (isset($c['user'])) ? $c['user']->firstName . ' ' . $c['user']->lastName . ' (' . $c['user']->username . ')' : 'Unknown User'; ?></a><br /><br />
+                <?php echo nl2br($c['description']); ?></div>
             <div class="key"><b><?php echo $this->translate('ot-account-index:apiapp-apiKey'); ?>:</b> <?php echo $c['apiKey']; ?></div>
         </div>
 
@@ -21,4 +21,4 @@
     <?php endforeach; ?>
 <?php else: ?>
 <?php echo $this->translate('ot-account-index:apiapp-noApplications'); ?>
-<?php endif; ?>           
+<?php endif; ?>

@@ -6,7 +6,7 @@
 
 <p>
     Your API key if required on every request.  You will append your key in the
-    query string of your request.  For example, if you wanted to get the version 
+    query string of your request.  For example, if you wanted to get the version
     information for this application you'd make a GET request  to the following URL:
 </p>
 
@@ -15,41 +15,50 @@
 </p>
 <br />
 <p>
-    For POST, PUT, and DELETE methods, put all parameters (except your api key) 
+    For POST, PUT, and DELETE methods, put all parameters (except your api key)
     as a URL encoded string in the post body of the request.
 </p>
 <a name="apitop"></a>
 <br />
 
-<div id="jump">
-    <select id="jumpbox">
-        <option value="">Jump to endpoint...</option>
-        <?php foreach ($this->endpoints as $e): ?>
-            <option><?php echo $e['name']; ?></option>
-        <?php endforeach; ?>
-    </select>
-</div>
-
-<h2>API Methods Available</h2>
-
-<?php foreach ($this->endpoints as $endpoint) : ?>
-<div class="apiEndpoint">
-    <a class="backToTop" href="#apitop">Back to top</a>
-    <h2><a name="<?php echo $endpoint['name']; ?>"></a><?php echo Zend_Registry::get('siteUrl'); ;?>/api/<?php echo $endpoint['name']; ?></h2>
-    <div class="endpointDescription">
-        <?php echo $endpoint['description']; ?>
+<?php if (count($this->endpoints) != 0): ?>
+    <div id="jump">
+        <select id="jumpbox">
+            <option value="">Jump to endpoint...</option>
+            <?php foreach ($this->endpoints as $e): ?>
+                <option><?php echo $e['name']; ?></option>
+            <?php endforeach; ?>
+        </select>
     </div>
 
-    <?php foreach ($endpoint['methods'] as $method => $doc) : ?>
-    <div class="method">
-        <div class="protocol">
-            <b><?php echo strtoupper($method); ?> Request</b>
+    <h2>API Methods Available For Your Account</h2>
+
+    <?php foreach ($this->endpoints as $endpoint) : ?>
+    <div class="apiEndpoint">
+        <a class="backToTop" href="#apitop">Back to top</a>
+        <h2><a name="<?php echo $endpoint['name']; ?>"></a><?php echo Zend_Registry::get('siteUrl'); ;?>/api/<?php echo $endpoint['name']; ?></h2>
+        <div class="endpointDescription">
+            <?php echo $endpoint['description']; ?>
         </div>
 
-        <div class="methodDescription"><?php echo $doc; ?></div>   
+        <?php foreach ($endpoint['methods'] as $method => $doc) : ?>
+        <div class="method">
+            <div class="protocol">
+                <b><?php echo strtoupper($method); ?> Request</b>
+            </div>
+
+            <div class="methodDescription"><?php echo $doc; ?></div>
+        </div>
+
+        <?php endforeach; ?>
     </div>
 
     <?php endforeach; ?>
-</div>
+<?php else: ?>
+    <div class="ui-widget">
+    <div class="ui-state-highlight ui-corner-all" style="text-align: center; font-weight: bold;">
+        No API Methods available for your account.
+    </div>
+    </div>
 
-<?php endforeach; ?>
+<?php endif; ?>
