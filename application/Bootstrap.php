@@ -1,5 +1,5 @@
 <?php
-class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
-{
+class Bootstrap extends Ot_Application_Bootstrap_Bootstrap
+{        
 
 }

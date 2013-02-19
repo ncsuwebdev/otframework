@@ -1,13 +1,6 @@
 <?php
-class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
+class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
 {
-    protected function _initAutoload()
-    {
-        require_once 'Zend/Loader/Autoloader.php';
-        $loader = Zend_Loader_Autoloader::getInstance();
-        $loader->setFallbackAutoloader(true);
-    }
-
     protected function _initUrl()
     {
         $baseUrl = substr($_SERVER['PHP_SELF'], 0, strpos($_SERVER['PHP_SELF'], '/public/index.php'));
@@ -260,7 +253,7 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
     public function _initCronjobs()
     {
         $eq = new Ot_Cron('Ot_EmailQueue', 'Processes emails from the queue', '* * * * *');
-        $eq->setMethod(new Ot_Model_Cronjob_EmailQueue());
+        $eq->setMethod(new Ot_Cronjob_EmailQueue());
 
         $register = new Ot_Cron_Register();
         $register->registerCronjob($eq);
@@ -271,19 +264,19 @@ class Ot_Bootstrap extends Zend_Application_Module_Bootstrap
         $register = new Ot_Api_Register();
         
         $endpoint = new Ot_Api_Endpoint('ot-account', 'Deals with the accounts in the system');
-        $endpoint->setMethod(new Ot_Model_Apiendpoint_Account());
+        $endpoint->setMethod(new Ot_Apiendpoint_Account());
         $register->registerApiEndpoint($endpoint);
         
         $endpoint = new Ot_Api_Endpoint('ot-version', 'Returns the OT Framework version numbers');
-        $endpoint->setMethod(new Ot_Model_Apiendpoint_Version());
+        $endpoint->setMethod(new Ot_Apiendpoint_Version());
         $register->registerApiEndpoint($endpoint);
         
         $endpoint = new Ot_Api_Endpoint('ot-cron', 'Deals with the cron jobs in the system');
-        $endpoint->setMethod(new Ot_Model_Apiendpoint_Cron());
+        $endpoint->setMethod(new Ot_Apiendpoint_Cron());
         $register->registerApiEndpoint($endpoint);
         
         $endpoint = new Ot_Api_Endpoint('ot-myaccount', 'Deals with the current API account');
-        $endpoint->setMethod(new Ot_Model_Apiendpoint_MyAccount());
+        $endpoint->setMethod(new Ot_Apiendpoint_MyAccount());
         $register->registerApiEndpoint($endpoint);
     }
 
