@@ -2,22 +2,25 @@
 class Ot_Cli_Output
 {    
     public static function error($message)
-    {
-        echo "\n\n"
+    {        
+        $string = "\n\n"
            . "================================================\n"
            . "ERROR!\n"
            . "================================================\n\n"
            . $message
            . "\n\n"
            ;
-           
+        
+        file_put_contents('php://stderr', $string);
+        
         exit;
+        
     }
     
     public static function success($message)
     {
         
-        echo "\n\n"
+        $string = "\n\n"
            . "================================================\n"
            . "SUCCESS!\n"
            . "================================================\n\n"
@@ -25,6 +28,8 @@ class Ot_Cli_Output
            . "\n\n"
            ;
            
+        echo $string;
+        
         exit;
     }    
 }
