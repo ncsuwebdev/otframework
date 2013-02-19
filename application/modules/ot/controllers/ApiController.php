@@ -43,144 +43,173 @@ class Ot_ApiController extends Zend_Controller_Action
     }
 
     public function indexAction()
-    {
+    {        
+        try {
+            $apiRegister = new Ot_Api_Register();
 
-        $register = new Ot_Api_Register();
+            $vr = new Ot_Var_Register();
 
-        $params = $this->_getAllParams();
+            $params = $this->_getAllParams();
 
-        $endpoint = $params['endpoint'];
-
-        $thisEndpoint = $register->getApiEndpoint($endpoint);
-
-        if (!isset($params['key']) || empty($params['key'])) {
-            throw new Ot_Exception('You must provide an API key');
-        }
-
-        $returnType = 'json';
-        if (isset($params['type']) && in_array(strtolower($returnType), array('json', 'php'))) {
-            $returnType = strtolower($params['type']);
-        }
-
-        $apiApp = new Ot_Model_DbTable_ApiApp();
-
-        $thisApp = $apiApp->getAppByKey($params['key']);
-
-        $otAccount = new Ot_Model_DbTable_Account();
-        $thisAccount = $otAccount->find($thisApp->accountId);
-
-        $acl = new Ot_Acl('remote');
-
-        $vr = new Ot_Var_Register();
-
-        if (count($thisAccount->role) > 1) {
-
-            $roles = array();
-            // Get role names from the list of role Ids
-            foreach ($thisAccount->role as $r) {
-                $roles[] = $acl->getRole($r);
+            $returnType = 'json';
+            if (isset($params['type']) && in_array(strtolower($returnType), array('json', 'php'))) {
+                $returnType = strtolower($params['type']);
+            }
+            
+            if (!isset($params['endpoint']) || empty($params['endpoint'])) {
+                return $this->_validOutput(array('message' => 'Welcome to the ' . $vr->getVar('appTitle')->getValue() . ' API.  You will need an API key to get any further. Visit ' . Zend_Registry::get('siteUrl') . '/account to get one.'), $returnType);
             }
 
-            // Create a new role that inherits from all the returned roles
-            $roleName = implode(',', $roles);
+            $endpoint = $params['endpoint'];
 
-            $thisAccount->role = $roleName;
+            $thisEndpoint = $apiRegister->getApiEndpoint($endpoint);
 
-            $acl->addRole(new Zend_Acl_Role($roleName), $roles);
+            if (is_null($thisEndpoint)) {
+                return $this->_errorOutput('Invalid Endpoint', $returnType, 404);
+            }
 
-        } else if (count($thisAccount->role) == 1) {
-            $thisAccount->role = $thisAccount->role[0];
+            if (!isset($params['key']) || empty($params['key'])) {
+                return $this->_errorOutput('You must provide an API key', $returnType, 403);
+            }        
+
+            $apiApp = new Ot_Model_DbTable_ApiApp();
+
+            $thisApp = $apiApp->getAppByKey($params['key']);
+
+            if (is_null($thisApp)) {
+                return $this->_errorOutput('Invalid API key', $returnType, 403);
+            }
+
+            $otAccount = new Ot_Model_DbTable_Account();
+            $thisAccount = $otAccount->find($thisApp->accountId);
+
+            if (is_null($thisAccount)) {
+                return $this->_errorOutput('No user found for this API key', $returnType, 403);
+            }
+
+            $acl = new Ot_Acl('remote');
+
+            if (count($thisAccount->role) > 1) {
+
+                $roles = array();
+                // Get role names from the list of role Ids
+                foreach ($thisAccount->role as $r) {
+                    $roles[] = $acl->getRole($r);
+                }
+
+                // Create a new role that inherits from all the returned roles
+                $roleName = implode(',', $roles);
+
+                $thisAccount->role = $roleName;
+
+                $acl->addRole(new Zend_Acl_Role($roleName), $roles);
+
+            } else if (count($thisAccount->role) == 1) {
+                $thisAccount->role = $thisAccount->role[0];
+            }
+
+            if (!$acl->hasRole($thisAccount->role)) {
+                $thisAccount->role = $vr->getVar('defaultRole')->getValue();
+            }
+
+            $role = $thisAccount->role;
+
+            if ($role == '' || !$acl->hasRole($role)) {
+                $role = $vr->getVar('defaultRole')->getValue();
+            }
+
+            // the api "module" here is really a kind of placeholder
+            $aclResource = 'api_' . strtolower($thisEndpoint->getName());
+
+            Zend_Auth::getInstance()->getStorage()->write($thisAccount);
+            
+        } catch (Exception $e) {
+            return $this->_errorOutput($e->getMessage(), $returnType);
         }
 
-        if (!$acl->hasRole($thisAccount->role)) {
-            $thisAccount->role = $vr->getVar('defaultRole')->getValue();
-        }
+        $data = array();
 
-        $role = $thisAccount->role;
+        if ($this->_request->isPost()) {
 
-        if ($role == '' || !$acl->hasRole($role)) {
-            $role = $vr->getVar('defaultRole')->getValue();
-        }
+            if (!$acl->isAllowed($role, $aclResource, 'post')) {
+                return $this->_errorOutput('You do not have permission to access this endpoint with POST', $returnType, 403);
+            }
 
-        // the api "module" here is really a kind of placeholder
-        $aclResource = 'api_' . strtolower($thisEndpoint->getName());
+            try {
+                $data = $thisEndpoint->getMethod()->post($params);
+            } catch (Exception $e) {
+                return $this->_errorOutput($e->getMessage(), $returnType);
+            }
 
-        Zend_Auth::getInstance()->getStorage()->write($thisAccount);
+        } else if ($this->_request->isPut()) {
 
-        if (!is_null($thisEndpoint)) {
+            if (!$acl->isAllowed($role, $aclResource, 'put')) {
+                return $this->_errorOutput('You do not have permission to access this endpoint with PUT', $returnType, 403);
+            }
 
-            $data = array();
-
-            if ($this->_request->isPost()) {
-
-                if (!$acl->isAllowed($role, $aclResource, 'post')) {
-                    return $this->_output(array('error' => 'You do not have permission to access this endpoint with POST', 'status' => 'failure'), $returnType);
-                }
-
-                try {
-                    $data = $thisEndpoint->getMethod()->post($params);
-                } catch (Ot_Exception $e) {
-                    return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
-                }
-
-            } else if ($this->_request->isPut()) {
-
-                if (!$acl->isAllowed($role, $aclResource, 'put')) {
-                    return $this->_output(array('error' => 'You do not have permission to access this endpoint with PUT', 'status' => 'failure'), $returnType);
-                }
-
-                try {
-                    $data = $thisEndpoint->getMethod()->put($params);
-                } catch (Ot_Exception $e) {
-                    return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
-                }
+            try {
+                $data = $thisEndpoint->getMethod()->put($params);
+            } catch (Exception $e) {
+                return $this->_errorOutput($e->getMessage(), $returnType);
+            }
 
 
-            } else if ($this->_request->isDelete()) {
+        } else if ($this->_request->isDelete()) {
 
-                if (!$acl->isAllowed($role, $aclResource, 'delete')) {
-                    return $this->_output(array('error' => 'You do not have permission to access this endpoint with DELETE', 'status' => 'failure'), $returnType);
-                }
+            if (!$acl->isAllowed($role, $aclResource, 'delete')) {
+                return $this->_errorOutput('You do not have permission to access this endpoint with DELETE', $returnType, 403);
+            }
 
-                try {
-                    $data = $thisEndpoint->getMethod()->delete($params);
-                }  catch (Ot_Exception $e) {
-                    return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
-                }
-
-            } else {
-
-                if (!$acl->isAllowed($role, $aclResource, 'get')) {
-                    return $this->_output(array('error' => 'You do not have permission to access this endpoint with GET', 'status' => 'failure'), $returnType);
-                }
-
-                try {
-                    $data = $thisEndpoint->getMethod()->get($params);
-                }  catch (Ot_Exception $e) {
-                    return $this->_output(array('error' => $e->getMessage(), 'status' => 'failure'), $returnType);
-                }
+            try {
+                $data = $thisEndpoint->getMethod()->delete($params);
+            }  catch (Exception $e) {
+                return $this->_errorOutput($e->getMessage(), $returnType);
             }
 
         } else {
-            return $this->_output(array('error' => 'API endpoint could not be found', 'status' => 'failure'));
-        }
 
+            if (!$acl->isAllowed($role, $aclResource, 'get')) {
+                return $this->_errorOutput('You do not have permission to access this endpoint with GET', $returnType, 403);
+            }
+
+            try {
+                $data = $thisEndpoint->getMethod()->get($params);
+            }  catch (Exception $e) {
+                return $this->_errorOutput($e->getMessage(), $returnType);
+            }
+        }
+            
+        return $this->_validOutput($data, $returnType);
+    }
+
+    protected function _validOutput($data, $returnType)
+    {               
         if (!is_array($data)) {
             $data = (array)$data;
         }
-
-
+        
         $ret = array(
             'data' => $data,
             'status' => 'success'
         );
-
-        return $this->_output($ret, $returnType);
+        
+        return $this->_output($ret, $returnType, 200);
     }
-
-
-    protected function _output($data, $returnType) {
-
+    
+    protected function _errorOutput($errorMessage, $returnType, $code = 500)
+    {
+        $ret = array(
+            'status'       => 'failure',
+            'errorMessage' => $errorMessage,
+        );
+        
+        return $this->_output($ret, $returnType, $code);
+    }
+    
+    protected function _output($data, $returnType, $code = 200) 
+    {
+        $this->getResponse()->setHttpResponseCode($code);
+        
         switch ($returnType) {
             case 'php':
                 header('Content-type: text/php');
