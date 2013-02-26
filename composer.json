@@ -30,6 +30,7 @@
         }
     },
     "scripts": {
-            "post-install-cmd": "php ./otutils/composerSetup.php"
+        "post-install-cmd": "php ./otutils/composerSetup.php",
+        "post-update-cmd": "php ./otutils/composerSetup.php"
     }
 }
