@@ -1,0 +1,98 @@
+{
+    "hash": "ed44104c8a8f6a57b57324196e91255c",
+    "packages": [
+        {
+            "name": "ncsuwebdev/php-ncstate",
+            "version": "1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ncsuwebdev/PHP-Ncstate.git",
+                "reference": "1.0.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ncsuwebdev/PHP-Ncstate/zipball/1.0.6",
+                "reference": "1.0.6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Ncstate": "/"
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Jason Austin",
+                    "email": "jfaustin@ncsu.edu",
+                    "homepage": "http://ot.ncsu.edu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Utility library for NC State",
+            "homepage": "http://github.com/ncsuwebdev/PHP-Ncstate",
+            "keywords": [
+                "ncstate",
+                "ncsu"
+            ],
+            "time": "2013-02-06 20:22:08"
+        },
+        {
+            "name": "zendframework/zendframework1",
+            "version": "dev-release-1.12",
+            "source": {
+                "type": "svn",
+                "url": "http://framework.zend.com/svn/framework/standard",
+                "reference": "/branches/release-1.12/@25268"
+            },
+            "require": {
+                "php": ">=5.2.11"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-trunk": "1.12.x-dev",
+                    "dev-release-1.0": "1.0.x-dev",
+                    "dev-release-1.5": "1.5.x-dev",
+                    "dev-release-1.6": "1.6.x-dev",
+                    "dev-release-1.7": "1.7.x-dev",
+                    "dev-release-1.8": "1.8.x-dev",
+                    "dev-release-1.9": "1.9.x-dev",
+                    "dev-release-1.10": "1.10.x-dev",
+                    "dev-release-1.11": "1.11.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend": "library/"
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "include-path": [
+                "library/"
+            ],
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Zend Framework 1",
+            "homepage": "http://framework.zend.com/",
+            "keywords": [
+                "ZF1",
+                "framework"
+            ],
+            "time": "2013-02-25 19:06:28"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "zendframework/zendframework1": 20
+    }
+}

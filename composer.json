@@ -25,8 +25,11 @@
     },
     "autoload": {
         "psr-0": {
-            "Ot": "library/Ot",            
-            "Oauth": "library/Oauth"
+            "Ot": "library",            
+            "Oauth": "library"
         }
+    },
+    "scripts": {
+            "post-install-cmd": "php ./otutils/composerSetup.php"
     }
 }
