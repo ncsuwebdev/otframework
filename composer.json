@@ -25,7 +25,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Ot": "/library/Ot"
+            "Ot": "library/Ot",            
+            "Oauth": "library/Oauth"
         }
     }
 }
