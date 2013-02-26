@@ -1,7 +1,7 @@
 <?php
 
-$otfVendorPath = realpath(dirname(__FILE__) . '/vendor/ncsuwebdev/otframework');
-$basePath = realpath(dirname(__FILE__));
+$otfVendorPath = realpath(dirname(__FILE__) . '/../');
+$basePath = realpath(dirname(__FILE__) . '/../../../../');
 
 $foldersToLink = array(
     '/application/languages/ot',

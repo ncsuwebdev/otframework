@@ -49,6 +49,7 @@ class Ot_FrontController_Plugin_Language extends Zend_Controller_Plugin_Abstract
         }
         
         $translate = new Zend_Translate('csv', APPLICATION_PATH . '/languages', 'auto', $options);
+        $translate->addTranslation(APPLICATION_PATH . '/languages/ot');
         $translate->addTranslation(APPLICATION_PATH . '/../overrides/languages');
         
         if (!$translate->isAvailable($language)) {
