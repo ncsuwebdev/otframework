@@ -30,7 +30,7 @@
         }
     },
     "scripts": {
-        "post-install-cmd": "Ot_Composer_Installer::symlinks",
-        "post-update-cmd": "Ot_Composer_Installer::symlinks"
+        "post-install-cmd": "Ot_Composer_Installer::install",
+        "post-update-cmd": "Ot_Composer_Installer::install"
     }
 }

@@ -3,12 +3,39 @@ use Composer\Script\Event;
 
 class Ot_Composer_Installer
 {
-    public static function symlinks(Event $event)
+    public static function install(Event $event)
     {
-        $composer = $event->getComposer();
-        
+        $basePath = realpath($event->getComposer()->getConfig()->get('vendor-dir') . '/../');
+        $otfVendorPath = realpath($event->getComposer()->getConfig()->get('vendor-dir') . '/ncsuwebdev/otframework');
+                
         $io = $event->getIO();
         
-        $io->write(print_R($composer, true));
+        $foldersToLink = array(
+            '/application/languages/ot',
+            '/application/modules/ot',
+            '/public/scripts/ot',
+            '/public/css/ot',
+            '/public/images/ot',
+            '/public/themes/ot',
+            '/public/min',
+            '/otutils',
+        );
+
+        foreach ($foldersToLink as $f) {
+            exec('rm ' . $basePath . $f);
+            exec('ln -s ' . $otfVendorPath . $f . ' ' . $basePath . $f);
+            $io->write('Symlinking ' . $f);
+        }
+
+        $writable = array(
+            '/cache',
+            '/overrides',
+        );
+
+        foreach ($writable as $w) {
+            exec('chmod -R 757 ' . $basePath . $w);
+            $io->write('Making ' . $w . ' writable.');
+        }
+
     }
 }
