@@ -5,11 +5,10 @@ use Composer\Script\Event;
  * Installer to be used when composer is installing the base app.
  */
 class Ot_Composer_Installer
-{
-    public static function install(Event $event)
+{   
+    public static function setupSymlinks(Event $event)
     {
-        $basePath = realpath($event->getComposer()->getConfig()->get('vendor-dir') . '/../');
-        $otfVendorPath = realpath($event->getComposer()->getConfig()->get('vendor-dir') . '/ncsuwebdev/otframework');
+        $paths = self::_helperDirectory($event);
                 
         $io = $event->getIO();
         
@@ -25,20 +24,119 @@ class Ot_Composer_Installer
         );
 
         foreach ($foldersToLink as $f) {
-            exec('rm ' . $basePath . $f);
-            exec('ln -s ' . $otfVendorPath . $f . ' ' . $basePath . $f);
+            unlink($paths['basePath'] . $f);
+            symlink($paths['otfVendorPath'] . $f, $paths['basePath'] . $f);
+            
             $io->write('Symlinking ' . $f);
-        }
-
+        }        
+    }
+    
+    public static function setupWritableDirectories(Event $event)
+    {
+        $paths = self::_helperDirectory($event);
+                
+        $io = $event->getIO();
+        
         $writable = array(
             '/cache',
             '/overrides',
         );
 
         foreach ($writable as $w) {
-            exec('chmod -R 757 ' . $basePath . $w);
+            self::_helperRecursiveChmod($paths['basePath'] . $w, 0757);
             $io->write('Making ' . $w . ' writable.');
         }
-
     }
+    
+    public static function copyApplicationIni(Event $event)
+    {
+        $paths = self::_helperDirectory($event);
+                
+        $io = $event->getIO();
+        
+        if (!is_file($paths['basePath'] . '/application/configs/application.ini')) {
+            copy($paths['basePath'] . '/application/configs/application.default.ini', $paths['basePath'] . '/application/configs/application.ini');
+            
+            $io->write('application.default.ini copied to application.ini');            
+        } else {
+            $io->write('application.ini already exists...skipping');
+        }
+        
+    }
+    
+    public static function copyDbMigrations(Event $event)
+    {
+        $paths = self::_helperDirectory($event);
+                
+        $io = $event->getIO();        
+        
+        self::_helperRecursiveCopy($paths['otfVendorPath'] . '/db', $paths['basePath'] . '/db');
+        $io->write('db migration files copied');
+    }    
+    
+    public static function _helperDirectory(Event $event)
+    {
+        return array(
+            'basePath'      => realpath($event->getComposer()->getConfig()->get('vendor-dir') . '/../'),
+            'otfVendorPath' => realpath($event->getComposer()->getConfig()->get('vendor-dir') . '/ncsuwebdev/otframework'),
+        );
+    }
+    
+    public static function _helperRecursiveChmod($path, $permission)
+    {
+        // Check if the path exists
+        if (!file_exists($path)) {
+            return(false);
+        }
+        
+        // See whether this is a file
+        if (is_file($path)) {
+            
+            // Chmod the file with our given filepermissions
+            chmod($path, $permission);
+            
+        // If this is a directory...
+        } elseif (is_dir($path)) {
+            
+            // Then get an array of the contents
+            $foldersAndFiles = scandir($path);
+            
+            // Remove "." and ".." from the list
+            $entries = array_slice($foldersAndFiles, 2);
+            
+            // Parse every result...
+            foreach ($entries as $entry) {
+                
+                // And call this function again recursively, with the same permissions
+                self::_helperRecursiveChmod($path . "/" . $entry, $permission);
+                
+            }
+            
+            // When we are done with the contents of the directory, we chmod the directory itself
+            chmod($path, $permission);
+        }
+        
+        // Everything seemed to work out well, return TRUE
+        return(true);
+    }
+    
+    public static function _helperRecursiveCopy($src, $dst) 
+    { 
+        $dir = opendir($src); 
+        @mkdir($dst); 
+        
+        while (false !== ($file = readdir($dir))) { 
+            
+            if (($file != '.') && ($file != '..')) { 
+                
+                if (is_dir($src . '/' . $file)) { 
+                    self::_helperRecursiveCopy($src . '/' . $file, $dst . '/' . $file); 
+                } else { 
+                    copy($src . '/' . $file, $dst . '/' . $file); 
+                } 
+            } 
+        } 
+        
+        closedir($dir); 
+    } 
 }
