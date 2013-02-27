@@ -24,7 +24,7 @@ class Ot_Composer_Installer
         );
 
         foreach ($foldersToLink as $f) {
-            unlink($paths['basePath'] . $f);
+            @unlink($paths['basePath'] . $f);
             symlink($paths['otfVendorPath'] . $f, $paths['basePath'] . $f);
             
             $io->write('Symlinking ' . $f);
