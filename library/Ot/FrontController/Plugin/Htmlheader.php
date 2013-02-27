@@ -47,13 +47,15 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         //   <link> tags for each item instead of grouping them into a single file
         $useMinify = $registry->useMinify->getValue();
         
-        if($useMinify) {
-            $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
-            $view->minifyHeadLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
+        if ($useMinify) {
+            $view->minifyHeadLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
+            $view->minifyHeadLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/bootstrap/css/bootstrap.min.css');
+            $view->minifyHeadLink()->prependStylesheet($baseUrl . '/css/ot/common.css');
         } else {
-            $view->headLink()->appendStylesheet($baseUrl . '/public/css/ot/common.css');
-            $view->headLink()->appendStylesheet($baseUrl . '/public/' . $themePath . '/public/jQueryUI/ui.all.css');
-        }
+            $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
+            $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/bootstrap/css/bootstrap.min.css');
+            $view->headLink()->prependStylesheet($baseUrl . '/css/ot/common.css');
+        }                 
         
         if (isset($themeConfig->css->file)) {
             foreach ($themeConfig->css->file as $c) {
@@ -70,7 +72,7 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                         $view->headLink()->appendStylesheet($path);
                     }
                 } elseif ($c->order == 'prepend') {
-                    if($useMinify) {
+                    if ($useMinify) {
                         $view->minifyHeadLink()->prependStylesheet($path);
                     } else {
                         $view->headLink()->prependStylesheet($path);
@@ -81,10 +83,12 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         
         if($useMinify) {
             $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
+            $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/bootstrap.min.js');
             $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
             $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
         } else {
             $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
+            $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/bootstrap.min.js');
             $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
             $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
         }

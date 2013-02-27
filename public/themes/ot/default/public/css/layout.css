@@ -1,84 +1,18 @@
-body, html {
-    background-color: #E0E0E0;
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
 }
 
-#hd {
-    border: 1px solid #333333;
-    border-bottom: 1px solid #000000;
-    height: 50px;
-    padding: 5px 7px 5px 7px;
-    margin-top: 10px;
-    background-color: #7FADFF;
+.sidebar-nav {
+    padding: 9px 0;
 }
 
-#appTitle {
-    font-size: 1.3em;
-    font-weight: bold;    
-}
-
-#pageTitle {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 10px;    
-}
-
-.authInfo {
-    text-align: right;
-    float: right;
-    line-height: 30px;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.authInfo select {
-    font-weight: normal;
-}
-
-#nav {
-    border-top: 1px solid #999999;    
-}
-
-#bd {
+@media (max-width: 980px) {
     
-}
-
-#ft {
-    font-size: 11px;
-    border: 1px solid #333333;
-    background-color: #333333;
-    color: #999999;
-    height: 25px;
-    margin-bottom: 15px;
-    padding: 5px;
-}
-
-#ft a {
-    color: #666666;    
-}
-
-#doc4 {
-        
-}
-
-.content {
-    padding: 10px 7px 7px 7px;
-    min-height: 400px;
-    background-color: #FFFFFF;
-    border-left: 1px solid #333333;
-    border-right: 1px solid #333333;
-}
-
-#overrideTranslate {
-    background-color: #666;
-    border-top: 1px solid #333;
-    border-right: 1px solid #333;
-    border-left: 1px solid #333;
-    padding: 2px 5px;
-    text-align: right;
-    font-size: .9em;
-}
-
-#overrideTranslate a {
-    color: #BBB;
-    text-decoration: none;
+    /* Enable use of floated navbar text */
+    .navbar-text.pull-right {
+        float: none;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
 }

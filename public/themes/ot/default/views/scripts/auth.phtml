@@ -23,7 +23,7 @@ if (!$auth->hasIdentity()) {
 
     echo '<a href="' . $this->url(array(), 'account', true) . '" id="authMyAccount">' . $this->translate('theme-scripts-auth:myAccount') . '</a>'
         . '&nbsp; | &nbsp;'
-        . '<a href="' . $this->url(array('action' => 'logout'), 'login', true) . '" id="authLogout" class="authModal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';
+        . '<a href="#authLogoutDialog" data-toggle="modal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';
 
     $identity = $auth->getIdentity();
 
@@ -31,21 +31,3 @@ if (!$auth->hasIdentity()) {
         echo '<br /><span>You are masquerading as <a href="' . $this->url(array('action' => 'index', 'accountId' => $identity->accountId), 'account', true) . '">' . $identity->firstName . ' ' . $identity->lastName . '</a>. ' . '<a href="' . $this->url(array('action' => 'unmasquerade'), 'account', true) . '">Stop Masquerading</a></span>';
     }
 }  
-
-$translate = Zend_Registry::get('Zend_Translate');
-if (count($translate->getList()) > 1) {
-    $list = $translate->getList();
-    foreach ($list as &$l) {
-        $l = Ot_Language::getLanguageName($l);
-    }
-    unset($l);
-
-    echo '&nbsp; | &nbsp;';
-    echo $this->formLabel('language_select', 'Language: ');
-    echo $this->formSelect('language_select', $translate->getLocale(), null, $list);
-}
-
-?>
-<div id="authLogoutDialog" title="Logout">
-<?php echo $this->translate('theme-scripts-auth:sureLogOut'); ?>
-</div>

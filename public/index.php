@@ -20,6 +20,8 @@
  * @version    SVN: $Id: $
  */
 
+require_once realpath(dirname(__FILE__) . '/../vendor/autoload.php');
+
 ini_set('memory_limit', '-1');
 
 // Define path to application directory

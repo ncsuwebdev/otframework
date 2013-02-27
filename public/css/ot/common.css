@@ -148,17 +148,6 @@ span.required {
     color: #C00;
 }
 
-ul li {
-    list-style-type: inherit;
-}
-
-ol li {
-    list-style-type: decimal;
-}
-
-li {
-    margin-left: 15px;
-}
 
 div.maintenance {
     font-size: 1.3em;
@@ -208,11 +197,6 @@ div.maintenanceModeOn {
 div.maintenanceModeOff {
     background-color: #44DF29;
 }
-
-body {
-    text-align: left;
-}
-
 
 /** jQueryUi styles **/
 div#systemMessages {
@@ -271,12 +255,6 @@ a.linkButton span.ui-icon {
     margin-top: -8px;
 }
 
-input[type=submit], input[type=button], input[type=reset], button {
-    padding: .3em 1em;
-    font-size: .9em;
-    font-family: inherit;
-    cursor: pointer;
-}
 /** End jQueryUi styles **/
 
 div#loading {

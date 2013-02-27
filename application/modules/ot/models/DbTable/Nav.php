@@ -59,74 +59,76 @@ class Ot_Model_DbTable_Nav extends Ot_Db_Table
     {
         $cache = Zend_Registry::get('cache');
         
-        if (!$navData = $cache->load('Ot_Nav')) {
-            
+        if (!$navigation = $cache->load('Ot_Navigation_Container')) {
             $navData = $this->fetchAll();
+        
+            $pages = array();
+
+            foreach ($navData as $tab) {
+
+                $page = array(
+                    'id'         => $tab->id,
+                    'parent'     => $tab->parent,
+                    'label'      => $tab->display,     
+                    'module'     => $tab->module,
+                    'controller' => $tab->controller,
+                    'action'     => $tab->action,
+                    'route'      => 'default',
+                    'resource'   => $tab->module . '_' . (($tab->controller == '') ? 'index' : $tab->controller),
+                    'privilege'  => ($tab->action == '') ? 'index' : $tab->action
+                );                                      
+                
+                if (preg_match('/^http/i', $tab->link)) {
+                    $page['uri'] = $tab->link;
+                    $page['target'] = '_blank';
+                }
+                
+                $pages[] = $page;
+            }                        
             
-            $cache->save($navData, 'Ot_Nav');
+            $tree = $this->_buildTree($pages);
+            
+            $navigation = new Zend_Navigation($tree); 
+            
+            $cache->save($navigation, 'Ot_Navigation_Container');
         }
+
+        return $navigation;
         
-        return $navData;
     }
-    
-    /**
-     * Returns the nav html string
-     * 
-     * @var $navData  The array of the nav data
-     * @var addTitles Whether or not to add the module:controller:action string
-     *                in the title attribute
-     */
-    public function generateHtml($navData, $addTitles = false)
-    {
-        $str = '';
-        foreach ($navData['children'] as $c) {
-            if ($c['show']) {
-            	
-            	$childrenStr = '';
-            	if(count($c['children']) != 0) {
-            	   $childrenStr = $this->generateHtml($c, $addTitles);
-            	}
-            	
-            	$liStr = '';
-            	
-                $liStr .= '<li name="' . $c['display'] . '" id="navItem_' . $c['parent'] . '_' . $c['id'] . '">';
-                
-                $title = '';
-                if ($addTitles) {
-                    $title = 'title="' . $c['module'] . ':' . $c['controller'] . ':' . $c['action'] . '"';
-                }
-                
-                if ($c['allowed']) {
-                    $liStr .= '<a' . ($title ? ' ' . $title : '') . ' href="' . $c['link'] . '" target="'
-                         . $c['target'] . '"' . (($c['link'] == '') ? ' class="no-link"' : '') . '>' . $c['display'] . '</a>' . "\n";
-                    if(!$childrenStr && !$c['link']) { //if it's a dropdown with no accessible children, don't print it
-                        continue;
-                    }
-                } else { // not allowed
-                    if(!$childrenStr) {
-                    	continue;
-                    }
-                    // if it's not allowed but has children that are allowed, print them.
-                    $liStr .= '<a' . ($title ? ' ' . $title : '') . ' href="' . $c['link'] . '" target="'
-                         . $c['target'] . '"' . (($c['link'] == '') ? ' class="no-link"' : '') . '>' . $c['display'] . '</a>' . "\n"
-                         . '<ul>' . "\n" . $childrenStr . '</ul>' . "\n";
-                }
-                
-                
-                if($childrenStr) {
-                    $liStr .= '<ul>' . "\n";
-                    $liStr .= $childrenStr;
-                    $liStr .= '</ul>' . "\n";
-                }
         
-                $liStr .= "</li>";
+       
+    protected function _buildTree($allNodes, $node = null)
+    {
+        $children = array();
+        
+        $parentId = (is_null($node)) ? 0 : $node['id'];
+        
+        foreach ($allNodes as $key => $n) {            
+            if ($n['parent'] == $parentId) {
+                unset($n['parent']);
                 
-                $str .= $liStr;
+                $children[] = $n;
             }
         }
 
-        return $str;
+        foreach ($children as $key => $child) {
+            
+            $kids = $this->_buildTree($allNodes, $child);
+            
+            $keepers = array();
+            foreach ($kids as $k) {
+                $keepers[] = $k;                
+            }
+            
+            if (count($keepers) != 0) {
+                $children[$key]['pages'] = $keepers;
+            }
+        }
+                    
+        return $children;        
     }
+    
     
     /**
      * Overrides the insert method to clear the cache after the insert takes place
