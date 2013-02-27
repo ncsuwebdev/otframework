@@ -1,6 +1,9 @@
 <?php
 use Composer\Script\Event;
 
+/**
+ * Installer to be used when composer is installing the base app.
+ */
 class Ot_Composer_Installer
 {
     public static function install(Event $event)
