@@ -49,11 +49,11 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         
         if ($useMinify) {
             $view->minifyHeadLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
-            $view->minifyHeadLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/bootstrap/css/bootstrap.min.css');
+            $view->headLink()->appendStylesheet('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css');
             $view->minifyHeadLink()->prependStylesheet($baseUrl . '/css/ot/common.css');
         } else {
             $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
-            $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/bootstrap/css/bootstrap.min.css');
+            $view->headLink()->appendStylesheet('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css');
             $view->headLink()->prependStylesheet($baseUrl . '/css/ot/common.css');
         }                 
         
@@ -82,14 +82,14 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         }
         
         if($useMinify) {
-            $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
-            $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/bootstrap.min.js');
-            $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
+            $view->minifyHeadScript()->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+            $view->minifyHeadScript()->appendFile('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
+            $view->minifyHeadScript()->appendFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
             $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
         } else {
-            $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery.min.js');
-            $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/bootstrap.min.js');
-            $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/jquery-ui.min.js');
+            $view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+            $view->headScript()->appendFile('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
+            $view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
             $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
         }
         

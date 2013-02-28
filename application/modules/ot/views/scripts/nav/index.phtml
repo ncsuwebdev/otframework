@@ -41,7 +41,5 @@
 <span id="undoMessage"><?php echo $this->translate('ot-nav-index:undoMoveMessage'); ?></span>
 <br /><br /> 
 <div id="navEditorContainer">
-<ul id="masterList">
-    <?php echo $this->editNavTreeHtml; ?>
-</ul>
+<?php echo $this->navigation()->menu()->setOnlyActiveBranch(false)->setRenderParents(false)->setPartial('nav-edit.phtml'); ?>          
 </div>

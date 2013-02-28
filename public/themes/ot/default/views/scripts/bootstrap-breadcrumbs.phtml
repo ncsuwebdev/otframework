@@ -1,0 +1,25 @@
+<?php
+$pageCount = count($this->pages);
+?>
+
+<ul class="breadcrumb">
+<?php
+    $i = 0;
+
+    foreach ($this->pages as $page) {
+        echo "<li>";
+
+
+        $i++;
+        
+        if ($i < $pageCount) {
+            echo $this->navigation()->breadcrumbs()->htmlify($page);
+            echo '<span class="divider">/</span>';
+        } else {
+            echo $page->label;
+        }
+
+        echo "</li>\n";
+    }
+?>
+</ul>

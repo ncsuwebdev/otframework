@@ -6,7 +6,9 @@
 
 $this->headMeta()->appendName('keywords', $this->varReg('metaKeywords'))
                  ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
-                 ->appendHttpEquiv('Content-Language', 'en-US');             
+                 ->appendHttpEquiv('Content-Language', 'en-US')
+                 ->appendName('viewport', 'width=device-width, initial-scale=1.0');             
+
                  
 echo $this->headMeta() . "\n";
 $this->headTitle($this->varReg('appTitle'))
@@ -92,7 +94,9 @@ echo "\n";
                 }
             }
             ?>
-
+        
+        <?php echo $this->navigation()->breadcrumbs()->setMinDepth(0)->setMaxDepth(null)->setPartial('bootstrap-breadcrumbs.phtml'); ?>
+        
         <h1><?php echo $this->title; ?></h1>
         <?php echo $this->layout()->content; ?>
 

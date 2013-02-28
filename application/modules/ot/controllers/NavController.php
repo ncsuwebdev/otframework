@@ -79,12 +79,7 @@ class Ot_NavController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-nav-index:title');;
         
         $this->view->siteUrl = Zend_Registry::get('siteUrl');
-        $this->view
-             ->headScript()
-             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
-                                 
-        $nav = new Ot_Model_DbTable_Nav();
-        $this->view->editNavTreeHtml = $nav->generateHtml(Zend_Registry::get('navArray'), true);
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');        
     }
 
     

@@ -357,14 +357,13 @@ function setupLiveEvents() {
     
     // Prevent any links from sending the user to that page.  We need this since
     // we actually use the href as a property.
-    $('ul#masterList li a:not(.controlButton)').live('click', function(e) {
+    $(document).on("click", 'ul#masterList li a:not(.controlButton)', function(e) {
         e.preventDefault();
         e.stopPropagation();
         return false;
     });
-    
-    // deletes an element and all it's children
-    $('ul#masterList li').find('.deleteElement').live('click', function() {
+        
+    $('ul#masterList li').on('click', '.deleteElement', function() {
         if (confirm("Are you sure you want to delete this element?  This action cannot be undone.")) {
             $(this).parent().slideUp('normal', 
                 function() {
@@ -373,14 +372,14 @@ function setupLiveEvents() {
         }
     });
     
-    $('a.expander').live('click', function() {
+    $(document).on("click", 'a.expander', function() {
         $(this).parent().toggleClass('liOpen').toggleClass('liClosed');
         return false;
     });
 
 
     // populates the modal dialog with the link's properties when you click edit
-    $('ul#masterList li').find('.editElement').live('click', function() {
+    $('ul#masterList li').on('click', '.editElement', function() {
         
         var el = $(this).parent();
         
