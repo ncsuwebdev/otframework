@@ -18,6 +18,10 @@
     line-height:    0.7;
 }
 
+.sf-menu li {
+    line-height: 12px;
+}
+
 .sf-menu li a {
     font-size: 0.9em;
     height: 10px;

@@ -66,7 +66,7 @@ Your browser does not support inline frames or is currently configured  not to d
                 <br /><br />
             </div>
             <div id="header-nav-menu">
-            <?php echo $this->render('nav.phtml'); ?>
+                <?php echo $this->navigation()->menu()->setOnlyActiveBranch(false)->setRenderParents(false)->setPartial('oit-nav.phtml'); ?>          
             </div>
         </div>
 
