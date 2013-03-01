@@ -21,7 +21,7 @@ Features include:
 
 ##Creating an OTF App##
 
-There is a base skeleton app available for you to get started.  It is available at http://github.com/ncsuwebdev/base-otf-app and can be installed in on step via composer.
+There is a base skeleton app available for you to get started.  It is available at http://github.com/ncsuwebdev/base-otf-app and can be installed in one step via composer.
 
 **You should not start building your app from this git repo!!** Using the skeleton app is the preferred method to starting a project built on OTF.  Composer will also be the avenue for future OT Framework updates.
 
