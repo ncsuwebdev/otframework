@@ -1,0 +1,57 @@
+<?php
+        
+$html = array('<ul class="sf-menu">');
+ 
+$parentId = 0;
+
+foreach ($this->container as $page) {
+ 
+    // dropdown
+    $dropdown = !empty($page->pages);
+     
+    // header
+    $html[] = '<li name="' . $page->getLabel() . '" id="navItem_' . $parentId . '_' . $page->getId() . '">';
+ 
+    $html[] = '<a target="' . $page->getTarget() . '" href="' . $page->getHref() . '">' . $page->getLabel() . '</a>';
+ 
+    if (!$dropdown) {
+        $html[] = '</li>';
+        continue;
+    }
+ 
+    $html = array_merge($html, editSubmenu($page, $page->getId()));
+     
+    $html[] = "</li>";
+}
+ 
+$html[] = '</ul>';
+ 
+echo join(PHP_EOL, $html);
+
+function editSubmenu($page, $parentId) 
+{
+    $html = array();
+    
+    $html[] = '<ul>';
+    
+    foreach ($page->pages as $p) {
+        
+        $html[] = '<li name="' . $p->getLabel() . '" id="navItem_' . $parentId . '_' . $p->getId() . '">';
+                
+        $html[] = '<a target="' . $p->getTarget() . '" href="' . $p->getHref() . '">';
+     
+        $html[] = $p->getLabel();
+
+        $html[] = '</a>';
+        
+        if (!empty($p->pages)) {
+            $html = array_merge($html, editSubmenu($p, $p->getId()));
+        }
+        
+        $html[] = "</li>";        
+    }
+    
+    $html[] = '</ul>';
+    
+    return $html;
+}

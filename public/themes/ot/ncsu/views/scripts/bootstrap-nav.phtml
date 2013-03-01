@@ -1,0 +1,136 @@
+<?php
+$html = array('<ul class="nav">');
+ 
+$i = 0;
+
+foreach ($this->container as $page) {
+    // visibility of the page
+    if (!$page->isVisible()) {
+        continue;
+    }
+    
+    if ($i != 0) {                
+        $html[] = '<li class="nav-spacer"></li>';
+    }
+    
+    $i++;
+ 
+    // dropdown
+    $dropdown = !empty($page->pages);
+ 
+    // header
+    $html[] = '<li' . ($dropdown ? ' class="dropdown"' : '') . '>';
+ 
+    if (!$dropdown) {
+        $html[] = '<a href="' . $page->getHref() . '">';
+    } else {
+        $html[] = '<a href="#" class="dropdown-toggle" data-toggle="dropdown">';
+    }
+ 
+    $html[] = $page->getLabel();
+ 
+    if ($dropdown) {
+        $html[] = '<b class="caret"></b>';
+    }
+ 
+    $html[] = '</a>';
+ 
+    if (!$dropdown) {
+        $html[] = '</li>';
+        
+        continue;
+    }
+ 
+    $html[] = '<ul class="dropdown-menu">';
+ 
+    foreach ($page->pages as $subpage) {
+        // visibility of the sub-page
+        if (!$subpage->isVisible()) {
+            continue;
+        }
+        
+        $li = '<li';
+        
+        if (!empty($subpage->pages)) {
+            $li .= ' class="dropdown-submenu"';
+        }
+        
+        $li .= '>';
+        
+        $html[] = $li;
+        
+        if (!empty($subpage->pages)) {
+            $html[] = '<a href="#">';
+        } else {
+            $html[] = '<a href="' . $subpage->getHref() . '">';
+        }
+ 
+        if ($subpage->get('icon')) {
+            $html[] = '<i class="icon-' . $subpage->get('icon') . '"></i>';
+        }
+ 
+        $html[] = $subpage->getLabel();
+        $html[] = "</a>";
+        
+        if (!empty($subpage->pages)) {
+            $html = array_merge($html, submenu($subpage));
+        }
+        
+        $html[] = "</li>";
+    }
+ 
+    $html[] = "</ul>";
+    $html[] = "</li>";
+}
+ 
+$html[] = '</ul>';
+ 
+echo join(PHP_EOL, $html);
+
+function submenu($page) 
+{
+    $html = array();
+    
+    $html[] = '<ul class="dropdown-menu">';
+    
+    foreach ($page->pages as $p) {
+
+        // visibility of the sub-page
+        if (!$p->isVisible()) {
+            continue;
+        }
+        
+        $li = '<li';
+        
+        if (!empty($p->pages)) {
+            $li .= ' class="dropdown-submenu"';
+        }
+        
+        $li .= '>';
+        
+        $html[] = $li;
+        
+        if (!empty($p->pages)) {
+            $html[] = '<a href="#">';
+        } else {
+            $html[] = '<a href="' . $p->getHref() . '">';
+        }
+ 
+        if ($p->get('icon')) {
+            $html[] = '<i class="icon-' . $p->get('icon') . '"></i>';
+        }
+ 
+        $html[] = $p->getLabel();
+        $html[] = "</a>";
+        
+        if (!empty($p->pages)) {
+            $html = array_merge($html, submenu($p));
+        }
+        
+        $html[] = "</li>";        
+    }
+    
+    $html[] = '</ul>';
+    
+    return $html;
+}

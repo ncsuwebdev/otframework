@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configData>
+    <production>
+        <theme>
+            <name>NC State Theme</name>
+            <description>An official-ish NC State Theme</description>
+        </theme>
+        <css>
+            <file path="layout.css" order="append"/>
+            <file path="ncsu-bootstrap.css" order="append"/>
+        </css>
+        <scripts>
+            <file path="default.js" order="append"/>
+            <file path="default.js" order="append"/>
+        </scripts>
+    </production>
+</configData>

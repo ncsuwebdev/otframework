@@ -1,0 +1,86 @@
+/** 
+ * Nav Skin
+ *
+ * Remove this if you want it to be the default bluish looking style.  If you want
+ * to change the images, you need to copy those CSS declarations from the snapfish.css
+ * file and change them here so you don't change the original.
+ * See: http://users.tpg.com.au/j_birch/plugins/superfish/
+ **/
+ 
+ /*** ESSENTIAL STYLES ***/
+.sf-menu, .sf-menu * {
+    margin:         0;
+    padding:        0;
+    list-style:     none;
+}
+
+.sf-menu {
+    line-height:    0.7;
+}
+
+.sf-menu li {
+    line-height: 12px;
+}
+
+.sf-menu li a {
+    font-size: 0.9em;
+    height: 10px;
+    text-align: left;
+}
+.sf-menu li a:hover {
+    text-decoration: none;
+    color: #FFF;
+}
+
+ul.sf-menu li li:hover ul,
+ul.sf-menu li li.sfHover ul {
+    left:           10em; /* match ul width */
+    top:            0;
+}
+
+/*** DEMO SKIN ***/
+.sf-menu {
+    float:          left;
+    margin-bottom:  0em;
+}
+.sf-menu a {
+    border-left:    0px solid #FFF;
+    border-bottom:  0px solid #FFF;
+    padding:        .75em 1em;
+    text-decoration:none;
+    border-top:     0px solid #FFF;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+    color:          #AAA;
+}
+.sf-menu li li a, .sf-menu li li a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+    color:          #000;
+}
+.sf-menu li {
+    background: none;
+}
+.sf-menu li li {
+    background:     #484848;
+}
+.sf-menu li li li {
+    background:     #484848;
+}
+.sf-menu li:hover, .sf-menu li.sfHover,
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+    background-image: url(../images/superfish/menu-tile-hover.png);
+    background-repeat: repeat-x;
+    outline:        0;
+}
+.sf-menu li li:hover, .sf-menu li li.sfHover,
+.sf-menu li li a:focus, .sf-menu li li a:hover, .sf-menu li li a:active {
+    background:     #8F8F8F;
+    outline:        0;
+    color:          #FFF;
+}
+
+.sf-menu li:hover ul,
+.sf-menu li.sfHover ul {
+    left:           0;
+    top:            2.2em; /* match top ul list item height */
+    z-index:        99;
+}

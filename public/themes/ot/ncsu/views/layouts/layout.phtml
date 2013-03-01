@@ -1,0 +1,184 @@
+<?php echo $this->doctype('XHTML1_STRICT'); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<?php
+$this->headMeta()->appendName('keywords', $this->varReg('metaKeywords'))
+                 ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
+                 ->appendHttpEquiv('Content-Language', 'en-US');
+
+echo $this->headMeta() . "\n";
+$this->headTitle($this->varReg('appTitle'))
+     ->headTitle(strip_tags($this->title))
+     ->headTitle()->setSeparator(' - ');
+
+echo "\n";
+
+$brandingBar = new Ncstate_Brand_Bar(array(
+    'secure' => true,
+    'color'  => 'red_on_white'            
+));
+
+echo $this->headTitle() . "\n\n";
+
+//print the minified (common) css first, then the autoloaded css
+echo $this->minifyHeadLink() . "\n";
+
+//add the NCSU branding css to the headlink
+$this->headLink()->appendStylesheet($brandingBar->getStylesheetUrl());
+
+echo $this->headLink() . "\n\n";
+
+// print the minified (common) scripts first, then the autoloaded scripts
+echo $this->minifyHeadScript() . "\n";
+echo $this->headScript() . "\n";
+
+$this->overrideTranslation()->js();
+echo "\n";
+
+
+?>
+</head>
+
+<body>
+<input type="hidden" name="baseUrl" id="baseUrl" value="<?php echo $this->baseUrl(); ?>" />
+
+<!-- START NCSU Branding Utility Bar -->
+<?php
+echo $brandingBar->getIframeHtml();
+?>
+<!-- END NCSU Branding Utility Bar -->
+
+
+    <div class="container" id="header">
+        <div class="row">
+            <div id="site-title" class="span8">
+                <h1><?php echo $this->varReg('appTitle'); ?></h1>
+            </div>
+            <div id="site-auth" class="span4">
+                <?php echo $this->render('auth.phtml'); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                      <div class="container">
+                        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                        </button>
+                        <div class="nav-collapse collapse">
+                          <?php echo $this->navigation()->menu()->setOnlyActiveBranch(false)->setRenderParents(false)->setPartial('bootstrap-nav.phtml'); ?>          
+                        </div><!--/.nav-collapse -->
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="content">
+        <?php
+            $zrMessages = array();
+            $fmMessages = array();
+            $mMessages = array();
+
+            if(Zend_Registry::isRegistered('flashMessages')) {
+                $zrMessages = Zend_Registry::get('flashMessages');
+            }
+
+            $mMessages = (isset($this->messages) && is_array($this->messages)) ? $this->messages : array();
+            $messages = array_merge($zrMessages, $fmMessages, $mMessages);
+
+
+            if (count($messages) > 0) {
+                
+                $sprites = array(
+                    'error'   => 'error',
+                    'info'    => 'info',
+                    'warning' => 'block',
+                    'success' => 'success',
+                );
+                
+                if (count($messages) != 0) {
+                    foreach ($messages as $m) {
+                        $type = (is_object($m)) ? $m->type : 'info';
+                        $message = (is_object($m)) ? $m->message : $m;
+                        
+                        echo '<div class="alert alert-' . (isset($sprites[$type]) ? $sprites[$type] : 'info') . '">'                        
+                        . $this->translate($message)
+                        . '</div>'
+                        ;
+                    }
+                }
+            }
+            ?>
+        
+        <div class="alert alert-block">alert</div>
+      <h3 id="pageTitle">Title goes here</h3>
+      
+          <?php echo $this->layout()->content; ?>
+      
+
+    </div> <!-- /container -->
+    <div class="container">
+        <?php $this->overrideTranslation()->link($this->translate('theme-layouts-layout:editText')); ?>
+    </div>
+    
+    <div class="container" id="footer">
+        <div class="row">
+            <div class="span12" id="footer-nav">
+                <ul aria-label="Services Navigation">
+                    <li><a href="http://www.ncsu.edu/emergency-information/">Emergency Information</a></li>
+                    <li><a href="http://www.ncsu.edu/privacy/" title="North Carolina State University Privacy Policy">Privacy</a></li>
+                    <li><a href="http://www.ncsu.edu/copyright/" title="North Carolina State University copyright policy">Copyright</a></li>
+                    <li><a class="track" href="http://oit.ncsu.edu/itaccess/legislation-and-policies" title="North Carolina State University website accessibility information">Accessibility</a></li>
+                    <li><a class="track" href="http://oied.ncsu.edu/oied/">Diversity</a></li>
+                    <li><a class="track" href="http://policies.ncsu.edu/" title="North Carolina State University Policies">University Policies</a></li>
+                    <li><a href="http://www.ncsu.edu/about-site/" title="About the North Carolina State University website">About the Site</a></li>
+                    <li><a class="track" href="https://jobs.ncsu.edu/" title="Jobs at North Carolina State University">Jobs</a></li>
+                    <li><a href="http://www.ncsu.edu/contact-us/" title="Contact North Carolina State University">Contact Us</a></li>			    	
+                </ul>
+            </div>            
+        </div>
+        
+        <div class="clearfix"></div>
+        
+        <div class="row" id="footer-bottom">
+            <div class="span4" id="footer-logo">
+                
+            </div>
+            <div class="span8" id="footer-address">
+                North Carolina State University &nbsp; Raleigh, NC 27695 &nbsp; Phone: (919) 515-2011				
+            </div>
+        </div>
+    </div>
+
+    
+
+
+ 
+            <?php if ($this->title || $this->titleBackButton || $this->titleForwardButton): ?>
+            <div class="yui-gb gradient-gray" id="pageTitle">
+                <div class="yui-u first left">
+                    <?php if ($this->titleBackButton): ?>
+                        <a href="<?php echo $this->titleBackButton['href']; ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->titleBackButton['text']; ?><span class="ui-icon ui-icon-carat-1-w"></span></a>
+                    <?php endif; ?>&nbsp;
+                </div>
+                <div class="yui-u center" id="pageTitleValue"><?php echo $this->truncate($this->title, 70); ?></div>
+                <div class="yui-u right">
+                    <?php if ($this->titleForwardButton): ?>
+                        <a href="<?php echo $this->titleForwardButton['href']; ?>" class="ui-state-default ui-corner-all linkButtonRight"><?php echo $this->titleForwardButton['text']; ?><span class="ui-icon ui-icon-carat-1-e"></span></a>
+                    <?php endif; ?>&nbsp;
+                </div>
+            </div>
+            <?php endif; ?>
+
+                    
+                
+
