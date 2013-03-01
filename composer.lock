@@ -1,6 +1,38 @@
 {
-    "hash": "ed44104c8a8f6a57b57324196e91255c",
+    "hash": "8ac0073199e1ef8bad8dc2a3063a0eff",
     "packages": [
+        {
+            "name": "ncsuwebdev/ncsubootstrap",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ncsuwebdev/ncsubootstrap.git",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/1.0.0",
+                "reference": "1.0.0",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Jason Austin",
+                    "email": "jfaustin@ncsu.edu",
+                    "homepage": "http://ot.ncsu.edu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An NCSU-brand override for Twitter Bootstrap",
+            "homepage": "http://github.com/ncsuwebdev/ncsubootstrap",
+            "keywords": [
+                "ncstate",
+                "ncsu"
+            ],
+            "time": "2013-03-01 13:45:42"
+        },
         {
             "name": "ncsuwebdev/php-ncstate",
             "version": "1.0.6",
@@ -43,11 +75,11 @@
         },
         {
             "name": "zendframework/zendframework1",
-            "version": "dev-release-1.12",
+            "version": "1.12.2",
             "source": {
                 "type": "svn",
                 "url": "http://framework.zend.com/svn/framework/standard",
-                "reference": "/branches/release-1.12/@25268"
+                "reference": "/tags/release-1.12.2/@25270"
             },
             "require": {
                 "php": ">=5.2.11"
@@ -71,7 +103,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],
@@ -84,7 +116,7 @@
                 "ZF1",
                 "framework"
             ],
-            "time": "2013-02-25 19:06:28"
+            "time": "2013-02-25 19:10:50"
         }
     ],
     "packages-dev": null,
@@ -92,7 +124,7 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "zendframework/zendframework1": 20
-    }
+    "stability-flags": [
+
+    ]
 }

@@ -16,7 +16,7 @@ echo "\n";
 
 $brandingBar = new Ncstate_Brand_Bar(array(
     'secure' => true,
-    'color'  => 'red_on_white'            
+    'color'  => 'red_on_white'
 ));
 
 echo $this->headTitle() . "\n\n";
@@ -26,6 +26,7 @@ echo $this->minifyHeadLink() . "\n";
 
 //add the NCSU branding css to the headlink
 $this->headLink()->appendStylesheet($brandingBar->getStylesheetUrl());
+$this->headLink()->appendStylesheet($this->baseUrl() . '/css/ncsubootstrap/css/ncsu-bootstrap.css');
 
 echo $this->headLink() . "\n\n";
 
@@ -73,7 +74,7 @@ echo $brandingBar->getIframeHtml();
                           <span class="icon-bar"></span>
                         </button>
                         <div class="nav-collapse collapse">
-                          <?php echo $this->navigation()->menu()->setOnlyActiveBranch(false)->setRenderParents(false)->setPartial('bootstrap-nav.phtml'); ?>          
+                          <?php echo $this->navigation()->menu()->setOnlyActiveBranch(false)->setRenderParents(false)->setPartial('bootstrap-nav.phtml'); ?>
                         </div><!--/.nav-collapse -->
                       </div>
                     </div>
@@ -97,20 +98,20 @@ echo $brandingBar->getIframeHtml();
 
 
             if (count($messages) > 0) {
-                
+
                 $sprites = array(
                     'error'   => 'error',
                     'info'    => 'info',
                     'warning' => 'block',
                     'success' => 'success',
                 );
-                
+
                 if (count($messages) != 0) {
                     foreach ($messages as $m) {
                         $type = (is_object($m)) ? $m->type : 'info';
                         $message = (is_object($m)) ? $m->message : $m;
-                        
-                        echo '<div class="alert alert-' . (isset($sprites[$type]) ? $sprites[$type] : 'info') . '">'                        
+
+                        echo '<div class="alert alert-' . (isset($sprites[$type]) ? $sprites[$type] : 'info') . '">'
                         . $this->translate($message)
                         . '</div>'
                         ;
@@ -118,18 +119,18 @@ echo $brandingBar->getIframeHtml();
                 }
             }
             ?>
-        
+
         <div class="alert alert-block">alert</div>
       <h3 id="pageTitle">Title goes here</h3>
-      
+
           <?php echo $this->layout()->content; ?>
-      
+
 
     </div> <!-- /container -->
     <div class="container">
         <?php $this->overrideTranslation()->link($this->translate('theme-layouts-layout:editText')); ?>
     </div>
-    
+
     <div class="container" id="footer">
         <div class="row">
             <div class="span12" id="footer-nav">
@@ -142,27 +143,27 @@ echo $brandingBar->getIframeHtml();
                     <li><a class="track" href="http://policies.ncsu.edu/" title="North Carolina State University Policies">University Policies</a></li>
                     <li><a href="http://www.ncsu.edu/about-site/" title="About the North Carolina State University website">About the Site</a></li>
                     <li><a class="track" href="https://jobs.ncsu.edu/" title="Jobs at North Carolina State University">Jobs</a></li>
-                    <li><a href="http://www.ncsu.edu/contact-us/" title="Contact North Carolina State University">Contact Us</a></li>			    	
+                    <li><a href="http://www.ncsu.edu/contact-us/" title="Contact North Carolina State University">Contact Us</a></li>
                 </ul>
-            </div>            
+            </div>
         </div>
-        
+
         <div class="clearfix"></div>
-        
+
         <div class="row" id="footer-bottom">
             <div class="span4" id="footer-logo">
-                
+
             </div>
             <div class="span8" id="footer-address">
-                North Carolina State University &nbsp; Raleigh, NC 27695 &nbsp; Phone: (919) 515-2011				
+                North Carolina State University &nbsp; Raleigh, NC 27695 &nbsp; Phone: (919) 515-2011
             </div>
         </div>
     </div>
 
-    
 
 
- 
+
+
             <?php if ($this->title || $this->titleBackButton || $this->titleForwardButton): ?>
             <div class="yui-gb gradient-gray" id="pageTitle">
                 <div class="yui-u first left">
@@ -179,6 +180,6 @@ echo $brandingBar->getIframeHtml();
             </div>
             <?php endif; ?>
 
-                    
-                
+
+
 
