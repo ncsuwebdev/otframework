@@ -2,7 +2,19 @@
 ini_set('memory_limit', '-1');
 
 // Define path to application directory
-defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+if (!defined('APPLICATION_PATH')) {
+    $basepath = realpath(dirname(__FILE__));
+    
+    $applicationPath = $basepath . '/../application';
+    
+    if (preg_match('/vendor/i', $basepath)) {
+        $applicationPath = $basepath . '/../../../../application';
+    }
+    
+    define('APPLICATION_PATH', realpath($applicationPath));
+}
+
+require_once realpath(APPLICATION_PATH . '/../vendor/autoload.php');
 
 $paths = array(
         realpath(APPLICATION_PATH . '/../library'),
@@ -12,14 +24,9 @@ $paths = array(
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, $paths));
 
-
-require_once 'Zend/Console/Getopt.php';
-require_once 'Zend/Application.php';
-require_once 'Ot/Cli/Output.php';
-
-
 // Path to where the database migration files live
-$pathToMigrateFiles = dirname(__FILE__) . '/../db';
+$pathToMigrateFiles = realpath(APPLICATION_PATH . '/../db');
+
 
 // A list of all possible environments the user can specify
 $possibleEnvironments = array(
