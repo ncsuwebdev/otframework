@@ -22,7 +22,8 @@
         "php": ">=5.3.0",
         "ncsuwebdev/php-ncstate": "1.0.6",
         "zendframework/zendframework1": "1.12.2",
-        "ncsuwebdev/ncsubootstrap": "1.0.0"
+        "ncsuwebdev/ncsubootstrap": "dev-master",
+        "emagister/zend-form-decorators-bootstrap": "dev-master"
     },
     "autoload": {
         "psr-0": {

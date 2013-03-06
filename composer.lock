@@ -1,18 +1,68 @@
 {
-    "hash": "8ac0073199e1ef8bad8dc2a3063a0eff",
+    "hash": "76a9ce4488621814bc0a00ceeb6e1782",
     "packages": [
         {
-            "name": "ncsuwebdev/ncsubootstrap",
-            "version": "1.0.0",
+            "name": "emagister/zend-form-decorators-bootstrap",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ncsuwebdev/ncsubootstrap.git",
-                "reference": "1.0.0"
+                "url": "https://github.com/Emagister/zend-form-decorators-bootstrap.git",
+                "reference": "c08fddcaef6074cd5463ebcd86a0a602d4ae2cb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/1.0.0",
-                "reference": "1.0.0",
+                "url": "https://api.github.com/repos/Emagister/zend-form-decorators-bootstrap/zipball/c08fddcaef6074cd5463ebcd86a0a602d4ae2cb3",
+                "reference": "c08fddcaef6074cd5463ebcd86a0a602d4ae2cb3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Twitter_": ""
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "include-path": [
+                ""
+            ],
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "EmagisterTech",
+                    "email": "php@emagister.com",
+                    "homepage": "http://engineering.emagister.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Zend_Form decorators for Twitter's Bootstrap UI",
+            "homepage": "https://emagister.github.com/zend-form-decorators-bootstrap",
+            "keywords": [
+                "bootstrap",
+                "twitter",
+                "twitter bootstrap",
+                "zend",
+                "zend form",
+                "zend form decorators"
+            ],
+            "time": "2013-02-27 18:49:23"
+        },
+        {
+            "name": "ncsuwebdev/ncsubootstrap",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ncsuwebdev/ncsubootstrap.git",
+                "reference": "9ff6c697ad503dfa18846b7b7c8cac6730e6c4fb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/9ff6c697ad503dfa18846b7b7c8cac6730e6c4fb",
+                "reference": "9ff6c697ad503dfa18846b7b7c8cac6730e6c4fb",
                 "shasum": ""
             },
             "type": "library",
@@ -31,7 +81,7 @@
                 "ncstate",
                 "ncsu"
             ],
-            "time": "2013-03-01 13:45:42"
+            "time": "2013-03-01 14:50:22"
         },
         {
             "name": "ncsuwebdev/php-ncstate",
@@ -124,7 +174,8 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ]
+    "stability-flags": {
+        "ncsuwebdev/ncsubootstrap": 20,
+        "emagister/zend-form-decorators-bootstrap": 20
+    }
 }

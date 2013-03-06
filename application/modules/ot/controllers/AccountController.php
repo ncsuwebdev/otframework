@@ -435,9 +435,9 @@ class Ot_AccountController extends Zend_Controller_Action
         $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
         $defaultRole = $this->_helper->varReg('defaultRole');
-        $values = array('role' => $defaultRole);
-
-        $form = $account->form($values);
+        
+        $form = new Ot_Form_Account();
+        $form->populate(array('roleSelect' => array($defaultRole)));
 
         $acl = Zend_Registry::get('acl');
 
@@ -569,8 +569,6 @@ class Ot_AccountController extends Zend_Controller_Action
             }
         }
 
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.tooltip.min.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
         $this->_helper->pageTitle('ot-account-add:title');

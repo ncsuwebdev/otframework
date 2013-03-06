@@ -1,83 +1,29 @@
 @CHARSET "UTF-8";
 
 
-div.zend_form label.optional, div.zend_form label.required {
-    width: 125px;
-}
-
-div.accessRoles fieldset div.elm label {
-    float : left;
-    
-}
-
-div.accessRoles fieldset div.elm input[type="checkbox"] {
-    float : left; 
-    margin : 5px;
-}
-
-div.accessRoles br {
-    display : none;
-}
-
-legend {
-    font-size : 12pt;
-    font-weight : bold; 
-}
-
-div.general {
-    float : left;
-    width : 25%;
-}
-
-div.accessRoles {
-    float : left;
-    width : 75%;
-}
-
-table.accessTable {
-    float : left;
-    margin : 5px;
-    text-align : center;
-}
-
-td{
-    width : 125px;
-}
-
-td.hidden {
-    margin : none;
-    background : none;
-}
-
-td.access {
+.access {
     background-image: url(../../../../images/ot/aclAccess.gif);
     background-repeat: repeat-x;
-    color: #FFF;
-    font-weight: normal;
-    text-align: center;
     background-color: #6b2;
+    color: #FFF;
 }
 
-td.noAccess {
-    width : 125px;
+.noAccess {
     background-image: url(../../../../images/ot/aclNoAccess.gif);
     background-repeat: repeat-x;
-    color: #FFF;
-    font-weight: normal;
-    text-align: center;    
     background-color: #b21;
+    color: #FFF;
 }
 
-td.someAccess {
+.someAccess {
     background-image: url(../../../../images/ot/aclSomeAccess.gif);
     background-repeat: repeat-x;
     background-color: #fb0;
     color: #000;
-    font-weight: normal;
-    text-align: center;    
 }
 
-div.actions {
+.actions {
+    width: 100px;
     padding : 5px;
     background : #EEE;
     border : none;
@@ -85,6 +31,10 @@ div.actions {
     -webkit-box-shadow: 4px 5px 15px #555;
     box-shadow: 4px 5px 15px #555;
     text-align : center;
+}
+
+.actions table {
+    width: 100%;
 }
 
 div.wrapper {
@@ -95,19 +45,33 @@ div.actions table {
     margin : 0;
 }
 
-td.controller {
-    font-weight : bold;
-}
-
-td.action {
+.action {
     font-size : 95%;
     line-height : 1.05263;
 }
 
-td.action.noAccess {
+.action.noAccess {
     display : none;
 }
 
-td.controller.access, td.controller.someAccess {
+.controller.access, td.controller.someAccess {
     cursor : pointer;
+}
+
+.controller {
+    padding: 5px 3px;
+    color: #FFFFFF;
+    text-align: center;
+    font-weight: normal;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.controller strong {
+    color: #000000;
+}
+
+#permissionsHeader {
+    margin-top: 0px;
+    border-bottom: 1px solid #EEEEEE;
 }

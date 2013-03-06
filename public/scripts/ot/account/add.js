@@ -16,23 +16,19 @@ $('document').ready(function() {
  * the tipsy hover handler to the table cells 
  */
 function init() {
-    $('td.description').tipsy({gravity: 'e', fade: true});
-    
-    $("#access").tabs({
-        selected:0
-    });
+    //$('td.description').tipsy({gravity: 'e', fade: true});
     
     createControllers();
     
-    $('input.roleSelect').change(function() {
+    $('#roleSelect').change(function() {
         var roles = new Array();
         
-        $.each($('input.roleSelect:checked'), function() {
+        $.each($('#roleSelect option:selected'), function() {
             roles.push($(this).val());
-        });
-        
+        });           
+                
         updateTables(roles);
-    });
+    }).change();
 }
 
 /**
@@ -65,6 +61,7 @@ function createControllers() {
  * @param roles The new roles to merge together
  */
 function updateTables(roles) {
+        
     $.getJSON($('#baseUrl').val() + '/ot/account/get-permissions', {'roles' : roles}, function(data) {
         $.each($controllers, function(i, controller){
             controller.update(data[controller.module][controller.name]['part']);
@@ -133,9 +130,7 @@ function Controller (module, name) {
     }
     
     this.redraw = function() {
-        $('td', this.$object).fadeOut(250)
-            .removeClass('access noAccess someAccess').addClass(this.status)
-            .fadeIn(250);
+        $(this.$object).removeClass('access noAccess someAccess').addClass(this.status);
     }
     
     this.addAction = function(action) {
