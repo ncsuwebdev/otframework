@@ -37,9 +37,7 @@ class ErrorController extends Zend_Controller_Action
     public function errorAction()
     {
         $errors = $this->_getParam('error_handler');
-        
-        $registry = new Ot_Var_Register();
-        
+                
         $this->getResponse()->clearBody();
                 
         $title = '';
@@ -61,7 +59,7 @@ class ErrorController extends Zend_Controller_Action
                             $title = 'default-index-error:generic';
                     }
                     
-                    $this->view->showTrackback = ($this->_helper->varReg('showTrackbackOnErrors')!= '') ? $this->_helper->varReg('showTrackbackOnErrors') : '1';
+                    $this->view->showTrackback = ($this->_helper->configVar('showTrackbackOnErrors')!= '') ? $this->_helper->configVar('showTrackbackOnErrors') : '1';
                     $this->view->trackback     = $exception->getTrace();
                     $message = $exception->getMessage();
                     break;

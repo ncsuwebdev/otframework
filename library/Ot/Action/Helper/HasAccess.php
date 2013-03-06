@@ -35,7 +35,7 @@ class Ot_Action_Helper_HasAccess extends Zend_Controller_Action_Helper_Abstract
     
     public function init()
     {
-        $this->_registry = new Ot_Var_Register();
+        $this->_registry = new Ot_Config_Register();
         $this->_identity = Zend_Auth::getInstance()->getIdentity();
         
         parent::init();

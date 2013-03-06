@@ -26,10 +26,10 @@
                         <i>To: <?php echo implode(', ', $mo->getRecipients()); ?></i>
                     </td>
                     <td>
-                        <b>Queued On:</b> <?php echo $this->dateFormat($message['queueDt'], $this->varReg('dateTimeFormat')); ?><br />
+                        <b>Queued On:</b> <?php echo $this->dateFormat($message['queueDt'], $this->configVar('dateTimeFormat')); ?><br />
                         <?php 
                         if ($message['status'] == 'sent') {
-                            echo "<b>Sent On:</b> " . $this->dateFormat($message['sentDt'], $this->varReg('dateTimeFormat'));
+                            echo "<b>Sent On:</b> " . $this->dateFormat($message['sentDt'], $this->configVar('dateTimeFormat'));
                         } elseif ($message['status'] == 'error') {
                             echo '<b class="red">Not Sent Because Of Error</b>';
                         } elseif ($message['status'] == 'waiting') {

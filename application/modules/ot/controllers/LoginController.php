@@ -47,7 +47,7 @@ class Ot_LoginController extends Zend_Controller_Action
         //var_dump($req->requestUri, $req->uri, $req->requestedFromUrl);exit;
 
         $loginOptions = Zend_Registry::get('applicationLoginOptions');
-        $registry = new Ot_Var_Register();
+        $registry = new Ot_Config_Register();
 
         $authRealm = new Zend_Session_Namespace('authRealm');
         $authRealm->setExpirationHops(1);

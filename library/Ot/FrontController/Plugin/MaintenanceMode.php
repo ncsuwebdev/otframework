@@ -39,7 +39,7 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
         // so if you change the filename, it needs to be changed there too
         $maintenanceModeFileName = 'maintenanceMode';
 
-        $register = new Ot_Var_Register();
+        $register = new Ot_Config_Register();
         
         $identity = Zend_Auth::getInstance()->getIdentity();
         $role = (empty($identity->role)) ? $register->defaultRole->getValue() : $identity->role;

@@ -3,12 +3,12 @@
 <head>
 
 <?php
-$this->headMeta()->appendName('keywords', $this->varReg('metaKeywords'))
+$this->headMeta()->appendName('keywords', $this->configVar('metaKeywords'))
                  ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
                  ->appendHttpEquiv('Content-Language', 'en-US');
 
 echo $this->headMeta() . "\n";
-$this->headTitle($this->varReg('appTitle'))
+$this->headTitle($this->configVar('appTitle'))
      ->headTitle(strip_tags($this->title))
      ->headTitle()->setSeparator(' - ');
 
@@ -54,7 +54,7 @@ echo $brandingBar->getIframeHtml();
     <div class="container" id="header">
         <div class="row">
             <div id="site-title" class="span8">
-                <h1><?php echo $this->varReg('appTitle'); ?></h1>
+                <h1><?php echo $this->configVar('appTitle'); ?></h1>
             </div>
             <div id="site-auth" class="span4">
                 <?php echo $this->render('auth.phtml'); ?>

@@ -12,27 +12,32 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_Action_Helper_HasAccess
+ * @package    Ot_View_Helper_FormatPhone
  * @category   Library
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
- * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
+ * @license    http://itdapps.ncsu.edu/bsd.txt BSD License
  * @version    SVN: $Id: $
  */
 
 /**
- * Adds additional features to a title of a page
+ * Grabs config vars from the registry
  *
- * @package    Ot_Action_Helper_HasAccess
+ * @package    Ot_View_Helper_VarReg
  * @category   Library
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_Action_Helper_VarReg extends Zend_Controller_Action_Helper_Abstract
+
+class Ot_View_Helper_ConfigVar extends Zend_View_Helper_Abstract
 {
-    public function varReg($var)
+    
+    /**
+     * @param var variable to get
+     */
+    public function configVar($var)
     {
-        $vr = new Ot_Var_Register();
+        $vr = new Ot_Config_Register();
         
         $thisVar = $vr->getVar($var);
         
@@ -41,10 +46,5 @@ class Ot_Action_Helper_VarReg extends Zend_Controller_Action_Helper_Abstract
         }
         
         return $thisVar->getValue();
-    }
-    
-    public function direct($var)
-    {
-        return $this->varReg($var);
     }
 }

@@ -65,10 +65,10 @@ class Ot_AclController extends Zend_Controller_Action
             'delete'             => $this->_helper->hasAccess('delete'),
         );
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $this->_helper->varReg('defaultRole'));
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole'));
         
         $role = new Ot_Model_DbTable_Role();
-        $this->view->defaultRole = $role->find($this->_helper->varReg('defaultRole'));
+        $this->view->defaultRole = $role->find($this->_helper->configVar('defaultRole'));
             
         $roles = $this->_acl->getAvailableRoles();
       
@@ -104,10 +104,10 @@ class Ot_AclController extends Zend_Controller_Action
 
         $get = Zend_Registry::get('getFilter');
         
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $this->_helper->varReg('defaultRole'));
+        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole'));
         
         $role = new Ot_Model_DbTable_Role();
-        $this->view->defaultRole = $role->find($this->_helper->varReg('defaultRole'));
+        $this->view->defaultRole = $role->find($this->_helper->configVar('defaultRole'));
 
         if (!isset($get->roleId)) {
             throw new Ot_Exception_Input('msg-error-roleIdNotSet');
@@ -435,7 +435,7 @@ class Ot_AclController extends Zend_Controller_Action
         $account = new Ot_Model_DbTable_Account();
         $affectedAccounts = $account->getAccountsForRole($get->roleId);
         
-        $defaultRole = $this->_helper->varReg('defaultRole');
+        $defaultRole = $this->_helper->configVar('defaultRole');
         
         if (!isset($availableRoles[$defaultRole])) {
             throw new Ot_Exception_Data('msg-error-noDefaultRole');

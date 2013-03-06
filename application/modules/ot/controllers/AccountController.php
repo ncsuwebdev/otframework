@@ -73,6 +73,13 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $userData = array_merge($userData, (array) $thisAccount);
 
+        $aar = new Ot_Account_Attribute_Register();
+        
+        $vars = $aar->getVars($userData['accountId']);
+                
+        foreach ($vars as $varName => $var) {
+            $userData[$varName] = $var->getValue();
+        }
 
         $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapter = $authAdapter->find($userData['realm']);
@@ -84,7 +91,7 @@ class Ot_AccountController extends Zend_Controller_Action
            'name'        => $a->name,
            'description' => $a->description,
         );
-
+        
         $this->_userData = $userData;
     }
 
@@ -120,7 +127,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         throw new Ot_Exception('The account was not found.');
                     }
 
-                    $mAccount->role = $this->_helper->varReg('newAccountRole');
+                    $mAccount->role = $this->_helper->configVar('newAccountRole');
 
                     $mAccount->realAccount = $identity;
                     $mAccount->masquerading = true;
@@ -179,7 +186,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'apiAppDelete'   => $this->_helper->hasAccess('delete', 'ot_apiapp'),
             'apiAppEdit'     => $this->_helper->hasAccess('edit', 'ot_apiapp'),
             'apiDocs'        => $this->_helper->hasAccess('api-docs', 'ot_apiapp'),
-            'guestApiAccess' => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->varReg('defaultRole')),
+            'guestApiAccess' => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole')),
         );
 
 
@@ -194,28 +201,9 @@ class Ot_AccountController extends Zend_Controller_Action
                 $this->_userData['username'],
             )
         );
-
-        $loginOptions = Zend_Registry::get('applicationLoginOptions');
-
-        if (isset($loginOptions['accountPlugin'])) {
-            $acctPlugin = new $loginOptions['accountPlugin'];
-            $attributes = $acctPlugin->get($this->_userData['accountId']);
-        }
-
-        $rolesDb = new Ot_Model_DbTable_AccountRoles();
-        $where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
-        $roleIds = $rolesDb->fetchAll($where)->toArray();
-
-        if (count($roleIds) == 0) {
-            throw new Ot_Exception_Data('Role id not found');
-        }
-
-        foreach ($roleIds as &$r) {
-            $r = $r['roleId'];
-        }
-
+         
         $role = new Ot_Model_DbTable_Role();
-        $where = $role->getAdapter()->quoteInto('roleId IN (?)', $roleIds);
+        $where = $role->getAdapter()->quoteInto('roleId IN (?)', $this->_userData['role']);
         $roles = $role->fetchAll($where)->toArray();
 
         foreach ($roles as &$r) {
@@ -429,14 +417,12 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function addAction()
     {
-    	$this->view->messages = $this->_helper->messenger->getMessages();
-
-        $account = new Ot_Model_DbTable_Account();
-        $loginOptions = Zend_Registry::get('applicationLoginOptions');
-
-        $defaultRole = $this->_helper->varReg('defaultRole');
         
-        $form = new Ot_Form_Account();
+        $account = new Ot_Model_DbTable_Account();
+
+        $defaultRole = $this->_helper->configVar('defaultRole');
+        
+        $form = new Ot_Form_Account(true);
         $form->populate(array('roleSelect' => array($defaultRole)));
 
         $acl = Zend_Registry::get('acl');
@@ -459,7 +445,7 @@ class Ot_AccountController extends Zend_Controller_Action
                     'role'         => (array)$form->getValue('roleSelect'),
                 );
                 if(!isset($accountData['role']) || count($accountData['role']) < 1) {
-                    $accountData['role'] = $this->_helper->varReg('defaultRole');
+                    $accountData['role'] = $this->_helper->configVar('defaultRole');
                 }
 
                 $dba = Zend_Db_Table::getDefaultAdapter();
@@ -573,9 +559,12 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
         $this->_helper->pageTitle('ot-account-add:title');
 
-        $this->view->form = $form;
-        $this->view->permissions = $permissions;
-        $this->view->permissionList = Zend_Json::encode($permissions);
+        $this->view->assign(array(
+            'form'           => $form,
+            'permissions'    => $permissions,
+            'permissionList' => Zend_Json::encode($permissions),
+            'messages'       => $this->_helper->messenger->getMessages()
+        ));
 
     }
 
@@ -641,31 +630,20 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function editAction()
     {
-        $account = new Ot_Model_DbTable_Account();
-
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
-
-        $loginOptions = Zend_Registry::get('applicationLoginOptions');
-
-        $form = $account->form($this->_userData);
-
-        $rolesDb = new Ot_Model_DbTable_AccountRoles();
-
-        $where = $rolesDb->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
-
-        $result = $rolesDb->fetchAll($where);
-
-        if(count($result) < 1) {
-            throw new Ot_Exception_Data('No roles associated with this account');
-        }
+        
+        $me = (Zend_Auth::getInstance()->getIdentity()->accountId == $this->_userData['accountId']);        
+        
+        $form = new Ot_Form_Account(false, $me);
+        $form->populate($this->_userData);
 
         $acl = Zend_Registry::get('acl');
 
         $resources = array();
-        foreach ($result as $r) {
-            $resources[] = $acl->getResources($r->roleId);
+        foreach ($this->_userData['role'] as $r) {
+            $resources[] = $acl->getResources($r);
         }
-
+        
         $permissions = $this->mergeResources($resources);
 
         if ($this->_request->isPost()) {
@@ -675,6 +653,8 @@ class Ot_AccountController extends Zend_Controller_Action
 
                 $data = array(
                     'accountId'    => $this->_userData['accountId'],
+                    'username'     => $this->_userData['username'],
+                    'realm'        => $this->_userData['realm'],
                     'firstName'    => $form->getValue('firstName'),
                     'lastName'     => $form->getValue('lastName'),
                     'emailAddress' => $form->getValue('emailAddress'),
@@ -686,14 +666,12 @@ class Ot_AccountController extends Zend_Controller_Action
                     $data['realm']    = $form->getValue('realm');
                     $data['role']     = (array)$form->getValue('roleSelect');
 
-                    if(!isset($data['role']) || count($data['role']) < 1) {
-                        $data['role'] = $this->_helper->varReg('defaultRole');
+                    if (!isset($data['role']) || count($data['role']) < 1) {
+                        $data['role'] = $this->_helper->configVar('defaultRole');
                     }
 
                     $data['username'] = $form->getValue('username');
                 }
-
-
 
                 $account = new Ot_Model_DbTable_Account();
 
@@ -712,25 +690,20 @@ class Ot_AccountController extends Zend_Controller_Action
                         throw $e;
                     }
 
-                    if (isset($loginOptions['accountPlugin'])) {
-                        $acctPlugin = new $loginOptions['accountPlugin']();
-
-                        $subform = $acctPlugin->editSubForm($this->_userData['accountId']);
-
-                        $data = array('accountId' => $this->_userData['accountId']);
-
-                        foreach ($subform->getElements() as $e) {
-                            $data[$e->getName()] = $form->getValue($e->getName());
-                        }
-
-                        try {
-                            $acctPlugin->editProcess($data);
-                        } catch (Exception $e) {
-                            $dba->rollback();
-                            throw $e;
+                    $aar = new Ot_Account_Attribute_Register();
+                    
+                    $vars = $aar->getVars();
+                    
+                    $values = $form->getValues();
+                    
+                    foreach ($vars as $varName => $var) {
+                        if (isset($values['accountattribute'][$varName])) {
+                            $var->setValue($values['accountattribute'][$varName]);
+                            
+                            $aar->save($var, $this->_userData['accountId']);
                         }
                     }
-
+                    
                     $custom = new Ot_Model_Custom();
 
                     $attributes = $custom->getAttributesForObject('Ot_Profile');
@@ -784,16 +757,20 @@ class Ot_AccountController extends Zend_Controller_Action
             $this->_helper->messenger->addInfo('msg-info-editAccountSelf');
         }
 
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/account/add.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/add.js');        
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.tooltip.min.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/account/permissionsTable.js');
-
-        $this->view->form = $form;
-        $this->view->permissions = $permissions;
-        $this->view->permissionList = Zend_Json::encode($permissions);
-        $this->_helper->pageTitle('ot-account-edit:title');
-
+        
+        $this->_helper->pageTitle('ot-account-edit:title');        
+        
+        $this->view->assign(array(
+            'form'           => $form,
+            'permissions'    => $permissions,
+            'permissionList' => Zend_Json::encode($permissions),
+            'messages'       => $this->_helper->messenger->getMessages(),
+        ));
+        
         $this->view->acl = array(
             'edit-permission' => $this->_helper->hasAccess('edit', 'ot_acl'),
         );
@@ -1160,7 +1137,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $roles = $get->roles;
 
         if (!isset($roles) || count($roles) < 1) {
-            $roles = array($this->_helper->varReg('defaultRole'));
+            $roles = array($this->_helper->configVar('defaultRole'));
         }
 
         $acl = Zend_Registry::get('acl');

@@ -47,7 +47,7 @@ class Ot_ApiController extends Zend_Controller_Action
         try {
             $apiRegister = new Ot_Api_Register();
 
-            $vr = new Ot_Var_Register();
+            $vr = new Ot_Config_Register();
 
             $params = $this->_getAllParams();
 

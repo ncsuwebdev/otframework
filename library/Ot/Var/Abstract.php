@@ -79,37 +79,12 @@ abstract class Ot_Var_Abstract
     abstract public function renderFormElement();
 
     public function setValue($value)
-    {
-        $model = new Ot_Model_DbTable_Var();
-
-        $thisVar = $model->find($this->getName());
-
-        $data = array(
-            'varName' => $this->getName(),
-            'value'   => $value,
-        );
-
-        if (is_null($thisVar)) {
-            $model->insert($data);
-        } else {
-            $model->update($data, null);
-        }
-
+    {        
         $this->_value = $value;
     }
 
     public function getValue()
-    {
-        $model = new Ot_Model_DbTable_Var();
-
-        $thisVar = $model->find($this->getName());
-
-        if (is_null($thisVar)) {
-            $this->_value = $this->getDefaultValue();
-        } else {
-            $this->_value = $thisVar['value'];
-        }
-        
+    {        
         return $this->_value;
     }
     

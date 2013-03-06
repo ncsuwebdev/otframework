@@ -3,12 +3,12 @@
 <head>
 
 <?php
-$this->headMeta()->appendName('keywords', $this->varReg('metaKeywords'))
+$this->headMeta()->appendName('keywords', $this->configVar('metaKeywords'))
                  ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
                  ->appendHttpEquiv('Content-Language', 'en-US');
 
 echo $this->headMeta() . "\n";
-$this->headTitle($this->varReg('appTitle'))
+$this->headTitle($this->configVar('appTitle'))
      ->headTitle(strip_tags($this->title))
      ->headTitle()->setSeparator(' - ');
 
@@ -60,7 +60,7 @@ Your browser does not support inline frames or is currently configured  not to d
                 <div class="ui-helper-clearfix"></div>
                 <a id="homeLink" href="<?php echo $this->baseUrl(); ?>">
                     <span id="oitLogo">
-                        <span class="title"><?php echo $this->varReg('appTitle'); ?></span>
+                        <span class="title"><?php echo $this->configVar('appTitle'); ?></span>
                     </span>
                 </a>
                 <br /><br />

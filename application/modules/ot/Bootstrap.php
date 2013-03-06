@@ -55,7 +55,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $layout = Zend_Layout::getMvcInstance();
         $view = $layout->getView();
 
-        $registry = new Ot_Var_Register();
+        $registry = new Ot_Config_Register();
 
         $theme = ($registry->theme->getValue() != '') ? $registry->theme->getValue() : 'default';
 
@@ -244,7 +244,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $format[] = new Ot_Var_Type_Text('dayFormat', 'Day Format', 'Date formatted using PHP\'s strftime() function.', '%d');
         $format[] = new Ot_Var_Type_Text('timeFormat', 'Time Format', 'Time formatted using PHP\'s strftime() function.', '%I:%M %p');
         
-        $vr = new Ot_Var_Register();
+        $vr = new Ot_Config_Register();
         $vr->registerVars($site, 'Site Settings');
         $vr->registerVars($auth, 'Authentication');
         $vr->registerVars($format, 'Date/Time Formats');
@@ -288,5 +288,15 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
 
         $cfor = new Ot_CustomFieldObject_Register();
         $cfor->registerCustomFieldObjects($objects);
+    }
+
+    public function _initAccountAttributeVars()
+    {
+        $accountVars = array();
+        
+        $accountVars[] = new Ot_Var_Type_Text('department', 'University Department', 'Your university department', 'OIT');
+
+        $aar = new Ot_Account_Attribute_Register();
+        $aar->registerVars($accountVars);
     }
 }

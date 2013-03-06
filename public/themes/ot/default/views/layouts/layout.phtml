@@ -4,14 +4,14 @@
 <head>
 <?php
 
-$this->headMeta()->appendName('keywords', $this->varReg('metaKeywords'))
+$this->headMeta()->appendName('keywords', $this->configVar('metaKeywords'))
                  ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
                  ->appendHttpEquiv('Content-Language', 'en-US')
                  ->appendName('viewport', 'width=device-width, initial-scale=1.0');             
 
                  
 echo $this->headMeta() . "\n";
-$this->headTitle($this->varReg('appTitle'))
+$this->headTitle($this->configVar('appTitle'))
      ->headTitle(strip_tags($this->title))
      ->headTitle()->setSeparator(' - ');
 
@@ -44,7 +44,7 @@ echo "\n";
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="<?php echo $this->baseUrl(); ?>"><?php echo $this->varReg('appTitle'); ?></a>
+          <a class="brand" href="<?php echo $this->baseUrl(); ?>"><?php echo $this->configVar('appTitle'); ?></a>
                     
           <div class="nav-collapse collapse">
               <p class="navbar-text pull-right">
@@ -64,7 +64,7 @@ echo "\n";
             $fmMessages = array();
             $mMessages = array();
 
-            if(Zend_Registry::isRegistered('flashMessages')) {
+            if (Zend_Registry::isRegistered('flashMessages')) {
                 $zrMessages = Zend_Registry::get('flashMessages');
             }
 

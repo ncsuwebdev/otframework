@@ -12,8 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_Bug
- * @category   Model
+ * @package    Ot_Action_Helper_HasAccess
+ * @category   Library
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
@@ -21,27 +21,30 @@
  */
 
 /**
- * Model to do deal with config vars
+ * Adds additional features to a title of a page
  *
- * @package    Ot_Var
- * @category   Model
+ * @package    Ot_Action_Helper_HasAccess
+ * @category   Library
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
- *
  */
-class Ot_Model_DbTable_Var extends Ot_Db_Table
+class Ot_Action_Helper_ConfigVar extends Zend_Controller_Action_Helper_Abstract
 {
-    /**
-     * Name of the table in the database
-     *
-     * @var string
-     */
-    protected $_name = 'tbl_ot_var';
-
-    /**
-     * Primary key of the table
-     *
-     * @var string
-     */
-    protected $_primary = 'varName';
+    public function configVar($var)
+    {
+        $vr = new Ot_Config_Register();
+        
+        $thisVar = $vr->getVar($var);
+        
+        if (is_null($thisVar)) {
+            return '';
+        }
+        
+        return $thisVar->getValue();
+    }
+    
+    public function direct($var)
+    {
+        return $this->configVar($var);
+    }
 }

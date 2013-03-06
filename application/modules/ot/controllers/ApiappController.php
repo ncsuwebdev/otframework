@@ -35,8 +35,8 @@ class Ot_ApiappController extends Zend_Controller_Action
     {
         parent::init();
 
-        if (!$this->_helper->hasAccess('index', 'ot_api', $this->_helper->varReg('defaultRole'))) {
-            throw new Exception('Default role (' . $this->_helper->varReg('defaultRole') . ') does not have access to ot_api');
+        if (!$this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole'))) {
+            throw new Exception('Default role (' . $this->_helper->configVar('defaultRole') . ') does not have access to ot_api');
         }
 
         $get = Zend_Registry::get('getFilter');
@@ -85,7 +85,7 @@ class Ot_ApiappController extends Zend_Controller_Action
 
         $this->view->allApps = $allApps;
 
-        $this->_helper->pageTitle('ot-apiapp-allApps:title', $this->_helper->varReg('appTitle'));
+        $this->_helper->pageTitle('ot-apiapp-allApps:title', $this->_helper->configVar('appTitle'));
     }
 
     public function apiDocsAction()
@@ -101,7 +101,7 @@ class Ot_ApiappController extends Zend_Controller_Action
 
         $acl = new Ot_Acl('remote');
 
-        $vr = new Ot_Var_Register();
+        $vr = new Ot_Config_Register();
 
         $role = $vr->getVar('defaultRole')->getValue();
 

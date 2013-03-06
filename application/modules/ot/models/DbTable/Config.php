@@ -12,39 +12,36 @@
  * obtain it through the world-wide-web, please send an email
  * to itappdev@ncsu.edu so we can send you a copy immediately.
  *
- * @package    Ot_View_Helper_FormatPhone
- * @category   Library
+ * @package    Ot_Bug
+ * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
- * @license    http://itdapps.ncsu.edu/bsd.txt BSD License
+ * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
  */
 
 /**
- * Grabs config vars from the registry
+ * Model to do deal with config vars
  *
- * @package    Ot_View_Helper_VarReg
- * @category   Library
+ * @package    Ot_Var
+ * @category   Model
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
+ *
  */
-
-class Ot_View_Helper_VarReg extends Zend_View_Helper_Abstract
+class Ot_Model_DbTable_Config extends Ot_Db_Table
 {
-    
     /**
-     * @param var variable to get
+     * Name of the table in the database
+     *
+     * @var string
      */
-    public function varReg($var)
-    {
-        $vr = new Ot_Var_Register();
-        
-        $thisVar = $vr->getVar($var);
-        
-        if (is_null($thisVar)) {
-            return '';
-        }
-        
-        return $thisVar->getValue();
-    }
+    protected $_name = 'tbl_ot_config';
+
+    /**
+     * Primary key of the table
+     *
+     * @var string
+     */
+    protected $_primary = 'varName';
 }

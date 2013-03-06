@@ -112,7 +112,7 @@ class Ot_LogController extends Zend_Controller_Action
                         implode(', ', $roleList), 
                         $l->request,
                         $l->sid, 
-                        strftime($this->_helper->varReg('dateTimeFormat'), $l->timestamp),
+                        strftime($this->_helper->configVar('dateTimeFormat'), $l->timestamp),
                         $l->message,
                         $l->priorityName,
                         $l->attributeName,

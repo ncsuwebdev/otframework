@@ -29,9 +29,9 @@
  *             Information Technology
  *
  */
-class Ot_Var_Register
+class Ot_Config_Register
 {
-    const REGISTRY_KEY = 'Ot_Var_Register';
+    const REGISTRY_KEY = 'Ot_Config_Register';
 
     public function __construct()
     {
@@ -44,7 +44,7 @@ class Ot_Var_Register
     {
         $registered = $this->getVars();
         if (isset($registered[$var->getName()])) {
-            throw new Ot_Exception('Module var ' . $var->getName() . ' already registered');
+            throw new Ot_Exception('Config var ' . $var->getName() . ' already registered');
         }
         
         $registered[$var->getName()] = array(
@@ -66,18 +66,51 @@ class Ot_Var_Register
     {
         $registered = $this->getVars();
 
-        return (isset($registered[$name])) ? $registered[$name]['object'] : null;
-
+        return (isset($registered[$name])) ? $registered[$name]['object'] : null;        
     }
     
     public function getVars()
     {
-        return Zend_Registry::get(self::REGISTRY_KEY);
+        $registered = Zend_Registry::get(self::REGISTRY_KEY);
+                          
+        foreach ($registered as $r) {
+            $r['object']->setValue($r['object']->getDefaultValue());
+        }
+        
+        $model = new Ot_Model_DbTable_Config();
+        
+        $allVars = $model->fetchAll();
+        
+        foreach ($allVars as $v) {
+            if (isset($registered[$v->varName])) {
+                $registered[$v->varName]['object']->setValue($v->value);
+            }
+        }
+        
+        return $registered;
     }
 
     public function __get($name)
     {
         return $this->getVar($name);
+    }
+    
+    public function save(Ot_Var_Abstract $var)
+    {
+        $model = new Ot_Model_DbTable_Config();
+
+        $thisVar = $model->find($var->getName());
+
+        $data = array(
+            'varName' => $var->getName(),
+            'value'   => $var->getValue(),
+        );
+
+        if (is_null($thisVar)) {
+            $model->insert($data);
+        } else {
+            $model->update($data, null);
+        }        
     }
 }
 

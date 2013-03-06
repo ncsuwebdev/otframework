@@ -43,7 +43,7 @@ class Ot_Api_Access
                         
         $remoteAcl = new Ot_Acl('remote');
 
-        $registry = new Ot_Var_Register();
+        $registry = new Ot_Config_Register();
         $publicRole = $registry->defaultRole->getValue();
         
         if ($request->getParameter('oauth_token') != ''

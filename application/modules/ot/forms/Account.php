@@ -1,7 +1,7 @@
 <?php
 class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
 {
-    public function __construct($options = array())
+    public function __construct($new = false, $me = false, $options = array())
     {
         parent::__construct($options);
 
@@ -83,9 +83,31 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
             $roleSelect->addMultiOption($r['roleId'], $r['name']);
         }
         
-        $this->addElements(array($realmSelect, $username, $password, $passwordConf, $roleSelect, $firstName, $lastName, $email, $timezone));
+        if ($new) {
+            $this->addElements(array($realmSelect, $username, $password, $passwordConf, $roleSelect, $firstName, $lastName, $email, $timezone));
+        } else {
+            
+            if ($me) {
+                $this->addElements(array($firstName, $lastName, $email, $timezone));
+            } else {
+                $this->addElements(array($roleSelect, $firstName, $lastName, $email, $timezone));
+            }
+        }        
                 
-
+        $aar = new Ot_Account_Attribute_Register();
+        
+        $vars = $aar->getVars();
+        
+        foreach ($vars as $v) {
+            $elm = $v->renderFormElement();
+            $elm->clearDecorators();
+            $elm->setBelongsTo('accountattribute');
+            
+            $this->addElement($elm);
+        }
+        
+        /*
+        
         $subformElements = array();
 
         
@@ -105,6 +127,8 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
                 $subformElements[] = $e->getName();
             }
         }
+         
+         */
 
         $custom = new Ot_Model_Custom();
 

@@ -14,11 +14,11 @@
             </tr>
             <tr>
                 <td><label><?php echo $this->translate("ot-emailqueue-details:queueDate"); ?></label></td>
-                <td><?php echo $this->dateFormat($this->email['queueDt'], $this->varReg('dateTimeFormat')); ?></td>
+                <td><?php echo $this->dateFormat($this->email['queueDt'], $this->configVar('dateTimeFormat')); ?></td>
             </tr>
             <tr>
                 <td><label><?php echo $this->translate("ot-emailqueue-details:sentDate"); ?></label></td>
-                <td><?php echo ($this->email['status'] == 'sent') ? $this->dateFormat($this->email['sentDt'], $this->varReg('dateTimeFormat')) : $this->translate("ot-emailqueue-details:notSent"); ?></td>
+                <td><?php echo ($this->email['status'] == 'sent') ? $this->dateFormat($this->email['sentDt'], $this->configVar('dateTimeFormat')) : $this->translate("ot-emailqueue-details:notSent"); ?></td>
             </tr>
         </tbody>
     </table>

@@ -79,7 +79,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             $resource = null;
         }
 
-        $registry = new Ot_Var_Register();
+        $registry = new Ot_Config_Register();
 
         $role = $registry->defaultRole->getValue();
         $defaultRole = $role;

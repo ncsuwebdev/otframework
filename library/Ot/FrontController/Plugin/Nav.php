@@ -44,7 +44,7 @@ class Ot_FrontController_Plugin_Nav extends Zend_Controller_Plugin_Abstract
     {
         $acl     = Zend_Registry::get('acl');
          
-        $register = new Ot_Var_Register();
+        $register = new Ot_Config_Register();
 
         $identity = Zend_Auth::getInstance()->getIdentity();
         $role = (empty($identity->role)) ? $register->defaultRole->getValue() : $identity->role;

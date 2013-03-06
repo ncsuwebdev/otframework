@@ -39,7 +39,7 @@ class Ot_ConfigController extends Zend_Controller_Action
             'edit' => $this->_helper->hasAccess('edit')
         );
 
-        $register = new Ot_Var_Register();
+        $register = new Ot_Config_Register();
         
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.tipsy.js');
@@ -58,7 +58,6 @@ class Ot_ConfigController extends Zend_Controller_Action
             $varsByModule[$v['namespace']][] = $v['object'];
 
         }
-
 
         $form = new Zend_Form();
         $form->setDecorators(array(
@@ -132,6 +131,8 @@ class Ot_ConfigController extends Zend_Controller_Action
                 foreach ($varsByModule as $key => $value) {
                     foreach ($value as $v) {
                         $v->setValue($form->getElement('config_' . $v->getName())->getValue());
+                        
+                        $register->save($v);
                     }
                 }
 
@@ -173,7 +174,7 @@ class Ot_ConfigController extends Zend_Controller_Action
                 
                 unlink($location);
                 
-                $vr = new Ot_Var_Register();
+                $vr = new Ot_Config_Register();
                 
                 foreach ($options as $o) {
                     list($key, $value) = $o;
@@ -213,7 +214,7 @@ class Ot_ConfigController extends Zend_Controller_Action
         header('Content-type: text/csv');
         header('Content-disposition: attachment;filename=configExport-' . date('c') . '.csv');
 
-        $vr = new Ot_Var_Register();
+        $vr = new Ot_Config_Register();
         
         $options = $vr->getVars();
         
