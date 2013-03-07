@@ -88,6 +88,19 @@ abstract class Ot_Var_Abstract
         return $this->_value;
     }
     
+    public function getDisplayValue()
+    {
+        $value = $this->getValue();
+        
+        if (empty($value)) {
+            $value = 'None';
+        } elseif (is_array($value)) {
+            $value = implode(', ', $value);
+        }
+        
+        return $value;
+    }
+    
     protected function _encrypt($string)
     {
         return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($this->_cryptKey), $string, MCRYPT_MODE_CBC, md5(md5($this->_cryptKey))));

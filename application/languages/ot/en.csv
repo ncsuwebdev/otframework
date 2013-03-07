@@ -566,6 +566,8 @@ msg-info-passwordResetRequest;A password reset request was sent to the email add
 msg-info-passwordReset;Your password has been reset.
 msg-info-accountCreated;Your account was created successfully. You may now log in.
 
+msg-info-none;None
+
 theme-scripts-auth:notLoggedIn;You are not Logged in!
 theme-scripts-auth:logInHere;%1$sLog in%2$s here.
 theme-scripts-auth:welcome;Welcome
@@ -576,4 +578,3 @@ theme-scripts-footer:poweredByZendFramework;Powered by Zend Framework
 theme-scripts-footer:OIT;OIT - Outreach Technologies
 theme-scripts-footer:NCSU;North Carolina State University
 theme-layouts-layout:editText;Edit Text For This Page
-

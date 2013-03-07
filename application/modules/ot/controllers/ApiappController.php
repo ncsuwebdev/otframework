@@ -183,12 +183,9 @@ class Ot_ApiappController extends Zend_Controller_Action
      */
     public function addAction()
     {
-        $this->_helper->pageTitle('ot-apiapp-add:title');
-
         $apiApp = new Ot_Model_DbTable_ApiApp();
 
-        $form = $apiApp->form(array('imagePath' => $this->_getImage(0)));
-
+        $form = new Ot_Form_ApiApp();       
 
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -199,20 +196,7 @@ class Ot_ApiappController extends Zend_Controller_Action
                     'accountId'   => $this->_userData['accountId'],
                 );
 
-                $imageValue = $form->getValue('image');
-
-                if ($imageValue != '/tmp/' && $imageValue != '') {
-
-                    $image = new Ot_Model_DbTable_Image();
-
-                    $image->resizeImage($form->image->getFileName(), 64, 64);
-
-                    $iData = array('source' => file_get_contents(trim($form->image->getFileName())));
-
-                    $data['imageId'] = $image->insert($iData);
-                }
-
-                $appId = $apiApp->insert($data);
+                $apiApp->insert($data);
 
                 $this->_helper->messenger->addSuccess('ot-apiapp-add:successfullyRegistered');
 
@@ -222,8 +206,13 @@ class Ot_ApiappController extends Zend_Controller_Action
                 $this->_helper->messenger->addError('ot-apiapp-add:problemSubmitting');
             }
         }
-
-        $this->view->form = $form;
+        
+        $this->_helper->pageTitle('ot-apiapp-add:title');
+        
+        $this->view->assign(array(
+            'form' => $form,
+        ));
+        
     }
 
     /**
@@ -231,9 +220,7 @@ class Ot_ApiappController extends Zend_Controller_Action
      *
      */
     public function editAction()
-    {
-        $this->_helper->pageTitle('ot-apiapp-edit:title');
-
+    {        
         $get = Zend_Registry::get('getFilter');
 
         if (!isset($get->appId)) {
@@ -251,9 +238,8 @@ class Ot_ApiappController extends Zend_Controller_Action
             throw new Ot_Exception_Access('ot-apiapp-edit:notAllowedToEdit');
         }
 
-        $form = $apiApp->form(
-            array_merge($thisApp->toArray(), array('imagePath' => $this->_getImage($thisApp->imageId)))
-        );
+        $form = new Ot_Form_ApiApp();
+        $form->populate($thisApp->toArray());
 
         if ($this->_request->isPost()) {
 
@@ -265,23 +251,6 @@ class Ot_ApiappController extends Zend_Controller_Action
                     'website'     => $form->getValue('website'),
                 );
 
-                $imageValue = $form->getValue('image');
-
-                if ($imageValue != '/tmp/' && $imageValue != '') {
-
-                    $image = new Ot_Model_DbTable_Image();
-
-                    $image->resizeImage($form->image->getFileName(), 64, 64);
-
-                    $iData = array('source' => file_get_contents(trim($form->image->getFileName())));
-
-                    if (isset($thisApp->imageId) && $thisApp->imageId != 0) {
-                        $image->deleteImage($thisApp->imageId);
-                    }
-
-                    $data['imageId'] = $image->insert($iData);
-                }
-
                 $apiApp->update($data, null);
 
                 $this->_helper->messenger->addSuccess('ot-apiapp-edit:successfullyModified');
@@ -292,7 +261,11 @@ class Ot_ApiappController extends Zend_Controller_Action
             }
         }
 
-        $this->view->form = $form;
+        $this->_helper->pageTitle('ot-apiapp-edit:title');
+
+        $this->view->assign(array(
+            'form' => $form
+        ));
     }
 
     public function deleteAction()
@@ -333,7 +306,7 @@ class Ot_ApiappController extends Zend_Controller_Action
     protected function _getImage($imageId)
     {
         if ($imageId == 0) {
-            return $this->view->baseUrl() . '/ot/images/consumer.png';
+            return $this->view->baseUrl() . '/images/ot/consumer.png';
         }
 
         return $this->view->url(array('imageId' => $imageId), 'image');

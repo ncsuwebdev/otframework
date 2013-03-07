@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ncsuwebdev/ncsubootstrap.git",
-                "reference": "9ff6c697ad503dfa18846b7b7c8cac6730e6c4fb"
+                "reference": "e042c73a3a8a8191e24cb8ac17c559d2fb8c6218"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/9ff6c697ad503dfa18846b7b7c8cac6730e6c4fb",
-                "reference": "9ff6c697ad503dfa18846b7b7c8cac6730e6c4fb",
+                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/e042c73a3a8a8191e24cb8ac17c559d2fb8c6218",
+                "reference": "e042c73a3a8a8191e24cb8ac17c559d2fb8c6218",
                 "shasum": ""
             },
             "type": "library",
@@ -81,7 +81,7 @@
                 "ncstate",
                 "ncsu"
             ],
-            "time": "2013-03-01 14:50:22"
+            "time": "2013-03-07 16:12:15"
         },
         {
             "name": "ncsuwebdev/php-ncstate",

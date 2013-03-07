@@ -40,7 +40,7 @@ class Ot_View_Helper_DefaultVal extends Zend_View_Helper_Abstract
      * @param string $alt
      * @return string
      */
-    public function defaultVal($val, $alt)
+    public function defaultVal($val, $alt = 'msg-info-none')
     {
         if ($val != '') {
             return $val;
@@ -48,6 +48,6 @@ class Ot_View_Helper_DefaultVal extends Zend_View_Helper_Abstract
         
         $translate = Zend_Registry::get('Zend_Translate');
         
-        return $translate->translate($alt);
+        return '<span class="muted">' . $translate->translate($alt) . '</span>';
     }
 }

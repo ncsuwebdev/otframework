@@ -55,119 +55,25 @@ class Ot_AccountController extends Zend_Controller_Action
     {
         parent::init();
 
-        $get = Zend_Registry::get('getFilter');
-
         $userData = array();
 
         $userData['accountId'] = Zend_Auth::getInstance()->getIdentity()->accountId;
-        if ($get->accountId && $this->_helper->hasAccess('editAllAccounts')) {
-            $userData['accountId'] = $get->accountId;
+        if ($this->_getParam('accountId') && $this->_helper->hasAccess('editAllAccounts')) {
+            $userData['accountId'] = $this->_getParam('accountId');
         }
 
         $account = new Ot_Model_DbTable_Account();
-        $thisAccount = $account->find($userData['accountId']);
-
+        $thisAccount = $account->getByAccountId($userData['accountId']);
+        
         if (is_null($thisAccount)) {
             throw new Ot_Exception_Data('msg-error-noAccount');
-        }
+        }        
 
-        $userData = array_merge($userData, (array) $thisAccount);
-
-        $aar = new Ot_Account_Attribute_Register();
-        
-        $vars = $aar->getVars($userData['accountId']);
+        $this->_authAdapter = $thisAccount->authAdapter['obj'];                
                 
-        foreach ($vars as $varName => $var) {
-            $userData[$varName] = $var->getValue();
-        }
-
-        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
-        $adapter = $authAdapter->find($userData['realm']);
-        $a = $adapter;
-
-        $this->_authAdapter = new $a->class;
-        $userData['authAdapter'] = array(
-           'realm'       => $userData['realm'],
-           'name'        => $a->name,
-           'description' => $a->description,
-        );
-        
-        $this->_userData = $userData;
+        $this->_userData = (array) $thisAccount;        
     }
-
-    public function masqueradeAction()
-    {
-
-        $this->_helper->pageTitle('Masquerade');
-
-        $this->view->messages = $this->_helper->messenger->getMessages();
-        $this->view->masquerading = false;
-
-        $identity = Zend_Auth::getInstance()->getIdentity();
-
-        if (isset($identity->masquerading) && $identity->masquerading) {
-            $this->view->masquerading = true;
-            $this->view->identity = $identity;
-        } else {
-
-            $accountModel = new Ot_Model_DbTable_Account();
-            $form = $accountModel->masqueradeForm();
-
-            if ($this->_request->isPost()) {
-
-                if ($form->isValid($_POST)) {
-
-                    $mAccount = $accountModel->getAccount($form->getValue('username'), $form->getValue('realm'));
-
-                    if ($mAccount->accountId == $identity->accountId) {
-                        throw new Ot_Exception('You cannot masquerade as yourself.');
-                    }
-
-                    if (is_null($mAccount)) {
-                        throw new Ot_Exception('The account was not found.');
-                    }
-
-                    $mAccount->role = $this->_helper->configVar('newAccountRole');
-
-                    $mAccount->realAccount = $identity;
-                    $mAccount->masquerading = true;
-
-                    Zend_Auth::getInstance()->getStorage()->write($mAccount);
-
-                    $this->_helper->messenger->addInfo('You are now masquerading as ' . $mAccount->firstName . ' ' . $mAccount->lastName . ' (' . $mAccount->username . ' in ' . $mAccount->realm . ' realm).');
-
-                    $this->_helper->redirector->gotoRoute(array('action' => 'index', 'controller' => 'index'), 'default', true);
-
-                }
-            }
-
-            $this->view->form = $form;
-        }
-    }
-
-    public function unmasqueradeAction()
-    {
-    	$this->view->messages = $this->_helper->messenger->getMessages();
-
-        $identity = Zend_Auth::getInstance()->getIdentity();
-
-        if (!$identity->masquerading) {
-            throw new Ot_Exception('You are not masquerading!');
-        }
-
-        $realIdentity = $identity->realAccount;
-
-        Zend_Auth::getInstance()->clearIdentity();
-
-        $realIdentity->masquerading = false;
-
-        Zend_Auth::getInstance()->getStorage()->write($realIdentity);
-
-        $this->_helper->messenger->addInfo('You are no longer masquerading.');
-
-        $this->_helper->redirector->gotoRoute(array('action' => 'masquerade'), 'account', true);
-
-    }
+    
 
     /**
      * Default user profile page
@@ -188,20 +94,8 @@ class Ot_AccountController extends Zend_Controller_Action
             'apiDocs'        => $this->_helper->hasAccess('api-docs', 'ot_apiapp'),
             'guestApiAccess' => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole')),
         );
-
-
-        $this->view->messages = $this->_helper->messenger->getMessages();
-        $this->view->userData = $this->_userData;
-
-        $this->_helper->pageTitle(
-            'ot-account-index:title',
-            array(
-                $this->_userData['firstName'],
-                $this->_userData['lastName'],
-                $this->_userData['username'],
-            )
-        );
-         
+        
+        
         $role = new Ot_Model_DbTable_Role();
         $where = $role->getAdapter()->quoteInto('roleId IN (?)', $this->_userData['role']);
         $roles = $role->fetchAll($where)->toArray();
@@ -210,11 +104,17 @@ class Ot_AccountController extends Zend_Controller_Action
              $r = $r['name'];
         }
 
+        $aar = new Ot_Account_Attribute_Register();
+        
+        $accountAttributes = $aar->getVars($this->_userData['accountId']);
+                
         $custom = new Ot_Model_Custom();
 
+        $customData = array();
+        
         $data = $custom->getData('Ot_Profile', $this->_userData['accountId'], 'none', false);
         foreach ($data as $d) {
-            $attributes[$d['attribute']['label']] = $d['value'];
+            $customData[$d['attribute']['label']] = $d['value'];
         }
 
         $apiApp = new Ot_Model_DbTable_ApiApp();
@@ -222,11 +122,23 @@ class Ot_AccountController extends Zend_Controller_Action
         $apiApps = $apiApp->getAppsForAccount($this->_userData['accountId'], 'access')->toArray();
 
         $this->view->assign(array(
-            'attributes' => $attributes,
-            'roles'      => $roles,
-            'apiApps'    => $apiApps,
-            'tab'        => $this->_getParam('tab', 'account'),
+            'userData'          => $this->_userData,
+            'messages'          => $this->_helper->messenger->getMessages(),
+            'customData'        => $customData,
+            'accountAttributes' => $accountAttributes,
+            'roles'             => $roles,
+            'apiApps'           => $apiApps,
+            'tab'               => $this->_getParam('tab', 'account'),
         ));
+                
+        $this->_helper->pageTitle(
+            'ot-account-index:title',
+            array(
+                $this->_userData['firstName'],
+                $this->_userData['lastName'],
+                $this->_userData['username'],
+            )
+        );
 
     }
 
@@ -236,15 +148,11 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function allAction()
     {
-
         $this->view->acl = array(
             'add'    => $this->_helper->hasAccess('add'),
             'edit'   => $this->_helper->hasAccess('edit'),
             'delete' => $this->_helper->hasAccess('delete'),
         );
-
-        $this->_helper->pageTitle('ot-account-all:title');
-        $this->view->messages = $this->_helper->messenger->getMessages();
 
         $filterUsername = $this->_getParam('username');
         $filterFirstName = $this->_getParam('firstName');
@@ -312,7 +220,10 @@ class Ot_AccountController extends Zend_Controller_Action
             $adapterMap[$a->adapterKey] = $a;
         }
 
+        $this->_helper->pageTitle('ot-account-all:title');
+        
         $this->view->assign(array(
+            'messages'      => $this->_helper->messenger->getMessages(),
             'paginator'     => $paginator,
             'form'          => $form,
             'interface'     => true,
@@ -320,95 +231,6 @@ class Ot_AccountController extends Zend_Controller_Action
             'direction'     => $filterDirection,
             'adapters'      => $adapterMap,
         ));
-
-        /*
-        if ($this->_request->isXmlHttpRequest()) {
-
-            $filter = Zend_Registry::get('postFilter');
-
-            $this->_helper->layout->disableLayout();
-            $this->_helper->viewRenderer->setNeverRender();
-
-            $account = new Ot_Model_DbTable_Account();
-
-            $sortname  = (isset($filter->sortname)) ? $filter->sortname : 'username';
-            $sortorder = (isset($filter->sortorder)) ? $filter->sortorder : 'asc';
-            $rp        = (isset($filter->rp)) ? $filter->rp : 15;
-            $page      = ((isset($filter->page)) ? $filter->page : 1) - 1;
-            $qtype     = (isset($filter->query) && !empty($filter->query)) ? $filter->qtype : null;
-            $query     = (isset($filter->query) && !empty($filter->query)) ? $filter->query : null;
-
-            $acl = Zend_Registry::get('acl');
-            $roles = $acl->getAvailableRoles();
-
-            $where = null;
-
-            if (!is_null($query)) {
-                if ($qtype == 'role') {
-                    // find what role Id corresponds to the text string that was entered
-                    foreach ($roles as $r) {
-                        if ($query == $r['name']) {
-                            $query = $r['roleId'];
-                            break;
-                        }
-                    }
-                }
-
-                $where = $account->getAdapter()->quoteInto($qtype . ' = ?', $query);
-            }
-
-            // if they're searching by a role, you can't use the $where, since role no longer exists in the account table
-            if($qtype == 'role') {
-                $accounts = $account->getAccountsForRole($query, $sortname . ' ' . $sortorder, $rp, $page * $rp);
-                $totals = $account->getAccountsForRole($query);
-            } else{
-                $accounts = $account->fetchAll($where, $sortname . ' ' . $sortorder, $rp, $page * $rp);
-                $totals = $account->fetchAll($where);
-            }
-
-            $response = array(
-                'page' => $page + 1,
-                'total' => count($totals),
-                'rows'  => array(),
-            );
-
-            $otAuth = new Ot_Model_DbTable_AuthAdapter();
-            $adapters = $otAuth->fetchAll();
-
-            $realmMap = array();
-            foreach ($adapters as $a) {
-                $realmMap[$a->adapterKey] = $a->name;
-            }
-
-            // TODO: fix bug on account/all page. Search results are not displaying correctly
-            if(count($accounts) > 0) {
-                foreach ($accounts as $a) {
-
-                    $roleList = array();
-
-                    foreach ($a->role as $r) {
-                        $roleList[] = $roles[$r]['name'];
-                    }
-
-                    $row = array(
-                        'id'   => $a->accountId,
-                        'cell' => array(
-                            $a->username,
-                            $a->firstName,
-                            $a->lastName,
-                            $realmMap[$a->realm],
-                            implode(', ', $roleList)
-                        ),
-                    );
-
-                    $response['rows'][] = $row;
-                }
-            }
-
-            echo Zend_Json::encode($response);
-            return;
-        }
-         */
     }
 
     /**
@@ -416,8 +238,7 @@ class Ot_AccountController extends Zend_Controller_Action
      *
      */
     public function addAction()
-    {
-        
+    {        
         $account = new Ot_Model_DbTable_Account();
 
         $defaultRole = $this->_helper->configVar('defaultRole');
@@ -451,10 +272,7 @@ class Ot_AccountController extends Zend_Controller_Action
                 $dba = Zend_Db_Table::getDefaultAdapter();
                 $dba->beginTransaction();
 
-                // Account table
-                $thisAccount = $account->getAccount($accountData['username'], $accountData['realm']);
-
-                if (is_null($thisAccount)) {
+                if (!$account->accountExists($accountData['username'], $accountData['realm'])) {
                     try {
                         $accountData['accountId'] = $account->insert($accountData);
                     } catch (Exception $e) {
@@ -661,21 +479,17 @@ class Ot_AccountController extends Zend_Controller_Action
                     'timezone'     => $form->getValue('timezone'),
                 );
 
-                if ($this->_userData['accountId']
-                    != Zend_Auth::getInstance()->getIdentity()->accountId) {
-                    $data['realm']    = $form->getValue('realm');
-                    $data['role']     = (array)$form->getValue('roleSelect');
+                if ($this->_userData['accountId'] != Zend_Auth::getInstance()->getIdentity()->accountId) {
+                    $data['role'] = $form->getValue('role');
 
                     if (!isset($data['role']) || count($data['role']) < 1) {
                         $data['role'] = $this->_helper->configVar('defaultRole');
                     }
-
-                    $data['username'] = $form->getValue('username');
                 }
-
+                
                 $account = new Ot_Model_DbTable_Account();
 
-                $thisAccount = $account->getAccount($data['username'], $data['realm']);
+                $thisAccount = $account->getByUsername($data['username'], $data['realm']);
 
                 if (!is_null($thisAccount) && $thisAccount->accountId != $data['accountId']) {
                     $this->_helper->messenger->addError('msg-error-accountTaken');
@@ -692,13 +506,13 @@ class Ot_AccountController extends Zend_Controller_Action
 
                     $aar = new Ot_Account_Attribute_Register();
                     
-                    $vars = $aar->getVars();
+                    $vars = $aar->getVars($this->_userData['accountId']);
                     
                     $values = $form->getValues();
                     
                     foreach ($vars as $varName => $var) {
-                        if (isset($values['accountattribute'][$varName])) {
-                            $var->setValue($values['accountattribute'][$varName]);
+                        if (isset($values['attributes'][$varName])) {
+                            $var->setValue($values['attributes'][$varName]);
                             
                             $aar->save($var, $this->_userData['accountId']);
                         }
@@ -786,47 +600,13 @@ class Ot_AccountController extends Zend_Controller_Action
             throw new Ot_Exception_Access('msg-error-accountAccessDelete');
         }
 
-        $form = Ot_Form_Template::delete('deleteUser');
-
-        if ($this->_request->isPost() && $form->isValid($_POST)) {
-
-            $dba = Zend_Db_Table::getDefaultAdapter();
-            $dba->beginTransaction();
+        if ($this->_request->isPost()) {
 
             $account = new Ot_Model_DbTable_Account();
 
             $where = $account->getAdapter()->quoteInto('accountId = ?', $this->_userData['accountId']);
-
-            try {
-                $account->delete($where);
-            } catch (Exception $e) {
-                $dba->rollback();
-                throw $e;
-            }
-
-            $loginOptions = Zend_Registry::get('applicationLoginOptions');
-
-            if (isset($loginOptions['accountPlugin'])) {
-                $acctPlugin = new $loginOptions['accountPlugin']();
-
-                try {
-                    $acctPlugin->deleteProcess($this->_userData['accountId']);
-                } catch (Exception $e) {
-                    $dba->rollback();
-                    throw $e;
-                }
-            }
-
-            $custom = new Ot_Model_Custom();
-
-            try {
-                $custom->deleteData('Ot_Profile', $this->_userData['accountId']);
-            } catch (Exception $e) {
-                $dba->rollback();
-                throw $e;
-            }
-
-            $dba->commit();
+            
+            $account->delete($where);
 
             $loggerOptions = array(
                 'attributeName' => 'accountId',
@@ -838,60 +618,11 @@ class Ot_AccountController extends Zend_Controller_Action
             $this->_helper->messenger->addSuccess('msg-info-accountDeleted');
 
             $this->_helper->redirector->gotoRoute(array('action' => 'all'), 'account', true);
+        } else {
+            throw new Ot_Exception_Access('You can not access this method directly');
         }
-
-        $this->view->userData = $this->_userData;
-        $this->_helper->pageTitle('ot-account-delete:title');
-        $this->view->form = $form;
     }
 
-    /**
-     * Allows a user to revoke their connection to a remote application
-     *
-     */
-        public function revokeConnectionAction()
-        {
-                $this->_helper->pageTitle('ot-account-revokeConnection:title');
-
-                $get = Zend_Registry::get('getFilter');
-
-                if (!isset($get->consumerId)) {
-                    throw new Ot_Exception_Input('ot-account-revokeConnection:consumerIdNotSet');
-                }
-
-                $consumer = new Ot_Model_DbTable_OauthServerConsumer();
-
-                $thisConsumer = $consumer->find($get->consumerId);
-                if (is_null($thisConsumer)) {
-                    throw new Ot_Exception_Data('ot-account-revokeConnection:consumerIdNotExists');
-                }
-
-                $st = new Ot_Model_DbTable_OauthServerToken();
-
-                $existingAccessToken = $st->getTokenByAccountAndConsumer(
-                    $this->_userData['accountId'], $thisConsumer->consumerId,
-                    'access'
-                );
-                if (is_null($existingAccessToken)) {
-                    throw new Ot_Exception_Data('ot-account-revokeConnection:noAccessToken');
-                }
-
-                $form = Ot_Form_Template::delete('revokeAccess', 'Revoke Access', 'Cancel');
-
-                if ($this->_request->isPost() && $form->isValid($_POST)) {
-                    $st->removeToken($existingAccessToken->token);
-
-                    $this->_helper->flashMessenge->addInfo(
-                        //'Token has been removed. ' . $thisConsumer->name . ' no longer has access to your account.'
-                        $this->view->translate('ot-account-revokeConnection:tokenremoved', array($thisConsumer->name))
-                    );
-
-                    $this->_helper->redirector->gotoRoute(array(), 'account', true);
-                }
-
-                $this->view->form = $form;
-                $this->view->consumer = $thisConsumer;
-        }
 
     /**
      * allows a user to change their password
@@ -899,12 +630,11 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function changePasswordAction()
     {
-    	$this->view->messages = $this->_helper->messenger->getCurrentMessages();
         $identity = Zend_Auth::getInstance()->getIdentity();
 
         $account = new Ot_Model_DbTable_Account();
 
-        $thisAccount = $account->getAccount($identity->username, $identity->realm);
+        $thisAccount = $account->getByUsername($identity->username, $identity->realm);
         if (is_null($thisAccount)) {
             throw new Ot_Exception_Data('msg-error-noAccount');
         }
@@ -917,79 +647,21 @@ class Ot_AccountController extends Zend_Controller_Action
             throw new Ot_Exception_Access('msg-error-authAdapterSupport');
         }
 
-        $form = new Zend_Form();
-        $form->setAttrib('id', 'changePassword')->setDecorators(
-            array(
-                'FormElements',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                'Form',
-            )
-        );
-
-        $oldPassword = $form->createElement(
-            'password',
-            'oldPassword',
-            array('label' => 'ot-account-changePassword:form:oldPassword')
-        );
-        $oldPassword->setRequired(true)
-                    ->addValidator('StringLength', false, array(5, 20))
-                    ->addFilter('StringTrim')
-                    ->addFilter('StripTags');
-
-        $newPassword = $form->createElement(
-            'password',
-            'newPassword',
-            array('label' => 'ot-account-changePassword:form:newPassword')
-        );
-        $newPassword->setRequired(true)
-                    ->addValidator('StringLength', false, array(5, 20))
-                    ->addFilter('StringTrim')
-                    ->addFilter('StripTags');
-
-        $newPasswordConf = $form->createElement(
-            'password',
-            'newPasswordConf',
-            array('label' => 'ot-account-changePassword:form:newPasswordConf')
-        );
-        $newPasswordConf->setRequired(true)
-                        ->addValidator('StringLength', false, array(5, 20))
-                        ->addFilter('StringTrim')
-                        ->addFilter('StripTags');
-
-        $submit = $form->createElement(
-            'submit',
-            'changeButton',
-            array('label' => 'ot-account-changePassword:form:submit')
-        );
-        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
-
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
-
-        $form->addElements(array($oldPassword, $newPassword, $newPasswordConf))->setElementDecorators(
-            array(
-                'ViewHelper',
-                'Errors',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                array('Label', array('tag' => 'span')),
-            )
-        )->addElements(array($submit, $cancel));
+        $form = new Ot_Form_ChangePassword();        
 
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
 
-                if ($form->getValue('newPassword')
-                    != $form->getValue('newPasswordConf')) {
+                if ($form->getValue('newPassword') != $form->getValue('newPasswordConf')) {
                     $this->_helper->messenger->addError('msg-error-passwordMismatch');
                 }
 
-                if (md5($form->getValue('oldPassword'))
-                    != $thisAccount->password) {
+                if (md5($form->getValue('oldPassword')) != $thisAccount->password) {
                     $this->_helper->messenger->addError('msg-error-passwordInvalidOriginal');
                 }
 
                 if ($this->_helper->messenger->count('error') == 0) {
+                    
                     $data = array(
                         'accountId' => $thisAccount->accountId,
                         'password'  => md5($form->getValue('newPassword'))
@@ -998,7 +670,6 @@ class Ot_AccountController extends Zend_Controller_Action
                     $account->update($data, null);
 
                     $this->_helper->messenger->addSuccess('msg-info-passwordChanged');
-                    $this->_helper->messenger->addSuccess('tesingggg');
 
                     $loggerOptions = array(
                         'attributeName' => 'accountId',
@@ -1019,7 +690,11 @@ class Ot_AccountController extends Zend_Controller_Action
         );
 
         $this->_helper->pageTitle('ot-account-changePassword:title');
-        $this->view->form  = $form;
+        
+        $this->view->assign(array(
+            'form'     => $form,
+            'messages' => $this->_helper->messenger->getCurrentMessages(),
+        ));
     }
 
     /**
@@ -1153,4 +828,79 @@ class Ot_AccountController extends Zend_Controller_Action
         return;
 
     }
+    
+public function masqueradeAction()
+    {
+
+        $this->_helper->pageTitle('Masquerade');
+
+        $this->view->messages = $this->_helper->messenger->getMessages();
+        $this->view->masquerading = false;
+
+        $identity = Zend_Auth::getInstance()->getIdentity();
+
+        if (isset($identity->masquerading) && $identity->masquerading) {
+            $this->view->masquerading = true;
+            $this->view->identity = $identity;
+        } else {
+
+            $accountModel = new Ot_Model_DbTable_Account();
+            $form = $accountModel->masqueradeForm();
+
+            if ($this->_request->isPost()) {
+
+                if ($form->isValid($_POST)) {
+
+                    $mAccount = $accountModel->getByUsername($form->getValue('username'), $form->getValue('realm'));
+
+                    if ($mAccount->accountId == $identity->accountId) {
+                        throw new Ot_Exception('You cannot masquerade as yourself.');
+                    }
+
+                    if (is_null($mAccount)) {
+                        throw new Ot_Exception('The account was not found.');
+                    }
+
+                    $mAccount->role = $this->_helper->configVar('newAccountRole');
+
+                    $mAccount->realAccount = $identity;
+                    $mAccount->masquerading = true;
+
+                    Zend_Auth::getInstance()->getStorage()->write($mAccount);
+
+                    $this->_helper->messenger->addInfo('You are now masquerading as ' . $mAccount->firstName . ' ' . $mAccount->lastName . ' (' . $mAccount->username . ' in ' . $mAccount->realm . ' realm).');
+
+                    $this->_helper->redirector->gotoRoute(array('action' => 'index', 'controller' => 'index'), 'default', true);
+
+                }
+            }
+
+            $this->view->form = $form;
+        }
+    }
+
+    public function unmasqueradeAction()
+    {
+    	$this->view->messages = $this->_helper->messenger->getMessages();
+
+        $identity = Zend_Auth::getInstance()->getIdentity();
+
+        if (!$identity->masquerading) {
+            throw new Ot_Exception('You are not masquerading!');
+        }
+
+        $realIdentity = $identity->realAccount;
+
+        Zend_Auth::getInstance()->clearIdentity();
+
+        $realIdentity->masquerading = false;
+
+        Zend_Auth::getInstance()->getStorage()->write($realIdentity);
+
+        $this->_helper->messenger->addInfo('You are no longer masquerading.');
+
+        $this->_helper->redirector->gotoRoute(array('action' => 'masquerade'), 'account', true);
+
+    }    
+    
 }

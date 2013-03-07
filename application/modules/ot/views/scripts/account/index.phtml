@@ -1,105 +1,158 @@
-<?php echo $this->translate('ot-account-index:header'); ?>
-<br /><br />
-<?php if ($this->acl['delete']): ?>
-    <a href="<?php echo $this->url(array('action' => 'delete', 'accountId' => $this->userData['accountId']), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
-    <?php echo $this->translate('ot-account-index:linkDeleteUser'); ?>
-    <span class="ui-icon ui-icon-minusthick"></span></a>
-    <br /><br />
+<?php if ($this->userData['authAdapter']['enabled'] == 0): ?>
+<div class="alert alert-block">
+    <b>WARNING!</b> This account uses the <?php echo $this->userData['authAdapter']['name']; ?> 
+    authentication adapter which is currently disabled.  <a href="<?php echo $this->url(array('controller' => 'auth'), 'ot', true); ?>">Enable this adapter</a> 
+    to allow this user to log in.
+</div>
 <?php endif; ?>
 
-<div id="oauth">
-    <ul>
-        <li<?php echo ($this->tab == 'account') ? ' class="ui-tabs-selected"' : ''; ?>><a href="#tabs-data"><span><?php echo $this->translate('ot-account-index:account'); ?></span></a></li>
-        <?php if ($this->acl['guestApiAccess']): ?>
-        <li<?php echo ($this->tab == 'apps') ? ' class="ui-tabs-selected"' : ''; ?>><a href="#tabs-apps"><span><?php echo $this->translate('ot-account-index:apps'); ?></span></a></li>
-        <?php endif; ?>
-    </ul>
-    <div id="tabs-data">
-    <?php echo $this->translate('ot-account-index:userDataHeader'); ?>
-    <br /><br />
-    <?php if ($this->acl['edit'] || $this->acl['changePassword']) : ?>
-        <?php if ($this->acl['edit']): ?>
-
-            <a href="<?php echo $this->url(array('action' => 'edit', 'accountId' => $this->userData['accountId']), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
-            <?php echo $this->translate('ot-account-index:linkEditUserData'); ?>
-            <span class="ui-icon ui-icon-pencil"></span></a>
-        <?php endif; ?>
-        <?php if ($this->acl['changePassword']) : ?>
-            <a href="<?php echo $this->url(array('action' => 'change-password'), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
-            <?php echo $this->translate('ot-account-index:linkChangePassword'); ?>
-            <span class="ui-icon ui-icon-locked"></span></a>
-        <?php endif; ?>
-        <br /><br />
-    <?php endif; ?>
-        <div id="gravatarWrapper">
-            <?php echo $this->gravatar($this->userData['emailAddress'], array('imgSize' => 128)); ?>
-            <a href="http://gravatar.com" target="_blank">Change picture...</a>
-        </div>
-        <table class="form">
-            <tbody>
-                <tr>
-                    <td width="130"><label><?php echo $this->translate('model-account-username'); ?></label></td>
-                    <td><?php echo $this->userData['username']; ?></td>
-                </tr>
-                <tr>
-                    <td><label><?php echo $this->translate('model-account-loginMethod'); ?></label></td>
-                    <td><?php echo $this->userData['authAdapter']['name']; ?></td>
-                </tr>
-                <tr>
-                    <td><label><?php echo $this->translate('model-account-role'); ?></label></td>
-                    <td><?php echo implode(', ', $this->roles); ?></td>
-                </tr>
-                <tr>
-                    <td>
-                    <label><?php echo $this->translate('model-account-firstName'); ?></label></td>
-                    <td><?php echo $this->userData['firstName']; ?></td>
-                </tr>
-                <tr>
-                    <td>
-                    <label><?php echo $this->translate('model-account-lastName'); ?></label></td>
-                    <td><?php echo $this->userData['lastName']; ?></td>
-                </tr>
-                <tr>
-                    <td>
-                    <label><?php echo $this->translate('model-account-emailAddress'); ?></label></td>
-                    <td><?php echo (empty($this->userData['emailAddress']) ? 'None' : $this->userData['emailAddress']); ?></td>
-                </tr>
-                <tr>
-                    <td>
-                    <label><?php echo $this->translate('model-account-timezone'); ?></label></td>
-                    <td><?php echo (empty($this->userData['timezone']) ? $this->config->user->timezone->val : $this->userData['timezone']); ?></td>
-                </tr>
-                <?php foreach($this->attributes as $key=>$attr) : ?>
-                <tr>
-                    <td>
-                    <label><?php echo ucwords($key); ?>:</label></td>
-                    <td>
-                    <?php if (empty($attr)) : ?>
-                          <?php echo $this->translate('ot-account-index:none'); ?>
-                    <?php elseif (is_array($attr)): ?>
-                          <?php echo implode(', ', $attr); ?>
-                    <?php else : ?>
-                          <?php echo $attr; ?>
-                    <?php endif; ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        * To change your account's picture, signup for an account at <a href="http://gravatar.com" target="_blank">Gravatar.com</a> and associate a picture with your account's email address (<?php echo $this->userData['emailAddress']; ?>).
-    </div>
+<ul class="nav nav-tabs">
+    <li<?php echo ($this->tab == 'account') ? ' class="active"' : ''; ?>><a href="#data" data-toggle="tab"><?php echo $this->translate('ot-account-index:account'); ?></a></li>
     <?php if ($this->acl['guestApiAccess']): ?>
-    <div id="tabs-apps">
+    <li<?php echo ($this->tab == 'apps') ? ' class="active"' : ''; ?>><a href="#apps" data-toggle="tab"><?php echo $this->translate('ot-account-index:apps'); ?></a></li>
+    <?php endif; ?>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane<?php echo ($this->tab == 'account') ? ' active' : ''; ?>" id="data">        
+            <div class="row">
+                <div class="span8">
+                    <?php echo $this->translate('ot-account-index:userDataHeader'); ?>
+                    <br /><br />
+                    
+                    <?php if ($this->acl['edit'] || $this->acl['changePassword'] || $this->acl['delete']) : ?>
+                        <?php if ($this->acl['edit']): ?>
+                            <a href="<?php echo $this->url(array('action' => 'edit', 'accountId' => $this->userData['accountId']), 'account', true); ?>" class="btn">
+                                <i class="icon icon-pencil"></i>
+                            <?php echo $this->translate('ot-account-index:linkEditUserData'); ?>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($this->acl['changePassword']) : ?>
+                            <a href="<?php echo $this->url(array('action' => 'change-password'), 'account', true); ?>" class="btn">
+                                <i class="icon icon-lock"></i>
+                                <?php echo $this->translate('ot-account-index:linkChangePassword'); ?>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($this->acl['delete']): ?>
+                            <a href="#deleteUser" data-toggle="modal" class="btn btn-danger">
+                                <i class="icon-white icon-minus"></i>
+                            <?php echo $this->translate('ot-account-index:linkDeleteUser'); ?>
+                            </a>                    
+                            <div id="deleteUser" class="modal hide fade">
+                                <div class="modal-header">
+                                    <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                                    <h3>Delete User <?php echo $this->userData['firstName'] . ' ' . $this->userData['lastName']; ?></h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p><?php echo $this->translate('ot-account-delete:header', $this->userData['username'], $this->userData['authAdapter']['name']); ?></p>
+                                    <br />
+                                    <p><?php echo $this->translate('form-delete-confirm'); ?></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form style="margin: 0;" method="post" action="<?php echo $this->url(array('action' => 'delete'), 'account', true); ?>">
+                                        <input type="hidden" name="accountId" value="<?php echo $this->userData['accountId']; ?>" />
+                                        <input type="submit" name="submit" value="Yes, Delete" class="btn btn-danger" />
+                                        <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                                    </form>
+                                </div>
+                            </div>
+                        <?php endif; ?>    
+                        <br /><br />
+
+                    <?php endif; ?>
+            
+                    <table class="form">
+                        <tbody>
+                            <tr>
+                                <td width="160"><label><?php echo $this->translate('model-account-username'); ?>:</label></td>
+                                <td><?php echo $this->userData['username']; ?></td>
+                            </tr>
+                            <tr>
+                                <td><label><?php echo $this->translate('model-account-loginMethod'); ?>:</label></td>
+                                <td><?php echo $this->userData['authAdapter']['name']; ?></td>
+                            </tr>
+                            <tr>
+                                <td><label><?php echo $this->translate('model-account-role'); ?>:</label></td>
+                                <td><?php echo implode(', ', $this->roles); ?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <label><?php echo $this->translate('model-account-firstName'); ?>:</label></td>
+                                <td><?php echo $this->defaultVal($this->userData['firstName']); ?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <label><?php echo $this->translate('model-account-lastName'); ?>:</label></td>
+                                <td><?php echo $this->defaultVal($this->userData['lastName']); ?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <label><?php echo $this->translate('model-account-emailAddress'); ?>:</label></td>
+                                <td><?php echo $this->defaultVal($this->userData['emailAddress']); ?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <label><?php echo $this->translate('model-account-timezone'); ?>:</label></td>
+                                <td><?php echo (empty($this->userData['timezone']) ? date_default_timezone_get() : $this->userData['timezone']); ?></td>
+                            </tr>
+                            <?php foreach($this->accountAttributes as $attr) : ?>
+                            <tr>
+                                <td><label><?php echo $attr->getLabel(); ?>:</label></td>
+                                <td><?php echo $this->defaultVal($attr->getDisplayValue()); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php foreach($this->customData as $key=>$attr) : ?>
+                            <tr>
+                                <td>
+                                <label><?php echo ucwords($key); ?>:</label></td>
+                                <td>
+                                <?php if (is_array($attr)): ?>
+                                      <?php echo implode(', ', $attr); ?>
+                                <?php else : ?>
+                                      <?php echo $this->defaultVal($attr); ?>
+                                <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="span4">
+                    <div class="thumbnail">
+                        <?php echo $this->gravatar($this->userData['emailAddress'], array('imgSize' => 300)); ?>
+                        <h5>Account Avatar</h5>
+                        <p>
+                            To change your account's picture, signup for an account at 
+                            <a href="http://gravatar.com" target="_blank">Gravatar.com</a> and 
+                            associate a picture with your account's email address 
+                            (<?php echo $this->userData['emailAddress']; ?>). 
+                        </p>
+                        <p>                            
+                            <a href="http://gravatar.com" target="_blank" class="btn btn-primary">Change picture...</a>  
+                        </p>
+                    </div>       
+                </div>
+            </div>
+        </div>
+    <?php if ($this->acl['guestApiAccess']): ?>
+    <div class="tab-pane<?php echo ($this->tab == 'apps') ? ' active' : ''; ?>" id="apps">
         <?php echo $this->translate('ot-account-index:apiapp-header'); ?>
         <br /><br />
         <?php if ($this->acl['apiDocs'] || $this->acl['apiAppAdd']): ?>
 
-            <?php if ($this->acl['apiDocs']): ?>
-                <a href="<?php echo $this->url(array('action' => 'api-docs'), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:viewApiDocumentation'); ?><span class="ui-icon ui-icon-gear"></span></a>
-            <?php endif; ?>
-
             <?php if ($this->acl['apiAppAdd']): ?>
-                <a href="<?php echo $this->url(array('action' => 'add', 'accountId' => $this->userData['accountId']), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-account-index:apiapp-addButton'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
+                <a href="<?php echo $this->url(array('action' => 'add', 'accountId' => $this->userData['accountId']), 'apiapp', true); ?>" class="btn btn-success">
+                    <i class="icon-white icon-plus"></i>
+                    <?php echo $this->translate('ot-account-index:apiapp-addButton'); ?>
+                </a>
+            <?php endif; ?>
+        
+        
+            <?php if ($this->acl['apiDocs']): ?>
+                <a href="<?php echo $this->url(array('action' => 'api-docs'), 'apiapp', true); ?>" class="btn">
+                    <i class="icon icon-list-alt"></i>
+                    <?php echo $this->translate('ot-account-index:viewApiDocumentation'); ?>
+                </a>
             <?php endif; ?>
 
         <br /><br />
@@ -108,35 +161,50 @@
 
         <?php if (count($this->apiApps) != 0): ?>
             <?php foreach ($this->apiApps as $c): ?>
-            <div class="consumer" style="background-image:url(<?php echo ($c['imageId'] != 0) ? $this->url(array('imageId' => $c['imageId']), 'image', true) : ''; ?>">
-
-                <div class="options">
-
-                    <?php if ($this->acl['apiAppEdit']): ?>
-                    <a href="<?php echo $this->url(array('action' => 'edit', 'appId' => $c['appId'], 'accountId' => $this->userData['accountId']), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-apiapp-details:appEditButton'); ?><span class="ui-icon ui-icon-pencil"></span></a>
-                    <br /><br />
-                    <?php endif; ?>
-
-                    <?php if ($this->acl['apiAppDelete']): ?>
-                    <a href="<?php echo $this->url(array('action' => 'delete', 'appId' => $c['appId'], 'accountId' => $this->userData['accountId']), 'apiapp', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-apiapp-details:appDeleteButton'); ?><span class="ui-icon ui-icon-minusthick"></span></a>
-                    <br /><br />
-                    <?php endif; ?>
-
-                </div>
-
-                <div class="details">
-                    <div class="name">
-                        <?php echo $c['name']; ?>
-                        <?php if ($c['website'] != ''): ?>
-                            <span class="website">(<a target="_blank" href="<?php echo $c['website']; ?>"><?php echo $c['website']; ?></a>)</span>
-                        <?php endif; ?>
-                    </div>
-                    <div class="description"><?php echo nl2br($c['description']); ?></div>
-                    <div class="key"><b><?php echo $this->translate('ot-account-index:apiapp-apiKey'); ?>:</b> <?php echo $c['apiKey']; ?></div>
-                </div>
-
-                <div class="ui-helper-clearfix"></div>
+        <div class="apiapp">
+        <div class="row">
+            <div class="span1">
+                <img src="<?php echo $this->baseUrl('/images/ot/consumer.png'); ?>" width="64" height="64" alt="api app" />
             </div>
+            <div class="span7">
+                <div class="name">
+                    <?php echo $c['name']; ?>
+                    <?php if ($c['website'] != ''): ?>
+                        <span class="website">(<a target="_blank" href="<?php echo $c['website']; ?>"><?php echo $c['website']; ?></a>)</span>
+                    <?php endif; ?>
+                </div>
+                <div class="description"><?php echo nl2br($c['description']); ?></div>
+                <div class="key"><b><?php echo $this->translate('ot-account-index:apiapp-apiKey'); ?>:</b> <?php echo $c['apiKey']; ?></div>
+            </div>
+            <div class="span3">
+                <?php if ($this->acl['apiAppEdit']): ?>
+                    <a href="<?php echo $this->url(array('action' => 'edit', 'appId' => $c['appId'], 'accountId' => $this->userData['accountId']), 'apiapp', true); ?>" class="btn btn-block"><?php echo $this->translate('ot-apiapp-details:appEditButton'); ?></a>
+                    <br />
+                <?php endif; ?>
+
+                <?php if ($this->acl['apiAppDelete']): ?>
+                    <a href="#deleteApiApp<?php echo $c['appId']; ?>" data-toggle="modal" class="btn btn-danger btn-block"><?php echo $this->translate('ot-apiapp-details:appDeleteButton'); ?></a>
+                    <div id="deleteApiApp<?php echo $c['appId']; ?>" class="modal hide fade">
+                        <div class="modal-header">
+                            <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                            <h3>Delete Api App <?php echo $c['name']; ?></h3>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to remove this API App?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <form style="margin: 0;" method="post" action="<?php echo $this->url(array('action' => 'delete'), 'apiapp', true); ?>">
+                                <input type="hidden" name="appId" value="<?php echo $c['appId']; ?>" />
+                                <input type="hidden" name="accountId" value="<?php echo $this->userData['accountId']; ?>" />
+                                <input type="submit" name="submit" value="Yes, Delete" class="btn btn-danger" />
+                                <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                            </form>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        </div>
             <?php endforeach; ?>
         <?php else: ?>
         <?php echo $this->translate('ot-account-index:apiapp-noApplications'); ?>
@@ -145,4 +213,6 @@
     </div>
     <?php endif; ?>
 </div>
+
+<div class="clearfix"></div>
 <br /><br />

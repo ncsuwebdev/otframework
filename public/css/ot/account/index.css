@@ -1,64 +1,30 @@
 @CHARSET "UTF-8";
 
-h3 {
-    border-bottom: 1px solid #999;
-    font-size: 1.4em;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.passwordButton {
-    padding: 2px 15px 2px 20px;
-    background-image: url(../../../../images/ot/key.png);
-    background-repeat: no-repeat;
-}
-
-#gravatarWrapper {
-    text-align: center;
-    float: right;
-    margin: 10px 10px 0 0;
-    padding: 0;
-    width: 128px;
-    height: 128px;
-    border: 3px solid #444;
-}
-
-.consumer {
-    background-image: url(../../../../images/ot/consumer.png);
-    background-repeat: no-repeat;
-    background-position: 10px 10px;
+.apiapp {
     border: 1px solid #CCC;
-    padding: 10px 10px 10px 85px;
     margin: 25px 0px;
+    padding: 8px 3px;
 }
 
-.consumer .name {
+.apiapp .name {
     font-size: 1.4em;
     font-weight: bold;
 }
 
-.consumer .name .website {
+.apiapp .name .website {
     color: #AAAAAA;
     font-size: 0.8em;
     font-weight: normal;
 }
 
-.consumer .name .website a {
+.apiapp .name .website a {
     color: #AAAAAA;
 }
 
-.consumer .description {
+.apiapp .description {
     color: #333;
     margin: 10px 0px;
 }
-
-.consumer .options {
-    float: right;
-    width: 200px;
-    text-align: right;
-    padding-top: 10px;
-}
-
 
 
 .access {

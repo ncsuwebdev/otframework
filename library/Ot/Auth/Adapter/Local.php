@@ -86,7 +86,7 @@ class Ot_Auth_Adapter_Local implements Zend_Auth_Adapter_Interface, Ot_Auth_Adap
     {
         $account = new Ot_Model_DbTable_Account();
 
-        $result = $account->getAccount($this->_username, 'local');
+        $result = $account->getByUsername($this->_username, 'local');
 
         if (is_null($result)) {
             return new Zend_Auth_Result(false, null, array('User "' . $this->_username . '" account was not found.'));

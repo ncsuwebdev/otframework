@@ -73,10 +73,6 @@ class Ot_Auth_Adapter_Twitter implements Zend_Auth_Adapter_Interface, Ot_Auth_Ad
         
         if (Zend_Registry::isRegistered('applicationLoginOptions')) {
             $loginOptions = Zend_Registry::get('applicationLoginOptions');
-
-            if (!isset($loginOptions['adapteroptions']['google']['consumerKey']) || $loginOptions['adapteroptions']['google']['consumerKey'] == '' || !isset($loginOptions['adapteroptions']['google']['consumerSecret']) || $loginOptions['adapteroptions']['google']['consumerSecret'] == '') {
-                throw new Exception('Twitter authentication options must be set in the application configuration.');
-            }
             
             if (!defined('AUTH_TWITTER_CONSUMER_KEY')) {
                 define('AUTH_TWITTER_CONSUMER_KEY', $loginOptions['adapteroptions']['google']['consumerKey']);
@@ -96,6 +92,10 @@ class Ot_Auth_Adapter_Twitter implements Zend_Auth_Adapter_Interface, Ot_Auth_Ad
      */
     public function authenticate()
     {
+        if (AUTH_TWITTER_CONSUMER_KEY == '' || AUTH_TWITTER_CONSUMER_SECRET == '') {
+            throw new Exception('Yahoo authentication options must be set in the application configuration.');
+        }
+        
         $session = new Zend_Session_Namespace('ot_auth_adapter_twitter');
         
         if (isset($session->authed)) {

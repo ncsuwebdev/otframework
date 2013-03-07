@@ -8,10 +8,9 @@ class Ot_Form_UserSearch extends Zend_Form
         $this->setAttrib('id', 'userSearchForm')
              ->setDecorators(array(
                      'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'well')),
                      'Form',
              ))
-             ->setAttrib('class', 'ui-corner-all')
              ->setMethod(Zend_Form::METHOD_GET);
 
         $username = $this->createElement('text', 'username', array('label' => 'Username:'));
@@ -47,7 +46,7 @@ class Ot_Form_UserSearch extends Zend_Form
         $direction->setDecorators(array('ViewHelper'));
         
         $submit = $this->createElement('submit', 'submitButton', array('label' => 'Filter Results'));
-        $submit->setAttrib('class', 'button-red');
+        $submit->setAttrib('class', 'btn btn-danger');
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit')),
                    array(array('wrapperAll' => 'HtmlTag'), array('tag' => 'div', 'class' => 'submit')),

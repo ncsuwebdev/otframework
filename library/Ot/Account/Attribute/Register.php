@@ -119,5 +119,14 @@ class Ot_Account_Attribute_Register
             $model->update($data, $where);
         }        
     }
+    
+    public function delete($accountId)
+    {
+        $model = new Ot_Model_DbTable_AccountAttribute();
+
+        $where = $model->getAdapter()->quoteInto('accountId = ?', $accountId);
+        
+        $model->delete($where);
+    }
 }
 

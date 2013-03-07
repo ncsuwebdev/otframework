@@ -211,7 +211,7 @@ class Ot_LoginController extends Zend_Controller_Action
                 
                 $realm    = $auth->getIdentity()->realm;
                 $account     = new Ot_Model_DbTable_Account();
-                $thisAccount = $account->getAccount($username, $realm);
+                $thisAccount = $account->getByUsername($username, $realm);
 
                 if (is_null($thisAccount)) {
 
@@ -381,7 +381,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
                 $account = new Ot_Model_DbTable_Account();
                 $realm = $form->getValue('realm');
-                $userAccount = $account->getAccount($form->getValue('username'), 'local');//$form->getValue('realm'));
+                $userAccount = $account->getByUsername($form->getValue('username'), 'local');//$form->getValue('realm'));
 
                 if (!is_null($userAccount)) {
                     $loginOptions = array();
@@ -483,7 +483,7 @@ class Ot_LoginController extends Zend_Controller_Action
         }
 
         $account     = new Ot_Model_DbTable_Account();
-        $thisAccount = $account->getAccount($username, $realm);
+        $thisAccount = $account->getByUsername($username, $realm);
 
         if (is_null($thisAccount)) {
             throw new Ot_Exception_Data('msg-error-userAccountNotFound');
@@ -659,9 +659,7 @@ class Ot_LoginController extends Zend_Controller_Action
                         'lastName'     => $form->getValue('lastName'),
                     );
 
-                    $thisAccount = $account->getAccount($accountData['username'], $accountData['realm']);
-
-                    if (!is_null($thisAccount)) {
+                    if ($account->accountExists($accountData['username'], $accountData['realm'])) {
                         $this->_helper->messenger->addError('msg-error-usernameTaken');
                     } else {
 

@@ -74,7 +74,7 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $timezone->setValue(date_default_timezone_get());
 
         // Role select box
-        $roleSelect = $this->createElement('multiSelect', 'roleSelect', array('label' => 'model-account-role'));
+        $roleSelect = $this->createElement('multiSelect', 'role', array('label' => 'model-account-role'));
         $roleSelect->setRequired(true);
         $roleSelect->setDescription('You may select multiple roles for a user');
 
@@ -84,13 +84,16 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         }
         
         if ($new) {
-            $this->addElements(array($realmSelect, $username, $password, $passwordConf, $roleSelect, $firstName, $lastName, $email, $timezone));
+            $this->addElements(array($realmSelect, $username, $roleSelect, $firstName, $lastName, $email, $timezone));
         } else {
             
             if ($me) {
                 $this->addElements(array($firstName, $lastName, $email, $timezone));
             } else {
-                $this->addElements(array($roleSelect, $firstName, $lastName, $email, $timezone));
+                $realmSelect->setAttrib('disabled', 'disabled');
+                $username->setAttrib('disabled', 'disabled');
+                
+                $this->addElements(array($realmSelect, $username, $roleSelect, $firstName, $lastName, $email, $timezone));
             }
         }        
                 
@@ -101,7 +104,7 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         foreach ($vars as $v) {
             $elm = $v->renderFormElement();
             $elm->clearDecorators();
-            $elm->setBelongsTo('accountattribute');
+            $elm->setBelongsTo('attributes');
             
             $this->addElement($elm);
         }

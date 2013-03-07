@@ -75,10 +75,6 @@ class Ot_Auth_Adapter_Facebook implements Zend_Auth_Adapter_Interface, Ot_Auth_A
         
         if (Zend_Registry::isRegistered('applicationLoginOptions')) {
             $loginOptions = Zend_Registry::get('applicationLoginOptions');
-
-            if (!isset($loginOptions['adapteroptions']['facebook']['appId']) || $loginOptions['adapteroptions']['facebook']['appId'] == '' || !isset($loginOptions['adapteroptions']['facebook']['secret']) || $loginOptions['adapteroptions']['facebook']['secret'] == '') {
-                throw new Exception('Facebook Connect options must be set in the application configuration.');
-            }
             
             if (!defined('AUTH_FB_APPID')) {
                 define('AUTH_FB_APPID', $loginOptions['adapteroptions']['facebook']['appId']);
@@ -98,6 +94,10 @@ class Ot_Auth_Adapter_Facebook implements Zend_Auth_Adapter_Interface, Ot_Auth_A
      */
     public function authenticate()
     {
+        if (AUTH_FB_APPID == '' || AUTH_FB_SECRET == '') {
+            throw new Exception('Yahoo authentication options must be set in the application configuration.');
+        }
+        
         // Create our Application instance (replace this with your appId and secret).
         $facebook = new Facebook(array(
           'appId'  => AUTH_FB_APPID,

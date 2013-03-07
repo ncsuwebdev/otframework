@@ -139,7 +139,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 }
             }     
             
-            $thisAccount = $account->getAccount($auth->getIdentity()->username, $auth->getIdentity()->realm);
+            $thisAccount = $account->getByUsername($auth->getIdentity()->username, $auth->getIdentity()->realm);
 
             $thisAccount->masquerading = false;
             if (isset($identity->masquerading) && $identity->masquerading == true && isset($identity->realAccount) && !is_null($identity->realAccount)) {

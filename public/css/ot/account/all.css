@@ -1,23 +1,11 @@
 .noItems {
     line-height: 200px;
     text-align: center;
-    font-size: 10pt; 
 }
 
-form {
-    border: 1px solid #CCCCCC;
-    background: #EEEEEE;
-    padding: 20px;
-    margin-bottom: 20px;
-}
 
 form select, form input[type='text'] {
     width: 110px;
-}
-
-div.zend_form {
-    padding: 0px;
-    margin: 0px;
 }
 
 div.criteria {
@@ -31,19 +19,6 @@ div.submit {
     margin-top: 18px;
 }
 
-div.results {
-    padding: 0px;
-}
-
-table.list {
-    width: 100%;
-}
-
 #itemFooter {
     text-align: center;
-    padding-top: 20px;
-}
-
-.red {
-    color: #CC0000;
 }

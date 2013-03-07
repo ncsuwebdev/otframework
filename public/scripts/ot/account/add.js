@@ -20,10 +20,10 @@ function init() {
     
     createControllers();
     
-    $('#roleSelect').change(function() {
+    $('#role').change(function() {
         var roles = new Array();
         
-        $.each($('#roleSelect option:selected'), function() {
+        $.each($('#role option:selected'), function() {
             roles.push($(this).val());
         });           
                 

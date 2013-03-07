@@ -74,21 +74,6 @@ class Ot_Model_DbTable_ApiApp extends Ot_Db_Table
         return parent::insert($data);
     }
     
-    
-    public function delete($appId)
-    {
-        $where = $this->getAdapter()->quoteInto('appId = ?', $appId);
-
-        return parent::delete($where);
-    }
-    
-    public function deleteAppsForAccountId($accountId)
-    {
-        $where = $this->getAdapter()->quoteInto('accountId = ?', $accountId);
-
-        return parent::delete($where);
-    }
-    
     private function _generateApiKey()
     {
         return sha1(time() + microtime() + rand(1, 1000000));
@@ -102,81 +87,5 @@ class Ot_Model_DbTable_ApiApp extends Ot_Db_Table
         );        
         
         return parent::update($data);
-    }
-    
-    /**
-     * Gets the form for adding and editing a ticket
-     *
-     * @param array $values
-     * @return Zend_Form
-     */
-    public function form($values = array())
-    {
-        $form = new Zend_Form();
-        $form->setAttrib('id', 'apiAppForm')->setAttrib('enctype', 'multipart/form-data')->setDecorators(
-            array(
-                'FormElements',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                'Form',
-            )
-        );
-             
-        $image = $form->createElement('file', 'image', array('label' => 'Application Icon:'));
-        $image->addValidator('Count', false, 1)     // ensure only 1 file
-              ->addValidator('Size', false, 204800) // limit to 200K
-              ->addValidator('Extension', false, 'jpg,jpeg,png'); // only JPEG, PNG
-                           
-        $name = $form->createElement('text', 'name', array('label' => 'Application Name:'));
-        $name->setRequired(true)
-              ->addFilter('StringTrim')
-              ->addFilter('StripTags')
-              ->setAttrib('maxlength', '128')
-              ->setValue((isset($values['name']) ? $values['name'] : ''));
-              
-        $description = $form->createElement('textarea', 'description', array('label' => 'Description:'));
-        $description->setRequired(true)
-              ->addFilter('StringTrim')
-              ->addFilter('StripTags')
-              ->setAttrib('style', 'height: 100px; width: 350px;')
-              ->setValue((isset($values['description']) ? $values['description'] : ''));
-              
-        $website = $form->createElement('text', 'website', array('label' => 'Application Website:'));
-        $website->setRequired(false)
-              ->addFilter('StringTrim')
-              ->addFilter('StripTags')
-              ->setAttrib('maxlength', '255')
-              ->setValue((isset($values['website']) ? $values['website'] : ''));   
-
-        $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
-        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
-
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
-        
-        $form->addElements(array($image, $name, $description, $website));
-
-        $form->setElementDecorators(
-            array(
-                'ViewHelper',
-                'Errors',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                array('Label', array('tag' => 'span')),
-            )
-        )->addElements(array($submit, $cancel));
-                
-        $image->addPrefixPath('Ot_Form_Decorator', 'Ot/Form/Decorator', 'decorator');
-        $image->addDecorator('File');
-        $image->addDecorator('Imageupload', array('id' => 'applicationIconImage', 'src' => $values['imagePath']));
-
-        if (isset($values['appId'])) {
-
-            $appId = $form->createElement('hidden', 'appId');
-            $appId->setValue($values['appId']);
-            $appId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
-
-            $form->addElement($appId);
-        }
-        return $form;
-    }
+    }    
 }

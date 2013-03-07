@@ -121,7 +121,7 @@ class Ot_Api
      *
      * @return array
      */
-    public static function getAccount($accountId)
+    public static function getByUsername($accountId)
     {
         $otAccount = new Ot_Model_DbTable_Account();
         $accountInfo = $otAccount->find($accountId);

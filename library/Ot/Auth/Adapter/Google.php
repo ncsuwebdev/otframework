@@ -74,10 +74,6 @@ class Ot_Auth_Adapter_Google implements Zend_Auth_Adapter_Interface, Ot_Auth_Ada
         if (Zend_Registry::isRegistered('applicationLoginOptions')) {
             $loginOptions = Zend_Registry::get('applicationLoginOptions');
 
-            if (!isset($loginOptions['adapteroptions']['google']['consumerKey']) || $loginOptions['adapteroptions']['google']['consumerKey'] == '' || !isset($loginOptions['adapteroptions']['google']['consumerSecret']) || $loginOptions['adapteroptions']['google']['consumerSecret'] == '') {
-                throw new Exception('Google authentication options must be set in the application configuration.');
-            }
-            
             if (!defined('AUTH_GOOGLE_CONSUMER_KEY')) {
                 define('AUTH_GOOGLE_CONSUMER_KEY', $loginOptions['adapteroptions']['google']['consumerKey']);
             }
@@ -96,6 +92,10 @@ class Ot_Auth_Adapter_Google implements Zend_Auth_Adapter_Interface, Ot_Auth_Ada
      */
     public function authenticate()
     {
+        if (AUTH_GOOGLE_CONSUMER_KEY == '' || AUTH_GOOGLE_CONSUMER_SECRET == '') {
+            throw new Exception('Yahoo authentication options must be set in the application configuration.');
+        }
+        
         $session = new Zend_Session_Namespace('ot_auth_adapter_google');
         
         if (isset($session->authed)) {

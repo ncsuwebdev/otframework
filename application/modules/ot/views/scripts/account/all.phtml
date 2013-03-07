@@ -2,9 +2,9 @@
    
   
 <?php if ($this->acl['add']): ?>
-<a href="<?php echo $this->url(array('action' => 'add'), 'account', true); ?>" class="ui-state-default ui-corner-all linkButton">
-<?php echo $this->translate('ot-account-all:linkNewAccount'); ?>
-<span class="ui-icon ui-icon-plusthick"></span></a>
+<a href="<?php echo $this->url(array('action' => 'add'), 'account', true); ?>" class="btn btn-success">
+    <i class="icon-plus icon-white"></i>
+<?php echo $this->translate('ot-account-all:linkNewAccount'); ?></a>
 <br /><br />
 <?php endif; ?>
 <?php echo $this->translate('ot-account-all:header'); ?>
@@ -17,9 +17,9 @@
 
     <h4><?php echo $this->paginator->getTotalItemCount(); ?> User<?php echo ($this->paginator->getTotalItemCount() != 1) ? 's' : ''; ?> Found</h4>
     
-    <table class="list">    
+    <table class="table table-striped table-bordered">    
         <thead>
-            <tr class="ui-widget-header">
+            <tr>
                 <th data-sort="name" data-direction="<?php echo ($this->sort == 'name') ? (($this->direction == 'asc') ? 'desc' : 'asc') : ''; ?>" class="<?php echo ($this->sort == 'name') ? $this->direction : ''; ?>">Name</th>                
                 <th data-sort="username" data-direction="<?php echo ($this->sort == 'username') ? (($this->direction == 'asc') ? 'desc' : 'asc') : ''; ?>" class="<?php echo ($this->sort == 'username') ? $this->direction : ''; ?>">Username</th>
                 <th>Login Method</th>
@@ -33,18 +33,19 @@
                     <td><?php echo $user['username']; ?></td>
                     <td style="text-align:center">
                         <?php echo $this->adapters[$user['realm']]->name; ?>
-                        <?php echo ($this->adapters[$user['realm']]->enabled == 0) ? ' (<b class="red">DISABLED</b>)' : ''; ?>
+                        <?php echo ($this->adapters[$user['realm']]->enabled == 0) ? ' (<b class="text-warning">DISABLED</b>)' : ''; ?>
                     </td>
-                    <td style="text-align:center"><a href="<?php echo $this->url(array('accountId' => $user['accountId']), 'account', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">Details</a></td>
+                    <td style="text-align:center">
+                        <a href="<?php echo $this->url(array('accountId' => $user['accountId']), 'account', true); ?>" class="btn">Details</a></td>
                 </tr>                
             <?php endforeach; ?>                    
         </tbody>    
     </table>
     
     <div id="itemFooter">
-        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'searchPaginationControl.phtml'); ?>
+        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'bootstrap-pagination.phtml'); ?>
     </div>
 <?php else: ?>    
-   <div class="noItems">There are no requests at the moment.</div>    
+    <div class="noItems">No user accounts found.</div>    
 <?php endif; ?>
 </div>
