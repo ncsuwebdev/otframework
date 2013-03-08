@@ -119,7 +119,9 @@ echo $brandingBar->getIframeHtml();
                 }
             }
             ?>
-      <h3 id="pageTitle"><?php echo $this->title; ?></h3>
+        <?php if ($this->title != ''): ?>
+            <h3 id="pageTitle"><?php echo $this->title; ?></h3>
+        <?php endif; ?>
 
           <?php echo $this->layout()->content; ?>
 

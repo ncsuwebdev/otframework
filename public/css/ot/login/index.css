@@ -1,6 +1,31 @@
-@CHARSET "UTF-8";
-
-#loginForms {
+#login {
     width: 400px;
     margin: 0 auto;
+}
+
+#login .tab-content {
+    border: 1px solid #DDDDDD;
+    border-top: 0px;
+    background-color: #FFFFFF;
+    padding: 20px 10px 10px 10px;
+}
+
+#login ul.nav {
+    margin-bottom: 0px;
+}
+
+#login .description {
+    margin-bottom: 20px;
+}
+
+#login h3 {
+    margin-top: 0px;
+}
+
+#login fieldset {
+    margin-top: 20px;
+}
+
+#login .help-block {
+    font-size: 0.8em;
 }

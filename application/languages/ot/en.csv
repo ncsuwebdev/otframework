@@ -517,7 +517,7 @@ msg-info-triggerCloned;The action '%1$s' was added successfully.
 
 ot-login-form:username;Username:
 ot-login-index:title;Login
-ot-login-index:header;Select the way you would like to log in.
+ot-login-index:header;Please Sign In...
 ot-login-index:password;Password:
 ot-login-index:login;Login
 ot-login-index:signUp;Sign-Up Now
