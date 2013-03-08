@@ -17,7 +17,7 @@ ot-account-index:linkChangePassword;Change Password
 ot-account-index:linkDeleteUser;Delete User
 ot-account-index:connectionHeader;Connections can be made between this application and other apps.  The requesting application must make the request on your behalf, then you will be asked to login here to grant the requesting application access.  You may revoke any unwanted access by these connections at any time.
 ot-account-index:remote;External Application Access
-ot-account-index:remoteHeader;If you would like another application to access this application's data, you will need to individually grant them this access. 
+ot-account-index:remoteHeader;If you would like another application to access this application's data, you will need to individually grant them this access.
 ot-account-index:consumerHasAccessButton;Revoke Access
 ot-account-index:account;My Account
 ot-account-index:apps;API Access
@@ -115,7 +115,7 @@ ot-apiapp-index:addButton;Register an Application
 ot-apiapp-index:detailsButton;Get Application Details
 ot-apiapp-index:applicationListText;You have registered the following applications:
 ot-apiapp-index:noApplications;You have not setup any applications to access this application's data remotely.
-ot-apiapp-allApps:title;All Applications using %1$s 
+ot-apiapp-allApps:title;All Applications using %1$s
 ot-apiapp-allApps:header;This list consists of every API application that has been registered to use %1$s.
 ot-apiapp-allApps:detailsButton;Get Application Details
 ot-apiapp-allApps:applicationListText;The following applications have been registered:
@@ -278,7 +278,7 @@ ot-config-index:header;These are the various options that you can set to configu
 ot-config-index:table:name;Name
 ot-config-index:table:value;Value
 ot-config-index:noDescription;No Description Provided
-ot-config-edit:form:reset;Reset to Default: 
+ot-config-edit:form:reset;Reset to Default:
 ot-config-edit:form:submit;Save Config Option
 ot-config-edit:title;Edit Configuration Option
 ot-config-edit:header;You can edit the application configuration from here. These changes will be made globally and immediately.
@@ -481,7 +481,7 @@ msg-error-queueIdNotSet;Queue ID not set.
 msg-error-noQueue;Queued email could not be found.
 msg-error-configDirNotWritable;Config directory (%1$s) is not writable, add write permissions to this folder and try again.
 msg-error-statusNotFound;No status was found in query string.
-msg-error-savingNav;Error saving the navigation to the database: 
+msg-error-savingNav;Error saving the navigation to the database:
 msg-error-notValidResource;%1$s_%2$s is not a valid resource.
 msg-error-langDirNotWritable;Langague override directory is not writable.
 msg-error-writingLangFile;Error writing to language file.
@@ -534,11 +534,11 @@ ot-login-passwordReset:linkReset;Reset My Password
 ot-login-passwordReset:title;Password Reset
 ot-login-passwordReset:header;You can reset your password to whatever you like.
 ot-login-signup:title;Sign-up for an Account
-ot-login-signup:header;You can create a new account here. If you already have an account for %1$s, you can  
-ot-login-signup:clickHere;click here to log in.
+ot-login-signup:header;Have you already signed up for an account for %1$s?  If you have, you can continue to the login page.
+ot-login-signup:clickHere;Log In Now
 ot-login-signup:enterId;Enter your requested user ID below, as well as your email address.
 ot-login-signup:realmNotFound;Realm %1$s not found.
-ot-login-login:header;Please log in to access your account. 
+ot-login-login:header;Please log in to access your account.
 ot-login-login:userId;User ID:
 ot-login-login:password;Password:
 ot-login-login:clickHere;Click here if you have forgotten your password.

@@ -1,25 +1,11 @@
 <?php
-class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
+class Ot_Form_Signup extends Twitter_Bootstrap_Form_Horizontal
 {
-    public function __construct($new = false, $me = false, $options = array())
+    public function __construct($options = array())
     {
         parent::__construct($options);
 
-        $acl = Zend_Registry::get('acl');
-
-        $this->setAttrib('id', 'account');
-
-        $authAdapter = new Ot_Model_DbTable_AuthAdapter;
-        $adapters    = $authAdapter->fetchAll(null, 'displayOrder');
-
-        // Realm Select box
-        $realmSelect = $this->createElement('select', 'realm', array('label' => 'Login Method'));
-        foreach ($adapters as $adapter) {
-            $realmSelect->addMultiOption(
-                $adapter->adapterKey,
-                $adapter->name . (!$adapter->enabled ? ' (Disabled)' : '')
-            );
-        }
+        $this->setAttrib('id', 'signup');
 
         // Create and configure username element:
         $username = $this->createElement('text', 'username', array('label' => 'model-account-username'));
@@ -48,6 +34,21 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
                   ->addFilter(new Ot_Filter_Ucwords())
                  ->setAttrib('maxlength', '64');
 
+        // Password field
+        $password = $this->createElement('password', 'password', array('label' => 'model-account-password'));
+        $password->setRequired(true)
+                 ->addValidator('StringLength', false, array($this->_minPasswordLength, $this->_maxPasswordLength))
+                 ->addFilter('StringTrim')
+                 ->addFilter('StripTags');
+
+        // Password confirmation field
+        $passwordConf = $this->createElement('password', 'passwordConf', array('label' => 'model-account-passwordConf'));
+        $passwordConf->setRequired(true)
+                     ->addValidator('StringLength', false, array($this->_minPasswordLength, $this->_maxPasswordLength))
+                     ->addValidator('Identical', false, array('token' => 'password'))
+                     ->addFilter('StringTrim')
+                     ->addFilter('StripTags');
+
         // Email address field
         $email = $this->createElement('text', 'emailAddress', array('label' => 'model-account-emailAddress'));
         $email->setRequired(true)
@@ -58,29 +59,7 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $timezone->addMultiOptions(Ot_Model_Timezone::getTimezoneList());
         $timezone->setValue(date_default_timezone_get());
 
-        // Role select box
-        $roleSelect = $this->createElement('multiSelect', 'role', array('label' => 'model-account-role'));
-        $roleSelect->setRequired(true);
-        $roleSelect->setDescription('You may select multiple roles for a user');
-
-        $roles = $acl->getAvailableRoles();
-        foreach ($roles as $r) {
-            $roleSelect->addMultiOption($r['roleId'], $r['name']);
-        }
-
-        if ($new) {
-            $this->addElements(array($realmSelect, $username, $roleSelect, $firstName, $lastName, $email, $timezone));
-        } else {
-
-            if ($me) {
-                $this->addElements(array($firstName, $lastName, $email, $timezone));
-            } else {
-                $realmSelect->setAttrib('disabled', 'disabled');
-                $username->setAttrib('disabled', 'disabled');
-
-                $this->addElements(array($realmSelect, $username, $roleSelect, $firstName, $lastName, $email, $timezone));
-            }
-        }
+        $this->addElements(array($username, $password, $passwordConf, $firstName, $lastName, $email, $timezone));
 
         $aar = new Ot_Account_Attribute_Register();
 
@@ -94,13 +73,10 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
             $this->addElement($elm);
         }
 
+
         $custom = new Ot_Model_Custom();
 
-        if (isset($default['accountId'])) {
-            $attributes = $custom->getData('Ot_Profile', $default['accountId'], 'Zend_Form');
-        } else {
-            $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
-        }
+        $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
 
         $attributeNames = array();
         foreach ($attributes as $a) {
@@ -116,7 +92,7 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
 
         $this->addElement('submit', 'submit', array(
             'buttonType' => Twitter_Bootstrap_Form_Element_Submit::BUTTON_PRIMARY,
-            'label'      => 'form-button-save'
+            'label'      => 'Create My Account'
         ));
 
 

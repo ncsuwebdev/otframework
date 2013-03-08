@@ -1,7 +1,4 @@
 .apiEndpoint {
-    border: 1px solid #BBB;
-    background-color: #EDEDED;
-    padding: 10px 15px;
     margin-bottom: 25px;
 }
 
@@ -25,15 +22,9 @@
     white-space: pre;
 }
 
-div#jump {
-    width: 300px;
-    float: right;
+.jump {
     margin-top: 10px;
     text-align: right;
-}
-
-#jumpbox {
-    width: 200px;
 }
 
 .backToTop {

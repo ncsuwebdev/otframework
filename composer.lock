@@ -24,7 +24,7 @@
                     "Twitter_": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -33,7 +33,7 @@
             ],
             "authors": [
                 {
-                    "name": "EmagisterTech",
+                    "name": "Emagister Tech",
                     "email": "php@emagister.com",
                     "homepage": "http://engineering.emagister.com",
                     "role": "Developer"
@@ -66,7 +66,7 @@
                 "shasum": ""
             },
             "type": "library",
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Jason Austin",
@@ -153,7 +153,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],
