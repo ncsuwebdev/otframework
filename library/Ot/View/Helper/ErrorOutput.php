@@ -47,7 +47,7 @@ class Ot_View_Helper_ErrorOutput extends Zend_View_Helper_Abstract
 
         $html[] = '</h4>';
 
-        if (count($trackback) && $this->view->configVar('showTrackbackOnErrors')) {
+        if (count($trackback) && $this->view->configVar('showTrackbackOnError')) {
             $html[] = '<table class="table table-bordered table-striped table-condensed">';
             $html[] = '<thead>';
             $html[] = '<tr>';
@@ -57,15 +57,16 @@ class Ot_View_Helper_ErrorOutput extends Zend_View_Helper_Abstract
             $html[] = '</tr>';
             $html[] = '</thead>';
             $html[] = '<tbody>';
-            $html[] = '<tr>';
 
             foreach ($trackback as $t) {
+
+                $html[] = '<tr>';
                 $html[] = '<td>' . ((isset($t['file']) ? $t['file'] : 'N/A')) . '</td>';
                 $html[] = '<td>' . ((isset($t['function']) ? $t['function'] : 'N/A')) . '</td>';
                 $html[] = '<td>' . ((isset($t['line']) ? $t['line'] : 'N/A')) . '</td>';
+                $html[] = '</tr>';
             }
 
-            $html[] = '</tr>';
             $html[] = '</tbody>';
             $html[] = '</table>';
         }

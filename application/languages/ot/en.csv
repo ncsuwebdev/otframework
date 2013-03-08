@@ -181,7 +181,7 @@ form-button-edit;Edit
 form-delete-confirm;Are you sure you want to do this?
 
 model-role-form:roleName;Role Name:
-model-role-form:inheritRoleId;Inherit From:
+model-role-form:inheritRoleId;Inherits From:
 model-role-form:submit;Save Access Role
 
 ot-acl-form:allAccess;All Access
@@ -201,14 +201,14 @@ ot-acl-form:noInheritance;No Inheritance
 ot-acl-form:method;Method
 ot-acl-index:title;Manage Access Roles
 ot-acl-index:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_api. The API will not work correctly until access is granted to the default role (%1$s).
-ot-acl-index:header;Access Roles provide a simple approach to managing user access within the application. Roles are created by any user with access, allowing them to grand and revoke access to certain resources within the application.  Resources are defined as accessible functions within the application.<br /><br />Below are all active roles that are available to be assigned to users:
+ot-acl-index:header;Access Roles provide a simple approach to managing user access within the application. Roles are created by any user with access, allowing them to grant and revoke access to certain resources within the application.<br /><br />Below are all active roles that are available to be assigned to users:
 ot-acl-index:linkAdd;Add New Access Role
 ot-acl-index:table:roleName;Role Name
 ot-acl-index:table:inheritedFrom;Inherited From
 ot-acl-index:table:applicationAccess;Application Access
 ot-acl-index:table:remoteAccess;Remote Access
 ot-acl-index:noRoles;No Roles found
-ot-acl-details:title;Access Role Details
+ot-acl-details:title;Details for %1$s Access Role
 ot-acl-details:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_api. The API will not work correctly until access is granted to the default role (%1$s).
 ot-acl-details:accessTitle;Application Access
 ot-acl-details:header;These are the individual details for the %1$s access role as they appear in the actual ACL configuration file.

@@ -31,7 +31,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $auth = Zend_Auth::getInstance();
         $auth->setStorage(new Ot_Auth_Storage_Session(Zend_Registry::get('siteUrl') . 'auth'));
     }
-    
+
     public function _initPlugins()
     {
         $this->bootstrap('frontcontroller');
@@ -82,7 +82,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
              ->addHelperPath(array($themePath . '/views/helpers/'));
 
     }
-    
+
     public function _initRoutes()
     {
         $this->bootstrap('frontcontroller');
@@ -228,13 +228,14 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $site[] = new Ot_Var_Type_Text('metaKeywords', 'Keywords', 'The meta keywords you would like to use for the application.', '');
         $site[] = new Ot_Var_Type_Select('useMinify', 'Use Minify', 'Whether or not to use minify to combine and compress js, css, etc', '0', array(0 => 'No', 1 => 'Yes'));
         $site[] = new Ot_Var_Type_Theme('theme', 'Site Theme', 'The display theme for the application', 'default');
-        
+        $site[] = new Ot_Var_Type_Select('showTrackbackOnError', 'Show Error Trackbacks', 'Switch to show error trackbacks when the application has errors.  Should likely be turned off in production.', '0', array(0 => 'No', 1 => 'Yes'));
+
         $auth = array();
 
         $auth[] = new Ot_Var_Type_Multiselect('requiredAccountFields', 'Required User Account Fields', 'When a user logs in, if these fields are not populated, they will be forced to populate the fields before continuing', array('firstName', 'lastName', 'emailAddress'), array('firstName' => 'First Name', 'lastName' => 'Last Name', 'emailAddress' => 'Email Address'));
         $auth[] = new Ot_Var_Type_Role('defaultRole', 'Default Role', 'Default role that a user gets if they are not logged in.', '1');
         $auth[] = new Ot_Var_Type_Role('newAccountRole', 'New Account Role', 'Role which is assigned to users when a new account is created for them', '1');
-        
+
         $format = array();
 
         $format[] = new Ot_Var_Type_Text('dateTimeFormat', 'Date/Time Format', 'Date / Time formatted using PHP\'s strftime() function.', '%m/%d/%Y %I:%M %p');
@@ -243,7 +244,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $format[] = new Ot_Var_Type_Text('longDateFormat', 'Long Date Format', 'Date formatted using PHP\'s strftime() function.', '%m/%d/%Y');
         $format[] = new Ot_Var_Type_Text('dayFormat', 'Day Format', 'Date formatted using PHP\'s strftime() function.', '%d');
         $format[] = new Ot_Var_Type_Text('timeFormat', 'Time Format', 'Time formatted using PHP\'s strftime() function.', '%I:%M %p');
-        
+
         $vr = new Ot_Config_Register();
         $vr->registerVars($site, 'Site Settings');
         $vr->registerVars($auth, 'Authentication');
@@ -258,23 +259,23 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $register = new Ot_Cron_Register();
         $register->registerCronjob($eq);
     }
-    
+
     public function _initApiMethods()
     {
         $register = new Ot_Api_Register();
-        
+
         $endpoint = new Ot_Api_Endpoint('ot-account', 'Deals with the accounts in the system');
         $endpoint->setMethod(new Ot_Apiendpoint_Account());
         $register->registerApiEndpoint($endpoint);
-        
+
         $endpoint = new Ot_Api_Endpoint('ot-version', 'Returns the OT Framework version numbers');
         $endpoint->setMethod(new Ot_Apiendpoint_Version());
         $register->registerApiEndpoint($endpoint);
-        
+
         $endpoint = new Ot_Api_Endpoint('ot-cron', 'Deals with the cron jobs in the system');
         $endpoint->setMethod(new Ot_Apiendpoint_Cron());
         $register->registerApiEndpoint($endpoint);
-        
+
         $endpoint = new Ot_Api_Endpoint('ot-myaccount', 'Deals with the current API account');
         $endpoint->setMethod(new Ot_Apiendpoint_MyAccount());
         $register->registerApiEndpoint($endpoint);
@@ -293,7 +294,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
     public function _initAccountAttributeVars()
     {
         $accountVars = array();
-        
+
         $accountVars[] = new Ot_Var_Type_Text('department', 'University Department', 'Your university department', 'OIT');
 
         $aar = new Ot_Account_Attribute_Register();

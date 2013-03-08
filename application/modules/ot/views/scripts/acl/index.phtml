@@ -1,88 +1,89 @@
 <?php if (!$this->guestHasAccess) : ?>
-    <div class="ui-widget ui-state-highlight ui-corner-all">
-        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+    <div class="alert alert-warning">
         <?php echo $this->translate('ot-acl-index:defaultRoleNeedsAccess', $this->defaultRole->name); ?>
     </div>
-    <br />
 <?php endif; ?>
-<div id="aclIndexIndex">
-    <?php echo $this->translate('ot-acl-index:header'); ?>
-    <br /><br />
 
-    <?php if ($this->acl['add']): ?>
-    <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'add'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-acl-index:linkAdd'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
-    <br /><br />
-    <?php endif; ?>
-    <table class="list">
-        <tbody>
-        <tr class="ui-widget-header">
+<?php echo $this->translate('ot-acl-index:header'); ?>
+<br /><br />
+
+<?php if ($this->acl['add']): ?>
+<a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'add'), 'ot', true); ?>" class="btn btn-success"><i class="icon-white icon-plus"></i> <?php echo $this->translate('ot-acl-index:linkAdd'); ?></a>
+<br /><br />
+<?php endif; ?>
+
+
+<?php if (count($this->roles) > 0): ?>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
             <th width="200"><?php echo $this->translate('ot-acl-index:table:roleName'); ?></th>
             <th width="200"><?php echo $this->translate('ot-acl-index:table:inheritedFrom'); ?></th>
             <?php if ($this->acl['application-access']): ?>
             <th width="120"><?php echo $this->translate('ot-acl-index:table:applicationAccess'); ?></th>
-            <?php endif; ?> 
+            <?php endif; ?>
             <?php if ($this->acl['remote-access']): ?>
             <th width="120"><?php echo $this->translate('ot-acl-index:table:remoteAccess'); ?></th>
-            <?php endif; ?> 
+            <?php endif; ?>
             <?php if ($this->acl['edit']): ?>
             <th width="50"><?php echo $this->translate('table-header-edit'); ?></th>
-            <?php endif; ?>            
+            <?php endif; ?>
             <?php if ($this->acl['delete']): ?>
             <th width="50"><?php echo $this->translate('table-header-delete'); ?></th>
             <?php endif; ?>
         </tr>
-        <?php if (count($this->roles) > 0): ?>
-        <?php foreach ($this->roles as $r) : ?>
-        <tr class="<?php $this->cycle('row1', 'row2'); ?>">
-            <td><a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $r['roleId']), 'ot', true); ?>"><?php echo $r['name']; ?></a></td>
-            <td align="center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("ot-acl-form:noInheritance"); } ?></td>         
-            <?php if ($this->acl['application-access']): ?>
-            <td align="center">
-                <?php if ($r['editable']): ?>
-                <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $r['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-newwin"></span></a>
-                <?php else: ?>
-                <span class="ui-icon ui-icon-locked"></span>
-                <?php endif; ?>
-            </td>
+    </thead>
+    <tbody>
+    <?php foreach ($this->roles as $r) : ?>
+    <tr>
+        <td><a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $r['roleId']), 'ot', true); ?>"><?php echo $r['name']; ?></a></td>
+        <td style="text-align:center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("ot-acl-form:noInheritance"); } ?></td>
+        <?php if ($this->acl['application-access']): ?>
+        <td style="text-align:center">
+            <?php if ($r['editable']): ?>
+            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $r['roleId']), 'ot', true); ?>" class="btn btn-info"><i class="icon-white icon-th-list"></i></a>
+            <?php else: ?>
+            <a class="btn disabled"><i class="icon icon-lock"></i></a>
             <?php endif; ?>
-            <?php if ($this->acl['remote-access']): ?>
-            <td align="center">
-                <?php if ($r['editable']): ?>
-                <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $r['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-transferthick-e-w"></span></a>
-                <?php else: ?>
-                <span class="ui-icon ui-icon-locked"></span>
-                <?php endif; ?>
-            </td>
-            <?php endif; ?>     
-            <?php if ($this->acl['edit']): ?>
-            <td align="center">
-                <?php if ($r['editable']): ?>
-                <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'edit', 'roleId' => $r['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
-                <?php else: ?>
-                <span class="ui-icon ui-icon-locked"></span>
-                <?php endif; ?>
-            </td>
-            <?php endif; ?>   
-            <?php if ($this->acl['delete']): ?>
-            <td align="center">
-                <?php if ($r['editable']): ?>
-                    <?php if ($r['inheritedFrom']): ?>
-                        <span class="ui-icon ui-icon-locked"></span>
-                    <?php else: ?>
-                        <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'delete', 'roleId' => $r['roleId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>
-                    <?php endif; ?>
-                <?php else: ?>
-                    <span class="ui-icon ui-icon-locked"></span>
-                <?php endif; ?>
-            </td>
-            <?php endif; ?>
-        </tr>
-        <?php endforeach; ?>
-        <?php else: ?>
-        <tr>
-            <td colspan="4" class="noResults"><?php echo $this->translate('ot-acl-index:noRoles'); ?></td>
-        </tr>
+        </td>
         <?php endif; ?>
-        </tbody>
-    </table>
+        <?php if ($this->acl['remote-access']): ?>
+        <td style="text-align:center">
+            <?php if ($r['editable']): ?>
+            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $r['roleId']), 'ot', true); ?>" class="btn btn-info"><i class="icon-white icon-random"></i></a>
+            <?php else: ?>
+            <a class="btn disabled"><i class="icon icon-lock"></i></a>
+            <?php endif; ?>
+        </td>
+        <?php endif; ?>
+        <?php if ($this->acl['edit']): ?>
+        <td style="text-align:center">
+            <?php if ($r['editable']): ?>
+            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'edit', 'roleId' => $r['roleId']), 'ot', true); ?>" class="btn btn-info"><i class="icon-white icon-pencil"></i></a>
+            <?php else: ?>
+            <a class="btn disabled"><i class="icon icon-lock"></i></a>
+            <?php endif; ?>
+        </td>
+        <?php endif; ?>
+        <?php if ($this->acl['delete']): ?>
+        <td style="text-align:center">
+            <?php if ($r['editable']): ?>
+                <?php if ($r['inheritedFrom']): ?>
+                    <a class="btn disabled"><i class="icon icon-lock"></i></a>
+                <?php else: ?>
+                    <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'delete', 'roleId' => $r['roleId']), 'ot', true); ?>" class="btn btn-danger"><i class="icon-white icon-ban-circle"></i></a>
+                <?php endif; ?>
+            <?php else: ?>
+                <a class="btn disabled"><i class="icon icon-lock"></i></a>
+            <?php endif; ?>
+        </td>
+        <?php endif; ?>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php else: ?>
+<div class="noItems">
+    <?php echo $this->translate('ot-acl-index:noRoles'); ?>
 </div>
+<?php endif; ?>

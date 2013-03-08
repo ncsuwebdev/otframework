@@ -55,7 +55,7 @@ class ErrorController extends Zend_Controller_Action
 
                 break;
             default:
-                $exception = $errors->exception;
+                $exception = $errorHandler->exception;
 
                 if ($exception instanceof Ot_Exception) {
                     $title = $exception->getTitle();
