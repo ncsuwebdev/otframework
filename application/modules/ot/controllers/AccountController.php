@@ -641,64 +641,6 @@ class Ot_AccountController extends Zend_Controller_Action
         ));
     }
 
-    /**
-     * Change user roles in bulk
-     *
-     */
-    public function changeRolesAction()
-    {
-
-        $account = new Ot_Model_DbTable_Account();
-        $form = $account->changeRoleForm();
-
-
-        if ($this->_request->isPost()) {
-
-            if ($form->isValid($_POST)) {
-
-                $cleanImport = preg_replace("[^A-Za-z0-9,-]", "", $form->getValue('text'));
-                $user = explode(",", $cleanImport);
-
-                $success = array();
-                $failure = array();
-
-                foreach ($user as $userId) {
-
-                    $userId = trim($userId);
-
-                    if (empty($userId)) {
-                        continue;
-                    }
-
-                    try {
-                        $account->changeAccountRoleForUnityId($userId, $form->getValue('newRoleId'));
-                        $success[] = $userId;
-                    } catch (Exception $e) {
-                        $failure[] = $userId . ' (' . $e->getMessage() . ')';
-                    }
-                }
-
-                if (count($success)) {
-                    $this->_helper->messenger->addSuccess('Successfully changed role(s) for ' . implode(', ', $success) . '.');
-                }
-
-                if (count($failure)) {
-                    $this->_helper->messenger->addError('Failed to change role(s) for ' . implode(', ', $failure) . '.');
-                }
-
-                $this->_helper->redirector->setPrependBase('')
-                     ->gotoUrl($this->view->url(array('module' => 'ot', 'controller' => 'account', 'action' => 'change-roles'), 'default', true));
-            } else {
-                $this->_helper->messenger->addError('There was an error processing the form.');
-            }
-
-        }
-
-        $this->view->form = $form;
-        $this->_helper->pageTitle('Change Roles for Unity ID List');
-        $this->view->messages = $this->_helper->messenger->getMessages();
-
-    }
 
     /**
      * Allows a user to edit all user accounts in the system
