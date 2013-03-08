@@ -14,7 +14,7 @@
  *
  * @package    Ot_IndexController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
@@ -25,7 +25,7 @@
  *
  * @package    Ot_AuthController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  */
 class Ot_AuthController extends Zend_Controller_Action
@@ -35,118 +35,116 @@ class Ot_AuthController extends Zend_Controller_Action
      *
      */
     public function indexAction()
-    {               
+    {
         $this->view->acl = array(
             'toggle' => $this->_helper->hasAccess('toggle'),
             'edit'   => $this->_helper->hasAccess('edit'),
-        );        
-        
+        );
+
         $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapters = $authAdapter->fetchAll(null, 'displayOrder');
-        $this->view->adapters = $adapters;
-        
-        $this->view->numEnabledAdapters = $authAdapter->getNumberOfEnabledAdapters();
+
+        $this->view->assign(array(
+            'adapters'           => $adapters,
+            'numEnabledAdapters' => $authAdapter->getNumberOfEnabledAdapters()
+        ));
+
         $this->_helper->pageTitle('ot-auth-index:title');
     }
-    
+
+    /**
+     * Toggles the availability of the adapter
+     *
+     * @throws Ot_Exception_Data
+     * @throws Ot_Exception_Access
+     */
     public function toggleAction()
     {
-        
-        $get = Zend_Registry::get('getFilter');
+        $key = $this->_getParam('key', null);
 
-        if (!isset($get->key)) {
+        if (is_null($key)) {
             throw new Ot_Exception_Data('ot-auth-toggle:keyNotSet');
         }
-        
+
         $authAdapter = new Ot_Model_DbTable_AuthAdapter();
-        $adapter = $authAdapter->find($get->key);
+        $adapter = $authAdapter->find($key);
+
         if (is_null($adapter)) {
             throw new Ot_Exception_Data('ot-auth-toggle:noAdapter');
         }
-        $this->view->adapter = $adapter;
-        if ($adapter->enabled) {
-            $this->view->verb = 'disable';
-        } else {
-            $this->view->verb = 'enable';
-        }
-        
+
         $numEnabledAdapters = $authAdapter->getNumberOfEnabledAdapters();
 
-        $form = new Zend_Form();
-        $form->setAction('?key=' . $get->key)->setMethod('post')->setAttrib('id', 'toggleAuthAdapter');
-       
-        $submit = $form->createElement('submit', 'submitButton', array('label' => 'form-button-yes'));
-        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
-                 
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
-                        
-        $form->setElementDecorators(
-            array(
-                'ViewHelper',
-                'Errors',      
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                array('Label', array('tag' => 'span')),      
-            )
-        )->addElements(array($submit, $cancel));
-
-        if ($this->_request->isPost() && $form->isValid($_POST)) {
-            if ($adapter->enabled) {
-                if ($numEnabledAdapters > 1) {
-                    $data = array('adapterKey' => $adapter->adapterKey, 'enabled' => 0);
-                    $authAdapter->update($data, null);
-                } else {
-                    throw new Ot_Exception_Data('ot-auth-toggle:mustBeOneAdapter');
-                }
-            } else {
-                $data = array('enabled' => 1, 'adapterKey' => $adapter->adapterKey);
-                $authAdapter->update($data, null);
-            }
-            $this->_helper->redirector->gotoRoute(array('controller' => 'auth'), 'ot', true);
+        if ($numEnabledAdapters > 1) {
+            throw new Ot_Exception_Data('ot-auth-toggle:mustBeOneAdapter');
         }
 
-        $this->_helper->pageTitle('ot-auth-toggle:title');
-        $this->view->form = $form;
+        if ($this->_request->isPost()) {
+
+            $data = array(
+                'adapterKey' => $adapter->adapterKey,
+                'enabled'    => ($adapter->enabled) ? 0 : 1,
+            );
+
+            $authAdapter->update($data, null);
+
+
+            $this->_helper->redirector->gotoRoute(array('controller' => 'auth'), 'ot', true);
+
+        } else {
+            throw new Ot_Exception_Access('You are not allowed to access this method directly');
+        }
     }
-    
+
+    /**
+     * Allows for the editing of the meta data attached to an auth adapter
+     *
+     * @throws Ot_Exception_Input
+     * @throws Ot_Exception_Data
+     */
     public function editAction()
     {
-        $get = Zend_Registry::get('getFilter');
-        
-        if (!isset($get->key)) {
-            throw new Ot_Exception_Input('ot-auth-edit:valueNotFound');
-        }
-        
-        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
-        $thisAdapter = $authAdapter->find($get->key);
-        if (is_null($thisAdapter)) {
-            throw new Ot_Exception_Data('ot-auth-edit:noAdapter');
-        }     
+        $key = $this->_getParam('key', null);
 
-        $form = $authAdapter->form($thisAdapter->toArray());
-        
-        
+        if (is_null($key)) {
+            throw new Ot_Exception_Data('ot-auth-toggle:keyNotSet');
+        }
+
+        $authAdapter = new Ot_Model_DbTable_AuthAdapter();
+        $adapter = $authAdapter->find($key);
+
+        if (is_null($adapter)) {
+            throw new Ot_Exception_Data('ot-auth-toggle:noAdapter');
+        }
+
+        $form = new Ot_Form_AuthAdapter();
+
+        $form->populate($adapter->toArray());
+
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
+
                 $data = array(
-                    'adapterKey'  => $thisAdapter->adapterKey,
+                    'adapterKey'  => $adapter->adapterKey,
                     'name'        => $form->getValue('name'),
                     'description' => $form->getValue('description'),
                 );
-                
+
                 $authAdapter->update($data, null);
-                
+
                 $this->_helper->redirector->gotoRoute(array('controller' => 'auth'), 'ot', true);
             } else {
                 $this->_helper->messenger->addError('ot-auth-edit:problemSubmitting');
             }
         }
-        
-        $this->view->form = $form;
-        $this->_helper->pageTitle('ot-auth-edit:title');
+
+        $this->_helper->pageTitle('ot-auth-edit:title', $adapter->name);
+
+        $this->view->assign(array(
+            'form' => $form
+        ));
     }
-    
+
     /**
      * Updates the display order of the attributes from the AJAX request
      *
@@ -157,9 +155,9 @@ class Ot_AuthController extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
 
         if ($this->_request->isPost()) {
-            
+
             $post = Zend_Registry::get('postFilter');
-            
+
             if (!isset($post->adapterKeys)) {
                 $ret = array('rc' => 0, 'msg' => $this->view->translate('msg-error-attributeIdsNotSet'));
                 echo Zend_Json_Encoder::encode($ret);
@@ -167,13 +165,13 @@ class Ot_AuthController extends Zend_Controller_Action
             }
 
             $adapterKeys = $post->adapterKeys;
-            
+
             foreach ($adapterKeys as &$key) {
                 $key = substr($key, strpos($key, '_')+1);
             }
 
             $adapter = new Ot_Model_DbTable_AuthAdapter();
-            
+
             try {
                 $adapter->updateAdapterOrder($adapterKeys);
                 $ret = array('rc' => 1, 'msg' => $this->view->translate('msg-info-newOrderSaved'));
@@ -185,5 +183,5 @@ class Ot_AuthController extends Zend_Controller_Action
                 return;
             }
         }
-    }    
+    }
 }

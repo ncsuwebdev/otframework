@@ -2,7 +2,7 @@
 <br /><br />
 
 <div id="message">
-    <div id="orderMessage"></div>
+    <div id="orderMessage" class="alert"></div>
 </div>
 
 <?php if (count($this->adapters) != 0): ?>
@@ -21,16 +21,33 @@
                 <div class="span3 actions pull-right">
                     <?php if ($a->enabled): ?>
                         <?php if ($this->numEnabledAdapters > 1 && $this->acl['toggle']): ?>
-                            <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $a->adapterKey), 'ot', true); ?>" class="btn btn-danger"><i class="icon-white icon-minus"></i> <?php echo $this->translate('ot-auth-index:disable'); ?></a>
+                            <a href="#toggleModal<?php echo $a->adapterKey; ?>" data-toggle="modal" class="btn btn-danger"><i class="icon-white icon-ban-circle"></i> <?php echo $this->translate('ot-auth-index:disable'); ?></a>
                         <?php endif; ?>
                     <?php else: ?>
                         <?php if ($this->acl['toggle']) : ?>
-                            <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $a->adapterKey), 'ot', true); ?>" class="btn btn-success"><i class="icon-white icon-plus"></i> <?php echo $this->translate('ot-auth-index:enable'); ?></a>
+                            <a href="#toggleModal<?php echo $a->adapterKey; ?>" data-toggle="modal" class="btn btn-success"><i class="icon-white icon-ok-circle"></i> <?php echo $this->translate('ot-auth-index:enable'); ?></a>
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($this->acl['edit']): ?>
                         <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'edit', 'key' => $a->adapterKey), 'ot', true); ?>" class="btn"><i class="icon icon-pencil"></i> Edit</a>
                     <?php endif;?>
+                </div>
+            </div>
+
+            <div id="toggleModal<?php echo $a->adapterKey; ?>" class="modal hide fade">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                    <h3><?php echo (($a->enabled) ? 'Disable ' : 'Enable ') . $a->name . ' Auth Type'; ?></h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to <?php echo (($a->enabled) ? 'disable' : 'enable'); ?> this authentication type?</p>
+                </div>
+                <div class="modal-footer">
+                    <form style="margin: 0;" method="post" action="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle'), 'ot', true); ?>">
+                        <input type="hidden" name="key" value="<?php echo $a->adapterKey; ?>" />
+                        <input type="submit" name="submit" value="Yes, <?php echo (($a->enabled) ? 'Disable' : 'Enable'); ?>" class="btn <?php echo (($a->enabled) ? 'btn-danger' : 'btn-success'); ?>" />
+                        <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                    </form>
                 </div>
             </div>
 

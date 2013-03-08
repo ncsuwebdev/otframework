@@ -14,7 +14,7 @@
  *
  * @package    Ot_Bug
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    http://itdapps.ncsu.edu/bsd.txt  BSD License
  * @version    SVN: $Id: $
@@ -25,7 +25,7 @@
  *
  * @package    Ot_Bug
  * @category   Model
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  *
  */
@@ -44,7 +44,7 @@ class Ot_Model_DbTable_AuthAdapter extends Ot_Db_Table
      * @var string
      */
     protected $_primary = 'adapterKey';
-    
+
     /**
      * Returns all the enabled adapters
      */
@@ -53,7 +53,7 @@ class Ot_Model_DbTable_AuthAdapter extends Ot_Db_Table
         $where = $this->getAdapter()->quoteInto('enabled = ?', 1);
         return $this->fetchAll($where, 'displayOrder');
     }
-    
+
     /**
      * Returns the number of enabled adapters
      */
@@ -62,56 +62,7 @@ class Ot_Model_DbTable_AuthAdapter extends Ot_Db_Table
         $enabledAdapters = $this->getEnabledAdapters();
         return $enabledAdapters->count();
     }
-    
-    public function form($values = array())
-    {
-        $form = new Zend_Form();
-        $form->setAttrib('id', 'authAdapterForm')
-             ->setDecorators(
-                 array(
-                     'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                     'Form',
-                 )
-             );
-             
-        $name = $form->createElement('text', 'name', array('label' => 'Name:'));
-        $name->setRequired(true)
-              ->addFilter('StringTrim')
-              ->addFilter('StripTags')
-              ->setAttrib('maxlength', '64')
-              ->setValue((isset($values['name']) ? $values['name'] : ''));
 
-        $description = $form->createElement('textarea', 'description', array('label' => 'Description:'));
-        
-        $description->setRequired(true)
-                    ->addFilter('StringTrim')
-                    ->addFilter('StripTags')
-                    ->setAttrib('maxlength', '64')
-                    ->setAttrib('style', 'width: 300px; height: 50px;')
-                    ->setValue((isset($values['description']) ? $values['description'] : ''));
-
-        $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
-        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
-
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
-
-        $form->addElements(array($name, $description));
-
-        $form->setElementDecorators(
-            array(
-                'ViewHelper',
-                'Errors',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                array('Label', array('tag' => 'span')),
-            )
-        )->addElements(array($submit, $cancel));
-
-        return $form;        
-    }
-    
     /**
      * Updates the display order of the Adapters
      *
@@ -120,7 +71,7 @@ class Ot_Model_DbTable_AuthAdapter extends Ot_Db_Table
     public function updateAdapterOrder($order)
     {
         $dba = $this->getAdapter();
-        
+
         $dba->beginTransaction();
 
         $i = 1;
@@ -138,7 +89,7 @@ class Ot_Model_DbTable_AuthAdapter extends Ot_Db_Table
             }
             $i++;
         }
-        
+
         $dba->commit();
-    }           
+    }
 }

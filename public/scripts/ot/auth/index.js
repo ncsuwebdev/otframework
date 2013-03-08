@@ -7,21 +7,23 @@ $('document').ready(function() {
                     'adapterKeys[]': $('#adapterList').sortable('toArray')
                 },
                 function (data) {
+
                     $('#orderMessage').text(data.msg);
+
+                    $('#message').fadeIn();
+
                     if (data.rc == 1) {
-                        $('#orderMessage').removeClass('ui-state-error').addClass('ui-state-highlight');
+                        $('#orderMessage').removeClass('alert-block').addClass('alert-success');
                     } else {
-                        $('#orderMessage').removeClass('ui-state-highlight').addClass('ui-state-error');
+                        $('#orderMessage').removeClass('alert-success').addClass('alert-block');
                     }
-                    
-                    $('#orderMessage').fadeIn();
-                    
-                    setTimeout(function() { $('#orderMessage').fadeOut(); }, 2500); 
+
+                    setTimeout(function() { $('#message').fadeOut(); }, 2500);
                 },
                 "json"
-            );        
+            );
         }
     });
-    
-    $('#orderMessage').hide();
+
+    $('#message').hide();
 });

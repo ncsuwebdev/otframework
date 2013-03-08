@@ -78,7 +78,8 @@ ot-auth-toggle:mustBeOneAdapter;There must be one authentication adapter enabled
 ot-auth-edit:valueNotFound;Value for key not found in query string.
 ot-auth-edit:noAdapter;No authentication adapter exists with the given key.
 ot-auth-edit:problemSubmitting;There was a problem submitting the form
-ot-auth-edit:title;Edit Authentication Adapter
+ot-auth-edit:title;Edit %1$s Authentication Adapter
+ot-auth-edit:header;You can change the meta information for each authentication type so that your users can better understand their authentication choice.
 
 
 ot-apiapp-add:title;Register Application for API Access
