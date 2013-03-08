@@ -3,64 +3,46 @@ ul#adapterList {
     padding: 0px;
 }
 
-li.adapter {
-    border: 1px solid #CCCCCC;
+ul#adapterList li.adapter {
     padding: 5px;
     margin: 0 0 20px 0;
-    background-color: #FFFFFF;
     list-style: none;
 }
 
-div.status {
-    width: 64px;
-    height: 64px;
-    float: left;
-    margin-right: 10px;
+ul#adapterList div.status {
     text-align: center;
     background-repeat: no-repeat;
     background-position: center top;
+    height: 64px;
 }
 
-div.status.enabled {
+ul#adapterList div.status:hover {
+    cursor: ns-resize;
+}
+
+ul#adapterList div.status.enabled {
     background-image: url(../../../images/ot/grant.png);
 }
 
-div.status.disabled {
+ul#adapterList div.status.disabled {
     background-image: url(../../../images/ot/deny.png);
 }
 
-div.name {
-    margin-left: 80px;
-    font-weight: bold;
-    font-size: 1.2em;
-    margin-bottom: 10px;
+ul#adapterList h3.name {
+    margin-top: 0px;
 }
 
-div.description {
+ul#adapterList div.description {
     color: #666666;
-    margin-left: 80px;
     margin-bottom: 10px;
 }
 
-div.schedule {
-    font-style: italic;
-    margin-left: 80px;
-}
-
-div.actions {
-    margin: 10px 0px 10px 10px;
+ul#adapterList div.actions {
     text-align: right;
-
-    width: 200px;
-    float: right;
+    margin: 10px 10px auto auto;
 }
 
 #message {
     margin-bottom: 20px;
     height: 30px;
-}
-
-.dragIndicator {
-    float: left;
-    margin-right: 10px;
 }

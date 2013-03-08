@@ -2,36 +2,41 @@
 <br /><br />
 
 <div id="message">
-    <div id="orderMessage" class="ui-widget ui-state-highlight ui-corner-all"></div>    
+    <div id="orderMessage"></div>
 </div>
 
 <?php if (count($this->adapters) != 0): ?>
 <ul id="adapterList" class="ui-sortable">
     <?php foreach ($this->adapters as $a): ?>
-        <li id="attribute_<?php echo $a->adapterKey; ?>" class="adapter">         
-            <div class="status <?php echo ($a->enabled) ? 'enabled' : 'disabled'; ?>"></div>
-            <div class="actions">
-                <?php if ($a->enabled): ?>
-                    <?php if ($this->numEnabledAdapters > 1 && $this->acl['toggle']): ?>
-                        <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $a->adapterKey), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">&nbsp;<span class="ui-icon ui-icon-minusthick"></span><?php echo $this->translate('ot-auth-index:disable'); ?></a>
+        <li id="attribute_<?php echo $a->adapterKey; ?>" class="adapter well">
+
+            <div class="row">
+                <div class="span1 status <?php echo ($a->enabled) ? 'enabled' : 'disabled'; ?>">
+
+                </div>
+                <div class="span7">
+                    <h3 class="name"><?php echo $a->name; ?></h3>
+                    <div class="description"><?php echo $a->description; ?></div>
+                </div>
+                <div class="span3 actions pull-right">
+                    <?php if ($a->enabled): ?>
+                        <?php if ($this->numEnabledAdapters > 1 && $this->acl['toggle']): ?>
+                            <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $a->adapterKey), 'ot', true); ?>" class="btn btn-danger"><i class="icon-white icon-minus"></i> <?php echo $this->translate('ot-auth-index:disable'); ?></a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <?php if ($this->acl['toggle']) : ?>
+                            <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $a->adapterKey), 'ot', true); ?>" class="btn btn-success"><i class="icon-white icon-plus"></i> <?php echo $this->translate('ot-auth-index:enable'); ?></a>
+                        <?php endif; ?>
                     <?php endif; ?>
-                <?php else: ?>
-                    <?php if ($this->acl['toggle']) : ?>
-                        <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'toggle', 'key' => $a->adapterKey), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">&nbsp;<span class="ui-icon ui-icon-plusthick"></span><?php echo $this->translate('ot-auth-index:enable'); ?></a>
-                    <?php endif; ?>
-                <?php endif; ?>                        
-                <?php if ($this->acl['edit']): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'edit', 'key' => $a->adapterKey), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">&nbsp;<span class="ui-icon ui-icon-pencil"></span>Edit</a>
-                <?php endif;?>                    
+                    <?php if ($this->acl['edit']): ?>
+                        <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'edit', 'key' => $a->adapterKey), 'ot', true); ?>" class="btn"><i class="icon icon-pencil"></i> Edit</a>
+                    <?php endif;?>
+                </div>
             </div>
-            <div class="name">
-                <span class="ui-icon ui-icon-arrowthick-2-n-s dragIndicator">&nbsp;</span><?php echo $a->name; ?>
-            </div>
-            <div class="description"><?php echo $a->description; ?></div>            
-            <div class="ui-helper-clearfix"></div>
+
         </li>
     <?php endforeach; ?>
 </ul>
 <?php else: ?>
-<h3>No Auth Adapters Found</h3>
+    <div class="noItems">No Auth Adapters Found</div>
 <?php endif; ?>

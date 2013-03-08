@@ -1,4 +1,4 @@
-.navbar .nav>li>a {    
+.navbar .nav>li>a {
     padding: 5px 15px 5px;
     color: #FFF;
     text-shadow: none;
@@ -64,7 +64,7 @@
 
 #header .row #site-auth a:hover {
     color: #FFF;
-} 
+}
 
 #pageTitle {
     margin: 5px 0 14px 0;
@@ -85,7 +85,7 @@
     border-top: 5px solid #C00;
 }
 
-#footer .row #footer-nav {    
+#footer .row #footer-nav {
     background-color: #C00;
     margin-top: 5px;
     padding-top: 5px;
@@ -109,7 +109,7 @@
     padding: 4px 12px 4px 11px;
 }
 
-#footer #footer-bottom {   
+#footer #footer-bottom {
     margin-top: 15px;
 }
 
@@ -329,4 +329,8 @@ ul.ui-tabs-nav li a {
 
 .ui-button .ui-button-text {
     padding: 0;
+}
+
+.error-header {
+    margin-top: 20px;
 }

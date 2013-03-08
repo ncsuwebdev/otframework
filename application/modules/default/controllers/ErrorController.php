@@ -14,7 +14,7 @@
  *
  * @package    ErrorController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  * @license    BSD License
  * @version    SVN: $Id: $
@@ -25,7 +25,7 @@
  *
  * @package    ErrorController
  * @category   Controller
- * @copyright  Copyright (c) 2007 NC State University Office of      
+ * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  */
 class ErrorController extends Zend_Controller_Action
@@ -36,60 +36,51 @@ class ErrorController extends Zend_Controller_Action
      */
     public function errorAction()
     {
-        $errors = $this->_getParam('error_handler');
-                
+        $errorHandler = $this->_getParam('error_handler');
+
         $this->getResponse()->clearBody();
-                
+
         $title = '';
         $message = '';
-        
-        switch ($errors->type) {
-                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
-                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
-                    // 404 error -- controller or action not found
-                    $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
-                    $message = 'default-index-error:404:message';
-                    $title = 'default-index-error:404:header';
-                    break;
-                default:
-                    $exception = $errors->exception;
-                    if ($exception instanceof Ot_Exception) {
-                            $title = $exception->getTitle();
-                    } else {
-                            $title = 'default-index-error:generic';
-                    }
-                    
-                    $this->view->showTrackback = ($this->_helper->configVar('showTrackbackOnErrors')!= '') ? $this->_helper->configVar('showTrackbackOnErrors') : '1';
-                    $this->view->trackback     = $exception->getTrace();
-                    $message = $exception->getMessage();
-                    break;
+        $trackback = array();
+
+        switch ($errorHandler->type) {
+            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
+            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
+                // 404 error -- controller or action not found
+                $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
+
+                $message = 'default-index-error:404:message';
+                $title = 'default-index-error:404:title';
+
+                break;
+            default:
+                $exception = $errors->exception;
+
+                if ($exception instanceof Ot_Exception) {
+                    $title = $exception->getTitle();
+                } else {
+                    $title = 'default-index-error:generic';
+                }
+
+                $trackback = $exception->getTrace();
+                $message = $exception->getMessage();
+                break;
         }
-        
-        if($this->getRequest()->isXmlHttpRequest()) { // if it's an ajax request
+
+        if ($this->getRequest()->isXmlHttpRequest()) { // if it's an ajax request
             $this->_helper->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
-            $ret = array(
-                'status' => 'error',
-                'message' => $this->view->translate($message),
-            );
-            echo json_encode($ret);
+
+            echo $this->view->translate($message);
+            return;
         }
-        
-        /*
-         * 
-        if($this->getRequest()->isXmlHttpRequest() || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) { // if it's an ajax request
-            $json = array(
-                'status' => 'error',
-                'message' => $this->view->translate($message),
-            );
-            $this->_helper->json($json);
-         * 
-         * */
-        
-        
-        $this->_helper->pageTitle($title);
-        
-        $this->view->title = $this->view->translate('default-index-error:title') . ' ' . $this->view->title;
-        $this->view->message = $message;
+
+        $this->view->assign(array(
+            'trackback' => $trackback,
+            'message'   => $message,
+        ));
+
+        $this->_helper->pageTitle($this->view->translate('default-index-error:title') . ' ' . $this->view->translate($title));
     }
 }
