@@ -88,6 +88,16 @@ abstract class Ot_Var_Abstract
         return $this->_value;
     }
     
+    public function getRawValue()
+    {
+        return $this->_value;
+    }
+    
+    public function setRawValue($value)
+    {
+        $this->_value = $value;
+    }
+    
     public function getDisplayValue()
     {
         $value = $this->getValue();

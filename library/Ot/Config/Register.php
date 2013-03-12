@@ -83,7 +83,7 @@ class Ot_Config_Register
         
         foreach ($allVars as $v) {
             if (isset($registered[$v->varName])) {
-                $registered[$v->varName]['object']->setValue($v->value);
+                $registered[$v->varName]['object']->setRawValue($v->value);
             }
         }
         
@@ -103,7 +103,7 @@ class Ot_Config_Register
 
         $data = array(
             'varName' => $var->getName(),
-            'value'   => $var->getValue(),
+            'value'   => $var->getRawValue(),
         );
 
         if (is_null($thisVar)) {

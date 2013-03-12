@@ -57,85 +57,28 @@ class Ot_ConfigController extends Zend_Controller_Action
 
             $varsByModule[$v['namespace']][] = $v['object'];
 
-        }
-
-        $form = new Zend_Form();
-        $form->setDecorators(array(
-                 'FormElements',
-                 array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                 'Form',
-             ));
+        }        
         
-        $section = new Zend_Form_Element_Select('section', array('label' => 'Select Configuration Section:'));
-        $section->setDecorators(array(
-                    'ViewHelper',
-                    array(array('wrapperField' => 'HtmlTag'), array('tag' => 'div', 'class' => 'select-control')),                
-                    array('Label', array('placement' => 'prepend', 'class' => 'select-label')),                   
-                    array(array('wrapperAll' => 'HtmlTag'), array('tag' => 'div', 'class' => 'select-header ui-widget-header')),                    
-                ))
-                ->setValue($this->_getParam('selected'));
-        $form->addElement($section);
-        
-        $sectionOptions = array();
-        
-        foreach ($varsByModule as $key => $value) {
-            $group = array();
-            foreach ($value as $v) {
-                //$elm = $v->getFormElement();
-                $elm = $v->renderFormElement();
-                $elm->setDecorators(array(
-                    'ViewHelper',
-                    array('Errors', array('class' => 'help-inline')),
-                    array(array('wrapperField' => 'HtmlTag'), array('tag' => 'div', 'class' => 'fields')),                
-                    array('Label', array('placement' => 'append', 'class' => 'field-label')),      
-                    array('Description', array('placement' => 'append', 'tag' => 'div', 'class' => 'field-description')),                     
-                    array(array('empty' => 'HtmlTag'), array('placement' => 'append', 'tag' => 'div', 'class' => 'ui-helper-clearfix')),
-                    array(array('wrapperAll' => 'HtmlTag'), array( 'tag' => 'div', 'class' => 'field-group')),                    
-                ));
-                
-                $group[] = $elm->getName();
-
-                $form->addElement($elm);
-            }
-
-            $sectionOptions[preg_replace('/[^a-z]/i', '', $key)] = $key;
-                        
-            $form->addDisplayGroup($group, $key);
-        }
-        
-        asort($sectionOptions);
-        
-        $section->setMultiOptions($sectionOptions);
-
-        $form->setDisplayGroupDecorators(array(
-            'FormElements',
-            'Fieldset'
-        ));
-
-        $submit = $form->createElement('submit', 'saveButton', array('label' => 'Save Configuration'));
-        $submit->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formSubmit'))
-        ));
-
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(
-            array('ViewHelper', array('helper' => 'formButton'))
-        ));
-
-        $form->addElements(array($submit, $cancel));
+        $form = new Ot_Form_Config();
 
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
-                                
+                      
+                /*
                 foreach ($varsByModule as $key => $value) {
                     foreach ($value as $v) {
-                        $v->setValue($form->getElement('config_' . $v->getName())->getValue());
+                        $v->setValue($form->getElement($v->getName())->getValue());
                         
                         $register->save($v);
                     }
-                }
-
+                }*/
+                
+                $v = $varsByModule['Authentication'][0];
+                
+                $v->setValue($form->getElement($v->getName())->getValue());
+                
+                $register->save($v);
+                
                 $this->_helper->messenger->addSuccess($this->view->translate('msg-info-configUpdated', ''));
 
                 $this->_helper->redirector->gotoRoute(array('controller' => 'config', 'selected' => $form->getElement('section')->getValue()), 'ot', true);

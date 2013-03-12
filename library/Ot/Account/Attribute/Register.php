@@ -85,7 +85,7 @@ class Ot_Account_Attribute_Register
         
         foreach ($allVars as $v) {
             if (isset($registered[$v->varName])) {
-                $registered[$v->varName]->setValue($v->value);
+                $registered[$v->varName]->setRawValue($v->value);
             }
         }
         
@@ -110,7 +110,7 @@ class Ot_Account_Attribute_Register
         $data = array(
             'accountId' => $accountId, 
             'varName'   => $var->getName(),
-            'value'     => $var->getValue(),
+            'value'     => $var->getRawValue(),
         );
 
         if ($thisVar->count() == 0) {
