@@ -4,40 +4,37 @@
     <?php echo $this->translate("ot-trigger-add:cloneHeader", array('triggerName' => $this->clonedTriggerName)); ?>
 <?php endif; ?>
 <br /><br />
-<table class="form">
-    <tbody>
-        <tr>
-            <td><label><?php echo $this->translate("ot-trigger-details:trigger"); ?></label></td>
-            <td><?php echo $this->trigger->getName(); ?></td>
-        </tr>
-        <tr>
-            <td><label><?php echo $this->translate("ot-trigger-details:description"); ?></label></td>
-            <td><?php echo $this->trigger->getDescription(); ?></td>
-        </tr>
-    </tbody>
-</table>
-<?php echo $this->form; ?>
+
+<div class="row">
+    <div class="span8">        
+        <?php echo $this->form; ?>
+    </div>
+    <div class="span4">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th><?php echo $this->translate("ot-trigger-table:variable"); ?></th>
+                    <th><?php echo $this->translate("ot-trigger-table:description"); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (count($this->trigger->getOptions()) > 0) : ?>
+                    <?php foreach ($this->trigger->getOptions() as $key => $variable) : ?>
+                    <tr>
+                        <td>[[<?php echo $key; ?>]]</td>
+                        <td><?php echo $variable; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                <tr>
+                    <td colspan="2"><?php echo $this->translate("ot-trigger-add:noVariables"); ?></td>
+                </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 <?php echo $this->translate("ot-trigger-availableTitle"); ?>
 <br /><br />
 <?php echo $this->translate("ot-trigger-availableHeader"); ?>
 <br /><br />
-<table class="list">
-    <tbody>
-        <tr class="ui-widget-header">
-            <th width="200"><?php echo $this->translate("ot-trigger-table:variable"); ?></th>
-            <th width="300"><?php echo $this->translate("ot-trigger-table:description"); ?></th>
-        </tr>
-        <?php if (count($this->trigger->getOptions()) > 0) : ?>
-            <?php foreach ($this->trigger->getOptions() as $key => $variable) : ?>
-            <tr>
-                <td>[[<?php echo $key; ?>]]</td>
-                <td><?php echo $variable; ?></td>
-            </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
-        <tr>
-            <td colspan="2"><?php echo $this->translate("ot-trigger-add:noVariables"); ?></td>
-        </tr>
-        <?php endif; ?>
-    </tbody>
-</table>

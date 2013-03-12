@@ -38,11 +38,13 @@ class Ot_TriggerController extends Zend_Controller_Action
     {
         $this->_helper->pageTitle('ot-trigger-index:title');
         
-        $this->view->acl = array('details' => $this->_helper->hasAccess('details'));
+        $this->view->acl = array(
+            'details' => $this->_helper->hasAccess('details')
+        );
 
-        $register = new Ot_Trigger_Register();
+        $register = new Ot_Trigger_EventRegister();
 
-        $this->view->triggers = $register->getTriggers();
+        $this->view->triggerEvents = $register->getTriggerEvents();
     }
     
     /**
@@ -52,22 +54,21 @@ class Ot_TriggerController extends Zend_Controller_Action
     public function detailsAction()
     {
         $this->view->acl = array(
-            'index'        => $this->_helper->hasAccess('index'),
             'add'          => $this->_helper->hasAccess('add'),
             'edit'         => $this->_helper->hasAccess('edit'),
             'delete'       => $this->_helper->hasAccess('delete'),
             'changeStatus' => $this->_helper->hasAccess('change-status'),
         );
         
-        $key = $this->_getParam('key', null);
+        $eventKey = $this->_getParam('eventKey', null);
        
-        if (is_null($key)) {
+        if (is_null($eventKey)) {
             throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
         }
 
-        $register = new Ot_Trigger_Register();
+        $register = new Ot_Trigger_EventRegister();
 
-        $thisTrigger = $register->getTrigger($key);
+        $thisTrigger = $register->getTriggerEvent($eventKey);
         
         if (is_null($thisTrigger)) {
             throw new Ot_Exception_Data('msg-error-noTrigger');
@@ -75,23 +76,34 @@ class Ot_TriggerController extends Zend_Controller_Action
         
         $action = new Ot_Model_DbTable_TriggerAction();
 
-        $where = $action->getAdapter()->quoteInto('triggerId = ?', $thisTrigger->getName());
+        $where = $action->getAdapter()->quoteInto('triggerId = ?', $thisTrigger->getKey());
         $actions = $action->fetchAll($where)->toArray();
         
-        $tpr = new Ot_Trigger_PluginRegister();
+        $tpr = new Ot_Trigger_ActionTypeRegister();
+        $actionTypes = $tpr->getTriggerActionTypes();
         
-        foreach ($actions as &$a) {
-            $a['helper'] = $tpr->getTriggerPlugin($a['helper']);
+        if (count($actionTypes) == 0) {
+            throw new Ot_Exception_Data('model-trigger-action:noHelpersDefined');
+        }
+        
+        $actionsWithHelpers = array();
+        
+        foreach ($actions as $a) {
+            if (isset($actionTypes[$a['helper']])) {
+                $a['helper'] = $actionTypes[$a['helper']];
+            }
+            
+            $actionsWithHelpers[] = $a;
         }
         
         $this->_helper->pageTitle('ot-trigger-details:title', $thisTrigger->getName());
         
         $this->view->assign(array(
-            'actions'  => $actions,
-            'trigger'  => $thisTrigger,
-            'messages' => $this->_helper->messenger->getMessages(),
+            'actions'     => $actionsWithHelpers,
+            'actionTypes' => $actionTypes,
+            'trigger'     => $thisTrigger,
+            'messages'    => $this->_helper->messenger->getMessages(),
         ));        
-        
     }
     
     /**
@@ -100,32 +112,35 @@ class Ot_TriggerController extends Zend_Controller_Action
      */
     public function addAction()
     {
-    	// TODO: refactor this because it has confusing variable names (name/triggerId are the same thing)
-        $key = $this->_getParam('key', null);
+        $eventKey = $this->_getParam('eventKey', null);
+        $actionKey = $this->_getParam('actionKey', null);
        
-        if (is_null($key)) {
+        if (is_null($eventKey)) {
             throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
         }
         
-        $action = new Ot_Model_DbTable_TriggerAction();
+        if (is_null($actionKey)) {
+            throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
+        }
+        
+        $register = new Ot_Trigger_EventRegister();
 
-        $register = new Ot_Trigger_Register();
-
-        $thisTrigger = $register->getTrigger($key);
+        $thisTrigger = $register->getTriggerEvent($eventKey);
 
         if (is_null($thisTrigger)) {
             throw new Ot_Exception_Data('msg-error-noTrigger');
+        }        
+        
+        $actionTypeRegister = new Ot_Trigger_ActionTypeRegister();
+        
+        $thisActionType = $actionTypeRegister->getTriggerActionType($actionKey);
+        
+        if (is_null($thisActionType)) {
+            throw new Ot_Exception_Data('msg-error-noTrigger');
         }
-
-        $this->view->trigger = $thisTrigger;
-        $this->_helper->pageTitle('ot-trigger-add:title');
         
-        $values = array('triggerId' => $thisTrigger->getKey());
-        
-        if (isset($get->helper)) {
-            $values['helper'] = $get->helper;
-        }
-        
+        $action = new Ot_Model_DbTable_TriggerAction();
+        /*
         if (isset($get->triggerActionId) && $get->triggerActionId != '') {
 
             $actionToClone = $action->find($get->triggerActionId);
@@ -141,9 +156,9 @@ class Ot_TriggerController extends Zend_Controller_Action
                    $values['name'] = 'clone-' . $values['name'];
                 }
             }            
-        }
+        }*/
         
-        $form = $action->form($values);
+        $form = new Ot_Form_TriggerAction($thisActionType->addSubForm());
         
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -198,6 +213,8 @@ class Ot_TriggerController extends Zend_Controller_Action
         if (isset($clonedTriggerName) && $clonedTriggerName) {
             $this->view->clonedTriggerName = $clonedTriggerName;
         }
+        $this->view->trigger = $thisTrigger;
+        $this->_helper->pageTitle('ot-trigger-add:title');
         
         $this->view->form         = $form;
     }
@@ -301,27 +318,23 @@ class Ot_TriggerController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-        $get = Zend_Registry::get('getFilter');
+        $triggerActionId = $this->_getParam('triggerActionId', null);
         
-        if (!isset($get->triggerActionId)) {
+        if (is_null($triggerActionId)) {
             throw new Ot_Exception_Input('msg-error-triggerActionIdNotFound');
         }
         
         $action = new Ot_Model_DbTable_TriggerAction();
         
-        $thisAction = $action->find($get->triggerActionId);
+        $thisAction = $action->find($triggerActionId);
         
         if (is_null($thisAction)) {
             throw new Ot_Exception_Data('msg-error-noTriggerActionId');
-        }
-                    
-        $triggerId = $thisAction->triggerId;
+        }                
         
-        $form = Ot_Form_Template::delete('deleteTrigger');             
-        
-        if ($this->_request->isPost() && $form->isValid($_POST)) {
+        if ($this->_request->isPost()) {
                 
-            $where = $action->getAdapter()->quoteInto('triggerActionId = ?', $get->triggerActionId);
+            $where = $action->getAdapter()->quoteInto('triggerActionId = ?', $triggerActionId);
                 
             $action->delete($where);
                 
@@ -329,25 +342,22 @@ class Ot_TriggerController extends Zend_Controller_Action
                 
             $thisHelper = new $obj;
                 
-            $thisHelper->deleteProcess($get->triggerActionId);
+            $thisHelper->deleteProcess($triggerActionId);
                 
-            $logOptions = array('attributeName' => 'triggerActionId', 'attributeId'   => $get->triggerActionId);
+            $logOptions = array(
+                'attributeName' => 'triggerActionId', 
+                'attributeId'   => $triggerActionId
+            );
                     
             $this->_helper->log(Zend_Log::INFO, 'Trigger Action deleted', $logOptions);
         
             $this->_helper->messenger->addWarning('msg-info-triggerDeleted');
             
-            $this->_helper->redirector->gotoRoute(
-                array('controller' => 'trigger', 'action' => 'details', 'name' => $triggerId),
-                'ot',
-                true
-            );
+            $this->_helper->redirector->gotoRoute(array('controller' => 'trigger', 'action' => 'details', 'eventKey' => $thisAction->triggerId), 'ot', true);
+            
+        } else {
+            throw new Ot_Exception_Access('You are not allowed to access this method directly');
         }
-        
-        $this->view->form = $form;
-        $this->view->action = $thisAction->toArray();
-        $this->view->triggerId = $triggerId;
-        $this->_helper->pageTitle('ot-trigger-delete:title');
     }
     
     /**
@@ -356,55 +366,38 @@ class Ot_TriggerController extends Zend_Controller_Action
      */
     public function changeStatusAction()
     {
-        $get = Zend_Registry::get('getFilter');
+        $triggerActionId = $this->_getParam('triggerActionId', null);
         
-        if (!isset($get->triggerActionId)) {
+        if (is_null($triggerActionId)) {
             throw new Ot_Exception_Input('msg-error-triggerActionIdNotFound');
         }
         
         $action = new Ot_Model_DbTable_TriggerAction();
         
-        $thisAction = $action->find($get->triggerActionId);
+        $thisAction = $action->find($triggerActionId);
         
         if (is_null($thisAction)) {
             throw new Ot_Exception_Data('msg-error-noTriggerActionId');
-        }
+        }                
         
-        $triggerId  = $thisAction->triggerId;
-        $buttonText = 'form-button-enable';
-        $status     = 'enable';
-        
-        if ($thisAction->enabled == 1) {
-            $buttonText = 'form-button-disable';
-            $status     = 'disable';
-        }
-        
-        $this->view->status = $status;
-        
-        $form = Ot_Form_Template::delete('changeStatus', $buttonText);             
-        
-        if ($this->_request->isPost() && $form->isValid($_POST)) {
+        if ($this->_request->isPost()) {
 
-            $data = array('triggerActionId' => $get->triggerActionId, 'enabled' => !$thisAction->enabled);
+            $data = array(
+                'triggerActionId' => $triggerActionId, 
+                'enabled'         => !$thisAction->enabled
+            );
             
             $action->update($data, null);
             
-            $logOptions = array('attributeName' => 'triggerActionId', 'attributeId' => $get->triggerActionId);
+            $logOptions = array('attributeName' => 'triggerActionId', 'attributeId' => $triggerActionId);
                     
             $this->_helper->log(Zend_Log::INFO, 'Trigger Action deleted', $logOptions);
         
             $this->_helper->messenger->addWarning('msg-info-triggerActionStatus');
             
-            $this->_helper->redirector->gotoRoute(
-                array('controller' => 'trigger', 'action' => 'details', 'name' => $triggerId),
-                'ot',
-                true
-            );
+            $this->_helper->redirector->gotoRoute(array('controller' => 'trigger', 'action' => 'details', 'eventKey' => $thisAction->triggerId), 'ot', true);
+        } else {
+            throw new Ot_Exception_Access('You are not allowed to access this method directly');
         }
-        
-        $this->view->form = $form;
-        $this->view->action = $thisAction->toArray();
-        $this->view->triggerId = $triggerId;
-        $this->_helper->pageTitle('ot-trigger-changeStatus:title', array(ucwords($status)));
     }
 }

@@ -28,23 +28,25 @@
  * @copyright  Copyright (c) 2007 NC State University Office of      
  *             Information Technology
  */
-class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
+class Ot_Trigger_ActionType_Email extends Ot_Trigger_ActionType_Abstract
 {
     /**
      * table name for references
      *
      * @var string
      */
-    protected $_name = 'tbl_ot_trigger_helper_emailqueue';
+    protected $_tblname = 'tbl_ot_trigger_helper_email';
     
-    public function __construct()
+    public function __construct($key = '', $name = '', $description = '')
     {
+        parent::__construct($key, $name, $description);
+        
         global $application;
 
         $prefix = $application->getOption('tablePrefix');
 
         if (!empty($prefix)) {
-            $this->_name = $prefix . $this->_name;
+            $this->_tblname = $prefix . $this->_tblname;
         }
     }
     
@@ -55,7 +57,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
      */
     public function addSubForm()
     {
-        $description = 'This email will be sent using the email queue, rather than being sent immediately.';
+        $description = 'This email will be sent immediately when the trigger is executed.';
         
         $form = $this->_getForm();
         $form->setDescription($description);
@@ -71,7 +73,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
     public function addProcess($data)
     {
         $dba = Zend_Db_Table::getDefaultAdapter();
-        $dba->insert($this->_name, $data);
+        $dba->insert($this->_tblname, $data);
     }
     
     /**
@@ -84,7 +86,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
     {
         $data = $this->get($id);
         
-        $description = 'This email will be sent using the email queue, rather than being sent immediately.';
+        $description = 'This email will be sent immediately when the trigger is executed.';
         
         $form = $this->_getForm($data);
         $form->setDescription($description);
@@ -103,7 +105,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         
         $where = $dba->quoteInto('triggerActionId = ?', $data['triggerActionId']);
         
-        $dba->update($this->_name, $data, $where);        
+        $dba->update($this->_tblname, $data, $where);        
     }
     
     /**
@@ -118,7 +120,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         
         $where = $dba->quoteInto('triggerActionId = ?', $id);
 
-        return $dba->delete($this->_name, $where);
+        return $dba->delete($this->_tblname, $where);
     }
     
     /**
@@ -133,7 +135,8 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         
         $select = $dba->select();
 
-        $select->from($this->_name)->where('triggerActionId = ?', $id);
+        $select->from($this->_tblname)
+               ->where('triggerActionId = ?', $id);
 
         $result = $dba->fetchAll($select);
 
@@ -150,9 +153,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
      * @param array $data
      */
     public function dispatch($data)
-    {
-        $eq = new Ot_Model_DbTable_EmailQueue();
-        
+    {        
         $mail = new Zend_Mail();
 
         $to = explode(',', $data['to']);
@@ -166,13 +167,11 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         $mail->setSubject($data['subject']);
         $mail->setBodyText($data['body']);
         
-        $eData = array(
-            'zendMailObject' => $mail,
-            'attributeName'  => 'triggerActionId',
-            'attributeId'    => $data['triggerActionId'],
-        );
-        
-        $eq->queueEmail($eData);
+        try {
+            $mail->send();
+        } catch (Exception $e) {
+            throw new Ot_Exception('There was an error sending your email, please try again. ' . $e->getMessage());
+        }
     }
     
     /**
@@ -197,13 +196,14 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
            ->setAttrib('maxlength', '255')
            ->setAttrib('size', '40')
            ->addFilter('StripTags')
-           ->addFilter('StringTrim');
+           ->addFilter('StringTrim')
+           ->setDescription('Seperate multiple email addresses by comma.');
            
         if (isset($data['to'])) {
             $to->setValue($data['to']);
         }
            
-        $from = $form->createElement('text', 'from', array('label' => 'From Address:'));
+        $from = $form->createElement('text', 'from', array('label' => 'From Email Address:'));
         $from->setRequired(true)
              ->setAttrib('maxlength', '255')
              ->setAttrib('size', '40')
@@ -213,18 +213,19 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
         if (isset($data['from'])) {
             $from->setValue($data['from']);
         }
-        
-        $fromName = $form->createElement('text', 'fromName', array('label' => 'From Name:'));
+
+
+        $fromName = $form->createElement('text', 'fromName', array('label' => 'From Display Name:'));
         $fromName->setRequired(false)
-                 ->setAttrib('maxlength', '255')
-                 ->setAttrib('size', '40')
-                 ->addFilter('StripTags')
-                 ->addFilter('StringTrim');
-        
+             ->setAttrib('maxlength', '255')
+             ->setAttrib('size', '40')
+             ->addFilter('StripTags')
+             ->addFilter('StringTrim');
+
         if (isset($data['fromName'])) {
             $fromName->setValue($data['fromName']);
         }
-           
+
         $subject = $form->createElement('text', 'subject', array('label' => 'Subject:'));
         $subject->setRequired(true)
                 ->setAttrib('maxlength', '255')
@@ -241,7 +242,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
              ->setAttrib('rows', '10')
              ->addFilter('StripTags')
              ->addFilter('StringTrim');
-             
+               
         if (isset($data['body'])) {
             $body->setValue($data['body']);
         }              
@@ -252,6 +253,7 @@ class Ot_Trigger_Plugin_EmailQueue implements Ot_Plugin_Interface
                 'Errors',
                 array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
                 array('Label', array('tag' => 'span')),
+                'Description'
             )
         );
 

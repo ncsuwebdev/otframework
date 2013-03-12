@@ -1,75 +1,102 @@
 <a href="<?php echo $this->url(array('controller' => 'trigger'), 'ot', true); ?>"><i class="icon icon-arrow-left"></i> <?php echo $this->translate("ot-trigger-details:linkBack"); ?></a><br /><br />
 
-<div class="row">
-    <div class="span4">
-        <div class="thumbnail">
-            <h4><?php echo $this->trigger->getName(); ?></h4>
-            <p>
-                <?php echo $this->trigger->getDescription(); ?>
-            </p>
-            <br />
-            <p>
-                <?php if ($this->acl['add']) : ?>
-                    <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'key' => $this->trigger->getKey()), 'ot', true); ?>" class="btn btn-success"><i class="icon-white icon-plus"></i> <?php echo $this->translate("ot-trigger-details:linkAdd"); ?></a>
-                <?php endif; ?>
-            </p>
+The following actions will take place when the <b><?php echo $this->trigger->getName(); ?></b> trigger is 
+executed.
+<br /><br />
+
+
+<?php if ($this->acl['add']) : ?>
+    <a href="#addModal" data-toggle="modal" class="btn btn-success"><i class="icon-white icon-plus"></i> <?php echo $this->translate("ot-trigger-details:linkAdd"); ?></a>
+    <div id="addModal" class="modal hide fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+            <h3>Add New Action</h3>
         </div>
-    </div>   
-    <div class="span8">
-               
-        <?php if (count($this->actions) > 0) : ?>
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th width="200"><?php echo $this->translate("ot-trigger-details:name"); ?></th>
-                    <th width="300"><?php echo $this->translate("ot-trigger-details:action"); ?></th>
-                    <?php if ($this->acl['edit']) : ?>
-                    <th width="50"><?php echo $this->translate("table-header-edit"); ?></th>
-                    <?php endif; ?>
-                    <?php if ($this->acl['delete']) : ?>
-                    <th width="50"><?php echo $this->translate("table-header-delete"); ?></th>
-                    <?php endif; ?>
-                    <?php if ($this->acl['changeStatus']) : ?>
-                    <th width="100"><?php echo $this->translate("table-header-status"); ?></th>
-                    <?php endif; ?>
-                    <?php if ($this->acl['add']) : ?>
-                    <th width="100"><?php echo $this->translate("table-header-clone"); ?></th>
-                    <?php endif; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($this->actions as $a) : ?>
-                    <tr>
-                        <td><?php echo $a['name']; ?></td>
-                        <td><?php echo $a['helper']->getDescription(); ?></td>
+        <div class="modal-body">
+            <p>What kind of action would you like to add?</p>
+            
+            <ul>
+                <?php foreach ($this->actionTypes as $t): ?>
+                <li>
+                    <b><a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'eventKey' => $this->trigger->getKey(), 'actionKey' => $t->getKey()), 'ot', true); ?>"><?php echo $t->getName(); ?></a></b>
+                    <p><?php echo $t->getDescription(); ?></p>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+        </div>
+    </div>
+    <br /><br />
+<?php endif; ?>
+
+<?php if (count($this->actions) > 0) : ?>  
+    <?php foreach ($this->actions as $a): ?>
+        <div class="triggerAction well well-small">
+            <div class="row">
+                <div class="span1 status <?php echo ($a['enabled']) ? 'enabled' : 'disabled'; ?>">
+
+                </div>
+                <div class="span5">
+                    <h3 class="name"><?php echo $a['name']; ?></h3>
+                    <div class="description"><?php echo $a['helper']->getDescription(); ?></div>
+                </div>
+                <div class="span5 actions pull-right">
                         <?php if ($this->acl['edit']) : ?>
-                        <td align="center">
-                            <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'edit', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>
-                        </td>
-                        <?php endif; ?>
-                        <?php if ($this->acl['delete']) : ?>
-                        <td align="center">
-                            <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'delete', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>
-                        </td>
-                        <?php endif; ?>
-                        <?php if ($this->acl['changeStatus']) : ?>
-                        <td align="center">
-                            <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'change-status', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo ($a['enabled']) ? $this->translate('ot-trigger-details:disableAction') : $this->translate('ot-trigger-details:enableAction'); ?></a>
-                        </td>
+                            <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'edit', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="btn"><i class="icon icon-pencil"></i> Edit</a>
                         <?php endif; ?>
                         <?php if ($this->acl['add']) : ?>
-                        <td align="center">
-                            <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->trigger->getName(), 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoIcon"><?php echo $this->translate('ot-trigger-clone:cloneAction'); ?></a>
-                        </td>
+                            <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->trigger->getKey(), 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="btn"><i class="icon icon-adjust"></i> <?php echo $this->translate('ot-trigger-clone:cloneAction'); ?></a>
                         <?php endif; ?>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>        
-        <?php else : ?>
-            <?php echo $this->translate("ot-trigger-details:noActions"); ?>                
-        <?php endif; ?>
-    </div> 
-</div>        
+                        <?php if ($this->acl['changeStatus']) : ?>
+                            <a href="#toggleModal<?php echo $a['triggerActionId']; ?>" data-toggle="modal" class="btn <?php echo ($a['enabled']) ? 'btn-warning' : 'btn-success'; ?>"><i class="icon icon-off"></i> <?php echo ($a['enabled']) ? $this->translate('ot-trigger-details:disableAction') : $this->translate('ot-trigger-details:enableAction'); ?></a>
+                        <?php endif; ?>
+                        <?php if ($this->acl['delete']) : ?>
+                            <a href="#deleteModal<?php echo $a['triggerActionId']; ?>" data-toggle="modal" class="btn btn-danger"><i class="icon-white icon-ban-circle"></i> Delete</a>
+                        <?php endif; ?>
+                </div>
+            </div>
+
+            <div id="toggleModal<?php echo $a['triggerActionId']; ?>" class="modal hide fade">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                    <h3><?php echo (($a['enabled']) ? 'Disable ' : 'Enable ') . $a['name'] . ' Action'; ?></h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to <?php echo (($a['enabled']) ? 'disable' : 'enable'); ?> this action?</p>
+                </div>
+                <div class="modal-footer">
+                    <form style="margin: 0;" method="post" action="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'change-status'), 'ot', true); ?>">
+                        <input type="hidden" name="triggerActionId" value="<?php echo $a['triggerActionId']; ?>" />
+                        <input type="submit" name="submit" value="Yes, <?php echo (($a['enabled']) ? 'Disable' : 'Enable'); ?>" class="btn <?php echo (($a['enabled']) ? 'btn-warning' : 'btn-success'); ?>" />
+                        <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                    </form>
+                </div>
+            </div>
+
+            <div id="deleteModal<?php echo $a['triggerActionId']; ?>" class="modal hide fade">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                    <h3>Delete <?php echo $a['name']; ?> Action</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this action?</p>
+                </div>
+                <div class="modal-footer">
+                    <form style="margin: 0;" method="post" action="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'delete'), 'ot', true); ?>">
+                        <input type="hidden" name="triggerActionId" value="<?php echo $a['triggerActionId']; ?>" />
+                        <input type="submit" name="submit" value="Yes, Delete" class="btn btn-danger" />
+                        <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    <?php endforeach; ?>       
+
+<?php else : ?>
+    <?php echo $this->translate("ot-trigger-details:noActions"); ?>                
+<?php endif; ?>             
 
 <br /><br />

@@ -1,5 +1,28 @@
-@CHARSET "UTF-8";
+.triggerAction div.status {
+    text-align: center;
+    background-repeat: no-repeat;
+    background-position: center top;
+    height: 64px;
+}
 
-.thumbnail h4 {
+.triggerAction div.status.enabled {
+    background-image: url(../../../images/ot/grant.png);
+}
+
+.triggerAction div.status.disabled {
+    background-image: url(../../../images/ot/deny.png);
+}
+
+.triggerAction h3.name {
     margin-top: 0px;
+}
+
+.triggerAction div.description {
+    color: #666666;
+    margin-bottom: 10px;
+}
+
+.triggerAction div.actions {
+    text-align: right;
+    margin: 10px 10px auto auto;
 }

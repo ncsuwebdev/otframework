@@ -1,15 +1,15 @@
 <?php
-class Ot_Trigger
+class Ot_Trigger_Event
 {
     protected $_name;
     protected $_key;
     protected $_description;
     protected $_options;
 
-    public function __construct($name, $key, $description = '')
+    public function __construct($key = '', $name = '', $description = '')
     {
-        $this->setName($name);
         $this->setKey($key);
+        $this->setName($name);
         $this->setDescription($description);
     }
 

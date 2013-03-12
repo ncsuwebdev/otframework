@@ -163,22 +163,20 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         );
     }
 
-    public function _initTriggerPlugins()
+    public function _initTriggerActionTypes()
     {
         $plugins = array();
 
-        $plugins[] = new Ot_TriggerPlugin('Ot_Trigger_Plugin_EmailQueue', 'Send email via Queue');
-        $plugins[] = new Ot_TriggerPlugin('Ot_Trigger_Plugin_Email', 'Send email');
-        //$plugins[] = new Ot_TriggerPlugin('Ot_Trigger_Plugin_Txt', 'Send text message');
-        //$plugins[] = new Ot_TriggerPlugin('Ot_Trigger_Plugin_TxtQueue', 'Send text message via Queue');
-
-        $tpr = new Ot_Trigger_PluginRegister();
-        $tpr->registerTriggerPlugins($plugins);
+        $plugins[] = new Ot_Trigger_ActionType_EmailQueue('Ot_Trigger_Plugin_EmailQueue', 'Send email via Queue', 'Sends email using the built-in queue manager');
+        $plugins[] = new Ot_Trigger_ActionType_Email('Ot_Trigger_Plugin_Email', 'Send email immediately', 'Send email immediately without queuing');
+        
+        $tpr = new Ot_Trigger_ActionTypeRegister();
+        $tpr->registerTriggerActionTypes($plugins);
     }
 
     public function _initTriggers()
     {
-        $forgotTrigger = new Ot_Trigger('Forgot Your Password', 'Login_Index_Forgot', 'When a user has forgotten their password, they ask for a reset email to be sent to their registered email address.');
+        $forgotTrigger = new Ot_Trigger_Event('Login_Index_Forgot', 'Forgot Your Password', 'When a user has forgotten their password, they ask for a reset email to be sent to their registered email address.');
         $forgotTrigger->addOption('firstName', 'First name of the user')
                       ->addOption('lastName', 'Last name of the user.')
                       ->addOption('emailAddress', 'Email address of the user.')
@@ -187,7 +185,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
                       ->addOption('resetUrl', 'URL the user will need to go to to reset their password.')
                       ;
 
-        $signupTrigger = new Ot_Trigger('Signup for a new account', 'Login_Index_Signup', 'When a user signs up for a new account.');
+        $signupTrigger = new Ot_Trigger_Event('Login_Index_Signup', 'Signup for a new account', 'When a user signs up for a new account.');
         $signupTrigger->addOption('firstName', 'First name of the user.')
                       ->addOption('lastName', 'Last name of the user.')
                       ->addOption('emailAddress', 'Email address of the user.')
@@ -196,7 +194,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
                       ->addOption('password', 'The password they give to their account.')
                       ;
 
-        $createPassword = new Ot_Trigger('Admin created an account with a password', 'Admin_Account_Create_Password', 'When an administrator creates an account for a user where a password is dynamically generated for the user.');
+        $createPassword = new Ot_Trigger_Event('Admin_Account_Create_Password', 'Admin created an account with a password', 'When an administrator creates an account for a user where a password is dynamically generated for the user.');
         $createPassword->addOption('firstName', 'First name of the user.')
                        ->addOption('lastName', 'Last name of the user.')
                        ->addOption('emailAddress', 'Email address of the user.')
@@ -206,7 +204,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
                        ->addOption('role', 'Assigned role given to the user.')
                        ;
 
-        $noPassword = new Ot_Trigger('Admin created an account with no password', 'Admin_Account_Create_NoPassword', 'When an administrator creates an account for a user when no password is created for the user.');
+        $noPassword = new Ot_Trigger_Event('Admin_Account_Create_NoPassword', 'Admin created an account with no password', 'When an administrator creates an account for a user when no password is created for the user.');
         $noPassword->addOption('firstName', 'First name of the user.')
                    ->addOption('lastName', 'Last name of the user.')
                    ->addOption('emailAddress', 'Email address of the user.')
@@ -215,8 +213,8 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
                    ->addOption('role', 'Assigned role given to the user.')
                    ;
 
-        $register = new Ot_Trigger_Register();
-        $register->registerTriggers(array($forgotTrigger, $signupTrigger, $createPassword, $noPassword));
+        $register = new Ot_Trigger_EventRegister();
+        $register->registerTriggerEvents(array($forgotTrigger, $signupTrigger, $createPassword, $noPassword));
     }
 
     public function _initVars()

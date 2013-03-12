@@ -1,16 +1,18 @@
 <?php echo $this->translate("ot-trigger-index:header"); ?>
 <br /><br />
 <table class="table table-bordered table-striped">
-    <tbody>
-        <tr class="ui-widget-header">
+    <thead>
+        <tr>
             <th width="250"><?php echo $this->translate("ot-trigger-index:name"); ?></th>
             <th width="350"><?php echo $this->translate("ot-trigger-table:description"); ?></th>
         </tr>
-        <?php foreach($this->triggers as $t): ?>
+    </thead>
+    <tbody>
+        <?php foreach($this->triggerEvents as $t): ?>
         <tr>
             <td>
                 <?php if ($this->acl['details']):?>
-                <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'key' => $t->getKey()), 'ot', true); ?>">
+                <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'eventKey' => $t->getKey()), 'ot', true); ?>">
                 <?php endif; ?>
                 <?php echo $t->getName(); ?>
                 <?php if ($this->acl['details']):?>

@@ -29,10 +29,10 @@
  *             Information Technology
  *
  */
-class Ot_Trigger_PluginRegister
+class Ot_Trigger_EventRegister
 {
 
-    const REGISTRY_KEY = 'Ot_Trigger_PluginRegister';
+    const REGISTRY_KEY = 'Ot_Trigger_Event_Register';
 
     public function __construct()
     {
@@ -41,27 +41,27 @@ class Ot_Trigger_PluginRegister
         }
     }
 
-    public function registerTriggerPlugin(Ot_TriggerPlugin $plugin)
+    public function registerTriggerEvent(Ot_Trigger_Event $trigger)
     {
-        $registered = $this->getTriggerPlugins();
-        $registered[$plugin->getPluginId()] = $plugin;
+        $registered = $this->getTriggerEvents();
+        $registered[] = $trigger;
 
         Zend_Registry::set(self::REGISTRY_KEY, $registered);
     }
 
-    public function registerTriggerPlugins(array $plugins)
+    public function registerTriggerEvents(array $triggers)
     {
-        foreach ($plugins as $p) {
-            $this->registerTriggerPlugin($p);
+        foreach ($triggers as $t) {
+            $this->registerTriggerEvent($t);
         }
     }
 
-    public function getTriggerPlugin($pluginId)
+    public function getTriggerEvent($key)
     {
-        $registered = $this->getTriggerPlugins();
+        $registered = $this->getTriggerEvents();
 
         foreach ($registered as $r) {
-            if ($r->getPluginId() == $pluginId) {
+            if ($r->getKey() == $key) {
                 return $r;
             }
         }
@@ -70,7 +70,7 @@ class Ot_Trigger_PluginRegister
 
     }
     
-    public function getTriggerPlugins()
+    public function getTriggerEvents()
     {
         return Zend_Registry::get(self::REGISTRY_KEY);
     }

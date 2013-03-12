@@ -29,10 +29,10 @@
  *             Information Technology
  *
  */
-class Ot_Trigger_Register
+class Ot_Trigger_ActionTypeRegister
 {
 
-    const REGISTRY_KEY = 'Ot_Trigger_Register';
+    const REGISTRY_KEY = 'Ot_Trigger_ActionTypeRegister';
 
     public function __construct()
     {
@@ -41,24 +41,24 @@ class Ot_Trigger_Register
         }
     }
 
-    public function registerTrigger(Ot_Trigger $trigger)
+    public function registerTriggerActionType(Ot_Trigger_ActionType_Abstract $actionType)
     {
-        $registered = $this->getTriggers();
-        $registered[] = $trigger;
+        $registered = $this->getTriggerActionTypes();
+        $registered[$actionType->getKey()] = $actionType;
 
         Zend_Registry::set(self::REGISTRY_KEY, $registered);
     }
 
-    public function registerTriggers(array $triggers)
+    public function registerTriggerActionTypes(array $actionTypes)
     {
-        foreach ($triggers as $t) {
-            $this->registerTrigger($t);
+        foreach ($actionTypes as $a) {
+            $this->registerTriggerActionType($a);
         }
     }
 
-    public function getTrigger($key)
+    public function getTriggerActionType($key)
     {
-        $registered = $this->getTriggers();
+        $registered = $this->getTriggerActionTypes();
 
         foreach ($registered as $r) {
             if ($r->getKey() == $key) {
@@ -67,10 +67,9 @@ class Ot_Trigger_Register
         }
 
         return null;
-
     }
     
-    public function getTriggers()
+    public function getTriggerActionTypes()
     {
         return Zend_Registry::get(self::REGISTRY_KEY);
     }
