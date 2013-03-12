@@ -1,6 +1,6 @@
 <?php echo $this->translate("ot-trigger-index:header"); ?>
 <br /><br />
-<table class="list">
+<table class="table table-bordered table-striped">
     <tbody>
         <tr class="ui-widget-header">
             <th width="250"><?php echo $this->translate("ot-trigger-index:name"); ?></th>
@@ -10,7 +10,7 @@
         <tr>
             <td>
                 <?php if ($this->acl['details']):?>
-                <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'name' => $t->getName()), 'ot', true); ?>">
+                <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'key' => $t->getKey()), 'ot', true); ?>">
                 <?php endif; ?>
                 <?php echo $t->getName(); ?>
                 <?php if ($this->acl['details']):?>

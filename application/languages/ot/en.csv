@@ -427,9 +427,9 @@ ot-trigger-availableTitle;<b>Available Variables</b>
 ot-trigger-availableHeader;These variables are available for inclusion in your scripts.  The placeholders will be processed with actual data when a trigger is executed.
 ot-trigger-table:variable;Variable
 ot-trigger-table:description;Description
-ot-trigger-index:title;Trigger Index
-ot-trigger-index:header;Triggers are actions that happen with the applications.  By adding a trigger action, you can have the application execute some code at a designated point of the application.<br /><br />These are all the available triggers in the system.
-ot-trigger-index:name;Name
+ot-trigger-index:title;Application Triggers
+ot-trigger-index:header;Triggers are actionable events taken by the application.  For example, the adding of a new user account or resetting of a password.  When a trigger is fired, you can register certain events to happen, such as sending of an email or posting of a tweet.<br /><br />The following triggers are available for you to execute an action on.
+ot-trigger-index:name;Application Action
 ot-trigger-clone:cloneAction;Copy
 ot-trigger-details:title;Trigger Actions for %1$s
 ot-trigger-details:header;You can manage the actions for this trigger here.

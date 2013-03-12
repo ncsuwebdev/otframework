@@ -73,12 +73,12 @@ class Ot_Trigger_Dispatcher
     /**
      * Dispatches the trigger specified
      *
-     * @param int $triggerId
+     * @param int $key
      */
-    public function dispatch($triggerId)
+    public function dispatch($key)
     {
         $action = new Ot_Model_DbTable_TriggerAction();
-        $actions = $action->getActionsForTrigger($triggerId);
+        $actions = $action->getActionsForTrigger($key);
 
         foreach ($actions as $a) {
             $helper = new $a->helper;

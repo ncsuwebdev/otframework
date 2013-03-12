@@ -178,41 +178,41 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
 
     public function _initTriggers()
     {
-        $forgotTrigger = new Ot_Trigger('Login_Index_Forgot', 'When a user has forgotten their password, they ask for a reset email to be sent to their registered email address.');
-        $forgotTrigger->addOption("firstName", "First name of the user")
-                      ->addOption("lastName", "Last name of the user.")
-                      ->addOption("emailAddress", "Email address of the user.")
-                      ->addOption("username", "Username of user.")
-                      ->addOption("loginMethod", "Name of login method which they use to log into the system with.")
-                      ->addOption("resetUrl", "URL the user will need to go to to reset their password.")
+        $forgotTrigger = new Ot_Trigger('Forgot Your Password', 'Login_Index_Forgot', 'When a user has forgotten their password, they ask for a reset email to be sent to their registered email address.');
+        $forgotTrigger->addOption('firstName', 'First name of the user')
+                      ->addOption('lastName', 'Last name of the user.')
+                      ->addOption('emailAddress', 'Email address of the user.')
+                      ->addOption('username', 'Username of user.')
+                      ->addOption('loginMethod', 'Name of login method which they use to log into the system with.')
+                      ->addOption('resetUrl', 'URL the user will need to go to to reset their password.')
                       ;
 
-        $signupTrigger = new Ot_Trigger('Login_Index_Signup', "When a user signs up for a new account.");
-        $signupTrigger->addOption("firstName", "First name of the user.")
-                      ->addOption("lastName", "Last name of the user.")
-                      ->addOption("emailAddress", "Email address of the user.")
-                      ->addOption("username", "Username of user.")
-                      ->addOption("loginMethod", "Name of login method which they use to log into the system with.")
-                      ->addOption("password", "The password they give to their account.")
+        $signupTrigger = new Ot_Trigger('Signup for a new account', 'Login_Index_Signup', 'When a user signs up for a new account.');
+        $signupTrigger->addOption('firstName', 'First name of the user.')
+                      ->addOption('lastName', 'Last name of the user.')
+                      ->addOption('emailAddress', 'Email address of the user.')
+                      ->addOption('username', 'Username of user.')
+                      ->addOption('loginMethod', 'Name of login method which they use to log into the system with.')
+                      ->addOption('password', 'The password they give to their account.')
                       ;
 
-        $createPassword = new Ot_Trigger("Admin_Account_Create_Password", "When an administrator creates an account for a user where a password is dynamically generated for the user.");
-        $createPassword->addOption("firstName", "First name of the user.")
-                       ->addOption("lastName", "Last name of the user.")
-                       ->addOption("emailAddress", "Email address of the user.")
-                       ->addOption("username", "Username of user.")
-                       ->addOption("loginMethod", "Name of login method which they use to log into the system with.")
-                       ->addOption("password", "The password they give to their account.")
-                       ->addOption("role", "Assigned role given to the user.")
+        $createPassword = new Ot_Trigger('Admin created an account with a password', 'Admin_Account_Create_Password', 'When an administrator creates an account for a user where a password is dynamically generated for the user.');
+        $createPassword->addOption('firstName', 'First name of the user.')
+                       ->addOption('lastName', 'Last name of the user.')
+                       ->addOption('emailAddress', 'Email address of the user.')
+                       ->addOption('username', 'Username of user.')
+                       ->addOption('loginMethod', 'Name of login method which they use to log into the system with.')
+                       ->addOption('password', 'The password they give to their account.')
+                       ->addOption('role', 'Assigned role given to the user.')
                        ;
 
-        $noPassword = new Ot_Trigger("Admin_Account_Create_NoPassword", "When an administrator creates an account for a user when no password is created for the user.");
-        $noPassword->addOption("firstName", "First name of the user.")
-                   ->addOption("lastName", "Last name of the user.")
-                   ->addOption("emailAddress", "Email address of the user.")
-                   ->addOption("username", "Username of user.")
-                   ->addOption("loginMethod", "Name of login method which they use to log into the system with.")
-                   ->addOption("role", "Assigned role given to the user.")
+        $noPassword = new Ot_Trigger('Admin created an account with no password', 'Admin_Account_Create_NoPassword', 'When an administrator creates an account for a user when no password is created for the user.');
+        $noPassword->addOption('firstName', 'First name of the user.')
+                   ->addOption('lastName', 'Last name of the user.')
+                   ->addOption('emailAddress', 'Email address of the user.')
+                   ->addOption('username', 'Username of user.')
+                   ->addOption('loginMethod', 'Name of login method which they use to log into the system with.')
+                   ->addOption('role', 'Assigned role given to the user.')
                    ;
 
         $register = new Ot_Trigger_Register();

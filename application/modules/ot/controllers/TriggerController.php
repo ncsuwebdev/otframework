@@ -59,22 +59,19 @@ class Ot_TriggerController extends Zend_Controller_Action
             'changeStatus' => $this->_helper->hasAccess('change-status'),
         );
         
-        $get = Zend_Registry::get('getFilter');
-        
-        if (!isset($get->name)) {
+        $key = $this->_getParam('key', null);
+       
+        if (is_null($key)) {
             throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
         }
 
         $register = new Ot_Trigger_Register();
 
-        $thisTrigger = $register->getTrigger($get->name);
+        $thisTrigger = $register->getTrigger($key);
         
         if (is_null($thisTrigger)) {
             throw new Ot_Exception_Data('msg-error-noTrigger');
-        }
-        
-        $this->view->trigger = $thisTrigger;
-        $this->_helper->pageTitle('ot-trigger-details:title', $thisTrigger->getName());
+        }        
         
         $action = new Ot_Model_DbTable_TriggerAction();
 
@@ -87,9 +84,14 @@ class Ot_TriggerController extends Zend_Controller_Action
             $a['helper'] = $tpr->getTriggerPlugin($a['helper']);
         }
         
-        $this->view->actions = $actions;
+        $this->_helper->pageTitle('ot-trigger-details:title', $thisTrigger->getName());
         
-        $this->view->messages = $this->_helper->messenger->getMessages();
+        $this->view->assign(array(
+            'actions'  => $actions,
+            'trigger'  => $thisTrigger,
+            'messages' => $this->_helper->messenger->getMessages(),
+        ));        
+        
     }
     
     /**
@@ -99,13 +101,17 @@ class Ot_TriggerController extends Zend_Controller_Action
     public function addAction()
     {
     	// TODO: refactor this because it has confusing variable names (name/triggerId are the same thing)
-        $get = Zend_Registry::get('getFilter');
+        $key = $this->_getParam('key', null);
+       
+        if (is_null($key)) {
+            throw new Ot_Exception_Input('msg-error-triggerIdNotFound');
+        }
         
         $action = new Ot_Model_DbTable_TriggerAction();
 
         $register = new Ot_Trigger_Register();
 
-        $thisTrigger = $register->getTrigger($get->triggerId);
+        $thisTrigger = $register->getTrigger($key);
 
         if (is_null($thisTrigger)) {
             throw new Ot_Exception_Data('msg-error-noTrigger');
@@ -114,7 +120,7 @@ class Ot_TriggerController extends Zend_Controller_Action
         $this->view->trigger = $thisTrigger;
         $this->_helper->pageTitle('ot-trigger-add:title');
         
-        $values = array('triggerId' => $thisTrigger->getName());
+        $values = array('triggerId' => $thisTrigger->getKey());
         
         if (isset($get->helper)) {
             $values['helper'] = $get->helper;

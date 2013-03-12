@@ -1,5 +1,5 @@
 @CHARSET "UTF-8";
 
-table.list tbody tr td {
-    padding: 10px 5px;
+.thumbnail h4 {
+    margin-top: 0px;
 }

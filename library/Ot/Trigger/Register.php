@@ -56,12 +56,12 @@ class Ot_Trigger_Register
         }
     }
 
-    public function getTrigger($name)
+    public function getTrigger($key)
     {
         $registered = $this->getTriggers();
 
         foreach ($registered as $r) {
-            if ($r->getName() == $name) {
+            if ($r->getKey() == $key) {
                 return $r;
             }
         }
