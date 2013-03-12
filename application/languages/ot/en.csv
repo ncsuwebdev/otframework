@@ -207,6 +207,7 @@ ot-acl-index:table:roleName;Role Name
 ot-acl-index:table:inheritedFrom;Inherited From
 ot-acl-index:table:applicationAccess;Application Access
 ot-acl-index:table:remoteAccess;Remote Access
+ot-acl-index:table:details;Role Details
 ot-acl-index:noRoles;No Roles found
 ot-acl-details:title;Details for %1$s Access Role
 ot-acl-details:defaultRoleNeedsAccess;The default role (%1$s) does not have access to ot_api. The API will not work correctly until access is granted to the default role (%1$s).

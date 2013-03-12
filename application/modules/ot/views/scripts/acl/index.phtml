@@ -17,65 +17,22 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th width="200"><?php echo $this->translate('ot-acl-index:table:roleName'); ?></th>
-            <th width="200"><?php echo $this->translate('ot-acl-index:table:inheritedFrom'); ?></th>
-            <?php if ($this->acl['application-access']): ?>
-            <th width="120"><?php echo $this->translate('ot-acl-index:table:applicationAccess'); ?></th>
-            <?php endif; ?>
-            <?php if ($this->acl['remote-access']): ?>
-            <th width="120"><?php echo $this->translate('ot-acl-index:table:remoteAccess'); ?></th>
-            <?php endif; ?>
-            <?php if ($this->acl['edit']): ?>
-            <th width="50"><?php echo $this->translate('table-header-edit'); ?></th>
-            <?php endif; ?>
-            <?php if ($this->acl['delete']): ?>
-            <th width="50"><?php echo $this->translate('table-header-delete'); ?></th>
+            <th><?php echo $this->translate('ot-acl-index:table:roleName'); ?></th>
+            <th><?php echo $this->translate('ot-acl-index:table:inheritedFrom'); ?></th>            
+            <?php if ($this->acl['details']): ?>
+            <th><?php echo $this->translate('ot-acl-index:table:details'); ?></th>
             <?php endif; ?>
         </tr>
     </thead>
     <tbody>
     <?php foreach ($this->roles as $r) : ?>
     <tr>
-        <td><a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $r['roleId']), 'ot', true); ?>"><?php echo $r['name']; ?></a></td>
+        <td><?php echo $r['name']; ?></td>
         <td style="text-align:center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("ot-acl-form:noInheritance"); } ?></td>
-        <?php if ($this->acl['application-access']): ?>
+        
+        <?php if ($this->acl['details']): ?>
         <td style="text-align:center">
-            <?php if ($r['editable']): ?>
-            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'application-access', 'roleId' => $r['roleId']), 'ot', true); ?>" class="btn btn-info"><i class="icon-white icon-th-list"></i></a>
-            <?php else: ?>
-            <a class="btn disabled"><i class="icon icon-lock"></i></a>
-            <?php endif; ?>
-        </td>
-        <?php endif; ?>
-        <?php if ($this->acl['remote-access']): ?>
-        <td style="text-align:center">
-            <?php if ($r['editable']): ?>
-            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'remote-access', 'roleId' => $r['roleId']), 'ot', true); ?>" class="btn btn-info"><i class="icon-white icon-random"></i></a>
-            <?php else: ?>
-            <a class="btn disabled"><i class="icon icon-lock"></i></a>
-            <?php endif; ?>
-        </td>
-        <?php endif; ?>
-        <?php if ($this->acl['edit']): ?>
-        <td style="text-align:center">
-            <?php if ($r['editable']): ?>
-            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'edit', 'roleId' => $r['roleId']), 'ot', true); ?>" class="btn btn-info"><i class="icon-white icon-pencil"></i></a>
-            <?php else: ?>
-            <a class="btn disabled"><i class="icon icon-lock"></i></a>
-            <?php endif; ?>
-        </td>
-        <?php endif; ?>
-        <?php if ($this->acl['delete']): ?>
-        <td style="text-align:center">
-            <?php if ($r['editable']): ?>
-                <?php if ($r['inheritedFrom']): ?>
-                    <a class="btn disabled"><i class="icon icon-lock"></i></a>
-                <?php else: ?>
-                    <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'delete', 'roleId' => $r['roleId']), 'ot', true); ?>" class="btn btn-danger"><i class="icon-white icon-ban-circle"></i></a>
-                <?php endif; ?>
-            <?php else: ?>
-                <a class="btn disabled"><i class="icon icon-lock"></i></a>
-            <?php endif; ?>
+            <a class="btn" href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $r['roleId']), 'ot', true); ?>">Details</a>
         </td>
         <?php endif; ?>
     </tr>

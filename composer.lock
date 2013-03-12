@@ -24,7 +24,7 @@
                     "Twitter_": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -33,7 +33,7 @@
             ],
             "authors": [
                 {
-                    "name": "Emagister Tech",
+                    "name": "EmagisterTech",
                     "email": "php@emagister.com",
                     "homepage": "http://engineering.emagister.com",
                     "role": "Developer"
@@ -57,16 +57,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ncsuwebdev/ncsubootstrap.git",
-                "reference": "a88e0790b6819596f04a007cfcccd598b42f0a35"
+                "reference": "55bd6cb696253546fad14f0867f989687ca41816"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/a88e0790b6819596f04a007cfcccd598b42f0a35",
-                "reference": "a88e0790b6819596f04a007cfcccd598b42f0a35",
+                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/55bd6cb696253546fad14f0867f989687ca41816",
+                "reference": "55bd6cb696253546fad14f0867f989687ca41816",
                 "shasum": ""
             },
             "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Jason Austin",
@@ -81,7 +81,7 @@
                 "ncstate",
                 "ncsu"
             ],
-            "time": "2013-03-08 18:53:16"
+            "time": "2013-03-12 13:52:17"
         },
         {
             "name": "ncsuwebdev/php-ncstate",
@@ -153,7 +153,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],

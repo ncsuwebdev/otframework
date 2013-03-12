@@ -60,11 +60,8 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->acl = array(
             'add'                => $this->_helper->hasAccess('add'),
             'edit'               => $this->_helper->hasAccess('edit'),
-            'application-access' => $this->_helper->hasAccess('application-access'),
-            'remote-access'      => $this->_helper->hasAccess('remote-access'),
-            'delete'             => $this->_helper->hasAccess('delete'),
+            'details'            => $this->_helper->hasAccess('details'),
         );
-
 
         $roles = $this->_acl->getAvailableRoles();
 
@@ -89,6 +86,7 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->assign(array(
             'defaultRole'    => $thisDefaultRole,
             'roles'          => $roles,
+            'messages'       => $this->_helper->messenger->getMessages(),
             'guestHasAccess' => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole')),
         ));
 
@@ -160,6 +158,31 @@ class Ot_AclController extends Zend_Controller_Action
             }
         }
         unset($r);
+        
+        if ($this->_request->isPost()) {
+
+            if (!in_array($_POST['scope'], array('application', 'remote'))) {
+                throw new Ot_Exception('Scope not found.');            
+            }
+            
+            $scope = $_POST['scope'];            
+            
+            $rules = $this->_processAccessList($_POST, $thisRole->inheritRoleId, $scope);
+            
+            $role->assignRulesForRole($thisRole->roleId, $scope, $rules);
+
+            $logOptions = array(
+                'attributeName' => 'accessRole',
+                'attributeId'   => $thisRole->roleId,
+            );
+
+            $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
+
+            $this->_helper->messenger->addSuccess('Role permissions were set successfully');
+            
+            $this->_helper->redirector->gotoRoute(array('controller' => 'acl', 'action' => 'details', 'roleId' => $thisRole->roleId, 'scope' => $scope), 'ot', true);
+
+        }        
 
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
@@ -167,12 +190,15 @@ class Ot_AclController extends Zend_Controller_Action
         $this->_helper->pageTitle("ot-acl-details:title", $thisRole->name);
 
         $this->view->assign(array(
+            'messages'        => $this->_helper->messenger->getMessages(),
             'inheritRole'     => $inheritRoleName,
             'remoteResources' => $remoteResources,
             'guestHasAccess'  => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole')),
             'defaultRole'     => $defaultRole,
             'role'            => $thisRole->toArray(),
-            'resources'       => $resources
+            'resources'       => $resources,
+            'scope'           => $this->_getParam('scope', 'application'),
+            'children'        => $this->_acl->getChildrenOfRole($thisRole->roleId),
         ));
     }
 
@@ -257,7 +283,9 @@ class Ot_AclController extends Zend_Controller_Action
                 );
 
                 $this->_helper->log(Zend_Log::INFO, 'Role ' . $data['name'] . ' was modified', $logOptions);
-
+    
+                $this->_helper->messenger->addSuccess('Role was saved successfully');
+            
                 $this->_helper->redirector->gotoRoute(array('controller' => 'acl', 'action' => 'details', 'roleId' => $roleId), 'ot', true);
             } else {
                 $this->_helper->messenger->addError('msg-error-invalidForm');
@@ -386,163 +414,14 @@ class Ot_AclController extends Zend_Controller_Action
             );
 
             $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole['name'] . ' was deleted', $logOptions);
-
+            
+            $this->_helper->messenger->addWarning('Role was deleted successfully');
+                
             $this->_helper->redirector->gotoRoute(array('controller' => 'acl'), 'ot', true);
         } else {
             throw new Ot_Exception_Access('You can not access this method directly');
         }
     }
-
-    /**
-     * Allows a user to set access rules for a role for the application.
-     *
-     */
-    public function applicationAccessAction()
-    {
-    	$this->view
-             ->headScript()
-             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
-
-        $get = Zend_Registry::get('getFilter');
-
-        if (!isset($get->roleId)) {
-            throw new Ot_Exception_Input('msg-error-roleIdNotSet');
-        }
-
-        $role = new Ot_Model_DbTable_Role();
-
-        $thisRole = $role->find($get->roleId);
-        if (is_null($thisRole)) {
-            throw new Ot_Exception_Data('msg-error-noRole');
-        }
-
-        if ($thisRole->editable != 1) {
-            throw new Ot_Exception_Access('msg-error-unallowedRoleEdit');
-        }
-
-        if ($thisRole->inheritRoleId != 0) {
-            $this->view->inheritRole = $role->find($thisRole->inheritRoleId);
-        }
-
-        if ($this->_request->isPost()) {
-
-            $rules = $this->_processAccessList($_POST, $thisRole->inheritRoleId);
-
-            $role->assignRulesForRole($get->roleId, 'application', $rules);
-
-            $logOptions = array(
-                'attributeName' => 'accessRole',
-                'attributeId'   => $thisRole->roleId,
-            );
-
-            $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
-
-            $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $thisRole->roleId);
-
-        }
-
-        $this->view->children = $this->_acl->getChildrenOfRole($thisRole->roleId);
-
-        $resources = $this->_acl->getResources($thisRole->roleId);
-
-        foreach ($resources as &$r) {
-            foreach ($r as &$c) {
-                $c['someAccess'] = false;
-                foreach ($c['part'] as $p) {
-                    if ($p['access']) {
-                        $c['someaccess'] = true;
-                    }
-                }
-            }
-        }
-
-        $this->view->resources = $resources;
-        $this->view->role = $thisRole;
-
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
-
-        $this->_helper->pageTitle("ot-acl-applicationAccess:title");
-    }
-
-    /**
-     * Allows a user to set access rules for a role for remote access
-     *
-     */
-    public function remoteAccessAction()
-    {
-    	$this->view
-             ->headScript()
-             ->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');
-
-        $get = Zend_Registry::get('getFilter');
-
-        if (!isset($get->roleId)) {
-            throw new Ot_Exception_Input('msg-error-roleIdNotSet');
-        }
-
-        $role = new Ot_Model_DbTable_Role();
-
-        $thisRole = $role->find($get->roleId);
-        if (is_null($thisRole)) {
-            throw new Ot_Exception_Data('msg-error-noRole');
-        }
-
-        if ($thisRole->editable != 1) {
-            throw new Ot_Exception_Access('msg-error-unallowedRoleEdit');
-        }
-
-        if ($thisRole->inheritRoleId != 0) {
-            $this->view->inheritRole = $role->find($thisRole->inheritRoleId);
-        }
-
-        $remoteAcl = new Ot_Acl('remote');
-
-        if ($this->_request->isPost()) {
-
-            $rules = array();
-            $rules = $this->_processAccessList($_POST, $thisRole->inheritRoleId, 'remote');
-
-            $role->assignRulesForRole($thisRole->roleId, 'remote', $rules);
-
-            $logOptions = array(
-                'attributeName' => 'accessRole',
-                'attributeId'   => $thisRole->roleId,
-            );
-
-            $this->_helper->log(Zend_Log::INFO, 'Role ' . $thisRole->name . ' was modified', $logOptions);
-
-            $this->_helper->redirector->gotoUrl('/ot/acl/details/?roleId=' . $thisRole->roleId);
-
-        }
-
-        $this->view->children = $this->_acl->getChildrenOfRole($thisRole->roleId);
-
-        $resources = $remoteAcl->getRemoteResources($thisRole->roleId);
-
-        foreach ($resources as &$r) {
-            foreach ($r as &$c) {
-                $c['someAccess'] = false;
-                foreach ($c['part'] as $p) {
-                    if ($p['access']) {
-                        $c['someaccess'] = true;
-                    }
-                }
-            }
-        }
-
-        $this->view->resources = $resources;
-        $this->view->role = $thisRole;
-
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
-
-        $this->_helper->pageTitle("ot-acl-remoteAccess:title");
-    }
-
-
-
-
 
 
     /**
