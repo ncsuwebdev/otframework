@@ -1,27 +1,5 @@
 @CHARSET "UTF-8";
 
-
-.access {
-    background-image: url(../../../../images/ot/aclAccess.gif);
-    background-repeat: repeat-x;
-    background-color: #6b2;
-    color: #FFF;
-}
-
-.noAccess {
-    background-image: url(../../../../images/ot/aclNoAccess.gif);
-    background-repeat: repeat-x;
-    background-color: #b21;
-    color: #FFF;
-}
-
-.someAccess {
-    background-image: url(../../../../images/ot/aclSomeAccess.gif);
-    background-repeat: repeat-x;
-    background-color: #fb0;
-    color: #000;
-}
-
 .actions {
     width: 100px;
     padding : 5px;

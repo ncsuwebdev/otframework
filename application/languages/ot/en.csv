@@ -95,9 +95,9 @@ ot-apiapp-delete:deleteLabel;Delete API Application
 ot-apiapp-delete:applicationRemoved;Your application was successfully removed.
 ot-apiapp-details:title;Application Details
 ot-apiapp-details:back;Back to Applications
-ot-apiapp-details:appEditButton;Edit Application
+ot-apiapp-details:appEditButton;Edit
 ot-apiapp-details:appRegenerateButton;Generate New API Key
-ot-apiapp-details:appDeleteButton;Delete Application
+ot-apiapp-details:appDeleteButton;Delete
 ot-apiapp-details:header;Header
 ot-apiapp-details:apiKey;API Key
 ot-apiapp-details:appIdNotSet;The appId not set in query string.

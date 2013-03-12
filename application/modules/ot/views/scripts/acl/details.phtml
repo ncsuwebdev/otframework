@@ -104,7 +104,7 @@
                                 <td title="<?php echo $actions['description']; ?>" class="td1 description">
                                 <?php echo ucwords($controller); ?>
                                 </td>
-                                <td class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+                                <td style="text-align: center" class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
                                 <?php if (!empty($actions['all']['access'])) : ?>
                                     <?php echo $this->translate('ot-acl-form:allAccess'); ?>
                                 <?php else: ?>
@@ -136,7 +136,7 @@
                                 <td class="td1 description" title="<?php echo $access['description']; ?>">
                                 <?php echo ucwords($action); ?>
                                 </td>
-                                <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:hasAccess') : $this->translate('ot-acl-form:noAccess'); ?></td>
+                                <td style="text-align: center" class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:hasAccess') : $this->translate('ot-acl-form:noAccess'); ?></td>
                                 <td class="td3"><label><input type="checkbox" class="<?php echo $module . '_' . $controller; ?>_action" value="<?php echo (!empty($access['access'])) ? 'deny' : 'allow'; ?>" name="<?php echo $module . '[' . $controller . '][part][' . $action . ']'; ?>" id="<?php echo $module . '_' . $controller . '_part_' . $action; ?>"<?php echo (!$this->role['editable']) ? ' disabled="disabled"' : ''; ?> /> <?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:revokeAccess') : $this->translate('ot-acl-form:grantAccess'); ?></label></td>
                             </tr>
                                 <?php endforeach; ?>
@@ -170,7 +170,7 @@
                                 <td title="<?php echo $actions['description']; ?>" class="td1 description">
                                 <?php echo $controller; ?>
                                 </td>
-                                <td class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
+                                <td style="text-align: center" class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
                                 <?php if (!empty($actions['all']['access'])) : ?>
                                     <?php echo $this->translate('ot-acl-form:allAccess'); ?>
                                 <?php else: ?>
@@ -202,7 +202,7 @@
                                 <td class="td1 description" title="<?php echo $access['description']; ?>">
                                 <?php echo ucwords($action); ?>
                                 </td>
-                                <td class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:hasAccess') : $this->translate('ot-acl-form:noAccess'); ?></td>
+                                <td style="text-align: center" class="<?php echo (!empty($access['access'])) ? 'access' : 'noAccess'; ?>"><?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:hasAccess') : $this->translate('ot-acl-form:noAccess'); ?></td>
                                 <td class="td3"><label><input type="checkbox" class="<?php echo $module . '_' . $controller; ?>_action" value="<?php echo (!empty($access['access'])) ? 'deny' : 'allow'; ?>" name="<?php echo $module . '[' . $controller . '][part][' . $action . ']'; ?>" id="<?php echo $module . '_' . $controller . '_part_' . $action; ?>"<?php echo (!$this->role['editable']) ? ' disabled="disabled"' : ''; ?> /> <?php echo (!empty($access['access'])) ? $this->translate('ot-acl-form:revokeAccess') : $this->translate('ot-acl-form:grantAccess'); ?></label></td>
                             </tr>
                                 <?php endforeach; ?>

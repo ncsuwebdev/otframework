@@ -1,11 +1,5 @@
 @CHARSET "UTF-8";
 
-.apiapp {
-    border: 1px solid #CCC;
-    margin: 25px 0px;
-    padding: 8px 3px;
-}
-
 .apiapp .name {
     font-size: 1.4em;
     font-weight: bold;
@@ -26,7 +20,6 @@
     margin: 10px 0px;
 }
 
-
 .access {
     font-size: 1.2em;
     font-weight: bold;
@@ -38,4 +31,8 @@
 .key {
     margin-bottom: 20px;
     font-family: Courier;
+}
+
+.actions {
+    text-align: right;
 }
