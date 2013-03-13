@@ -42,9 +42,13 @@ class Ot_CustomController extends Zend_Controller_Action
 
         $this->_helper->pageTitle('ot-custom-index:title');
 
-        $this->view->acl = array('details' => $this->_helper->hasAccess('details'));
+        $this->view->acl = array(
+            'details' => $this->_helper->hasAccess('details')
+        );
 
-        $this->view->objects = $objects;
+        $this->view->assign(array(
+            'objects' => $objects,
+        ));
 
     }
 
@@ -61,29 +65,31 @@ class Ot_CustomController extends Zend_Controller_Action
             'delete'           => $this->_helper->hasAccess('delete'),
             'attributeDetails' => $this->_helper->hasAccess('attributeDetails'),
         );
+        
+        $key = $this->_getParam('key', null);
 
-        $get = Zend_Registry::get('getFilter');
-        if (!isset($get->objectId)) {
+        if (is_null($key)) {
             throw new Ot_Exception_Input('msg-error-objectNotFound');
         }
 
         $cfor = new Ot_CustomFieldObject_Register();
 
-        $object = $cfor->getCustomFieldObject($get->objectId);
+        $thisObject = $cfor->getCustomFieldObject($key);
 
-        if (is_null($object)) {
+        if (is_null($thisObject)) {
             throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
 
         $custom = new Ot_Model_Custom();
-        $attributes = $custom->getAttributesForObject($get->objectId);
+        $attributes = $custom->getAttributesForObject($key);
 
-        $this->_helper->pageTitle('ot-custom-details:title', $get->objectId);
+        $this->_helper->pageTitle('ot-custom-details:title', $thisObject->getName());
         
-        $this->view->attributes        = $attributes;
-        $this->view->objectId          = $get->objectId;
-        $this->view->objectDescription = $object->getDescription();
-        $this->view->messages          = $this->_helper->messenger->getMessages();
+        $this->view->assign(array(
+            'attributes' => $attributes,
+            'object'     => $thisObject,
+            'messages'   => $this->_helper->messenger->getMessages(),
+        ));
     }
 
     /**

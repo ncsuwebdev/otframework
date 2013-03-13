@@ -279,11 +279,24 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $register->registerApiEndpoint($endpoint);
     }
 
-    public function _initCustomFieldObjects()
+    public function _initCustomFields()
     {
+        // register types of vars available
+        $varTypes = array();
+        
+        $varTypes[] = new Ot_CustomFieldObject_FieldType('date', 'Date selector', 'Ot_Var_Type_Date');
+        $varTypes[] = new Ot_CustomFieldObject_FieldType('multiselect', 'Multi-Select Box', 'Ot_Var_Type_Multiselect');
+        $varTypes[] = new Ot_CustomFieldObject_FieldType('select', 'Dropdown Box', 'Ot_Var_Type_Select');
+        $varTypes[] = new Ot_CustomFieldObject_FieldType('text', 'Short Text Box', 'Ot_Var_Type_Text');
+        $varTypes[] = new Ot_CustomFieldObject_FieldType('textarea', 'Textarea', 'Ot_Var_Type_Textarea');
+                
+        $ftr = new Ot_CustomFieldObject_FieldTypeRegister();
+        $ftr->registerFieldTypes($varTypes);
+        
+        // Register objects that these vars can be attached to
         $objects = array();
 
-        $objects[] = new Ot_CustomFieldObject('Ot_Profile', 'User Profile');
+        $objects[] = new Ot_CustomFieldObject('Ot_Profile', 'User Account', 'Central OT Framework user account object');
 
         $cfor = new Ot_CustomFieldObject_Register();
         $cfor->registerCustomFieldObjects($objects);

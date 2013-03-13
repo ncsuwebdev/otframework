@@ -17,24 +17,23 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th><?php echo $this->translate('ot-acl-index:table:roleName'); ?></th>
-            <th><?php echo $this->translate('ot-acl-index:table:inheritedFrom'); ?></th>            
-            <?php if ($this->acl['details']): ?>
-            <th><?php echo $this->translate('ot-acl-index:table:details'); ?></th>
-            <?php endif; ?>
+            <th class="span5"><?php echo $this->translate('ot-acl-index:table:roleName'); ?></th>
+            <th><?php echo $this->translate('ot-acl-index:table:inheritedFrom'); ?></th> 
         </tr>
     </thead>
     <tbody>
     <?php foreach ($this->roles as $r) : ?>
     <tr>
-        <td><?php echo $r['name']; ?></td>
-        <td style="text-align:center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("ot-acl-form:noInheritance"); } ?></td>
-        
-        <?php if ($this->acl['details']): ?>
-        <td style="text-align:center">
-            <a class="btn" href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $r['roleId']), 'ot', true); ?>">Details</a>
+        <td>
+            <?php if ($this->acl['details']): ?>
+            <a href="<?php echo $this->url(array('controller' => 'acl', 'action' => 'details', 'roleId' => $r['roleId']), 'ot', true); ?>">
+            <?php endif; ?>
+            <?php echo $r['name']; ?>            
+            <?php if ($this->acl['details']): ?>
+            </a>
+            <?php endif; ?>
         </td>
-        <?php endif; ?>
+        <td style="text-align:center"><?php if ($r['inheritRoleId'] != 0) { echo $this->roles[$r['inheritRoleId']]['name']; } else { echo $this->translate("ot-acl-form:noInheritance"); } ?></td>
     </tr>
     <?php endforeach; ?>
     </tbody>

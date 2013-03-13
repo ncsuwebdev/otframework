@@ -330,7 +330,7 @@ ot-custom-index:table:description;Description
 ot-custom-index:noObjects;No objects found.
 ot-custom-details:title;Attributes for %1$s
 ot-custom-details:linkBack;Back to Object List
-ot-custom-details:linkAdd;Add New Custom Attribute To %1$s
+ot-custom-details:linkAdd;Add New Field
 ot-custom-details:linkSaveOrder;Save Attribute Order
 ot-custom-details:noAttributes;No custom attributes found for this object.
 ot-custom-attributeDetails:title;Attribute Details

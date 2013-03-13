@@ -1,24 +1,37 @@
 <?php
 class Ot_CustomFieldObject
 {
-    protected $_objectId;
+    protected $_key;
+    protected $_name;
     protected $_description;
 
-    public function __construct($objectId = '', $description = '')
+    public function __construct($key = '', $name = '', $description = '')
     {
-        $this->setObjectId($objectId);
+        $this->setKey($key);
+        $this->setName($name);
         $this->setDescription($description);
     }
 
-    public function setObjectId($_objectId)
+    public function setName($_name)
     {
-        $this->_objectId = $_objectId;
+        $this->_name = $_name;
         return $this;
     }
 
-    public function getObjectId()
+    public function getName()
     {
-        return $this->_objectId;
+        return $this->_name;
+    }
+
+    public function setKey($_key)
+    {
+        $this->_key = $_key;
+        return $this;
+    }
+
+    public function getKey()
+    {
+        return $this->_key;
     }
 
     public function setDescription($_description)

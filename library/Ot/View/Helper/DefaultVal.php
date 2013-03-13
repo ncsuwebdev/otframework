@@ -42,6 +42,8 @@ class Ot_View_Helper_DefaultVal extends Zend_View_Helper_Abstract
      */
     public function defaultVal($val, $alt = 'msg-info-none')
     {
+        $val = trim($val);
+        
         if ($val != '') {
             return $val;
         }
