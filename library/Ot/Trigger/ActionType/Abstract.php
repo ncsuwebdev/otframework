@@ -4,12 +4,22 @@ abstract class Ot_Trigger_ActionType_Abstract
     protected $_name;
     protected $_key;
     protected $_description;
+    protected $_dbtable;
+    protected $_form;
     
     public function __construct($key = '', $name = '', $description = '')
     {
         $this->setKey($key);
         $this->setName($name);
         $this->setDescription($description);
+        
+        if (!$this->_dbtable) {
+            throw new Ot_Exception('Action Type does not have a DB table set');
+        }
+        
+        if (!$this->_form) {
+            throw new Ot_Exception('Action type does not have a form set');
+        }
     }
     
     public function setName($_name)
@@ -45,55 +55,32 @@ abstract class Ot_Trigger_ActionType_Abstract
         return $this->_description;
     }
     
-    /**
-     * Subform to add a new trigger
-     *
-     * @return Zend_Form element
-     */
-    abstract public function addSubForm();
-    
-    /**
-     * Action called when the addForm is processed
-     *
-     * @param array $data
-     */
-    abstract public function addProcess($data);
-    
-    /**
-     * Subform to edit an existing trigger
-     *
-     * @param mixed $id
-     * @return Zend_Form element
-     */
-    abstract public function editSubForm($id);
-    
-    /**
-     * Action called when the editForm is processed
-     *
-     * @param array $data
-     */
-    abstract public function editProcess($data);
-    
-    /**
-     * Action called when a request is processed to delete a trigger
-     *
-     * @param mixed $id
-     * @return boolean
-     */
-    abstract public function deleteProcess($id);
-    
-    /**
-     * retrieves trigger with a specific ID
-     *
-     * @param mixed $id
-     * @return Zend_Db_Table_Rowset or null
-     */
-    abstract public function get($id);
+    public function getForm()
+    {
+        $class = new ReflectionClass($this->_form);
+        
+        if (!$class->isSubclassOf('Zend_Form_Subform')) {
+            throw new Exception('Form must be a valid Zend_Form_Subform object');
+        }
+        
+        return new $this->_form();
+    }
+            
+    public function getDbTable()
+    {
+        $class = new ReflectionClass($this->_dbtable);
+        
+        if (!$class->isSubclassOf('Ot_Db_Table')) {
+            throw new Exception('DB Table must be a valid Ot_Db_Table object');
+        }
+        
+        return new $this->_dbtable();
+    }    
     
     /**
      * Action called when a trigger is executed.
      *
      * @param array $data
      */
-    abstract public function dispatch($data);
+    abstract public function dispatch(array $data);
 }

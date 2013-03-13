@@ -30,128 +30,16 @@
  */
 class Ot_Trigger_ActionType_EmailQueue extends Ot_Trigger_ActionType_Abstract
 {
-    /**
-     * table name for references
-     *
-     * @var string
-     */
-    protected $_tblname = 'tbl_ot_trigger_helper_emailqueue';
+    protected $_form = 'Ot_Form_TriggerActionTypeEmail';
     
-    public function __construct($key = '', $name = '', $description = '')
-    {
-        parent::__construct($key, $name, $description);
-        
-        global $application;
-
-        $prefix = $application->getOption('tablePrefix');
-
-        if (!empty($prefix)) {
-            $this->_tblname = $prefix . $this->_tblname;
-        }
-    }
-    
-    /**
-     * Subform to add a new trigger
-     *
-     * @return Zend_Form element
-     */
-    public function addSubForm()
-    {
-        $description = 'This email will be sent using the email queue, rather than being sent immediately.';
-        
-        $form = $this->_getForm();
-        $form->setDescription($description);
-        
-        return $form;
-    }
-    
-    /**
-     * Action called when the addForm is processed
-     *
-     * @param array $data
-     */
-    public function addProcess($data)
-    {
-        $dba = Zend_Db_Table::getDefaultAdapter();
-        $dba->insert($this->_tblname, $data);
-    }
-    
-    /**
-     * Subform to edit an existing trigger
-     *
-     * @param mixed $id
-     * @return Zend_Form element
-     */
-    public function editSubForm($id)
-    {
-        $data = $this->get($id);
-        
-        $description = 'This email will be sent using the email queue, rather than being sent immediately.';
-        
-        $form = $this->_getForm($data);
-        $form->setDescription($description);
-                
-        return $form;
-    }
-    
-    /**
-     * Action called when the editForm is processed
-     *
-     * @param array $data
-     */
-    public function editProcess($data)
-    {
-        $dba = Zend_Db_Table::getDefaultAdapter();
-        
-        $where = $dba->quoteInto('triggerActionId = ?', $data['triggerActionId']);
-        
-        $dba->update($this->_tblname, $data, $where);        
-    }
-    
-    /**
-     * Action called when a request is processed to delete a trigger
-     *
-     * @param mixed $id
-     * @return boolean
-     */
-    public function deleteProcess($id)
-    {
-        $dba = Zend_Db_Table::getDefaultAdapter();
-        
-        $where = $dba->quoteInto('triggerActionId = ?', $id);
-
-        return $dba->delete($this->_tblname, $where);
-    }
-    
-    /**
-     * retrieves trigger with a specific ID
-     *
-     * @param mixed $id
-     * @return Zend_Db_Table_Rowset or null
-     */
-    public function get($id)
-    {
-        $dba = Zend_Db_Table::getDefaultAdapter();
-        
-        $select = $dba->select();
-
-        $select->from($this->_tblname)->where('triggerActionId = ?', $id);
-
-        $result = $dba->fetchAll($select);
-
-        if (count($result) == 1) {
-            return $result[0];
-        }
-        
-        return null;
-    }
+    protected $_dbtable = 'Ot_Model_DbTable_TriggerActionTypeEmail';
     
     /**
      * Action called when a trigger is executed.
      *
      * @param array $data
      */
-    public function dispatch($data)
+    public function dispatch(array $data)
     {
         $eq = new Ot_Model_DbTable_EmailQueue();
         
@@ -175,88 +63,5 @@ class Ot_Trigger_ActionType_EmailQueue extends Ot_Trigger_ActionType_Abstract
         );
         
         $eq->queueEmail($eData);
-    }
-    
-    /**
-     * Creates a form object
-     *
-     * @param array $data
-     * @return Zend_Form
-     */
-    protected function _getForm($data = array())
-    {        
-        $form = new Zend_Form_SubForm();
-        $form->setDecorators(
-            array(
-                'Description',
-                'FormElements',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-            )
-        );
-        
-        $to = $form->createElement('text', 'to', array('label' => 'To:'));
-        $to->setRequired(true)
-           ->setAttrib('maxlength', '255')
-           ->setAttrib('size', '40')
-           ->addFilter('StripTags')
-           ->addFilter('StringTrim');
-           
-        if (isset($data['to'])) {
-            $to->setValue($data['to']);
-        }
-           
-        $from = $form->createElement('text', 'from', array('label' => 'From Address:'));
-        $from->setRequired(true)
-             ->setAttrib('maxlength', '255')
-             ->setAttrib('size', '40')
-             ->addFilter('StripTags')
-             ->addFilter('StringTrim');
-             
-        if (isset($data['from'])) {
-            $from->setValue($data['from']);
-        }
-        
-        $fromName = $form->createElement('text', 'fromName', array('label' => 'From Name:'));
-        $fromName->setRequired(false)
-                 ->setAttrib('maxlength', '255')
-                 ->setAttrib('size', '40')
-                 ->addFilter('StripTags')
-                 ->addFilter('StringTrim');
-        
-        if (isset($data['fromName'])) {
-            $fromName->setValue($data['fromName']);
-        }
-           
-        $subject = $form->createElement('text', 'subject', array('label' => 'Subject:'));
-        $subject->setRequired(true)
-                ->setAttrib('maxlength', '255')
-                ->setAttrib('size', '40')
-                ->addFilter('StripTags')
-                ->addFilter('StringTrim');
-                
-        if (isset($data['subject'])) {
-            $subject->setValue($data['subject']);
-        }
-        
-        $body = $form->createElement('textarea', 'body', array('label' => 'Message:'));
-        $body->setRequired(true)
-             ->setAttrib('rows', '10')
-             ->addFilter('StripTags')
-             ->addFilter('StringTrim');
-             
-        if (isset($data['body'])) {
-            $body->setValue($data['body']);
-        }              
-        
-        $form->addElements(array($to, $from, $fromName, $subject, $body))->setElementDecorators(
-            array(
-                'ViewHelper',
-                'Errors',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                array('Label', array('tag' => 'span')),
-            )
-        );
-
-        return $form;        
     }
 }

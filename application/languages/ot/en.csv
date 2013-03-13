@@ -423,9 +423,9 @@ ot-translate-index:changeText;<b>Change Text to: </b>(leave blank for no changes
 ot-translate-index:removeText;Remove custom text and reset to default
 ot-translate-index:noChange;No text can be changed on this page.
 
-ot-trigger-availableTitle;<b>Available Variables</b>
+ot-trigger-availableTitle;Available Placehoders
 ot-trigger-availableHeader;These variables are available for inclusion in your scripts.  The placeholders will be processed with actual data when a trigger is executed.
-ot-trigger-table:variable;Variable
+ot-trigger-table:variable;Placeholder
 ot-trigger-table:description;Description
 ot-trigger-index:title;Application Triggers
 ot-trigger-index:header;Triggers are actionable events taken by the application.  For example, the adding of a new user account or resetting of a password.  When a trigger is fired, you can register certain events to happen, such as sending of an email or posting of a tweet.<br /><br />The following triggers are available for you to execute an action on.
@@ -442,13 +442,14 @@ ot-trigger-details:action;Action
 ot-trigger-details:noActions;No Actions Found.
 ot-trigger-details:enableAction;Enable
 ot-trigger-details:disableAction;Disable
-ot-trigger-add:title;Select Trigger Type
+ot-trigger-add:title;Add Action '%1$s' for '%2$s'
+ot-trigger-add:linkBack;Back to %1$s Trigger
 ot-trigger-add:cloneTitle;Copying Trigger '%1$s'
-ot-trigger-add:header;Select the type of action you would like to trigger.
+ot-trigger-add:header;Create a new action for this trigger.  You may use the variable placeholders for any part of the configurable options below.  The placeholders will be processed with actual data when the action is called.
 ot-trigger-add:cloneHeader;Creates a new trigger, using values from '%1$s'.
 ot-trigger-add:noVariables;No variables available.
-ot-trigger-edit:title;Modify Trigger Type
-ot-trigger-edit:header;Modify this action's properties, as well as the shortcut name of the action.
+ot-trigger-edit:title;Edit Action %1$s (%2$s) for %3$s
+ot-trigger-edit:header;You can modify any properties below.  You may use the variable placeholders for any part of the configurable options below.  The placeholders will be processed with actual data when the action is called.
 ot-trigger-delete:title;Delete Action
 ot-trigger-delete:header;You have selected to delete the action <b>%1$s</b> for <b>%2$s</b>.  Are you sure you want to do this?
 ot-trigger-changeStatus:title;%1$s Action

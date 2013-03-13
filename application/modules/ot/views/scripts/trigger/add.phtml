@@ -1,9 +1,13 @@
+<a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'details', 'eventKey' => $this->triggerEvent->getKey()), 'ot', true); ?>"><i class="icon icon-arrow-left"></i> <?php echo $this->translate("ot-trigger-add:linkBack", $this->triggerEvent->getName()); ?></a><br /><br />
+
+<p>
 <?php if (!$this->clonedTriggerName) : ?>
     <?php echo $this->translate("ot-trigger-add:header"); ?>
 <?php else : ?>
     <?php echo $this->translate("ot-trigger-add:cloneHeader", array('triggerName' => $this->clonedTriggerName)); ?>
 <?php endif; ?>
-<br /><br />
+</p>
+<br />
 
 <div class="row">
     <div class="span8">        
@@ -18,10 +22,10 @@
                 </tr>
             </thead>
             <tbody>
-                <?php if (count($this->trigger->getOptions()) > 0) : ?>
-                    <?php foreach ($this->trigger->getOptions() as $key => $variable) : ?>
+                <?php if (count($this->triggerEvent->getOptions()) > 0) : ?>
+                    <?php foreach ($this->triggerEvent->getOptions() as $key => $variable) : ?>
                     <tr>
-                        <td>[[<?php echo $key; ?>]]</td>
+                        <td><code>[[<?php echo $key; ?>]]</code></td>
                         <td><?php echo $variable; ?></td>
                     </tr>
                     <?php endforeach; ?>
@@ -34,7 +38,3 @@
         </table>
     </div>
 </div>
-<?php echo $this->translate("ot-trigger-availableTitle"); ?>
-<br /><br />
-<?php echo $this->translate("ot-trigger-availableHeader"); ?>
-<br /><br />

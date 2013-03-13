@@ -45,9 +45,9 @@ class Ot_Model_DbTable_TriggerAction extends Ot_Db_Table
      */
     protected $_primary = 'triggerActionId';
     
-    public function getActionsForTrigger($triggerId, $onlyEnabled = true)
+    public function getActionsForTrigger($eventKey, $onlyEnabled = true)
     {
-        $where = $this->getAdapter()->quoteInto('triggerId = ?', $triggerId);
+        $where = $this->getAdapter()->quoteInto('eventKey = ?', $eventKey);
         
         if ($onlyEnabled) {
             $where .= ' AND '
@@ -55,109 +55,6 @@ class Ot_Model_DbTable_TriggerAction extends Ot_Db_Table
         }
         
         return $this->fetchAll($where);
-    }
-    
-    /**
-     * Gets the form for adding and editing an action
-     *
-     * @param Array $values The default values to set for the form
-     */
-    public function form($values = array()) 
-    {
-        $tpr = new Ot_Trigger_PluginRegister();
-        $plugins = $tpr->getTriggerPlugins();
-
-        $helperTypes = array();
-        
-        foreach ($plugins as $p) {
-            $helperTypes[$p->getPluginId()] = $p->getDescription();
-        }
-        
-        if (count($helperTypes) == 0) {
-            throw new Ot_Exception_Data('model-trigger-action:noHelpersDefined');
-        }
-        
-        $form = new Zend_Form();
-        $form->setAttrib('id', 'actionForm')->setDecorators(
-            array(
-                'FormElements',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                'Form',
-            )
-        );
-
-        if (!isset($values['triggerActionId'])) {
-            $helper = $form->createElement('select', 'helper', array('label' => 'Action:'));
-            $helper->addMultiOptions($helperTypes)
-                   ->setValue((isset($values['helper'])) ? $values['helper'] : '');
-        } else {
-            $helper = $form->createElement('text', 'helper', array('label' => 'Action:'));
-            $helper->setAttrib('size', '40')
-                   ->setAttrib('readonly', true)
-                   ->setValue($values['helper']);
-        }
-
-        if (!isset($values['triggerId']) && !isset($values['triggerActionId'])) {
-            throw new Ot_Exception_Data('You must provide a triggerId');
-        }
-                  
-        // Create and configure username element:
-        $name = $form->createElement('text', 'name', array('label' => 'Shortcut Name:'));
-        $name->setRequired(true)
-             ->addFilter('StringTrim')
-             ->addFilter('StripTags')
-             ->setValue(isset($values['name']) ? $values['name'] : '');
-        
-        $form->addElements(array($helper, $name)); 
-        
-        if (isset($values['helper'])) {
-            $obj = $values['helper'];
-        } else {
-            $obj = key($helperTypes);
-        }
-            
-        $thisHelper = new $obj;
-
-        if (isset($values['triggerActionId'])) {
-            $subForm = $thisHelper->editSubForm($values['triggerActionId']);
-        } else {
-            $subForm = $thisHelper->addSubForm();  
-        }
-        
-        $form->addSubForm($subForm, $obj);
-        
-        $submit = $form->createElement('submit', 'submitButton', array('label' => 'Submit'));
-        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
-
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'Cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));        
-        
-        $form->setElementDecorators(
-            array(
-                'ViewHelper',
-                'Errors',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')),
-                array('Label', array('tag' => 'span')),
-            )
-        )->addElements(array($submit, $cancel));
-             
-        $triggerId = $form->createElement('hidden', 'triggerId');
-        $triggerId->setValue($values['triggerId']);
-        $triggerId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
-        
-        $form->addElement($triggerId);
-        
-        if (isset($values['triggerActionId'])) {
-            
-            $triggerActionId = $form->createElement('hidden', 'triggerActionId');
-            $triggerActionId->setValue($values['triggerActionId']);
-            $triggerActionId->setDecorators(array(array('ViewHelper', array('helper' => 'formHidden'))));
-            
-            $form->addElement($triggerActionId);
-        }             
-             
-        return $form;
     }
 }
 

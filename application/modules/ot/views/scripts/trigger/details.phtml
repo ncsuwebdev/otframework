@@ -1,6 +1,6 @@
 <a href="<?php echo $this->url(array('controller' => 'trigger'), 'ot', true); ?>"><i class="icon icon-arrow-left"></i> <?php echo $this->translate("ot-trigger-details:linkBack"); ?></a><br /><br />
 
-The following actions will take place when the <b><?php echo $this->trigger->getName(); ?></b> trigger is 
+The following actions will take place when the <b><?php echo $this->triggerEvent->getName(); ?></b> trigger is 
 executed.
 <br /><br />
 
@@ -18,7 +18,7 @@ executed.
             <ul>
                 <?php foreach ($this->actionTypes as $t): ?>
                 <li>
-                    <b><a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'eventKey' => $this->trigger->getKey(), 'actionKey' => $t->getKey()), 'ot', true); ?>"><?php echo $t->getName(); ?></a></b>
+                    <b><a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'eventKey' => $this->triggerEvent->getKey(), 'actionKey' => $t->getKey()), 'ot', true); ?>"><?php echo $t->getName(); ?></a></b>
                     <p><?php echo $t->getDescription(); ?></p>
                 </li>
                 <?php endforeach; ?>
@@ -40,14 +40,14 @@ executed.
                 </div>
                 <div class="span5">
                     <h3 class="name"><?php echo $a['name']; ?></h3>
-                    <div class="description"><?php echo $a['helper']->getDescription(); ?></div>
+                    <div class="description"><?php echo $a['actionType']->getDescription(); ?></div>
                 </div>
                 <div class="span5 actions pull-right">
                         <?php if ($this->acl['edit']) : ?>
                             <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'edit', 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="btn"><i class="icon icon-pencil"></i> Edit</a>
                         <?php endif; ?>
-                        <?php if ($this->acl['add']) : ?>
-                            <a href="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'add', 'triggerId' => $this->trigger->getKey(), 'triggerActionId' => $a['triggerActionId']), 'ot', true); ?>" class="btn"><i class="icon icon-adjust"></i> <?php echo $this->translate('ot-trigger-clone:cloneAction'); ?></a>
+                        <?php if ($this->acl['copy']) : ?>
+                            <a href="#copyModal<?php echo $a['triggerActionId']; ?>" data-toggle="modal" class="btn"><i class="icon icon-adjust"></i> <?php echo $this->translate('ot-trigger-clone:cloneAction'); ?></a>
                         <?php endif; ?>
                         <?php if ($this->acl['changeStatus']) : ?>
                             <a href="#toggleModal<?php echo $a['triggerActionId']; ?>" data-toggle="modal" class="btn <?php echo ($a['enabled']) ? 'btn-warning' : 'btn-success'; ?>"><i class="icon icon-off"></i> <?php echo ($a['enabled']) ? $this->translate('ot-trigger-details:disableAction') : $this->translate('ot-trigger-details:enableAction'); ?></a>
@@ -58,6 +58,26 @@ executed.
                 </div>
             </div>
 
+            <?php if ($this->acl['copy']) : ?>
+            <div id="copyModal<?php echo $a['triggerActionId']; ?>" class="modal hide fade">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                    <h3>Duplicate This Action</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to duplicate the <b><?php echo $a['name']; ?></b> action?</p>
+                </div>
+                <div class="modal-footer">
+                    <form style="margin: 0;" method="post" action="<?php echo $this->url(array('controller' => 'trigger', 'action' => 'copy'), 'ot', true); ?>">
+                        <input type="hidden" name="triggerActionId" value="<?php echo $a['triggerActionId']; ?>" />
+                        <input type="submit" name="submit" value="Yes, Duplicate" class="btn" />
+                        <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                    </form>
+                </div>
+            </div>
+            <?php endif; ?>
+            
+            <?php if ($this->acl['changeStatus']): ?>
             <div id="toggleModal<?php echo $a['triggerActionId']; ?>" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
@@ -74,7 +94,9 @@ executed.
                     </form>
                 </div>
             </div>
+            <?php endif; ?>
 
+            <?php if ($this->acl['delete']): ?>
             <div id="deleteModal<?php echo $a['triggerActionId']; ?>" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
@@ -91,6 +113,7 @@ executed.
                     </form>
                 </div>
             </div>
+            <?php endif; ?>
 
         </div>
     <?php endforeach; ?>       
