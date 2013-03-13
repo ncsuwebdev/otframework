@@ -60,24 +60,18 @@ class Ot_ConfigController extends Zend_Controller_Action
         }        
         
         $form = new Ot_Form_Config();
+        $form->getElement('section')->setValue($this->_getParam('selected'));
 
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
-                      
-                /*
+                                      
                 foreach ($varsByModule as $key => $value) {
                     foreach ($value as $v) {
                         $v->setValue($form->getElement($v->getName())->getValue());
                         
                         $register->save($v);
                     }
-                }*/
-                
-                $v = $varsByModule['Authentication'][0];
-                
-                $v->setValue($form->getElement($v->getName())->getValue());
-                
-                $register->save($v);
+                }
                 
                 $this->_helper->messenger->addSuccess($this->view->translate('msg-info-configUpdated', ''));
 
@@ -118,18 +112,16 @@ class Ot_ConfigController extends Zend_Controller_Action
                 unlink($location);
                 
                 $vr = new Ot_Config_Register();
-                
+                $vars = $vr->getVars();
+                                
                 foreach ($options as $o) {
                     list($key, $value) = $o;
-                    
-                    $var = $vr->getVar($key);
-                    
-                    if (!is_null($var)) {
-                        $unserialized = unserialize($value);
+                                        
+                    if (isset($vars[$key])) {
                         
-                        $value = ($unserialized) ? $unserialized : $value;
+                        $vars[$key]['object']->setRawValue($value);
                         
-                        $var->setValue($value);
+                        $vr->save($vars[$key]['object']);
                     }
                 }
                 
@@ -165,12 +157,8 @@ class Ot_ConfigController extends Zend_Controller_Action
         
         foreach ($options as $key => $o) {
 
-            $value = $o['object']->getValue();
-            
-            if (is_array($value) || is_object($value)) {
-                $value = serialize($value);
-            }
-                
+            $value = $o['object']->getRawValue();
+                            
             $data[] = array($key, $value);
         }
         
