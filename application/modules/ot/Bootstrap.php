@@ -284,22 +284,26 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         // register types of vars available
         $varTypes = array();
         
-        $varTypes[] = new Ot_CustomFieldObject_FieldType('date', 'Date selector', 'Ot_Var_Type_Date');
-        $varTypes[] = new Ot_CustomFieldObject_FieldType('multiselect', 'Multi-Select Box', 'Ot_Var_Type_Multiselect');
-        $varTypes[] = new Ot_CustomFieldObject_FieldType('select', 'Dropdown Box', 'Ot_Var_Type_Select');
-        $varTypes[] = new Ot_CustomFieldObject_FieldType('text', 'Short Text Box', 'Ot_Var_Type_Text');
-        $varTypes[] = new Ot_CustomFieldObject_FieldType('textarea', 'Textarea', 'Ot_Var_Type_Textarea');
+        $varTypes[] = new Ot_CustomAttribute_FieldType('date', 'Date selector', 'Ot_Var_Type_Date');
+        $varTypes[] = new Ot_CustomAttribute_FieldType('multiselect', 'Multi-Select Box', 'Ot_Var_Type_Multiselect', true);
+        $varTypes[] = new Ot_CustomAttribute_FieldType('select', 'Dropdown Box', 'Ot_Var_Type_Select', true);
+        $varTypes[] = new Ot_CustomAttribute_FieldType('text', 'Short Text Box', 'Ot_Var_Type_Text');
+        $varTypes[] = new Ot_CustomAttribute_FieldType('textarea', 'Textarea', 'Ot_Var_Type_Textarea');
+        $varTypes[] = new Ot_CustomAttribute_FieldType('checkbox', 'Checkbox', 'Ot_Var_Type_Checkbox');
+        $varTypes[] = new Ot_CustomAttribute_FieldType('radio', 'Radio Buttons', 'Ot_Var_Type_Radio', true);
+        $varTypes[] = new Ot_CustomAttribute_FieldType('description', 'Description', 'Ot_Var_Type_Description');
+        $varTypes[] = new Ot_CustomAttribute_FieldType('ranking', 'Ranking', 'Ot_Var_Type_Ranking');
                 
-        $ftr = new Ot_CustomFieldObject_FieldTypeRegister();
+        $ftr = new Ot_CustomAttribute_FieldTypeRegister();
         $ftr->registerFieldTypes($varTypes);
         
-        // Register objects that these vars can be attached to
-        $objects = array();
+        // Register host objects that these vars can be attached to
+        $hosts = array();
 
-        $objects[] = new Ot_CustomFieldObject('Ot_Profile', 'User Account', 'Central OT Framework user account object');
+        $hosts[] = new Ot_CustomAttribute_Host('Ot_Profile', 'User Account', 'Central OT Framework user account object');
 
-        $cfor = new Ot_CustomFieldObject_Register();
-        $cfor->registerCustomFieldObjects($objects);
+        $cfor = new Ot_CustomAttribute_HostRegister();
+        $cfor->registerHosts($hosts);
     }
 
     public function _initAccountAttributeVars()

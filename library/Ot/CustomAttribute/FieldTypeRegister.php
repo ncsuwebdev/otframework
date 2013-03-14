@@ -29,9 +29,9 @@
  *             Information Technology
  *
  */
-class Ot_CustomFieldObject_FieldTypeRegister
+class Ot_CustomAttribute_FieldTypeRegister
 {
-    const REGISTRY_KEY = 'Ot_CustomField_FieldTypeRegister';
+    const REGISTRY_KEY = 'Ot_CustomAttribute_FieldTypeRegister';
 
     public function __construct()
     {
@@ -40,7 +40,7 @@ class Ot_CustomFieldObject_FieldTypeRegister
         }
     }
 
-    public function registerFieldType(Ot_CustomFieldObject_FieldType $fieldType)
+    public function registerFieldType(Ot_CustomAttribute_FieldType $fieldType)
     {
         $registered = $this->getFieldTypes();
         

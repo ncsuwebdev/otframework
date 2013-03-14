@@ -1,6 +1,6 @@
 <a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'index'), 'ot', true); ?>"><i class="icon icon-arrow-left"></i> <?php echo $this->translate("ot-custom-details:linkBack"); ?></a>
 <br /><br />
-
+   
 <div class="row">
     <div class="span4">
         <div class="thumbnail">
@@ -8,15 +8,15 @@
                 <tbody>
                     <tr>
                         <td width="100"><label><?php echo $this->translate("ot-custom-form:object"); ?></label></td>
-                        <td><?php echo $this->object->getName(); ?></td>
+                        <td><?php echo $this->host->getName(); ?></td>
                     </tr>
                     <tr>
                         <td><label>Key:</label></td>
-                        <td><?php echo $this->object->getKey(); ?></td>
+                        <td><?php echo $this->host->getKey(); ?></td>
                     </tr>
                     <tr>
                         <td><label><?php echo $this->translate("ot-custom-form:description"); ?></label></td>
-                        <td><?php echo $this->object->getDescription(); ?></td>
+                        <td><?php echo $this->host->getDescription(); ?></td>
                     </tr>
                 </tbody>
             </table>
@@ -26,11 +26,34 @@
     </div>
     <div class="span8">
            
-        <?php if ($this->acl['add']) : ?>
-        <a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'add', 'key' => $this->object->getKey()), 'ot', true); ?>" class="btn btn-success"><i class="icon-white icon-plus"></i> <?php echo $this->translate("ot-custom-details:linkAdd"); ?></a>
-        <?php endif; ?>
-        
-        <input id="objectId" type="hidden" value="<?php echo $this->object->getKey(); ?>" />
+    <?php if ($this->acl['add']) : ?>
+        <a href="#addModal" data-toggle="modal" class="btn btn-success"><i class="icon-white icon-plus"></i> <?php echo $this->translate("ot-custom-details:linkAdd"); ?></a>
+        <div id="addModal" class="modal hide fade">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                <h3>Add New Attribute</h3>
+            </div>
+            <div class="modal-body">
+                <p>What kind of attribute would you like to add?</p>
+
+                <ul>
+                    <?php foreach ($this->fieldTypes as $f): ?>
+                    <li>
+                        <b><a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'add', 'key' => $this->host->getKey(), 'fieldTypeKey' => $f->getKey()), 'ot', true); ?>"><?php echo $f->getName(); ?></a></b>                        
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+            </div>
+        </div>
+        <br /><br />
+    <?php endif; ?>        
+        <div id="message">
+            <div id="orderMessage" class="alert"></div>
+        </div>
+        <input id="hostKey" type="hidden" value="<?php echo $this->host->getKey(); ?>" />
         <?php if (count($this->attributes) > 0) : ?>
             <ul id="attributeList" class="ui-sortable">
                 <?php foreach ($this->attributes as $a) : ?>
@@ -38,26 +61,59 @@
                         <div class="well">
                             <div class="row">
                                 <div class="span4">
-                                    <i class="icon icon-resize-vertical"></i>  
-                                    <?php if ($this->acl['attributeDetails']) : ?>
-                                        <a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'attribute-details', 'attributeId' => $a['attributeId']), 'ot', true); ?>"><?php echo $this->truncate($a['label'], 50); ?></a>
-                                    <?php else : ?>
-                                        <?php echo $this->truncate($a['label'], 50); ?>
-                                    <?php endif;  ?>
-                                    (<?php echo $a['type']; ?>)
+                                    <?php 
+                                    $form = new Twitter_Bootstrap_Form_Vertical();
+                                    
+                                    $elm = $a['var']->renderFormElement();
+                                    $elm->setRequired(($a['required'] == 1));
+                                                                        
+                                    $form->addElement($elm);
+                                    
+                                    $form->setElementDecorators(array(
+                                        array('FieldSize'),
+                                        array('ViewHelper'),
+                                        array('Addon'),
+                                        array('ElementErrors'),
+                                        array('Description', array('tag' => 'p', 'class' => 'help-block')),
+                                        array('HtmlTag', array('tag' => 'div', 'class' => 'controls')),
+                                        array('Label', array('class' => 'control-label')),
+                                        array('Wrapper')
+                                    ));
+                                    
+                                    echo $form;
+                                    ?>
                                 </div>
                                 <div class="span3 pull-right actions">
                                     <?php if ($this->acl['edit']) : ?>
                                         <a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'edit', 'attributeId' => $a['attributeId']), 'ot', true); ?>" class="btn"><i class="icon icon-pencil"></i> Edit</a>
                                     <?php endif; ?>&nbsp;
                                     <?php if ($this->acl['delete']) : ?>
-                                        <a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'delete', 'attributeId' => $a['attributeId']), 'ot', true); ?>" class="btn btn-danger"><i class="icon-white icon-ban-circle"></i> Delete</a>
-                                    <?php endif; ?>                                    
+                                        <a href="#deleteModal<?php echo $a['attributeId']; ?>" data-toggle="modal" class="btn btn-danger"><i class="icon-white icon-ban-circle"></i> Delete</a>
+                                    <?php endif; ?>    
+                                        
+                                    <i class="icon icon-resize-vertical"></i>
                                 </div>
                             </div>
                         </div>
                         <?php if ($this->acl['delete']) : ?>
-                        
+                        <div id="deleteModal<?php echo $a['attributeId']; ?>" class="modal hide fade">
+                            <div class="modal-header">
+                                <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                                <h3>Delete Field <?php echo $a['label']; ?></h3>
+                            </div>
+                            <div class="modal-body">
+                                <p>You are about to delete the field <b><?php echo $a['label']; ?></b></p>
+                                <br />
+                                <p><?php echo $this->translate('form-delete-confirm'); ?></p>
+                            </div>
+                            <div class="modal-footer">
+                                <form style="margin: 0;" method="post" action="<?php echo $this->url(array('controller' => 'custom', 'action' => 'delete'), 'ot', true); ?>">
+                                    <input type="hidden" name="attributeId" value="<?php echo $a['attributeId']; ?>" />
+                                    <input type="submit" name="submit" value="Yes, Delete" class="btn btn-danger" />
+                                    <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                                </form>
+                            </div>
+                        </div>                 
                         <?php endif; ?>
                     </li>
                 <?php endforeach; ?>

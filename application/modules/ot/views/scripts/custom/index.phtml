@@ -1,6 +1,6 @@
 <?php echo $this->translate("ot-custom-index:header"); ?>
 <br /><br />
-<?php if (count($this->objects) > 0) : ?>
+<?php if (count($this->hosts) > 0) : ?>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -10,10 +10,10 @@
     </thead>
     <tbody>
         
-        <?php foreach ($this->objects as $o) : ?>
+        <?php foreach ($this->hosts as $h) : ?>
         <tr>
-            <td><a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'details', 'key' => $o->getKey()), 'ot', true); ?>"><?php echo $o->getName(); ?> (<?php echo $o->getKey(); ?>)</a></td>
-            <td><?php echo $o->getDescription(); ?></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'details', 'key' => $h->getKey()), 'ot', true); ?>"><?php echo $h->getName(); ?> (<?php echo $h->getKey(); ?>)</a></td>
+            <td><?php echo $h->getDescription(); ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

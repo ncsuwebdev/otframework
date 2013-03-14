@@ -1,9 +1,27 @@
 #attributeList {
     list-style-type: none;
     margin: 0px;
-    margin-top: 20px;
+    margin-top: 00px;
 }
 
 #attributeList .actions {
     text-align: right;
+}
+
+textarea {
+    width: 300px;
+    height: 100px;
+}
+
+#attributeList form {
+    margin-bottom: 0px;
+}
+
+#attributeList form .control-group {
+    margin-bottom: 0px;
+}
+
+#message {
+    margin-bottom: 20px;
+    height: 30px;
 }

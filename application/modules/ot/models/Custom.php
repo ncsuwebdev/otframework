@@ -31,68 +31,7 @@
  *
  */
 class Ot_Model_Custom
-{
-    
-    /**
-     * Types of attributes available
-     *
-     * @var array
-     */
-    protected $_types = array(
-        'text',
-        'textarea',
-        'radio',
-        'checkbox',
-        'multicheckbox',
-        'multiselect',
-        'select',
-        'ranking',
-        'description'
-    );
-    
-    /**
-     * The array of options returned for a custom attribute of type "ranking"
-     *
-     * @var array
-     */
-    protected $_rankingOptions = array(
-        'N/A' => 'N/A',
-        '1' => '1',
-        '2' => '2', 
-        '3' => '3', 
-        '4' => '4', 
-        '5' => '5',
-    );
-    
-    /**
-     * Gets the attributes that have been assigned to a object, then renders 
-     * them if need be
-     *
-     * @param mixed $objectId
-     * @param string $render
-     * @return array of attributes
-     */
-    public function getAttributesForObject($objectId, $renderType = 'none')
-    {
-        $attr = new Ot_Model_DbTable_CustomAttribute();
-        
-        $where = null;
-        if (!is_null($objectId)) {
-            $where = $attr->getAdapter()->quoteInto('objectId = ?', $objectId);
-        }
-        
-        $attributes = $attr->fetchAll($where, 'order')->toArray();
-        
-        foreach ($attributes as &$a) {
-            if ($a['type'] == 'ranking') {
-                $a['options'] = $this->convertOptionsToString($this->_rankingOptions);
-            }
-
-            $a['formRender'] = $this->renderFormElement($a, $renderType);
-        }
-        
-        return $attributes;
-    }
+{    
     
     /**
      * Converts options for selects and radios from a string to an array
@@ -126,16 +65,6 @@ class Ot_Model_Custom
     public function convertOptionsToString($options)
     {
         return serialize((is_array($options)) ? $options: array());
-    }
-    
-    /**
-     * Gets all available types of custom attributes
-     *
-     * @return array
-     */
-    public function getTypes()
-    {
-        return array_combine($this->_types, $this->_types);
     }
     
     /**

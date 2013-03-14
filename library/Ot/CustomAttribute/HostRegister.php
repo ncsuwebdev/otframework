@@ -29,9 +29,9 @@
  *             Information Technology
  *
  */
-class Ot_CustomFieldObject_Register
+class Ot_CustomAttribute_HostRegister
 {
-    const REGISTRY_KEY = 'Ot_CustomField_Register';
+    const REGISTRY_KEY = 'Ot_CustomAttribute_HostRegister';
 
     public function __construct()
     {
@@ -40,40 +40,40 @@ class Ot_CustomFieldObject_Register
         }
     }
 
-    public function registerCustomFieldObject(Ot_CustomFieldObject $object)
+    public function registerHost(Ot_CustomAttribute_Host $host)
     {
-        $registered = $this->getCustomFieldObjects();
-        if (isset($registered[$object->getKey()])) {
-            throw new Ot_Exception('Custom Object ' . $object->getKey() . ' already registered');
+        $registered = $this->getHosts();
+        if (isset($registered[$host->getKey()])) {
+            throw new Ot_Exception('Custom Field Host ' . $host->getKey() . ' already registered');
         }
         
-        $registered[$object->getKey()] = $object;
+        $registered[$host->getKey()] = $host;
 
         Zend_Registry::set(self::REGISTRY_KEY, $registered);
     }
 
-    public function registerCustomFieldObjects(array $objects)
+    public function registerHosts(array $hosts)
     {
-        foreach ($objects as $o) {
-            $this->registerCustomFieldObject($o);
+        foreach ($hosts as $h) {
+            $this->registerHost($h);
         }
     }
 
-    public function getCustomFieldObject($key)
+    public function getHost($key)
     {
-        $registered = $this->getCustomFieldObjects();
+        $registered = $this->getHosts();
 
         return (isset($registered[$key])) ? $registered[$key] : null;
     }
     
-    public function getCustomFieldObjects()
+    public function getHosts()
     {
         return Zend_Registry::get(self::REGISTRY_KEY);
     }
 
     public function __get($key)
     {
-        return $this->getCustomFieldObject($key);
+        return $this->getHost($key);
     }
 }
 

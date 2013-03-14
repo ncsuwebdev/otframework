@@ -44,4 +44,43 @@ class Ot_Model_DbTable_CustomAttribute extends Ot_Db_Table
      * @var string
      */
     protected $_primary = 'attributeId';
+    
+    public function get($attributeId)
+    {
+        $thisAttribute = $this->find($attributeId);
+
+        if (is_null($thisAttribute)) {
+            throw new Ot_Exception_Data('msg-error-noAttribute');
+        }
+        
+        $thisAttribute = $thisAttribute->toArray();
+        
+        $ftr = new Ot_CustomAttribute_FieldTypeRegister();
+        
+        $thisAttribute['fieldType'] = $ftr->getFieldType($thisAttribute['fieldTypeKey']);
+        
+        if (is_null($thisAttribute['fieldType'])) {
+            throw new Ot_Exception_Data('Field type (' . $thisAttribute['fieldTypeKey'] . ' not registered');
+        }
+        
+        $cahr = new Ot_CustomAttribute_HostRegister();
+        
+        $thisAttribute['host'] = $cahr->getHost($thisAttribute['hostKey']);
+        
+        if (is_null($thisAttribute['host'])) {
+            throw new Ot_Exception_Data('Host (' . $thisAttribute['hostKey'] . ') not registered');
+        }
+        
+        $options = unserialize($thisAttribute['options']);
+        
+        $thisAttribute['options'] = array();
+        
+        if (is_array($options)) {
+            foreach ($options as $a) {
+                $thisAttribute['options'][]['option'] = $a;
+            }
+        }
+        
+        return $thisAttribute;
+    }
 }
