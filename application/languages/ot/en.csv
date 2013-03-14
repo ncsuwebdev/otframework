@@ -329,22 +329,24 @@ ot-custom-index:table:object;Object
 ot-custom-index:table:description;Description
 ot-custom-index:noObjects;No objects found.
 ot-custom-details:title;Attributes for %1$s
-ot-custom-details:linkBack;Back to Object List
-ot-custom-details:linkAdd;Add New Custom Attribute To %1$s
+ot-custom-details:linkBack;Back to List
+ot-custom-details:linkAdd;Add New Field
 ot-custom-details:linkSaveOrder;Save Attribute Order
 ot-custom-details:noAttributes;No custom attributes found for this object.
 ot-custom-attributeDetails:title;Attribute Details
 ot-custom-attributeDetails:delete;Delete
 ot-custom-attributeDetails:options;Options:
 ot-custom-attributeDetails;noOptions;No Options
-ot-custom-add:title;Add Custom Attribute to %1$s
-ot-custom-add:header;Enter in the information below to add custom attribute to this object.
+ot-custom-add:title;Add New %1$s to %2$s
+ot-custom-add:header;Enter in the information below to add a new %1$s to the %2$s.
 ot-custom-add:linkAdd;Add Custom Attribute
-ot-custom-edit:title;Edit Custom Attribute for %1$s
-ot-custom-edit:header;Enter in the information below to add custom attribute to this object.
+ot-custom-add:linkBack;Back to %1$s
+ot-custom-edit:title;Edit %1$s for %2$s
+ot-custom-edit:header;Modify the following %1$s the %2$s object.
 ot-custom-edit:delete;<b>Delete "%1$s"</b>
 ot-custom-edit:addOptions;Add New Options:
 ot-custom-edit:linkSave;Save Custom Attribute
+ot-custom-edit:linkBack;Back to %1$s
 ot-custom-delete:title;Delete Attribute from %1$s
 ot-custom-delete:header;You have selected to delete the attribute <b>%1$s</b>.  Are you sure you want to do this?  <b>This will remove all data associated with this attribute.</b>
 ot-debug-index:title;Debug Mode Admin

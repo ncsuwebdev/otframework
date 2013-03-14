@@ -22,21 +22,18 @@
             <tr>
                 <th data-sort="name" data-direction="<?php echo ($this->sort == 'name') ? (($this->direction == 'asc') ? 'desc' : 'asc') : ''; ?>" class="<?php echo ($this->sort == 'name') ? $this->direction : ''; ?>">Name</th>                
                 <th data-sort="username" data-direction="<?php echo ($this->sort == 'username') ? (($this->direction == 'asc') ? 'desc' : 'asc') : ''; ?>" class="<?php echo ($this->sort == 'username') ? $this->direction : ''; ?>">Username</th>
-                <th>Login Method</th>
-                <th>Actions</th>                
+                <th>Login Method</th>           
             </tr>
         </thead>        
         <tbody>        
             <?php foreach ($this->paginator as $user): ?>    
                 <tr>
-                    <td><?php echo $user['firstName'] . ' ' . $user['lastName']; ?></td>
+                    <td><a href="<?php echo $this->url(array('accountId' => $user['accountId']), 'account', true); ?>"><?php echo $this->defaultVal($user['firstName'] . ' ' . $user['lastName'], 'Unknown'); ?></a></td>
                     <td><?php echo $user['username']; ?></td>
                     <td style="text-align:center">
                         <?php echo $this->adapters[$user['realm']]->name; ?>
                         <?php echo ($this->adapters[$user['realm']]->enabled == 0) ? ' (<b class="text-warning">DISABLED</b>)' : ''; ?>
                     </td>
-                    <td style="text-align:center">
-                        <a href="<?php echo $this->url(array('accountId' => $user['accountId']), 'account', true); ?>" class="btn">Details</a></td>
                 </tr>                
             <?php endforeach; ?>                    
         </tbody>    

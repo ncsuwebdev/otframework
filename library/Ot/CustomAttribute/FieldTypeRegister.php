@@ -29,9 +29,9 @@
  *             Information Technology
  *
  */
-class Ot_CustomFieldObject_Register
+class Ot_CustomAttribute_FieldTypeRegister
 {
-    const REGISTRY_KEY = 'Ot_CustomField_Register';
+    const REGISTRY_KEY = 'Ot_CustomAttribute_FieldTypeRegister';
 
     public function __construct()
     {
@@ -40,40 +40,41 @@ class Ot_CustomFieldObject_Register
         }
     }
 
-    public function registerCustomFieldObject(Ot_CustomFieldObject $object)
+    public function registerFieldType(Ot_CustomAttribute_FieldType $fieldType)
     {
-        $registered = $this->getCustomFieldObjects();
-        if (isset($registered[$object->getObjectId()])) {
-            throw new Ot_Exception('Custom Object ' . $object->getObjectId() . ' already registered');
+        $registered = $this->getFieldTypes();
+        
+        if (isset($registered[$fieldType->getKey()])) {
+            throw new Ot_Exception('Field Type ' . $fieldType->getKey() . ' already registered');
         }
         
-        $registered[$object->getObjectId()] = $object;
+        $registered[$fieldType->getKey()] = $fieldType;
 
         Zend_Registry::set(self::REGISTRY_KEY, $registered);
     }
 
-    public function registerCustomFieldObjects(array $objects)
+    public function registerFieldTypes(array $fieldTypes)
     {
-        foreach ($objects as $o) {
-            $this->registerCustomFieldObject($o);
+        foreach ($fieldTypes as $f) {
+            $this->registerFieldType($f);
         }
     }
 
-    public function getCustomFieldObject($objectId)
+    public function getFieldType($key)
     {
-        $registered = $this->getCustomFieldObjects();
+        $registered = $this->getFieldTypes();
 
-        return (isset($registered[$objectId])) ? $registered[$objectId] : null;
+        return (isset($registered[$key])) ? $registered[$key] : null;
     }
     
-    public function getCustomFieldObjects()
+    public function getFieldTypes()
     {
         return Zend_Registry::get(self::REGISTRY_KEY);
     }
 
-    public function __get($objectId)
+    public function __get($key)
     {
-        return $this->getCustomFieldObject($objectId);
+        return $this->getCustomFieldType($key);
     }
 }
 

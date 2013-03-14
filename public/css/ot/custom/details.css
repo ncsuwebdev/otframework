@@ -1,34 +1,27 @@
-#attributeList li {
-    height: 18px;
-    margin: 3px;
-    padding: 0.4em 0.4em 0.4em 1.5em;
-}
-
 #attributeList {
     list-style-type: none;
-    width: 500px;
+    margin: 0px;
+    margin-top: 00px;
 }
 
-#attributeList li span.dragIndicator {
-    margin-left: -1.3em;
-    position: absolute;
-}
-
-#attributeList li a.attributeLabel {
-    text-decoration: underline; 
-}
-
-#attributeList li table {
-    width: 100%;
-    height: inherit;    
-}
-
-#attributeList li table tr td {
-    border: 0;
-    padding: 0;
-    margin: 0;
-}
-
-#attributeList li table td.controlButtons {
+#attributeList .actions {
     text-align: right;
+}
+
+textarea {
+    width: 300px;
+    height: 100px;
+}
+
+#attributeList form {
+    margin-bottom: 0px;
+}
+
+#attributeList form .control-group {
+    margin-bottom: 0px;
+}
+
+#message {
+    margin-bottom: 20px;
+    height: 30px;
 }

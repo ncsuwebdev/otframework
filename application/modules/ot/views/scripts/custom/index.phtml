@@ -1,24 +1,23 @@
 <?php echo $this->translate("ot-custom-index:header"); ?>
 <br /><br />
-<table class="list">
+<?php if (count($this->hosts) > 0) : ?>
+<table class="table table-bordered table-striped">
     <thead>
-        <tr class="ui-widget-header">
-            <th width="200"><?php echo $this->translate("ot-custom-index:table:object"); ?></th>
-            <th width="350"><?php echo $this->translate("ot-custom-index:table:description"); ?></th>
+        <tr>
+            <th class="span4"><?php echo $this->translate("ot-custom-index:table:object"); ?></th>
+            <th><?php echo $this->translate("ot-custom-index:table:description"); ?></th>
         </tr>
     </thead>
     <tbody>
-        <?php if (count($this->objects) > 0) : ?>
-        <?php foreach ($this->objects as $o) : ?>
-        <tr class="<?php $this->cycle('row1', 'row2'); ?>">
-            <td><a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'details', 'objectId' => $o->getObjectId()), 'ot', true); ?>"><?php echo $o->getObjectId(); ?></a></td>
-            <td><?php echo $o->getDescription(); ?></td>
+        
+        <?php foreach ($this->hosts as $h) : ?>
+        <tr>
+            <td><a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'details', 'key' => $h->getKey()), 'ot', true); ?>"><?php echo $h->getName(); ?> (<?php echo $h->getKey(); ?>)</a></td>
+            <td><?php echo $h->getDescription(); ?></td>
         </tr>
         <?php endforeach; ?>
-        <?php else : ?>
-        <tr>
-            <td colspan="2" class="noResults"><?php echo $this->translate("ot-custom-index:noObjects"); ?></td>
-        </tr>
-        <?php endif; ?>
     </tbody>
 </table>
+<?php else : ?>
+<?php echo $this->translate("ot-custom-index:noObjects"); ?>
+<?php endif; ?>
