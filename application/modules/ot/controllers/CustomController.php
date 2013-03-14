@@ -227,11 +227,11 @@ class Ot_CustomController extends Zend_Controller_Action
                 $this->_helper->log(Zend_Log::INFO, 'Attribute ' . $data['label'] . ' was modified.', $logOptions);
                 $this->_helper->messenger->addSuccess($this->view->translate('msg-info-attributeSaved', array($data['label'])));
 
-                 $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'key' => $thisAttribute['hostKey']), 'ot', true);
+                $this->_helper->redirector->gotoRoute(array('controller' => 'custom', 'action' => 'details', 'key' => $thisAttribute['hostKey']), 'ot', true);
             }                       
         }
 
-        $this->_helper->pageTitle('ot-custom-edit:title', $thisAttribute['host']->getName());
+        $this->_helper->pageTitle('ot-custom-edit:title', array($thisAttribute['fieldType']->getName(), $thisAttribute['host']->getName()));
         
         $this->view->assign(array(
             'form'      => $form,

@@ -1,6 +1,6 @@
 <a href="<?php echo $this->url(array('controller' => 'custom', 'action' => 'details', 'key' => $this->attribute['host']->getKey()), 'ot', true); ?>"><i class="icon icon-arrow-left"></i> <?php echo $this->translate("ot-custom-edit:linkBack", $this->attribute['host']->getName()); ?></a>
 <Br /><Br />
 
-<?php echo $this->translate("ot-custom-edit:header"); ?>
+<?php echo $this->translate("ot-custom-edit:header", array($this->attribute['fieldType']->getName(), $this->attribute['host']->getName())); ?>
 <br /><br />
 <?php echo $this->form; ?>
