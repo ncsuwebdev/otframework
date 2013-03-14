@@ -94,24 +94,22 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
             $this->addElement($elm);
         }
 
-        $custom = new Ot_Model_Custom();
+        $cahr = new Ot_CustomAttribute_HostRegister();
 
-        if (isset($default['accountId'])) {
-            $attributes = $custom->getData('Ot_Profile', $default['accountId'], 'Zend_Form');
-        } else {
-            $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
+        $thisHost = $cahr->getHost('Ot_Profile');
+
+        if (is_null($thisHost)) {
+            throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
-
-        $attributeNames = array();
-        foreach ($attributes as $a) {
-            $a['formRender']->clearDecorators();
-
-            $this->addElement($a['formRender']);
-            if(isset($a['attribute'])) {
-                $attributeNames[] = 'custom_' . $a['attribute']['attributeId'];
-            } else {
-                $attributeNames[] = 'custom_' . $a['attributeId'];
-            }
+        
+        $customAttributes = $thisHost->getAttributes();
+        
+        foreach ($customAttributes as $a) {
+            $elm = $a->getVar();
+            $elm->clearDecorators();
+            $elm->setBelongsTo('custom');
+            
+            $this->addElement($elm);
         }
 
         $this->addElement('submit', 'submit', array(
