@@ -553,26 +553,46 @@ class Ot_LoginController extends Zend_Controller_Action
 
                         try {
                             $accountData['accountId'] = $account->insert($accountData);
+                            
+                            $aar = new Ot_Account_Attribute_Register();
+
+                            $vars = $aar->getVars($accountData['accountId']);
+
+                            $values = $form->getValues();
+
+                            foreach ($vars as $varName => $var) {
+                                if (isset($values['accountAttributes'][$varName])) {
+                                    $var->setValue($values['accountAttributes'][$varName]);
+
+                                    $aar->save($var, $this->_userData['accountId']);
+                                }
+                            }
+
+                            $cahr = new Ot_CustomAttribute_HostRegister();
+
+                            $thisHost = $cahr->getHost('Ot_Profile');
+
+                            if (is_null($thisHost)) {
+                                throw new Ot_Exception_Data('msg-error-objectNotSetup');
+                            }
+
+                            $customAttributes = $thisHost->getAttributes($accountData['accountId']);
+
+                            foreach ($customAttributes as $attributeName => $a) {
+
+                                if (isset($values['customAttributes'][$attributeName])) {
+
+                                    $a['var']->setValue($values['customAttributes'][$attributeName]);
+
+                                    $thisHost->saveAttribute($a['var'], $this->_userData['accountId'], $a['attributeId']);                                
+                                }
+                            }                              
                         } catch (Exception $e) {
                             $dba->rollback();
                             throw $e;
                         }
 
-                        $custom = new Ot_Model_Custom();
-                        $attributes = $custom->getAttributesForObject('Ot_Profile');
-
-                        $data = array();
-                        foreach ($attributes as $a) {
-                            $data[$a['attributeId']] = $form->getValue('custom_' . $a['attributeId']);
-                        }
-
-                        try {
-                            $custom->saveData('Ot_Profile', $accountData['accountId'], $data);
-                        } catch (Exception $e) {
-                            $dba->rollback();
-                            throw $e;
-                        }
-
+                        
                         $dba->commit();
 
                         $this->_helper->messenger->addSuccess('msg-info-accountCreated');

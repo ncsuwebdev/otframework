@@ -17,5 +17,10 @@ class Ot_Var_Type_Password extends Ot_Var_Abstract
     public function getValue()
     {
         return $this->_decrypt(parent::getValue());
-    }     
+    }   
+    
+    public function getDisplayValue() 
+    {
+        return 'Protected';
+    }  
 }

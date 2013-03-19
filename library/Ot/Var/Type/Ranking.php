@@ -23,4 +23,9 @@ class Ot_Var_Type_Ranking extends Ot_Var_Abstract
         $elm->setValue($this->getValue());
         return $elm;
     }
+    
+    public function getDisplayValue() 
+    {
+        return (isset($this->_rankingOptions[$this->getValue()])) ?  $this->_rankingOptions[$this->getValue()] : 'N/A';
+    }
 }

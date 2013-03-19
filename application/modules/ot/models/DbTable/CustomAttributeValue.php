@@ -43,6 +43,6 @@ class Ot_Model_DbTable_CustomAttributeValue extends Ot_Db_Table
      *
      * @var string
      */
-    protected $_primary = array('objectId', 'parentId', 'attributeId');
+    protected $_primary = array('hostKey', 'hostParentId', 'attributeId');
 }
 

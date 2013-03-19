@@ -95,28 +95,6 @@ class Ot_AccountController extends Zend_Controller_Action
             'guestApiAccess' => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole')),
         );
 
-
-        $role = new Ot_Model_DbTable_Role();
-        $where = $role->getAdapter()->quoteInto('roleId IN (?)', $this->_userData['role']);
-        $roles = $role->fetchAll($where)->toArray();
-
-        foreach ($roles as &$r) {
-             $r = $r['name'];
-        }
-
-        $aar = new Ot_Account_Attribute_Register();
-
-        $accountAttributes = $aar->getVars($this->_userData['accountId']);
-
-        $custom = new Ot_Model_Custom();
-
-        $customData = array();
-
-        $data = $custom->getData('Ot_Profile', $this->_userData['accountId'], 'none', false);
-        foreach ($data as $d) {
-            $customData[$d['attribute']['label']] = $d['value'];
-        }
-
         $apiApp = new Ot_Model_DbTable_ApiApp();
 
         $apiApps = $apiApp->getAppsForAccount($this->_userData['accountId'], 'access')->toArray();
@@ -124,9 +102,6 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->assign(array(
             'userData'          => $this->_userData,
             'messages'          => $this->_helper->messenger->getMessages(),
-            'customData'        => $customData,
-            'accountAttributes' => $accountAttributes,
-            'roles'             => $roles,
             'apiApps'           => $apiApps,
             'tab'               => $this->_getParam('tab', 'account'),
         ));
@@ -263,77 +238,68 @@ class Ot_AccountController extends Zend_Controller_Action
                     'lastName'     => $form->getValue('lastName'),
                     'emailAddress' => $form->getValue('emailAddress'),
                     'timezone'     => $form->getValue('timezone'),
-                    'role'         => (array)$form->getValue('roleSelect'),
+                    'role'         => (array)$form->getValue('role'),
                 );
-                if(!isset($accountData['role']) || count($accountData['role']) < 1) {
+                
+                if (!isset($accountData['role']) || count($accountData['role']) < 1) {
                     $accountData['role'] = $this->_helper->configVar('defaultRole');
                 }
 
                 $dba = Zend_Db_Table::getDefaultAdapter();
                 $dba->beginTransaction();
 
-                if (!$account->accountExists($accountData['username'], $accountData['realm'])) {
+                if ($account->accountExists($accountData['username'], $accountData['realm'])) {                    
+                    $this->_helper->messenger->addError('msg-error-accountTaken');                   
+                } else {
+
                     try {
                         $accountData['accountId'] = $account->insert($accountData);
+                        
+                        $aar = new Ot_Account_Attribute_Register();
+
+                        $vars = $aar->getVars($accountData['accountId']);
+
+                        $values = $form->getValues();
+                        
+                        foreach ($vars as $varName => $var) {
+                            if (isset($values['accountAttributes'][$varName])) {
+                                $var->setValue($values['accountAttributes'][$varName]);
+
+                                $aar->save($var, $this->_userData['accountId']);
+                            }
+                        }
+
+                        $cahr = new Ot_CustomAttribute_HostRegister();
+
+                        $thisHost = $cahr->getHost('Ot_Profile');
+
+                        if (is_null($thisHost)) {
+                            throw new Ot_Exception_Data('msg-error-objectNotSetup');
+                        }
+
+                        $customAttributes = $thisHost->getAttributes($accountData['accountId']);
+                        
+                        foreach ($customAttributes as $attributeName => $a) {
+                            
+                            if (isset($values['customAttributes'][$attributeName])) {
+                                
+                                $a['var']->setValue($values['customAttributes'][$attributeName]);
+
+                                $thisHost->saveAttribute($a['var'], $this->_userData['accountId'], $a['attributeId']);                                
+                            }
+                        }         
+                        
                     } catch (Exception $e) {
                         $dba->rollback();
                         throw $e;
-                    }
-                } else {
-                    $this->_helper->messenger->addError('msg-error-accountTaken');
-                }
+                    }                
 
-
-                $accountData['password'] = $password;
-
-                // Account plugin
-                if ($this->_helper->messenger->count('error') == 0 && isset($loginOptions['accountPlugin'])) {
-                    $acctPlugin = new $loginOptions['accountPlugin'];
-
-                    $subform = $acctPlugin->addSubForm();
-
-                    $data = array('accountId' => $accountData['accountId']);
-
-                    foreach ($subform->getElements() as $e) {
-                        $data[$e->getName()] = $form->getValue($e->getName());
-                    }
-
-                    try {
-                        $acctPlugin->addProcess($data);
-                    } catch (Exception $e) {
-                        $dba->rollback();
-                        throw $e;
-                    }
-                }
-
-                // Custom attributes
-                if ($this->_helper->messenger->count('error') == 0) {
-
-                    $custom = new Ot_Model_Custom();
-
-                    $attributes = $custom->getAttributesForObject('Ot_Profile');
-
-                    $data = array();
-                    foreach ($attributes as $a) {
-                        $data[$a['attributeId']] = $form->getValue('custom_' . $a['attributeId']);
-                    }
-
-                    try {
-                        $custom->saveData('Ot_Profile', $accountData['accountId'], $data);
-                    } catch (Exception $e) {
-                        $dba->rollback();
-                        throw $e;
-                    }
-                }
-
-                if ($this->_helper->messenger->count('error') == 0) {
-                    $dba->commit();
+                    $accountData['password'] = $password;
 
                     $this->_helper->messenger->addSuccess('msg-info-accountCreated');
 
                     $td = new Ot_Trigger_Dispatcher();
                     $td->setVariables($accountData);
-
 
                     $role = new Ot_Model_DbTable_Role();
 
@@ -358,7 +324,9 @@ class Ot_AccountController extends Zend_Controller_Action
                     } else {
                         $td->dispatch('Admin_Account_Create_NoPassword');
                     }
-
+                    
+                    $dba->commit();
+                    
                     $logOptions = array(
                         'attributeName' => 'accountId',
                         'attributeId'   => $accountData['accountId'],
@@ -397,8 +365,9 @@ class Ot_AccountController extends Zend_Controller_Action
         $me = (Zend_Auth::getInstance()->getIdentity()->accountId == $this->_userData['accountId']);
 
         $form = new Ot_Form_Account(false, $me);
+        
         $form->populate($this->_userData);
-
+        
         $acl = Zend_Registry::get('acl');
 
         $resources = array();
@@ -443,41 +412,47 @@ class Ot_AccountController extends Zend_Controller_Action
 
                     try {
                         $account->update($data, null);
-                    } catch (Exception $e) {
-                        $dba->rollback();
-                        throw $e;
-                    }
+                        
+                        $aar = new Ot_Account_Attribute_Register();
 
-                    $aar = new Ot_Account_Attribute_Register();
+                        $vars = $aar->getVars($this->_userData['accountId']);
 
-                    $vars = $aar->getVars($this->_userData['accountId']);
+                        $values = $form->getValues();
+                        
+                        foreach ($vars as $varName => $var) {
+                            if (isset($values['accountAttributes'][$varName])) {
+                                $var->setValue($values['accountAttributes'][$varName]);
 
-                    $values = $form->getValues();
-
-                    foreach ($vars as $varName => $var) {
-                        if (isset($values['attributes'][$varName])) {
-                            $var->setValue($values['attributes'][$varName]);
-
-                            $aar->save($var, $this->_userData['accountId']);
+                                $aar->save($var, $this->_userData['accountId']);
+                            }
                         }
-                    }
 
-                    $custom = new Ot_Model_Custom();
+                        $cahr = new Ot_CustomAttribute_HostRegister();
 
-                    $attributes = $custom->getAttributesForObject('Ot_Profile');
+                        $thisHost = $cahr->getHost('Ot_Profile');
 
-                    $data = array();
-                    foreach ($attributes as $a) {
-                        $data[$a['attributeId']] = $form->getValue('custom_' . $a['attributeId']);
-                    }
+                        if (is_null($thisHost)) {
+                            throw new Ot_Exception_Data('msg-error-objectNotSetup');
+                        }
 
-                    try {
-                        $custom->saveData('Ot_Profile', $this->_userData['accountId'], $data);
+                        $customAttributes = $thisHost->getAttributes($this->_userData['accountId']);
+
+                        
+                        foreach ($customAttributes as $attributeName => $a) {
+                            
+                            if (isset($values['customAttributes'][$attributeName])) {
+                                
+                                $a['var']->setValue($values['customAttributes'][$attributeName]);
+
+                                $thisHost->saveAttribute($a['var'], $this->_userData['accountId'], $a['attributeId']);                                
+                            }
+                        }         
+                        
                     } catch (Exception $e) {
                         $dba->rollback();
                         throw $e;
                     }
-
+                    
                     $dba->commit();
 
                     $loggerOptions = array(

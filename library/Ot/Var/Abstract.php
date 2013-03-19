@@ -111,6 +111,10 @@ abstract class Ot_Var_Abstract
         return $value;
     }
     
+    public function __toString() {
+        return ($this->getValue()) ? $this->getValue() : '';
+    }
+    
     protected function _encrypt($string)
     {
         return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($this->_cryptKey), $string, MCRYPT_MODE_CBC, md5(md5($this->_cryptKey))));

@@ -8,4 +8,8 @@ class Ot_Var_Type_Textarea extends Ot_Var_Abstract
         $elm->setValue($this->getValue());
         return $elm;
     }
+    
+    public function getDisplayValue() {
+        return nl2br(parent::getDisplayValue());
+    }
 }

@@ -53,3 +53,8 @@ div.actions table {
     margin-top: 0px;
     border-bottom: 1px solid #EEEEEE;
 }
+
+textarea {
+    width: 220px;
+    height: 100px;
+}

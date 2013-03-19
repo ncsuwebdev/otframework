@@ -89,7 +89,7 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         foreach ($vars as $v) {
             $elm = $v->renderFormElement();
             $elm->clearDecorators();
-            $elm->setBelongsTo('attributes');
+            $elm->setBelongsTo('accountAttributes');
 
             $this->addElement($elm);
         }
@@ -105,9 +105,9 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $customAttributes = $thisHost->getAttributes();
         
         foreach ($customAttributes as $a) {
-            $elm = $a->getVar();
+            $elm = $a['var']->renderFormElement();
             $elm->clearDecorators();
-            $elm->setBelongsTo('custom');
+            $elm->setBelongsTo('customAttributes');
             
             $this->addElement($elm);
         }

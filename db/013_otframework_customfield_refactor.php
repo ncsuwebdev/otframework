@@ -14,8 +14,7 @@ class Db_013_otframework_customfield_refactor extends Ot_Migrate_Migration_Abstr
         
         $query = "ALTER TABLE  `" . $this->tablePrefix . "tbl_ot_custom_attribute` DROP  `direction` ;";
         
-        $dba->query($query);
-        
+        $dba->query($query);        
         
         $query = "ALTER TABLE  `" . $this->tablePrefix . "tbl_ot_custom_attribute` ADD  `description` VARCHAR( 255 ) NOT NULL AFTER  `label`";
         
@@ -25,9 +24,13 @@ class Db_013_otframework_customfield_refactor extends Ot_Migrate_Migration_Abstr
         
         $dba->query($query);       
         
-        $query = "";
+        $query = "ALTER TABLE  `" . $this->tablePrefix . "tbl_ot_custom_attribute_value` CHANGE  `objectId`  `hostKey` VARCHAR( 64 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT  ''";
         
-        $dba->query($query);
+        $dba->query($query);       
+        
+        $query = "ALTER TABLE  `" . $this->tablePrefix . "tbl_ot_custom_attribute_value` CHANGE  `parentId`  `hostParentId` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT  ''";
+        
+        $dba->query($query);               
     }
     
     public function down($dba) {    

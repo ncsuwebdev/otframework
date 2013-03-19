@@ -73,7 +73,7 @@
                             </tr>
                             <tr>
                                 <td><label><?php echo $this->translate('model-account-role'); ?>:</label></td>
-                                <td><?php echo implode(', ', $this->roles); ?></td>
+                                <td><?php echo implode(', ', array_keys($this->userData['role'])); ?></td>
                             </tr>
                             <tr>
                                 <td>
@@ -95,23 +95,17 @@
                                 <label><?php echo $this->translate('model-account-timezone'); ?>:</label></td>
                                 <td><?php echo (empty($this->userData['timezone']) ? date_default_timezone_get() : $this->userData['timezone']); ?></td>
                             </tr>
-                            <?php foreach($this->accountAttributes as $attr) : ?>
+                            <?php foreach ($this->userData['accountAttributes'] as $attr) : ?>
                             <tr>
                                 <td><label><?php echo $attr->getLabel(); ?>:</label></td>
                                 <td><?php echo $this->defaultVal($attr->getDisplayValue()); ?></td>
                             </tr>
                             <?php endforeach; ?>
-                            <?php foreach($this->customData as $key=>$attr) : ?>
+                            
+                            <?php foreach($this->userData['customAttributes'] as $attr) : ?>
                             <tr>
-                                <td>
-                                <label><?php echo ucwords($key); ?>:</label></td>
-                                <td>
-                                <?php if (is_array($attr)): ?>
-                                      <?php echo implode(', ', $attr); ?>
-                                <?php else : ?>
-                                      <?php echo $this->defaultVal($attr); ?>
-                                <?php endif; ?>
-                                </td>
+                                <td><label><?php echo $attr->getLabel(); ?>:</label></td>
+                                <td><?php echo $this->defaultVal($attr->getDisplayValue()); ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>

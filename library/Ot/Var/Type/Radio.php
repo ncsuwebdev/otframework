@@ -9,4 +9,11 @@ class Ot_Var_Type_Radio extends Ot_Var_Abstract
         $elm->setValue($this->getValue());
         return $elm;
     }
+    
+    public function getDisplayValue() 
+    {
+        $options = $this->getOptions();
+        
+        return (isset($options[$this->getValue()])) ?  $options[$this->getValue()] : 'None';
+    }
 }

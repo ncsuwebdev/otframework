@@ -73,21 +73,22 @@ class Ot_Form_Signup extends Twitter_Bootstrap_Form_Horizontal
             $this->addElement($elm);
         }
 
+        $cahr = new Ot_CustomAttribute_HostRegister();
 
-        $custom = new Ot_Model_Custom();
+        $thisHost = $cahr->getHost('Ot_Profile');
 
-        $attributes = $custom->getAttributesForObject('Ot_Profile', 'Zend_Form');
-
-        $attributeNames = array();
-        foreach ($attributes as $a) {
-            $a['formRender']->clearDecorators();
-
-            $this->addElement($a['formRender']);
-            if(isset($a['attribute'])) {
-                $attributeNames[] = 'custom_' . $a['attribute']['attributeId'];
-            } else {
-                $attributeNames[] = 'custom_' . $a['attributeId'];
-            }
+        if (is_null($thisHost)) {
+            throw new Ot_Exception_Data('msg-error-objectNotSetup');
+        }
+        
+        $customAttributes = $thisHost->getAttributes();
+        
+        foreach ($customAttributes as $a) {
+            $elm = $a['var']->renderFormElement();
+            $elm->clearDecorators();
+            $elm->setBelongsTo('customAttributes');
+            
+            $this->addElement($elm);
         }
 
         $this->addElement('submit', 'submit', array(

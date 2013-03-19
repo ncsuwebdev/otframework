@@ -66,5 +66,5 @@ class Ot_CustomAttribute_FieldType
         }
         
         return new $this->_varClassname();
-    }
+    }    
 }

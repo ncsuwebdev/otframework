@@ -99,30 +99,48 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
     protected function _mergeAccountData(Zend_Db_Table_Row $data)
     {
         $data = (object) $data->toArray();
-
-        $rolesModel = new Ot_Model_DbTable_AccountRoles();
-
-        $where = $rolesModel->getAdapter()->quoteInto('accountId = ?', $data->accountId);
-
-        $roles = $rolesModel->fetchAll($where);
-
+        
+        
+        $accountRolesModel = new Ot_Model_DbTable_AccountRoles();
+        $rolesModel = new Ot_Model_DbTable_Role();
+        
+        $select = $this->getAdapter()->select()
+                  ->from(array('a' => $accountRolesModel->info('name')))
+                  ->join(array('r' => $rolesModel->info('name')), 'a.roleId = r.roleId')
+                  ->where('accountId = ?', $data->accountId);
+        
+        $stmt = $select->query();
+        $roles = $stmt->fetchAll();
+        
         $roleList = array();
         foreach ($roles as $r) {
-            $roleList[] = $r['roleId'];
+            $roleList[$r['name']] = $r['roleId'];
         }
-
+        
         $data->role = $roleList;
 
         $aar = new Ot_Account_Attribute_Register();
 
         $vars = $aar->getVars($data->accountId);
 
-        $data->attributes = array();
+        $data->accountAttributes = array();
 
         foreach ($vars as $varName => $var) {
-            $data->attributes[$varName] = $var->getValue();
+            $data->accountAttributes[$varName] = $var;
         }
-
+        
+        $cahr = new Ot_CustomAttribute_HostRegister();
+        
+        $thisHost = $cahr->getHost('Ot_Profile');
+        
+        $attributes = $thisHost->getAttributes($data->accountId);
+        
+        $data->customAttributes = array();
+        
+        foreach ($attributes as $a) {
+            $data->customAttributes[$a['var']->getName()] = $a['var'];
+        }
+        
         $authAdapter = new Ot_Model_DbTable_AuthAdapter();
         $adapter = $authAdapter->find($data->realm);
 
@@ -132,7 +150,7 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
             'name'        => $adapter->name,
             'description' => $adapter->description
         );
-
+        
         return $data;
     }
 
@@ -263,8 +281,10 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
 
         $accountRoles = new Ot_Model_DbTable_AccountRoles();
         $apiApps = new Ot_Model_DbTable_ApiApp();
-        $custom = new Ot_Model_Custom();
         $aar = new Ot_Account_Attribute_Register();
+        $cahr = new Ot_CustomAttribute_HostRegister();
+        
+        $thisHost = $cahr->getHost('Ot_Profile');
 
         try {
             $deleteResult = parent::delete($where);
@@ -273,9 +293,9 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
 
             $apiApps->delete($where);
 
-            $custom->deleteData('Ot_Profile', $thisAccount->accountId);
-
             $aar->delete($thisAccount->accountId);
+            
+            $thisHost->delete($thisAccount->accountId);
 
         } catch (Exception $e) {
             if (!$inTransaction) {

@@ -21,4 +21,20 @@ class Ot_Var_Type_Multiselect extends Ot_Var_Abstract
     {
         return unserialize(parent::getValue());
     }
+    
+    public function getDisplayValue()
+    {
+        $options = $this->getOptions();
+        
+        $values = $this->getValue();
+        
+        $outputValues = array();
+        foreach ($values as $v) {
+            if (isset($options[$v])) {
+                $outputValues[] = $options[$v];
+            }
+        }
+        
+        return implode(', ', $outputValues);
+    }
 }

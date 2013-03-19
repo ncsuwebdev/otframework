@@ -45,7 +45,7 @@ class Ot_CustomAttribute_Host
         return $this->_description;
     }
     
-    public function getAttributes()
+    public function getAttributes($hostParentId = null)
     {
         $attr = new Ot_Model_DbTable_CustomAttribute();
         
@@ -69,12 +69,70 @@ class Ot_CustomAttribute_Host
             $r['var']->setLabel($r['label'])
                      ->setDescription($r['description'])
                      ->setOptions(unserialize($r['options']))
-                     ->setName($this->getKey() . '-' . $r['attributeId'])
+                     ->setName($this->getKey() . $r['attributeId'])
                      ;
             
-            $attributes[] = $r;
+            $attributes[$this->getKey() . $r['attributeId']] = $r;
+        }
+        
+        if (!is_null($hostParentId)) {
+            
+            $attrValModel = new Ot_Model_DbTable_CustomAttributeValue();
+            
+            $where = $attrValModel->getAdapter()->quoteInto('hostKey = ?', $this->getKey())
+                   . ' AND '
+                   . $attrValModel->getAdapter()->quoteInto('hostParentId = ?', $hostParentId)
+                   ;
+            
+            $attrValues = $attrValModel->fetchAll();
+            
+            foreach ($attrValues as $a) {
+                if (isset($attributes[$this->getKey() . $a->attributeId])) {
+                    $attributes[$this->getKey() . $a->attributeId]['var']->setRawValue($a->value);
+                }
+            }            
         }
         
         return $attributes;
+    }
+    
+    public function saveAttribute(Ot_Var_Abstract $var, $hostParentId, $attributeId)
+    {
+        $model = new Ot_Model_DbTable_CustomAttributeValue();
+
+        $where = $model->getAdapter()->quoteInto('hostParentId = ?', $hostParentId)
+                . ' AND '
+                . $model->getAdapter()->quoteInto('hostKey = ?', $this->getKey())
+                . ' AND '
+                . $model->getAdapter()->quoteInto('attributeId = ?', $attributeId)
+                ;
+        
+        
+        $thisVar = $model->fetchAll($where);                
+
+        $data = array(
+            'hostParentId' => $hostParentId, 
+            'hostKey'      => $this->getKey(),
+            'attributeId'  => $attributeId,
+            'value'        => $var->getRawValue(),
+        );
+
+        if ($thisVar->count() == 0) {
+            $model->insert($data);
+        } else {
+            $model->update($data, $where);
+        }        
+    }
+    
+    public function delete($hostParentId)
+    {
+        $model = new Ot_Model_DbTable_CustomAttributeValue();
+
+        $where = $model->getAdapter()->quoteInto('hostParentId = ?', $hostParentId)
+                . ' AND '
+                . $model->getAdapter()->quoteInto('hostKey = ?', $this->getKey())
+                ;
+        
+        $model->delete($where);
     }
 }

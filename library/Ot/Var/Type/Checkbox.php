@@ -8,4 +8,9 @@ class Ot_Var_Type_Checkbox extends Ot_Var_Abstract
         $elm->setValue($this->getValue());
         return $elm;
     }
+    
+    public function getDisplayValue()
+    {
+        return ($this->getValue()) ? 'Checked' : 'Not Checked';
+    }
 }
