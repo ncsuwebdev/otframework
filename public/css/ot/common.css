@@ -157,36 +157,9 @@ div.maintenance {
     text-align: center;
 }
 
-div.debug {
-    font-size: 1em;
-    padding: 7px;
-    border: 1px solid #000000;
-    color: #000;
-    margin-bottom: 20px;
-}
-
 div.maintenance a {
     text-decoration: underline;
     color: #FFF;
-}
-
-div#toggleDebugInfo {
-    float: right; 
-}
-
-div#debugInfo {
-    border-top: 1px solid #555;
-    margin-top: 10px;
-    padding-top: 5px;    
-}
-
-div.debug a {
-    text-decoration: underline;
-    color: #0000FF;
-}
-
-div.debugModeOn, div.debugModeOff {
-    background-color: #FFFFDF;
 }
 
 div.maintenanceModeOn {

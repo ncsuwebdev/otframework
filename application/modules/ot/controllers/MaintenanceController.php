@@ -38,17 +38,32 @@ class Ot_MaintenanceController extends Zend_Controller_Action
      * filename, it needs to be changed there too
      */  
     protected $_maintenanceModeFileName = "maintenanceMode";
+    
+    protected $_overridesPath = '';
         
+    protected $_inMaintenanceMode = false;
+    
+    public function init()
+    {
+        $this->_overridesPath = realpath(APPLICATION_PATH . '/../overrides');
+        
+        $this->_inMaintenanceMode = (is_file($this->_overridesPath . '/' . $this->_maintenanceModeFileName));
+                
+        if (!is_writable($this->_overridesPath)) {
+            throw new Ot_Exception_Data($this->view->translate('msg-error-configDirNotWritable', $this->_overridesPath));
+        }
+    }
     /**
      * Shows the maintenance mode index page
      */
     public function indexAction()
     {
-        $this->view->maintenanceMode = (
-            is_file(APPLICATION_PATH . '/../overrides/'. $this->_maintenanceModeFileName)
-        ) ? true : false;
         $this->_helper->pageTitle('ot-maintenance-index:title');
-        $this->view->messages = $this->_helper->messenger->getMessages();
+        
+        $this->view->assign(array(
+            'messages'          => $this->_helper->messenger->getMessages(),
+            'inMaintenanceMode' => $this->_inMaintenanceMode,
+        ));
     }
 
     /**
@@ -57,17 +72,11 @@ class Ot_MaintenanceController extends Zend_Controller_Action
      */
     public function toggleAction()
     { 
-        $path = realpath(APPLICATION_PATH . '/../overrides');
+        $status = $this->_getParam('status', null);
         
-        if (!is_writable($path)) {
-            throw new Ot_Exception_Data($this->view->translate('msg-error-configDirNotWritable', $path));
-        }
-        
-        $get = Zend_Registry::get('getFilter');
-        if (!isset($get->status)) {
+        if (is_null($status)) {
             throw new Ot_Exception_Input('msg-error-statusNotFound');
         }
-        $status = $get->status;
         
         if ($status == 'on') {
             file_put_contents($path . '/' . $this->_maintenanceModeFileName, '');

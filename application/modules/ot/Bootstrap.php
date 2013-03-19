@@ -42,8 +42,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $fc->registerPlugin(new Ot_FrontController_Plugin_Input());
         $fc->registerPlugin(new Ot_FrontController_Plugin_Auth());
         $fc->registerPlugin(new Ot_FrontController_Plugin_Htmlheader());
-        $fc->registerPlugin(new Ot_FrontController_Plugin_Nav());
-        $fc->registerPlugin(new Ot_FrontController_Plugin_DebugMode());
+        $fc->registerPlugin(new Ot_FrontController_Plugin_Nav());        
         $fc->registerPlugin(new Ot_FrontController_Plugin_MaintenanceMode());
         $fc->registerPlugin(new Ot_FrontController_Plugin_ActiveUsers());
     }
