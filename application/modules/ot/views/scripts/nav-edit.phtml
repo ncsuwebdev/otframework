@@ -2,60 +2,46 @@
         
 $html = array('<ul id="masterList">');
  
-$parentId = 0;
-
-foreach ($this->container as $page) {
- 
-    // dropdown
-    $dropdown = !empty($page->pages);
-     
-    // header
-    $html[] = '<li name="' . $page->getLabel() . '" id="navItem_' . $parentId . '_' . $page->getId() . '">';
- 
-    $html[] = '<a target="' . $page->getTarget() . '" title="' . $page->getModule() . ':' . $page->getController() . ':' . $page->getAction() . '" href="' . $page->getHref() . '">';
-     
-    $html[] = $page->getLabel();
- 
-    $html[] = '</a>';
- 
-    if (!$dropdown) {
-        $html[] = '</li>';
-        continue;
-    }
- 
-    $html = array_merge($html, editSubmenu($page, $page->getId()));
-     
-    $html[] = "</li>";
-}
+$html = array_merge($html, editSubmenu($this->container, 0));     
  
 $html[] = '</ul>';
  
 echo join(PHP_EOL, $html);
 
-function editSubmenu($page, $parentId) 
+function editSubmenu($pages, $parentId) 
 {
     $html = array();
     
-    $html[] = '<ul>';
-    
-    foreach ($page->pages as $p) {
+    foreach ($pages as $p) {
         
         $html[] = '<li name="' . $p->getLabel() . '" id="navItem_' . $parentId . '_' . $p->getId() . '">';
                 
+        $html[] = '<div class="dropzone"></div>';
+        
+        $html[] = '<i class="icon icon-resize-vertical"></i>';
+    
         $html[] = '<a target="' . $p->getTarget() . '" title="' . $p->getModule() . ':' .$p->getController() . ':' . $p->getAction() . '" href="' . $p->getHref() . '">';
      
         $html[] = $p->getLabel();
 
         $html[] = '</a>';
         
+        $html[] = '<a class="btn btn-danger controlButton deleteElement" title="Delete"><i class="icon-white icon-minus"></i></a>';
+    
+        $html[] = '<a class="btn controlButton editElement" title="Edit"><i class="icon icon-pencil"></i></a>';    
+        
+        
         if (!empty($p->pages)) {
-            $html = array_merge($html, editSubmenu($p, $p->getId()));
+                
+            $html[] = '<ul>';
+            
+            $html = array_merge($html, editSubmenu($p->pages, $p->getId()));            
+    
+            $html[] = '</ul>';
         }
         
         $html[] = "</li>";        
     }
-    
-    $html[] = '</ul>';
     
     return $html;
 }

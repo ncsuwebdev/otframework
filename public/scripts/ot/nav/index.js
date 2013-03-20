@@ -41,15 +41,7 @@ $('document').ready(function() {
         if ($(this).children('ul').children().length != 0) {
             $(this).addClass('liOpen');
         }
-        
-        addControlButtons($(this));
     });
-    
-    // add a place to drop above each li
-    $('ul#masterList li').prepend('<div class="dropzone"></div>');
-    
-    // add the expander arrows for the ones that are collapsable
-    addExpanders();
     
     // add the live events to watch for edit and delete buttons
     setupLiveEvents();
@@ -193,7 +185,6 @@ $('document').ready(function() {
                     
                     addControlButtons(newLi);             
                     newLi.prepend('<div class="dropzone"></div>');
-                    addExpanders();
                     
                     newElementIdCounter++;
                     
@@ -272,8 +263,6 @@ function initDragDrop() {
             
             $('#masterList li.liOpen').not(':has(li:not(.ui-draggable-dragging))').removeClass('liOpen');
             
-            addExpanders();
-            
             //reset our background colours.
             li.find('a,.dropzone').css({ backgroundColor: '', borderColor: '' });
             li.find('.dropzone').css({ backgroundColor: '', borderColor: '' });
@@ -287,19 +276,6 @@ function initDragDrop() {
         out: function() {
             $(this).filter('a').css({ backgroundColor: '' });
             $(this).filter('.dropzone').css({ borderColor: '' });
-        }
-    });
-}
-
-function addExpanders() {
-    $('a.expander').remove();
-    
-    $('ul:empty').remove();
-    
-    $('#masterList li').each(function() {
-        if ($(this).children('ul').length != 0) {
-            var tmpA = $('<a>').addClass('expander').addClass('controlButton');
-            $(this).prepend(tmpA);
         }
     });
 }
@@ -338,14 +314,9 @@ function serialize (items) {
  */
 function addControlButtons(el) {
     
-    $(el).prepend('<a class="controlButton editElement ui-state-default" title="Edit">&nbsp;<span class="ui-icon ui-icon-pencil"></span></a>');
-    $(el).prepend('<a class="controlButton deleteElement ui-state-default" title="Delete">&nbsp;<span class="ui-icon ui-icon-minusthick"></span></a>');
-    $(el).prepend('<span class="ui-icon ui-icon-arrowthick-2-n-s moveHandle"></span>');
-    
-    $('a.ui-state-default').hover(
-        function(){ $(this).addClass('ui-state-hover'); }, 
-        function(){ $(this).removeClass('ui-state-hover'); }
-      );
+    $(el).prepend('<a class="btn controlButton" title="Edit"><i class="icon icon-pencil"></i></a>');
+    $(el).prepend('<a class="btn btn-danger controlButton" title="Delete"><i class="icon-white icon-minus"></i></a>');
+    $(el).prepend('<i class="icon icon-resize-vertical"></i>');   
 }
 
 /**
@@ -363,23 +334,21 @@ function setupLiveEvents() {
         return false;
     });
         
-    $('ul#masterList li').on('click', '.deleteElement', function() {
+    $('ul#masterList li').on('click', '.deleteElement', function(e) {
         if (confirm("Are you sure you want to delete this element?  This action cannot be undone.")) {
             $(this).parent().slideUp('normal', 
                 function() {
                     $(this).remove();
-                });
+                });                
         }
-    });
-    
-    $(document).on("click", 'a.expander', function() {
-        $(this).parent().toggleClass('liOpen').toggleClass('liClosed');
-        return false;
+        
+        
+        e.stopPropagation();
     });
 
 
     // populates the modal dialog with the link's properties when you click edit
-    $('ul#masterList li').on('click', '.editElement', function() {
+    $('ul#masterList li').on('click', '.editElement', function(e) {
         
         var el = $(this).parent();
         
@@ -407,6 +376,9 @@ function setupLiveEvents() {
         $('#actionBox').val(permissions[2] || 'index');
         
         $("#navElementDialog").dialog("open");        
+        
+        
+        e.stopPropagation();
     });
 }
 

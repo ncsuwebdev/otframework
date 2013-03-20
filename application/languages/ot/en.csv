@@ -405,7 +405,7 @@ ot-nav-index:permissions;Permissions
 ot-nav-index:module;Module
 ot-nav-index:controller;Controller
 ot-nav-index:action;Action
-ot-nav-index:noPermissions;If no permissions are specified, default/index/index will be used.
+ot-nav-index:noPermissions;If no permissions are set below, default/index/index will be used.
 ot-nav-index:linkSave;Save Navigation Structure
 ot-nav-index:linkAdd;Add New Item
 ot-nav-index:undoMove;Undo Move
