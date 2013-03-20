@@ -38,10 +38,12 @@ class Ot_IndexController extends Zend_Controller_Action
     {   
         $this->_helper->pageTitle('ot-index-index:title');
         
-        $this->view->appVersion = Ot_Application_Version::getVersion();
-        $this->view->appTitle   = $this->_helper->configVar('appTitle');
-        $this->view->otVersion  = Ot_Version::VERSION;
-        $this->view->zfVersion  = Zend_Version::VERSION;        
+        $this->view->assign(array(
+            'appVersion' => Ot_Application_Version::getVersion(),
+            'appTitle'   => $this->_helper->configVar('appTitle'),
+            'otVersion'  => Ot_Version::VERSION,
+            'zfVersion'  => Zend_Version::VERSION,
+        ));
        
         /* The jQuery and jQueryUi library versions are acquired by the
          * javascript for this controller and inserted into the page that way.

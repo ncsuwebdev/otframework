@@ -1,11 +1,13 @@
 <?php echo $this->translate("ot-index-index:header"); ?>
 <br /><br />
-<table class="list">
-    <tbody>
-        <tr class="ui-widget-header">
-            <th width="200"><?php echo $this->translate("ot-index-index:library"); ?></th>
-            <th width="100"><?php echo $this->translate("ot-index-index:version"); ?></th>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th><?php echo $this->translate("ot-index-index:library"); ?></th>
+            <th><?php echo $this->translate("ot-index-index:version"); ?></th>
         </tr>
+    </thead>
+    <tbody>
         <tr> 
             <td style="text-align: left"><?php echo $this->appTitle; ?></td>
             <td style="text-align: center"><?php echo $this->appVersion; ?></td>
