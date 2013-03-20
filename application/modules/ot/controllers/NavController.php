@@ -74,12 +74,17 @@ class Ot_NavController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->acl = array('save' => $this->_helper->hasAccess('save'));
+        $this->view->acl = array(
+            'save' => $this->_helper->hasAccess('save')
+        );
         
         $this->_helper->pageTitle('ot-nav-index:title');;
         
-        $this->view->siteUrl = Zend_Registry::get('siteUrl');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.json.js');        
+        $this->view->assign(array(
+            'siteUrl' => Zend_Registry::get('siteUrl')
+        ));
+        
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.json.js');        
     }
 
     
@@ -132,15 +137,13 @@ class Ot_NavController extends Zend_Controller_Action
         
         if ($this->_request->isPost()) {
 
-            $rawData = Zend_Json_Decoder::decode($_POST['data']);
-            
             $rawData = array(
-                        'display'      => 'root',
-                        'permissions'  => '',
-                        'link'         => '',
-                        'children'     => $rawData
-                      );
-            
+                'display'      => 'root',
+                'permissions'  => '',
+                'link'         => '',
+                'children'     => Zend_Json_Decoder::decode($_POST['data']),
+            );
+                        
             $this->_filter = new Zend_Filter();
             $this->_filter->addFilter(new Zend_Filter_Word_CamelCaseToDash());
             $this->_filter->addFilter(new Zend_Filter_StringToLower());
@@ -164,10 +167,9 @@ class Ot_NavController extends Zend_Controller_Action
                 
                 $retData = array(
                     'rc' => '0',
-                    'msg' => $this->view
-                                  ->translate('msg-error-savingNav')
-                                   . ' ' . $e->getMessage(),
+                    'msg' => $this->view->translate('msg-error-savingNav') . ' ' . $e->getMessage(),
                 );
+                
                 echo Zend_Json_Encoder::encode($retData);
                 return;
             }
@@ -220,9 +222,7 @@ class Ot_NavController extends Zend_Controller_Action
             try {
                 $this->_acl->get($a['module'] . "_" . $a['controller']);
             } catch (Exception $e) {
-                throw new Exception(
-                    $this->view->translate('msg-error-notValidResource', array($a['module'], $a['controller']))
-                );
+                throw new Exception($this->view->translate('msg-error-notValidResource', array($a['module'], $a['controller'])));
             }
             
             $tab = array(
