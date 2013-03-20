@@ -1,6 +1,11 @@
-<p><?php echo $this->translate('ot-backup-index:header'); ?></p>
+
+<?php if ($this->downloadAll) : ?>
+<a class="btn" href="<?php echo $this->url(array('controller' => 'backup', 'action' => 'download-all-sql'), 'ot', true); ?>"><i class="icon icon-download-alt"></i> <?php echo $this->translate('ot-backup-index:downloadAllSql'); ?></a>
+<br /><br />
+<?php endif; ?>
+
+<?php echo $this->translate('ot-backup-index:header'); ?>
+<br /><br />
+
 <?php echo $this->form; ?>
 <br /><br />
-<?php if ($this->downloadAllSql) : ?>
-<a class="ui-state-default ui-corner-all linkButtonNoIcon" href="<?php echo $this->url(array('controller' => 'backup', 'action' => 'download-all-sql'), 'ot', true); ?>"><?php echo $this->translate('ot-backup-index:downloadAllSql'); ?></a>
-<?php endif; ?>

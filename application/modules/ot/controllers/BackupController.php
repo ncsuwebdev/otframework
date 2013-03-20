@@ -37,51 +37,23 @@ class Ot_BackupController extends Zend_Controller_Action
     {                                      
         $backup = new Ot_Model_Backup();
         
-        $form = $backup->_form();
+        $form = new Ot_Form_Backup(array('tables' => $backup->getTables()));
                 
         if ($this->_request->isPost()) {
-                
-                if ($form->isValid($_POST)) {
-                        
-                    $this->_helper->layout->disableLayout();
-                    $this->_helper->viewRenderer->setNeverRender();
-                    
-                    $db = Zend_Db_Table::getDefaultAdapter();
-                    
-                    $post = Zend_Registry::get('postFilter');
-                    
-                    $tableName = $post->tableName;
-                    
-                    if (isset($post->submitSql)) {
-                        $type = 'sql';
-                    } else {
-                        $type = 'csv';   
-                    }
+            if ($form->isValid($_POST)) {
 
-                    try {
-                        
-                        // This call sends it to the browser too 
-                        $backup->getBackup($db, $tableName, $type);
-                        
-                    } catch (Exception $e) {
-                        throw $e;
-                    }
-                    
-                    $logOptions = array(
-                        'attributeName' => 'databaseTableBackup',
-                        'attributeId'   => $tableName,
-                    );
-                    
-                    $message = 'Backup of database table ' . $tableName . ' was downloaded';
-                    $this->_helper->log(Zend_Log::INFO, $message, $logOptions);
-                }
+                $this->_helper->layout->disableLayout();
+                $this->_helper->viewRenderer->setNeverRender();
+                
+                // This call sends it to the browser too 
+                $backup->getBackup($form->getValue('tableName'), $form->getValue('format'));
+            }
         }
-        
-        $this->view->form = $form;
-        
-        if (!is_null(`mysqldump`)) {
-            $this->view->downloadAllSql = true;
-        }
+                
+        $this->view->assign(array(
+            'form'        => $form,
+            'downloadAll' => ($this->_helper->hasAccess('download-all-sql') && !is_null(`mysqldump`)),
+        ));
         
         $this->_helper->pageTitle('ot-backup-index:title');
     }
@@ -91,20 +63,13 @@ class Ot_BackupController extends Zend_Controller_Action
         if (!is_null(`mysqldump`)) {
             
             $backup = new Ot_Model_Backup();
-            
-            $db = Zend_Db_Table::getDefaultAdapter();
-            
-            try {
-                
-                // This call sends it to the browser too                 
-                $backup->getBackup($db, '', 'sqlAll');
-            } catch (Exception $e) {
-                throw $e;
-            }
-            
+               
             $this->_helper->layout->disableLayout();
             $this->_helper->viewRenderer->setNeverRender();
-            
+                        
+            // This call sends it to the browser too                 
+            $backup->getBackup('', 'sqlAll');
+                        
             $logOptions = array(
                 'attributeName' => 'databaseTableBackup',
                 'attributeId'   => 'allTables',

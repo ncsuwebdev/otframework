@@ -49,7 +49,17 @@ class Ot_Model_Backup
     {
         global $application;
 
-        $this->_prefix = $application->getOption('tablePrefix');
+        $this->_prefix = $application->getOption('tablePrefix');                             
+        
+        if (empty($this->_prefix)) {
+            throw new Ot_Exception_Access('No table prefix is defined, therefore you cannot make any backups.');
+        }
+        
+        if (!is_writable(APPLICATION_PATH . '/../cache')) {
+            throw new Ot_Exception_Data($this->view->translate('msg-error-cacheDirectoryNotWritable'));
+        }
+        
+        $this->_db = Zend_Db_Table::getDefaultAdapter();
     }
     /**
      * Does some sanity checking to make sure there's a prefix and the user is
@@ -60,26 +70,15 @@ class Ot_Model_Backup
      * @param $tableName The name of the table to fetch
      * @param $type The type of backup to get (csv, sql, or sqlAll)
      */
-    public function getBackup($db, $tableName, $type)
-    {
-        $this->_db = $db;
-        $this->_tableName = $tableName;                
-        
-        if (empty($this->_prefix)) {
-            throw new Ot_Exception_Access('No table prefix is defined, therefore you cannot make any backups.');
-        }
+    public function getBackup($tableName, $type)
+    {        
+        $this->_tableName = $tableName;   
         
         if ($type != 'sqlAll' && !preg_match('/^' . $this->_prefix . '/i', $this->_tableName)) {
-            throw new Ot_Exception_Access('You are attempting to access a table outside your application.
-                This is not allowed.');
+            throw new Ot_Exception_Access('You are attempting to access a table outside your application.  This is not allowed.');
         }
         
-        if (!is_writable(APPLICATION_PATH . '/../cache')) {
-            throw new Ot_Exception_Data($this->view->translate('msg-error-cacheDirectoryNotWritable'));
-        }
-        
-        switch($type) {
-            
+        switch($type) {            
             case 'csv':
                 $this->_getCsv();
                 break;
@@ -187,7 +186,7 @@ class Ot_Model_Backup
         unlink($path . '/' . $fileName);
     }   
     
-    protected function _getTables()
+    public function getTables()
     {
         $db = Zend_Db_Table::getDefaultAdapter();
         
@@ -201,55 +200,5 @@ class Ot_Model_Backup
         }
         
         return $tableList;
-    }
-    
-    /**
-     * The form for downloading the database tables
-     */
-    public function _form()
-    {
-        $form = new Zend_Form();
-        
-        if (empty($this->_prefix)) {
-            throw new Ot_Exception_Access('No table prefix is definied, therefore you cannot make any backups.');
-        }
-        
-        $tableList = $this->_getTables();
-        
-        $form->setAttrib('id', 'downloadDbTableForm')->setDecorators(
-            array(
-                'FormElements',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
-                'Form',
-            )
-        );
-                       
-        $tableName = $form->createElement('select', 'tableName', array('label' => 'Select A Table:'));
-        $tableName->setRequired(true)
-                  ->setMultiOptions($tableList);
-        
-        $submitCsv = $form->createElement('submit', 'submitCsv', array('label' => 'Download as CSV'));
-        $submitCsv->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
-
-        // if the mysqldump command is available on the system then allow the download as SQL option
-        if (!is_null(`mysqldump`)) {
-            $submitSql = $form->createElement('submit', 'submitSql', array('label' => 'Download as SQL'));
-            $submitSql->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
-        }
-                        
-        $form->addElements(array($tableName))->setElementDecorators(
-            array(
-                'ViewHelper',
-                'Errors',      
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                array('Label', array('tag' => 'span')),      
-            )
-        )->addElements(array($submitCsv));
-             
-        if (!is_null(`mysqldump`)) {
-            $form->addElement($submitSql);    
-        }
-             
-        return $form;
     }
 }

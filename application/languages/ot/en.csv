@@ -237,9 +237,9 @@ ot-acl-delete:title;Delete Access Role
 ot-acl-delete:header;You have selected to delete the role <b>%1$s</b>.
 ot-acl-delete:accountRoleChange;There are currently users who are assigned this role.  They will be put into the default role of <b>%1$s</b>.
 
-ot-backup-index:title;Backup Admin
-ot-backup-index:header;Select the table you would like to download.
-ot-backup-index:downloadAllSql;Click Here to Download All Tables as SQL
+ot-backup-index:title;Database Backup
+ot-backup-index:header;You can download a snapshot of a given database table from here if you do not have direct access to the database.  Select the table you would like to download.
+ot-backup-index:downloadAllSql;Download All Tables as SQL
 
 ot-bug-index:title;Bug Reports
 ot-bug-index:header;These are the bugs which have been filed.
