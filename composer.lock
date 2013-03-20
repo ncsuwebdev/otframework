@@ -1,6 +1,63 @@
 {
-    "hash": "76a9ce4488621814bc0a00ceeb6e1782",
+    "hash": "98d20fe4eb400490c131d15d3a5ee277",
     "packages": [
+        {
+            "name": "bombayworks/zendframework1",
+            "version": "v1.12.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bombayworks/zendframework1.git",
+                "reference": "v1.12.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bombayworks/zendframework1/zipball/v1.12.3",
+                "reference": "v1.12.3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.11"
+            },
+            "bin": [
+                "bin/zf.sh",
+                "bin/zf.php"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-trunk": "1.12.x-dev",
+                    "dev-release-1.0": "1.0.x-dev",
+                    "dev-release-1.5": "1.5.x-dev",
+                    "dev-release-1.6": "1.6.x-dev",
+                    "dev-release-1.7": "1.7.x-dev",
+                    "dev-release-1.8": "1.8.x-dev",
+                    "dev-release-1.9": "1.9.x-dev",
+                    "dev-release-1.10": "1.10.x-dev",
+                    "dev-release-1.11": "1.11.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend_": "library/",
+                    "ZendX_": "extras/library/"
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "include-path": [
+                "library/",
+                "extras/library/"
+            ],
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Zend Framework 1",
+            "homepage": "http://framework.zend.com/",
+            "keywords": [
+                "ZF1",
+                "framework"
+            ],
+            "time": "2013-03-13 17:09:28"
+        },
         {
             "name": "emagister/zend-form-decorators-bootstrap",
             "version": "dev-master",
@@ -122,51 +179,6 @@
                 "ncsu"
             ],
             "time": "2013-02-06 20:22:08"
-        },
-        {
-            "name": "zendframework/zendframework1",
-            "version": "1.12.2",
-            "source": {
-                "type": "svn",
-                "url": "http://framework.zend.com/svn/framework/standard",
-                "reference": "/tags/release-1.12.2/@25270"
-            },
-            "require": {
-                "php": ">=5.2.11"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-trunk": "1.12.x-dev",
-                    "dev-release-1.0": "1.0.x-dev",
-                    "dev-release-1.5": "1.5.x-dev",
-                    "dev-release-1.6": "1.6.x-dev",
-                    "dev-release-1.7": "1.7.x-dev",
-                    "dev-release-1.8": "1.8.x-dev",
-                    "dev-release-1.9": "1.9.x-dev",
-                    "dev-release-1.10": "1.10.x-dev",
-                    "dev-release-1.11": "1.11.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Zend": "library/"
-                }
-            },
-            "notification-url": "http://packagist.org/downloads/",
-            "include-path": [
-                "library/"
-            ],
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "framework"
-            ],
-            "time": "2013-02-25 19:10:50"
         }
     ],
     "packages-dev": null,
