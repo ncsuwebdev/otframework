@@ -45,7 +45,7 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
         $role = (empty($identity->role)) ? $register->defaultRole->getValue() : $identity->role;
         
         if (isset($identity->masquerading) && $identity->masquerading == true && isset($identity->realAccount) && !is_null($identity->realAccount) && isset($identity->realAccount->role)) {
-        	$role = $identity->realAccount->role;
+            $role = $identity->realAccount->role;
         }
         
         $acl = Zend_Registry::get('acl');
@@ -62,16 +62,20 @@ class Ot_FrontController_Plugin_MaintenanceMode extends Zend_Controller_Plugin_A
                     && $request->getControllerName() == 'login'
                     && $request->getActionName() == 'index')
                 ) {
-                    $layout->setLayoutPath(APPLICATION_PATH . '/views/layouts');
-                    $layout->setLayout('maintenance');
+                    $response = $this->getResponse();
+                
+                    $layout->disableLayout();
+                    
+                    $response->setBody($view->maintenanceMode()->publicLayout());
                 }
             } else {
                 $response = $this->getResponse();
+                
                 // there's no point in setting text here if it's a redirect
-                if($response->isRedirect()) {
+                if ($response->isRedirect()) {
                     $response->setBody('');
                 } else {
-                    $response->setBody($view->render('maintenanceHeader.phtml') . $response->getBody());
+                    $response->setBody($view->maintenanceMode()->header() . $response->getBody());
                 }
             }
         }

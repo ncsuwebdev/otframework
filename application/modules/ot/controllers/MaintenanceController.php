@@ -60,9 +60,14 @@ class Ot_MaintenanceController extends Zend_Controller_Action
     {
         $this->_helper->pageTitle('ot-maintenance-index:title');
         
+        $form = new Ot_Form_MaintenanceMode(array('currentMaintenanceModeStatus' => $this->_inMaintenanceMode));
+        $form->setMethod(Zend_Form::METHOD_GET);
+        $form->setAction($this->view->url(array('controller' => 'maintenance', 'action' => 'toggle'), 'ot', true));
+        
         $this->view->assign(array(
             'messages'          => $this->_helper->messenger->getMessages(),
             'inMaintenanceMode' => $this->_inMaintenanceMode,
+            'form'              => $form,
         ));
     }
 
@@ -78,10 +83,10 @@ class Ot_MaintenanceController extends Zend_Controller_Action
             throw new Ot_Exception_Input('msg-error-statusNotFound');
         }
         
-        if ($status == 'on') {
-            file_put_contents($path . '/' . $this->_maintenanceModeFileName, '');
+        if ($status == '1') {
+            file_put_contents($this->_overridesPath . '/' . $this->_maintenanceModeFileName, '');
         } else {
-            unlink($path . '/' . $this->_maintenanceModeFileName); 
+            unlink($this->_overridesPath . '/' . $this->_maintenanceModeFileName); 
         }
         
         $logOptions = array(
@@ -89,7 +94,7 @@ class Ot_MaintenanceController extends Zend_Controller_Action
             'attributeId'   => '0',
         );
         
-        if ($status == 'on') {
+        if ($status == '1') {
             $logMsg = "Application was put into maintenance mode";
             $this->_helper->messenger->addInfo('msg-info-maintenanceOn');
         } else {
