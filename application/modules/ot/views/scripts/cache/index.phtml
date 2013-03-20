@@ -1,9 +1,5 @@
-<?php if ($this->acl['clearCache']) : ?>
-<div>
-    <?php echo $this->translate('ot-cache-index:header'); ?>
-</div>
-<br />
-<form action="<?php echo $this->url(array('controller' => 'cache', 'action' => 'clear'), 'ot', true); ?>" method="post">
-    <input type="submit" name="clearCache" value="<?php echo $this->translate('ot-cache-index:linkClear'); ?>" />
-</form>
-<?php endif; ?>
+<?php echo $this->translate('ot-cache-index:header'); ?>
+
+<br /><br />
+
+<?php echo $this->form; ?>

@@ -34,12 +34,16 @@ class Ot_CacheController extends Zend_Controller_Action
      * Shows the cache management index page
      */
     public function indexAction()
-    {
-        $messages = array();
-                
-        $this->view->acl = array('clearCache' => $this->_helper->hasAccess('clear'));
-
-        $this->view->messages = array_merge($this->_helper->messenger->getMessages(), $messages);
+    { 
+        $form = new Ot_Form_Cache();
+        
+        $form->setAction($this->view->url(array('controller' => 'cache', 'action' => 'clear'), 'ot', true));
+        
+        $this->view->assign(array(
+            'form'     => $form,
+            'messages' => $this->_helper->messenger->getMessages()
+        ));
+        
         $this->_helper->pageTitle('ot-cache-index:title');
     }
     
@@ -51,8 +55,7 @@ class Ot_CacheController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNeverRender();
         $this->_helper->layout->disableLayout();
         
-        $post = Zend_Registry::get('postFilter');
-        if(!$post->clearCache) {
+        if (is_null($this->_getParam('clearCache', null))) {
             $this->_helper->messenger->addError('msg-info-cacheNotCleared');
             $this->_helper->redirector->gotoRoute(array('controller' => 'cache'), 'ot', true);
         }
