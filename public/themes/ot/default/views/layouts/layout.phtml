@@ -26,7 +26,6 @@ echo $this->headLink() . "\n\n";
 // print the minified (common) scripts first, then the autoloaded scripts
 echo $this->minifyHeadScript() . "\n";
 echo $this->headScript() . "\n";
-$this->overrideTranslation()->js(); 
 
 echo "\n";
 ?>
@@ -94,8 +93,6 @@ echo "\n";
                 }
             }
             ?>
-        
-        <?php echo $this->navigation()->breadcrumbs()->setMinDepth(0)->setMaxDepth(null)->setPartial('bootstrap-breadcrumbs.phtml'); ?>
         
         <h1><?php echo $this->title; ?></h1>
         <?php echo $this->layout()->content; ?>

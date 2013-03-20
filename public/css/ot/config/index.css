@@ -94,3 +94,8 @@ fieldset label {
 .subelement {
     margin-bottom: 5px;
 }
+
+textarea {
+    width: 400px;
+    height: 150px;
+}
