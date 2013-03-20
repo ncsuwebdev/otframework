@@ -36,8 +36,6 @@ class Ot_EmailqueueController extends Zend_Controller_Action
      */
     public function indexAction()
     {            
-        $this->_helper->pageTitle('ot-emailqueue-index:title');          
-        $this->view->messages = $this->_helper->messenger->getMessages(); 
         
         $filterStatus = $this->_getParam('status', 'any');
         $filterTrigger = $this->_getParam('trigger', 'any');
@@ -78,6 +76,8 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             $triggers[$a->triggerActionId] = $a;
         }
         
+        $this->_helper->pageTitle('ot-emailqueue-index:title'); 
+        
         $this->view->assign(array(
             'paginator'     => $paginator,
             'form'          => $form,
@@ -85,6 +85,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             'sort'          => $filterSort,
             'direction'     => $filterDirection,
             'triggers'      => $triggers,
+            'messages'      => $this->_helper->messenger->getMessages(),
         ));        
     }        
     
@@ -101,14 +102,12 @@ class Ot_EmailqueueController extends Zend_Controller_Action
         
         $eq = new Ot_Model_DbTable_EmailQueue();
 
-        $get = Zend_Registry::get('getFilter');
-
-        if (!isset($get->queueId)) {
+        $queueId = $this->_getParam('queueId', null);        
+        if (is_null($queueId)) {
             throw new Ot_Exception_Input('msg-error-queueIdNotSet');
         }
 
-        $email = $eq->find($get->queueId);
-
+        $email = $eq->find($queueId);
         if (is_null($email)) {
             throw new Ot_Exception_Data('msg-error-noQueue');
         }
@@ -121,7 +120,10 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             'header'  => $email['zendMailObject']->getHeaders(),
         );
 
-        $this->view->email = $email;
+        $this->view->assign(array(
+            'email' => $email
+        ));
+        
         $this->_helper->pageTitle('ot-emailqueue-details:title');
     }
     
@@ -133,30 +135,25 @@ class Ot_EmailqueueController extends Zend_Controller_Action
     {
         $eq = new Ot_Model_DbTable_EmailQueue();
 
-        $get = Zend_Registry::get('getFilter');
-
-        if (!isset($get->queueId)) {
+        $queueId = $this->_getParam('queueId', null);        
+        if (is_null($queueId)) {
             throw new Ot_Exception_Input('msg-error-queueIdNotSet');
         }
 
-        $email = $eq->find($get->queueId);
-
+        $email = $eq->find($queueId);
         if (is_null($email)) {
             throw new Ot_Exception_Data('msg-error-noQueue');
         }
         
-        $form = Ot_Form_Template::delete('deleteEmail');
-
-        if ($this->_request->isPost() && $form->isValid($_POST)) {
+        if ($this->_request->isPost()) {
                 
-            $where = $eq->getAdapter()->quoteInto('queueId = ?', $get->queueId);
+            $where = $eq->getAdapter()->quoteInto('queueId = ?', $queueId);
             $eq->delete($where);
             
             $this->_helper->messenger->addSuccess('ot-emailqueue-delete:success');
             $this->_helper->redirector->gotoRoute(array('controller' => 'emailqueue'), 'ot', true);
-        }
-        
-        $this->view->form = $form;
-        $this->_helper->pageTitle('ot-emailqueue-delete:pageTitle');
+        } else {
+            throw new Ot_Exception_Access('You are not allowed to access this method directly');
+        }        
     }
 }

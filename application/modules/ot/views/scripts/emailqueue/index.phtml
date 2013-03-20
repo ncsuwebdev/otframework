@@ -8,9 +8,9 @@
 
     <h4><?php echo $this->paginator->getTotalItemCount(); ?> Email<?php echo ($this->paginator->getTotalItemCount() != 1) ? 's' : ''; ?> Found</h4>
     
-    <table class="list">    
+    <table class="table table-bordered table-striped">    
         <thead>
-            <tr class="ui-widget-header">
+            <tr>
                 <th>Message</th>
                 <th>Dates</th>
                 <th>Trigger</th>                
@@ -42,7 +42,7 @@
                         if ($message['attributeName'] == 'triggerActionId') {
                             $t = $this->triggers[$message['attributeId']];
 
-                            echo "<b>" . $t->triggerId . "</b><br />" . $t->name;
+                            echo "<b>" . $t->name . "</b>";
                         } else {
                             echo "No Trigger";
                         }
@@ -50,16 +50,17 @@
                         ?>
                     </td>
                         
-                    <td style="text-align:center"><a href="<?php echo $this->url(array('controller' => 'emailqueue', 'action' => 'details', 'queueId' => $message['queueId']), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButtonNoText">Details</a></td>
+                    <td style="text-align:center">
+                        <a href="<?php echo $this->url(array('controller' => 'emailqueue', 'action' => 'details', 'queueId' => $message['queueId']), 'ot', true); ?>" class="btn">Details</a></td>
                 </tr>                
             <?php endforeach; ?>                    
         </tbody>    
     </table>
     
     <div id="itemFooter">
-        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'searchPaginationControl.phtml'); ?>
+        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'bootstrap-pagination.phtml'); ?>
     </div>
 <?php else: ?>    
-   <div class="noItems">There are no requests at the moment.</div>    
+   <div class="noItems">There are no emails at the moment.</div>    
 <?php endif; ?>
 </div>

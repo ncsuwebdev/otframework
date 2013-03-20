@@ -8,10 +8,9 @@ class Ot_Form_EmailqueueSearch extends Zend_Form
         $this->setAttrib('id', 'emailqueueSearchForm')
              ->setDecorators(array(
                      'FormElements',
-                     array('HtmlTag', array('tag' => 'div', 'class' => 'zend_form')),
+                     array('HtmlTag', array('tag' => 'div', 'class' => 'well')),
                      'Form',
              ))
-             ->setAttrib('class', 'ui-corner-all')
              ->setMethod(Zend_Form::METHOD_GET);
 
         $status = $this->createElement('select', 'status', array('label' => 'Sending Status:'));
@@ -27,10 +26,10 @@ class Ot_Form_EmailqueueSearch extends Zend_Form
         
         $ta = new Ot_Model_DbTable_TriggerAction();
         
-        $actions = $ta->fetchAll(null, array('triggerId', 'name'));
+        $actions = $ta->fetchAll(null, array('eventKey', 'name'));
         
         foreach ($actions as $a) {
-            $trigger->addMultiOption($a->triggerActionId, $a->triggerId . ' (' . $a->name . ')');
+            $trigger->addMultiOption($a->triggerActionId, $a->name);
         }
         
 
@@ -51,7 +50,7 @@ class Ot_Form_EmailqueueSearch extends Zend_Form
         $direction->setDecorators(array('ViewHelper'));
         
         $submit = $this->createElement('submit', 'submitButton', array('label' => 'Filter Results'));
-        $submit->setAttrib('class', 'button-red');
+        $submit->setAttrib('class', 'btn btn-danger');
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit')),
                    array(array('wrapperAll' => 'HtmlTag'), array('tag' => 'div', 'class' => 'submit')),
