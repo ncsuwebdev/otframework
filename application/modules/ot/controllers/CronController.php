@@ -43,27 +43,41 @@ class Ot_CronController extends Zend_Controller_Action
             'acl'    => $this->_helper->hasAccess('index', 'ot_acl')
         );
             
-        $this->view->guestHasAccess = $this->_helper->hasAccess('index', 'ot_cronjob', $this->_helper->configVar('defaultRole'));
         
         $role = new Ot_Model_DbTable_Role();
-        $this->view->defaultRole = $role->find($this->_helper->configVar('defaultRole'));
+                
+        $statusModel = new Ot_Model_DbTable_CronStatus();
+        $statusMarkers = $statusModel->fetchAll();
 
-        $registry = new Ot_Cron_Register();
-
-        $status = new Ot_Model_DbTable_CronStatus();
-        $statusMarkers = $status->fetchAll();
-
-        $status = array();
+        $cjStatus = array();
         foreach ($statusMarkers as $s) {
-            $status[$s->name] = array(
-                'status' => $s->status,
+            $cjStatus[$s->jobKey] = array(
+                'status'    => $s->status,
                 'lastRunDt' => $s->lastRunDt,
             );
         }
-
-        $this->view->messages = $this->_helper->messenger->getMessages();
-        $this->view->cronjobs = $registry->getCronjobs();
-        $this->view->status = $status;
+        
+        $jobs = array();        
+        
+        $cjr = new Ot_Cron_JobRegister();
+        
+        $registeredJobs = $cjr->getJobs();
+        
+        foreach ($registeredJobs as $j) {
+            $jobs[] = array(
+                'job'       => $j,
+                'isEnabled' => (isset($cjStatus[$j->getKey()]) && $cjStatus[$j->getKey()]['status'] == 'enabled'),
+                'lastRunDt' => (isset($cjStatus[$j->getKey()])) ? $cjStatus[$j->getKey()]['lastRunDt'] : 0,
+            );
+        }
+        
+        $this->view->assign(array(
+            'defaultRole'    => $role->find($this->_helper->configVar('defaultRole')),
+            'guestHasAccess' => $this->_helper->hasAccess('index', 'ot_cronjob', $this->_helper->configVar('defaultRole')),
+            'messages'       => $this->_helper->messenger->getMessages(),
+            'cronjobs'       => $jobs,
+        ));
+        
         $this->_helper->pageTitle('ot-cron-index:title');
     }
 
@@ -73,99 +87,46 @@ class Ot_CronController extends Zend_Controller_Action
      */
     public function toggleAction()
     {
-        $cs = new Ot_Model_DbTable_CronStatus();
-
-        $get = Zend_Registry::get('getFilter');
+        $jobKey = $this->_getParam('jobKey', null);
         
-        if (!isset($get->name)) {
+        if (is_null($jobKey)) {
             throw new Ot_Exception_Input('msg-error-nameNotSet');
         }
         
-        if (!isset($get->status)) {
-            $cj = $cs->find($get->name);
-    
-            if (is_null($cj)) {
-                $cj = array('status' => 'disabled', 'name' => $get->name);
-    
-                $status = 'disabled';
-            } else {
-                $cj = $cj->toArray();
-    
-                $status = $cj['status'];
-            }
-        } else {
-            $status = $get->status;
-        }        
+        $status = $this->_getParam('status', null);
         
-        $form = new Zend_Form();
-        $form->setAction('?name=' . $get->name)->setMethod('post')->setAttrib('id', 'toggleCronJob');
-       
-        $hidden = $form->createElement('hidden', 'status');
-        $hidden->setValue(($status == 'enabled') ? 'disable' : 'enable');
-        $hidden->clearDecorators();
-        $hidden->addDecorators(array(array('ViewHelper')));
-               
-        $submit = $form->createElement('submit', 'submitButton', array('label' => 'form-button-yes'));
-        $submit->setDecorators(array(array('ViewHelper', array('helper' => 'formSubmit'))));
-                 
-        $cancel = $form->createElement('button', 'cancel', array('label' => 'form-button-cancel'));
-        $cancel->setAttrib('id', 'cancel');
-        $cancel->setDecorators(array(array('ViewHelper', array('helper' => 'formButton'))));
-                        
-        $form->addElements(array($hidden))->setElementDecorators(
-            array(
-                'ViewHelper',
-                'Errors',      
-                array('HtmlTag', array('tag' => 'div', 'class' => 'elm')), 
-                array('Label', array('tag' => 'span')),      
-            )
-        )->addElements(array($submit, $cancel));
+        if (is_null($status) || !in_array($status, array('enabled', 'disabled'))) {
+            throw new Ot_Exception_Input('Status not set in the query string');
+        }                
         
-        if ($this->_request->isPost() && $form->isValid($_POST)) {
+        if ($this->_request->isPost()) {
             
-            $status = ($form->getValue('status') == 'enable') ? 'enabled' : 'disabled';
+            $cs = new Ot_Model_DbTable_CronStatus();
+            $cs->setCronStatus($jobKey, $status);
 
-            $cs->setCronStatus($get->name, $status);
-
-            $logOptions = array('attributeName' => 'cronName', 'attributeId' => $get->name);
+            $logOptions = array('attributeName' => 'cronName', 'attributeId' => $jobKey);
                     
-            $this->_helper->log(Zend_Log::INFO, 'Cronjob ' . $get->name . ' was set to ' . $status . '.', $logOptions);
+            $this->_helper->log(Zend_Log::INFO, 'Cronjob ' . $jobKey . ' was set to ' . $status . '.', $logOptions);
                         
             $this->_helper->redirector->gotoRoute(array('controller' => 'cron'), 'ot', true);
-        }
-        
-        if ($get->name == 'all') {
-            $this->view->displayName = 'all cron jobs';
         } else {
-            $this->view->displayName = $get->name;
+            throw new Ot_Exception_Access('You are not allowed to access this method directly');
         }
-
-        $this->view->status = ($status == 'enabled') ? 'disable' : 'enable';
-        $this->_helper->pageTitle('ot-cron-toggle:title');
-        $this->view->form = $form;
     }
     
     public function jobAction()
     {
         set_time_limit(0);
 
-        $name = $this->_getParam('name');
-
-        $register = new Ot_Cron_Register();
+        $jobKey = $this->_getParam('jobKey', null);
+        
+        if (is_null($jobKey)) {
+            throw new Ot_Exception_Input('msg-error-nameNotSet');
+        }
+        
         $dispatcher = new Ot_Cron_Dispatcher();
-        $cs = new Ot_Model_DbTable_CronStatus();
 
-        $thisJob = $register->getCronjob($name);
-
-        if (is_null($thisJob)) {
-            throw new Exception('Job not found');
-        }
-
-        if (!$cs->isEnabled($name)) {
-            throw new Exception('Job must be enabled for it to be run');
-        }
-
-        $dispatcher->dispatch($name);
+        $dispatcher->dispatch($jobKey);
 
         $this->_helper->messenger->addSuccess('Job executed successfully');
         $this->_helper->redirector->gotoRoute(array('controller' => 'cron', 'action' => 'index'), 'ot', true);

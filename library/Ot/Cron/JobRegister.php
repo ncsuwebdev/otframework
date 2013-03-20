@@ -29,9 +29,9 @@
  *             Information Technology
  *
  */
-class Ot_Cron_Register
+class Ot_Cron_JobRegister
 {
-    const REGISTRY_KEY = 'Ot_Cron_Registry';
+    const REGISTRY_KEY = 'Ot_Cron_JobRegister';
 
     public function __construct()
     {
@@ -40,32 +40,32 @@ class Ot_Cron_Register
         }
     }
 
-    public function registerCronjob(Ot_Cron $cron)
+    public function registerJob(Ot_Cron_Job $cron)
     {
-        $registered = $this->getCronjobs();
-        $registered[$cron->getName()] = $cron;
+        $registered = $this->getJobs();
+        $registered[$cron->getKey()] = $cron;
 
         Zend_Registry::set(self::REGISTRY_KEY, $registered);
     }
 
-    public function registerCronjobs(array $cronJobs)
+    public function registerJobs(array $jobs)
     {
-        foreach ($cronJobs as $job) {
-            $this->registerCronjob($job);
+        foreach ($jobs as $job) {
+            $this->registerJob($job);
         }
     }
 
-    public function getCronjob($name)
+    public function getJob($key)
     {
-        $registered = $this->getCronJobs();
+        $registered = $this->getJobs();
 
-        return (isset($registered[$name])) ? $registered[$name] : null;
+        return (isset($registered[$key])) ? $registered[$key] : null;
     }
     
     /**
      * returns all cron jobs regardless of whether it's enabled or disabled
      **/
-    public function getCronjobs()
+    public function getJobs()
     {
         return Zend_Registry::get(self::REGISTRY_KEY);
     }

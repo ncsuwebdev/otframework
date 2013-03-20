@@ -36,47 +36,51 @@ class Ot_Cron_Dispatcher
      *
      * @param int $
      */
-    public function dispatch($name = null)
+    public function dispatch($jobKey = null)
     {    	
-    	$register = new Ot_Cron_Register();
+    	$register = new Ot_Cron_JobRegister();
         $cs = new Ot_Model_DbTable_CronStatus();
 
-        if (!is_null($name)) {
-            $thisJob = $register->getCronjob($name);
+        if (!is_null($jobKey)) {
+            $thisJob = $register->getJob($jobKey);
 
-            if (!is_null($thisJob)) {
-                if (!$cs->isEnabled($thisJob->getName())) {
-                    throw new Ot_Exception('Job is disabled and cannot be run');
-                }
-
-                $lastRunDt = $cs->getLastRunDt($thisJob->getName());
-
-                $thisJob->getMethod()->execute($lastRunDt);
-
-                $cs->executed($thisJob->getName(), time());
-            } else {
-                throw new Ot_Exception('Cron Job cannot be found');
+            if (is_null($jobKey)) {
+                throw new Exception('Job not found');
             }
 
+            if (!$cs->isEnabled($thisJob->getKey())) {
+                throw new Ot_Exception('Job is disabled and cannot be run');
+            }
+
+            $lastRunDt = $cs->getLastRunDt($thisJob->getKey());
+            
+            $jobObj = $thisJob->getJobObj();
+            
+            $jobObj->execute($lastRunDt);
+
+            $cs->executed($thisJob->getKey(), time());
+            
             return;
         }
 
         $now = time();
         
-        $jobs = $register->getCronJobs();
+        $jobs = $register->getJobs();
 
     	foreach ($jobs as $job) {
             if ($this->shouldExecute($job->getSchedule(), $now)) {                
 
-                if (!$cs->isEnabled($job->getName())) {
+                if (!$cs->isEnabled($job->getKey())) {
                     continue;
                 }
 
-                $lastRunDt = $cs->getLastRunDt($job->getName());
+                $lastRunDt = $cs->getLastRunDt($job->getKey());
 
-                $job->getMethod()->execute($lastRunDt);
+                $jobObj = $thisJob->getJobObj();
+                
+                $jobObj->execute($lastRunDt);
 
-                $cs->executed($job->getName(), time());
+                $cs->executed($job->getKey(), time());
             }
         }
     }

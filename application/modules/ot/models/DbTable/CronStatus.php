@@ -44,7 +44,7 @@ class Ot_Model_DbTable_CronStatus extends Ot_Db_Table
      *
      * @var string
      */
-    protected $_primary = 'name';
+    protected $_primary = 'jobKey';
 
     /**
      * Checks to see if a certain cron job is enabled
@@ -52,9 +52,9 @@ class Ot_Model_DbTable_CronStatus extends Ot_Db_Table
      * @param string $name
      * @return boolean
      */
-    public function isEnabled($name)
+    public function isEnabled($jobKey)
     {
-        $result = $this->find($name);
+        $result = $this->find($jobKey);
 
         if (is_null($result)) {
             return false;
@@ -63,19 +63,19 @@ class Ot_Model_DbTable_CronStatus extends Ot_Db_Table
         return ($result->status == 'enabled');
     }
     
-    public function executed($name, $ts)
+    public function executed($jobKey, $ts)
     {
         $data = array(
-           'name'      => $name,
+           'jobKey'      => $jobKey,
            'lastRunDt' => $ts,
         );
         
         $this->update($data, null);
     }
     
-    public function getLastRunDt($name)
+    public function getLastRunDt($jobKey)
     {
-        $result = $this->find($name);
+        $result = $this->find($jobKey);
 
         if (is_null($result)) {
             return 0;
@@ -84,27 +84,27 @@ class Ot_Model_DbTable_CronStatus extends Ot_Db_Table
         return $result->lastRunDt;
     }
 
-    public function setCronStatus($name, $status)
+    public function setCronStatus($jobKey, $status)
     {
         $dba = $this->getAdapter();
 
-        if ($name == 'all') {
+        if ($jobKey == 'all') {
 
-            $register = new Ot_Cron_Register();
+            $register = new Ot_Cron_JobRegister();
 
-            $jobs = $register->getCronjobs();
+            $jobs = $register->getJobs();
 
             foreach ($jobs as $j) {
                 $data = array('status' => $status);
-                $job = $this->find($j->getName());
+                $job = $this->find($j->getKey());
 
                 if (!is_null($job)) {
-                    $where = $dba->quoteInto('name = ?', $j->getName());
+                    $where = $dba->quoteInto('jobKey = ?', $j->getKey());
 
                     $this->update($data, $where);
                 } else {
 
-                    $data['name'] = $j->getName();
+                    $data['jobKey'] = $j->getKey();
 
                     $this->insert($data);
                 }
@@ -112,19 +112,18 @@ class Ot_Model_DbTable_CronStatus extends Ot_Db_Table
         } else {
 
             $data = array('status' => $status);
-            $job = $this->find($name);
+            
+            $job = $this->find($jobKey);
 
             if (!is_null($job)) {
-                $where = $dba->quoteInto('name = ?', $name);
-
+                $where = $dba->quoteInto('jobKey = ?', $jobKey);
+                
                 $this->update($data, $where);
             } else {
-                $data['name'] = $name;
+                $data['jobKey'] = $jobKey;
 
                 $this->insert($data);
             }
         }
-
-        return true;
     }
 }

@@ -1,9 +1,7 @@
 <?php if (!$this->guestHasAccess) : ?>
-    <div class="ui-widget ui-state-highlight ui-corner-all">
-        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+    <div class="alert">
         <?php echo $this->translate('ot-cron-index:noAccess', array($this->defaultRole->name))?>
         <?php if ($this->acl['acl']) : ?>
-        <br />
         <a href="<?php echo $this->baseUrl(); ?>/ot/acl"><?php echo $this->translate('ot-cron-index:editAcl'); ?></a> 
         <?php endif; ?>
     </div>
@@ -14,45 +12,105 @@
 <br /><br />
 
     <?php if ($this->acl['toggle']): ?>
-    <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle', 'name' => 'all', 'status' => 'diabled'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-cron-index:linkEnableAll'); ?><span class="ui-icon ui-icon-plusthick"></span></a>
-    <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle', 'name' => 'all', 'status' => 'enabled'), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-cron-index:linkDisableAll'); ?><span class="ui-icon ui-icon-minusthick"></span></a>  
+    <a href="#enableAll" data-toggle="modal" class="btn btn-success"><i class="icon-white icon-plus"></i> <?php echo $this->translate('ot-cron-index:linkEnableAll'); ?></a>
+    <a href="#disableAll" data-toggle="modal" class="btn btn-danger"><i class="icon-white icon-minus"></i> <?php echo $this->translate('ot-cron-index:linkDisableAll'); ?></a>  
     <br /><br />
+    
+    <div id="enableAll" class="modal hide fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+            <h3>Enable All Cron Jobs</h3>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to enable all cron jobs?</p>
+        </div>
+        <div class="modal-footer">
+            <form style="margin: 0;" method="post" action="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle'), 'ot', true); ?>">
+                <input type="hidden" name="status" value="enabled" />
+                <input type="hidden" name="jobKey" value="all" />
+                <input type="submit" name="submit" value="Yes, Enable All Jobs" class="btn btn-success" />
+                <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+            </form>
+        </div>
+    </div>   
+    
+    <div id="disableAll" class="modal hide fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+            <h3>Disable All Cron Jobs</h3>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to disable all cron jobs?</p>
+        </div>
+        <div class="modal-footer">
+            <form style="margin: 0;" method="post" action="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle'), 'ot', true); ?>">
+                <input type="hidden" name="status" value="disabled" />
+                <input type="hidden" name="jobKey" value="all" />
+                <input type="submit" name="submit" value="Yes, Disable All Jobs" class="btn btn-danger" />
+                <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+            </form>
+        </div>
+    </div> 
     <?php endif; ?>
 
     <?php if (count($this->cronjobs) != 0): ?>
         <?php foreach ($this->cronjobs as $c): ?>
-            <div class="job">
-                <div class="status <?php echo (isset($this->status[$c->getName()]) && $this->status[$c->getName()]['status'] == 'enabled') ? 'enabled' : 'disabled'; ?>">&nbsp;</div>
-                <div class="actions">
+            <div class="job well well-small">
+                <div class="row">
+                <div class="span1 status <?php echo ($c['isEnabled']) ? 'enabled' : 'disabled'; ?>">
+
+                </div>
+                <div class="span5">
+                    <h3 class="name"><?php echo $c['job']->getName(); ?></h3>
+                    <div class="description"><?php echo $c['job']->getDescription(); ?></div>
+                    <div class="schedule">
+                        <?php
+                        if ($c['lastRunDt'] != 0) {
+                            echo 'Last executed ' . $this->elapsedTime($c['lastRunDt']);
+                        } else {
+                            echo $this->translate('ot-cron-index:neverRun');
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="span5 actions pull-right">
                     <?php if ($this->acl['toggle']): ?>
-                        <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle', 'name' => $c->getName()), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton">
+                        <a href="#toggleModal<?php echo $c['job']->getKey(); ?>" data-toggle="modal" class="btn <?php echo ($c['isEnabled']) ? 'btn-danger' : 'btn-success'; ?>">
                             <?php
-                            if (isset($this->status[$c->getName()]) && $this->status[$c->getName()]['status'] == 'enabled') {
-                                echo $this->translate('ot-cron-index:disable') . '<span class="ui-icon ui-icon-minusthick"></span>';
+                            if ($c['isEnabled']) {
+                                echo '<i class="icon-white icon-minus"></i> ' . $this->translate('ot-cron-index:disable');
                             } else {
-                                echo $this->translate('ot-cron-index:enable') . '<span class="ui-icon ui-icon-plusthick"></span>';
+                                echo '<i class="icon-white icon-plus"></i> ' . $this->translate('ot-cron-index:enable');
                             }
                             ?>
                         </a>
                     <?php endif; ?>
 
-                    <?php if (isset($this->status[$c->getName()]) && $this->status[$c->getName()]['status'] == 'enabled'): ?>
-                        <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'job', 'name' => $c->getName()), 'ot', true); ?>" class="ui-state-default ui-corner-all linkButton"><?php echo $this->translate('ot-cron-index:runNow'); ?><span class="ui-icon ui-icon-gear"></span></a>
+                    <?php if ($c['isEnabled']): ?>
+                        <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'job', 'jobKey' => $c['job']->getKey()), 'ot', true); ?>" class="btn"><i class="icon icon-cog"></i> <?php echo $this->translate('ot-cron-index:runNow'); ?></a>
                     <?php endif; ?>
-                </div>
-                <div class="name"><?php echo $c->getName(); ?></div>
-                <div class="description"><?php echo $c->getDescription(); ?></div>
-                <div class="schedule">
-                    <?php
-                    if (isset($this->status[$c->getName()]) && $this->status[$c->getName()]['lastRunDt'] != 0) {
-                        echo 'Last executed ' . $this->elapsedTime($this->status[$c->getName()]['lastRunDt']);
-                    } else {
-                        echo $this->translate('ot-cron-index:neverRun');
-                    }
-                    ?>
-                </div>
-                <div class="ui-helper-clearfix"></div>
+                </div>                  
             </div>
+                    
+            <?php if ($this->acl['toggle']): ?>
+            <div id="toggleModal<?php echo $c['job']->getKey(); ?>" class="modal hide fade">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                    <h3><?php echo (($c['isEnabled']) ? 'Disable' : 'Enable') . ' ' . $c['job']->getName() . ' Cron Job'; ?></h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to change this cron job?</p>
+                </div>
+                <div class="modal-footer">
+                    <form style="margin: 0;" method="post" action="<?php echo $this->url(array('controller' => 'cron', 'action' => 'toggle'), 'ot', true); ?>">
+                        <input type="hidden" name="jobKey" value="<?php echo $c['job']->getKey(); ?>" />
+                        <input type="hidden" name="status" value="<?php echo ($c['isEnabled']) ? 'disabled' : 'enabled' ?>" />
+                        <input type="submit" name="submit" value="Yes, <?php echo ($c['isEnabled']) ? 'Disable' : 'Enable'; ?>" class="btn <?php echo ($c['isEnabled']) ? 'btn-danger' : 'btn-success'; ?>" />
+                        <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                    </form>
+                </div>
+            </div>
+            <?php endif; ?>  
         <?php endforeach; ?>
     <?php else: ?>
     <h3>No Cron Jobs Found</h3>

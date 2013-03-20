@@ -166,8 +166,8 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
     {
         $plugins = array();
 
-        $plugins[] = new Ot_Trigger_ActionType_EmailQueue('Ot_Trigger_Plugin_EmailQueue', 'Send email via Queue', 'Sends email using the built-in queue manager');
-        $plugins[] = new Ot_Trigger_ActionType_Email('Ot_Trigger_Plugin_Email', 'Send email immediately', 'Send email immediately without queuing');
+        $plugins[] = new Ot_Trigger_ActionType_EmailQueue('Ot_Trigger_ActionType_EmailQueue', 'Send email via Queue', 'Sends email using the built-in queue manager');
+        $plugins[] = new Ot_Trigger_ActionType_Email('Ot_Trigger_ActionType_Email', 'Send email immediately', 'Send email immediately without queuing');
         
         $tpr = new Ot_Trigger_ActionTypeRegister();
         $tpr->registerTriggerActionTypes($plugins);
@@ -250,11 +250,13 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
 
     public function _initCronjobs()
     {
-        $eq = new Ot_Cron('Ot_EmailQueue', 'Processes emails from the queue', '* * * * *');
-        $eq->setMethod(new Ot_Cronjob_EmailQueue());
-
-        $register = new Ot_Cron_Register();
-        $register->registerCronjob($eq);
+        $cronjobs = array();
+        
+        $cronjobs[] = new Ot_Cron_Job('Ot_EmailQueue', 'Email Queue', 'Processes emails from the queue', '* * * * *', 'Ot_Cronjob_Emailqueue');
+        
+        $register = new Ot_Cron_JobRegister();
+        $register->registerJobs($cronjobs);
+        
     }
 
     public function _initApiMethods()
