@@ -43,23 +43,14 @@ class Ot_ActiveusersController extends Zend_Controller_Action
         $allActiveUsers = $activeUser->fetchAll(null, 'dt DESC')->toArray();
         
         foreach ($allActiveUsers as &$a) {
-            $a['accountInfo'] = (array) $otAccount->find($a['accountId']);
-            
-        }
-        
-        $this->view->activeUsers = $allActiveUsers;
-        
-        $allRoles = $otRole->fetchAll();
-
-        $roleMap = array();
-        
-        foreach ($allRoles as $role) {
-            $roleMap[$role->roleId] = $role->name;
-        }
-        
-        $this->view->roleMap = $roleMap;
+            $a['accountInfo'] = $otAccount->getByAccountId($a['accountId']);            
+        }        
         
         $this->_helper->pageTitle('ot-activeusers-index:title');
-        $this->view->messages = $this->_helper->messenger->getMessages();
+        
+        $this->view->assign(array(
+            'activeUsers' => $allActiveUsers,
+            'messages'    => $this->_helper->messenger->getMessages()
+        ));
     }
 }

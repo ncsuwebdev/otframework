@@ -39,10 +39,9 @@ class Ot_ImageController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNeverRender();
         $this->_helper->layout->disableLayout();
                     
-        $get = Zend_Registry::get('getFilter');
-
-        // if not set, give a 404 and exit
-        if (!isset($get->imageId)) {
+        $imageId = $this->_getParam('imageId', null);
+        
+        if (is_null($imageId)) {
             //$this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
             header('HTTP/1.1 404 Not Found');
             return;
@@ -50,7 +49,7 @@ class Ot_ImageController extends Zend_Controller_Action
         
         $image = new Ot_Model_DbTable_Image();
 
-        $thisImage = $image->find($get->imageId);     
+        $thisImage = $image->find($imageId);     
                 
         if (!is_null($thisImage)) {
             

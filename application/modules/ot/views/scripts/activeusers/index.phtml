@@ -1,25 +1,20 @@
 <?php echo $this->translate('ot-activeusers-index:header'); ?>
 <br /><br />
-<table class="list" width="80%">
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email Address</th>
+            <th>Last Activity</th>
+        </tr>
+    </thead>
     <tbody>
-    <tr class="ui-widget-header">
-        <th>Username</th>
-        <th>Name</th>
-        <th>Email Address</th>
-        <th>Role</th>
-        <th>Last Activity</th>
-    </tr>
     <?php foreach ($this->activeUsers as $a) : ?>
         <tr class="<?php echo $this->cycle('row1', 'row2'); ?>">
-            <td><?php echo $a['accountInfo']['username']; ?></td>
-            <td><?php echo $a['accountInfo']['firstName']; ?> <?php echo $a['accountInfo']['lastName']; ?></td>
-            <td><?php echo $a['accountInfo']['emailAddress']; ?></td>
-            <td><?php
-                foreach($a['accountInfo']['role'] as $role) {
-                    $roleList[] = $this->roleMap[$role];
-                }
-                echo implode(', ', $roleList);
-            ?></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'account', 'action' => 'index', 'accountId' => $a['accountInfo']->accountId), 'ot', true); ?>"><?php echo $a['accountInfo']->username; ?></a></td>
+            <td><?php echo $a['accountInfo']->firstName; ?> <?php echo $a['accountInfo']->lastName; ?></td>
+            <td><?php echo $a['accountInfo']->emailAddress; ?></td>
             <td><?php echo $this->elapsedTime($a['dt']); ?></td>
         </tr>
     <?php endforeach; ?>
