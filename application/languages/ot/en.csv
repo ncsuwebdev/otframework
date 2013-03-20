@@ -287,8 +287,8 @@ ot-config-edit:header;You can edit the application configuration from here. Thes
 ot-config-edit:description;<b>Description:</b>
 ot-config-edit:noDescription;No Description Provided
 
-ot-cron-index:title;Cron Job Status
-ot-cron-index:header;This interface provides the ability to manage cron jobs.
+ot-cron-index:title;Cron Job Manager
+ot-cron-index:header;Cron jobs are pieces of code that are excuted on a set schedule without interaction from a user.  The registered cron jobs can be found below.  You can toggle the status of the jobs, or execute the manually.
 ot-cron-index:linkAdd;Add New Cron Job
 ot-cron-index:successfulAlert;CRON Job Ran Successfully.
 ot-cron-index:linkEnableAll;Enable All
