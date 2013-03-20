@@ -33,8 +33,6 @@ echo $this->headLink() . "\n\n";
 // print the minified (common) scripts first, then the autoloaded scripts
 echo $this->minifyHeadScript() . "\n";
 echo $this->headScript() . "\n";
-
-$this->overrideTranslation()->js();
 echo "\n";
 
 
@@ -128,7 +126,7 @@ echo $brandingBar->getIframeHtml();
 
     </div> <!-- /container -->
     <div class="container">
-        <?php $this->overrideTranslation()->link($this->translate('theme-layouts-layout:editText')); ?>
+        <?php echo $this->overrideTranslation($this->translate('theme-layouts-layout:editText')); ?>
     </div>
 
     <div class="container" id="footer">

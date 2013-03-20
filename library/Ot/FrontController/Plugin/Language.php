@@ -60,6 +60,6 @@ class Ot_FrontController_Plugin_Language extends Zend_Controller_Plugin_Abstract
         $translate->setLocale($locale);
         
         Zend_Registry::set('Zend_Locale', $locale);
-        Zend_Registry::set('Zend_Translate', $translate);
+        Zend_Registry::set('Zend_Translate', $translate);                       
     }
 }

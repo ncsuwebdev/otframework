@@ -116,6 +116,15 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 }
             }
         }
+                
+        $acl    = Zend_Registry::get('acl');
+        $auth   = Zend_Auth::getInstance();
+        
+        $role = (!$auth->hasIdentity()) ? $registry->defaultRole->getValue() : $auth->getIdentity()->role;
+        
+        if ($acl->isAllowed($role, 'ot_translate', 'index')) {
+            $view->headScript()->appendFile($baseUrl . '/scripts/ot/translate.js');
+        }
     }
     
     public function postDispatch(Zend_Controller_Request_Abstract $request)

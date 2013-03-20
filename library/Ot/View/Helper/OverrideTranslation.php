@@ -30,54 +30,12 @@
 
 class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
 {
-    /**
-     * The baseUrl of the application
-     *
-     * @return unknown
-     */
-    protected $_baseUrl;
-    
-    public function overrideTranslation()
-    {
-        $this->_baseUrl = Zend_Layout::getMvcInstance()->getView()->baseUrl();    
-        return $this;
-    }
-   
-    public function js()
-    {
-        if ($this->_hasAccess()) {
-            echo '<script type="text/javascript" src="' . $this->_baseUrl . '/scripts/ot/translate.js"></script>';
-        }
-    }
-     
-    public function link($text = 'Edit Text')
+    public function overrideTranslation($text = 'Edit Text')
     {
         $zcf = Zend_Controller_Front::getInstance();
         
         $request = $zcf->getRequest();
-
-        $helper = Zend_Controller_Action_HelperBroker::getStaticHelper('url');
         
-        $url = $helper->url(
-            array(
-                'controller' => 'translate',
-                'm' => $request->getModuleName(),
-                'c' => $request->getControllerName(),
-                'a' => $request->getActionName(),
-            ),
-            'ot',
-            true
-        );
-             
-        if ($this->_hasAccess()) {
-            $translate = Zend_Registry::get('Zend_Translate');
-            echo '<div id="overrideTranslate"><a href="' . $url . '" id="locale_'
-            . Ot_Model_Language::getLanguageName($translate->getLocale()) . '">' . $text . '</a></div>';
-        }
-    }
-    
-    protected function _hasAccess()
-    {
         $registry = new Ot_Config_Register();
 
         $acl    = Zend_Registry::get('acl');
@@ -85,6 +43,36 @@ class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
         
         $role = (!$auth->hasIdentity()) ? $registry->defaultRole->getValue() : $auth->getIdentity()->role;
         
-        return $acl->isAllowed($role, 'ot_translate', 'index');
+        $html = array();
+        
+        if ($acl->isAllowed($role, 'ot_translate', 'index')) {
+            
+            $html[] = '<a href="#overrideTranslationModal" data-toggle="modal">' . $text . '</a>';
+            
+            // modal
+            $html[] = '<div id="overrideTranslationModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
+            $html[] = '  <div class="modal-header">';
+            $html[] = '    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
+            $html[] = '    <h3 id="myModalLabel">Edit Text On This Page</h3>';
+            $html[] = '  </div>';
+            $html[] = '  <div class="modal-body">';
+            $html[] = '    <p>' . $this->view->translate("ot-translate-index:header") . '</p>';
+            $html[] = '    <input type="hidden" id="overrideTranslation_m" value="' . $request->getModuleName() . '"/>';
+            $html[] = '    <input type="hidden" id="overrideTranslation_c" value="' . $request->getControllerName() . '"/>';
+            $html[] = '    <input type="hidden" id="overrideTranslation_a" value="' . $request->getActionName() . '"/>';
+            $html[] = '    <div id="overrideTranslationContent"></div>';
+            $html[] = '  </div>';
+            $html[] = '  <div class="modal-footer">';
+            $html[] = '    <button class="btn btn-primary" id="overriteTranslationSave">Save changes</button>';
+            $html[] = '    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
+            $html[] = '  </div>';
+            $html[] = '</div>';
+            
+            //$html[] = $this->view->url(array('controller' => 'translate', 'm' => $request->getModuleName(), 'c' => $request->getControllerName(), 'a' => $request->getActionName()), 'ot',true);
+            
+            
+        }
+        
+        return join(PHP_EOL, $html);
     }
 }
