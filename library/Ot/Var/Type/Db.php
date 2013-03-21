@@ -7,11 +7,13 @@ class Ot_Var_Type_Db extends Ot_Var_Abstract
         $elm->setDescription($this->getDescription());
         $elm->setValue($this->getValue());
         return $elm;
-    }       
+    }      
     
     public function setValue($value)
     {        
-        $value['password'] = $this->_encrypt($value['password']);
+        if (isset($value['password'])) {
+            $value['password'] = $this->_encrypt($value['password']);
+        }
                 
         return parent::setValue(serialize($value));        
     }
@@ -20,8 +22,10 @@ class Ot_Var_Type_Db extends Ot_Var_Abstract
     {
         $value = unserialize(parent::getValue());
                 
-        $value['password'] = $this->_decrypt($value['password']);
+        if (isset($value['password'])) {
+            $value['password'] = $this->_decrypt($value['password']);
+        }
                 
         return $value;
-    }        
+    }       
 }

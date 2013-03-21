@@ -242,7 +242,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $format[] = new Ot_Var_Type_Text('timeFormat', 'Time Format', 'Time formatted using PHP\'s strftime() function.', '%I:%M %p');
 
         $vr = new Ot_Config_Register();
-        $vr->registerVars($site, 'Site Settings');
+        $vr->registerVars($site, 'App Settings');
         $vr->registerVars($auth, 'Authentication');
         $vr->registerVars($format, 'Date/Time Formats');
     }

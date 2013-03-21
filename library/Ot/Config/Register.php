@@ -42,7 +42,8 @@ class Ot_Config_Register
 
     public function registerVar(Ot_Var_Abstract $var, $moduleNamespace)
     {
-        $registered = $this->getVars();
+        $registered = Zend_Registry::get(self::REGISTRY_KEY);
+        
         if (isset($registered[$var->getName()])) {
             throw new Ot_Exception('Config var ' . $var->getName() . ' already registered');
         }
@@ -76,6 +77,8 @@ class Ot_Config_Register
         foreach ($registered as $r) {
             $r['object']->setValue($r['object']->getDefaultValue());
         }
+        
+        require_once APPLICATION_PATH . '/modules/ot/models/DbTable/Config.php';
         
         $model = new Ot_Model_DbTable_Config();
         

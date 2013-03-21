@@ -33,7 +33,7 @@ class Ot_Composer_Installer
         // link ncsubootstrap into css
 
         @unlink($paths['basePath'] . '/public/css/ncsubootstrap');
-        symlink($paths['ncsubootstrapVendorPath'] . '/css/ncsubootstrap', $paths['basePath'] . '/public/css/ncsubootstrap');
+        symlink($paths['ncsubootstrapVendorPath'] . '/css', $paths['basePath'] . '/public/css/ncsubootstrap');
     }
 
     public static function setupWritableDirectories(Event $event)

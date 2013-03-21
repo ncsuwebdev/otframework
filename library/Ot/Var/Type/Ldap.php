@@ -11,7 +11,9 @@ class Ot_Var_Type_Ldap extends Ot_Var_Abstract
     
     public function setValue($value)
     {        
-        $value['password'] = $this->_encrypt($value['password']);
+        if (isset($value['password'])) {
+            $value['password'] = $this->_encrypt($value['password']);
+        }
                 
         return parent::setValue(serialize($value));        
     }
@@ -20,7 +22,9 @@ class Ot_Var_Type_Ldap extends Ot_Var_Abstract
     {
         $value = unserialize(parent::getValue());
                 
-        $value['password'] = $this->_decrypt($value['password']);
+        if (isset($value['password'])) {
+            $value['password'] = $this->_decrypt($value['password']);
+        }
                 
         return $value;
     }       
