@@ -34,7 +34,7 @@ class Nav
 
             // header
             $html[] = '<li' . ($dropdown ? ' class="dropdown"' : '') . '>';
-
+            
             if (!$dropdown) {
                 $html[] = '<a href="' . $page->getHref() . '">';
             } else {

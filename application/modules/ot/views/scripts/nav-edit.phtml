@@ -20,7 +20,14 @@ function editSubmenu($pages, $parentId)
         
         $html[] = '<i class="icon icon-resize-vertical"></i>';
     
-        $html[] = '<a target="' . $p->getTarget() . '" title="' . $p->getModule() . ':' .$p->getController() . ':' . $p->getAction() . '" href="' . $p->getHref() . '">';
+        $resource = explode('_', $p->getResource());
+        $privilege = $p->getPrivilege();
+        
+        $module = $resource[0];
+        $controller = $resource[1];
+        $action = $privilege;
+        
+        $html[] = '<a target="' . $p->getTarget() . '" title="' . $module . ':' . $controller . ':' . $action . '" href="' . $p->getHref() . '">';
      
         $html[] = $p->getLabel();
 

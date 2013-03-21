@@ -79,6 +79,11 @@ class Ot_Model_DbTable_Nav extends Ot_Db_Table
                 );                                      
                 
                 if (preg_match('/^http/i', $tab->link)) {
+                    unset($page['module']);
+                    unset($page['controller']);
+                    unset($page['action']);
+                    unset($page['route']);
+                    
                     $page['uri'] = $tab->link;
                     $page['target'] = '_blank';
                 }
