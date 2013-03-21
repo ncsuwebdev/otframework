@@ -366,7 +366,21 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $form = new Ot_Form_Account(false, $me);
         
-        $form->populate($this->_userData);
+        $formData = $this->_userData;
+        
+        if (isset($formData['accountAttributes'])) {
+            foreach ($formData['accountAttributes'] as $key => $a) {
+                $formData['accountAttributes'][$key] = $a->getValue();
+            }
+        }
+        
+        if (isset($formData['customAttributes'])) {
+            foreach ($formData['customAttributes'] as $key => $a) {
+                $formData['customAttributes'][$key] = $a->getValue();
+            }
+        }
+        
+        $form->populate($formData);       
         
         $acl = Zend_Registry::get('acl');
 
@@ -378,7 +392,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $permissions = $this->mergeResources($resources);
 
         if ($this->_request->isPost()) {
-            if ($form->isValid($_POST)) {
+            if ($form->isValid(array_merge($_POST, array('username' => $this->_userData['username'])))) {
 
                 $dba = Zend_Db_Table::getDefaultAdapter();
 
