@@ -223,7 +223,6 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $site[] = new Ot_Var_Type_Text('appTitle', 'Application Title', 'The title of the application.', 'OT Framework Application');
         $site[] = new Ot_Var_Type_Textarea('appDescription', 'Application Description', 'The application description.', 'App description!');
         $site[] = new Ot_Var_Type_Text('metaKeywords', 'Keywords', 'The meta keywords you would like to use for the application.', '');
-        $site[] = new Ot_Var_Type_Select('useMinify', 'Use Minify', 'Whether or not to use minify to combine and compress js, css, etc', '0', array(0 => 'No', 1 => 'Yes'));
         $site[] = new Ot_Var_Type_Theme('theme', 'Site Theme', 'The display theme for the application', 'default');
         $site[] = new Ot_Var_Type_Select('showTrackbackOnError', 'Show Error Trackbacks', 'Switch to show error trackbacks when the application has errors.  Should likely be turned off in production.', '0', array(0 => 'No', 1 => 'Yes'));
 

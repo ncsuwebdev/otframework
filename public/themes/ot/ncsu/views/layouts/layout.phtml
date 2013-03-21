@@ -21,17 +21,12 @@ $brandingBar = new Ncstate_Brand_Bar(array(
 
 echo $this->headTitle() . "\n\n";
 
-//print the minified (common) css first, then the autoloaded css
-echo $this->minifyHeadLink() . "\n";
-
 //add the NCSU branding css to the headlink
 $this->headLink()->appendStylesheet($brandingBar->getStylesheetUrl());
 $this->headLink()->appendStylesheet($this->baseUrl() . '/css/ncsubootstrap/css/ncsu-bootstrap.css');
 
 echo $this->headLink() . "\n\n";
 
-// print the minified (common) scripts first, then the autoloaded scripts
-echo $this->minifyHeadScript() . "\n";
 echo $this->headScript() . "\n";
 echo "\n";
 

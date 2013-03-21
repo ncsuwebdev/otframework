@@ -43,22 +43,23 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
         
         $registry = new Ot_Config_Register();
         
-        // $useMinify decides whether to minify css, js, etc. if you don't want to minify, it creates new
-        //   <link> tags for each item instead of grouping them into a single file
-        $useMinify = $registry->useMinify->getValue();
         
-        if ($useMinify) {
-            $view->minifyHeadLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
-            $view->headLink()->appendStylesheet('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css');
-            $view->minifyHeadLink()->prependStylesheet($baseUrl . '/css/ot/common.css');
-        } else {
-            $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
-            $view->headLink()->appendStylesheet('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css');
-            $view->headLink()->prependStylesheet($baseUrl . '/css/ot/common.css');
-        }                 
+        $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
+        $view->headLink()->appendStylesheet('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css');
+        $view->headLink()->prependStylesheet($baseUrl . '/css/ot/common.css');
+                
         
         if (isset($themeConfig->css->file)) {
-            foreach ($themeConfig->css->file as $c) {
+            $css = array();
+            if (is_array($themeConfig->css->file)) {
+                foreach ($themeConfig->css->file as $c) {
+                    $css[] = $c;
+                }
+            } else {
+                $css[] = $themeConfig->css->file;
+            }
+            
+            foreach ($css as $c) {
                 $path = $c->path;
                 
                 if (!preg_match('/^http/i', $path)) {
@@ -66,35 +67,30 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 }
                 
                 if ($c->order == 'append') {
-                    if($useMinify) {
-                        $view->minifyHeadLink()->appendStylesheet($path);
-                    } else {
-                        $view->headLink()->appendStylesheet($path);
-                    }
+                    $view->headLink()->appendStylesheet($path);
                 } elseif ($c->order == 'prepend') {
-                    if ($useMinify) {
-                        $view->minifyHeadLink()->prependStylesheet($path);
-                    } else {
-                        $view->headLink()->prependStylesheet($path);
-                    }
+                    $view->headLink()->prependStylesheet($path);                    
                 }
             }
         }
-        
-        if($useMinify) {
-            $view->minifyHeadScript()->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
-            $view->minifyHeadScript()->appendFile('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
-            $view->minifyHeadScript()->appendFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
-            $view->minifyHeadScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
-        } else {
-            $view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
-            $view->headScript()->appendFile('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
-            $view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
-            $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
-        }
+
+        $view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+        $view->headScript()->appendFile('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
+        $view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
+        $view->headScript()->appendFile($baseUrl . '/public/scripts/ot/global.js');
         
         if (isset($themeConfig->scripts->file)) {
-            foreach ($themeConfig->scripts->file as $s) {
+
+            $js = array();
+            if (is_array($themeConfig->scripts->file)) {
+                foreach ($themeConfig->scripts->file as $c) {
+                    $js[] = $c;
+                }
+            } else {
+                $js[] = $themeConfig->scripts->file;
+            }
+            
+            foreach ($js as $s) {
                 $path = $s->path;
                 
                 if (!preg_match('/^http/i', $path)) {
@@ -102,17 +98,9 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
                 }
                 
                 if ($s->order == 'append') {
-                    if($useMinify) {
-                        $view->minifyHeadScript()->appendFile($path);
-                    } else {
-                        $view->headScript()->appendFile($path);
-                    }
+                    $view->headScript()->appendFile($path);
                 } elseif ($s->order == 'prepend') {
-                    if($useMinify) {
-                        $view->minifyHeadScript()->prependFile($path);
-                    } else {
-                        $view->headScript()->prependFile($path);
-                    }
+                    $view->headScript()->prependFile($path);
                 }
             }
         }

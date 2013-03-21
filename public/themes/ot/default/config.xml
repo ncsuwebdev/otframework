@@ -9,7 +9,6 @@
     </theme>
     <css>
         <file path="layout.css" order="append"/>
-        <file path="layout.css" order="append"/>
     </css>
     <scripts>
     </scripts>
