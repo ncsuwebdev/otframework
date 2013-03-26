@@ -65,7 +65,6 @@ class Ot_MaintenanceController extends Zend_Controller_Action
         $form->setAction($this->view->url(array('controller' => 'maintenance', 'action' => 'toggle'), 'ot', true));
         
         $this->view->assign(array(
-            'messages'          => $this->_helper->messenger->getMessages(),
             'inMaintenanceMode' => $this->_inMaintenanceMode,
             'form'              => $form,
         ));

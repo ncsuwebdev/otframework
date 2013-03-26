@@ -103,7 +103,6 @@ class Ot_TriggerController extends Zend_Controller_Action
             'actions'      => $actionsWithActionTypes,
             'actionTypes'  => $actionTypes,
             'triggerEvent' => $thisTriggerEvent,
-            'messages'     => $this->_helper->messenger->getMessages(),
         ));        
     }
     

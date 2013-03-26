@@ -80,7 +80,6 @@ class Ot_ConfigController extends Zend_Controller_Action
         }
 
         $this->view->assign(array(
-            'messages' => $this->_helper->messenger->getMessages(),
             'form'     => $form,
         ));
         
@@ -136,8 +135,7 @@ class Ot_ConfigController extends Zend_Controller_Action
         $this->_helper->pageTitle('Import CSV Config File');
         
         $this->view->assign(array(
-            'form'     => $form,            
-            'messages' => $this->_helper->messenger->getMessages(),
+            'form'     => $form,
         ));
     }
     

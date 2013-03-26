@@ -74,21 +74,4 @@ class Ot_Action_Helper_Messenger extends Zend_Controller_Action_Helper_FlashMess
     {
         return $this->addMessage($message, self::MSG_INFO);
     }
-    public function count($type = null) {
-        if($type) {
-            $messages = array();
-            if (Zend_Registry::isRegistered('flashMessages')) {
-                $messages = Zend_Registry::get('flashMessages');
-            }
-            $count = 0;
-            foreach($messages as $message) {
-                if($message->type == $type) {
-                    $count++;
-                }
-            }
-            return $count;
-        } else {
-            return parent::count();
-        }
-    }
 }

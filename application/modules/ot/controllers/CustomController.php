@@ -90,7 +90,6 @@ class Ot_CustomController extends Zend_Controller_Action
             'attributes' => $thisHost->getAttributes(),
             'host'       => $thisHost,
             'fieldTypes' => $fieldTypes,
-            'messages'   => $this->_helper->messenger->getMessages(),
         ));
     }
 

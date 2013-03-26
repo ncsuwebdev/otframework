@@ -101,7 +101,6 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->view->assign(array(
             'userData'          => $this->_userData,
-            'messages'          => $this->_helper->messenger->getMessages(),
             'apiApps'           => $apiApps,
             'tab'               => $this->_getParam('tab', 'account'),
         ));
@@ -198,7 +197,6 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->_helper->pageTitle('ot-account-all:title');
 
         $this->view->assign(array(
-            'messages'      => $this->_helper->messenger->getMessages(),
             'paginator'     => $paginator,
             'form'          => $form,
             'interface'     => true,
@@ -348,8 +346,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->assign(array(
             'form'           => $form,
             'permissions'    => $permissions,
-            'permissionList' => Zend_Json::encode($permissions),
-            'messages'       => $this->_helper->messenger->getMessages()
+            'permissionList' => Zend_Json::encode($permissions)
         ));
 
     }
@@ -514,8 +511,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $this->view->assign(array(
             'form'           => $form,
             'permissions'    => $permissions,
-            'permissionList' => Zend_Json::encode($permissions),
-            'messages'       => $this->_helper->messenger->getMessages(),
+            'permissionList' => Zend_Json::encode($permissions)
         ));
 
         $this->view->acl = array(
@@ -626,7 +622,6 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $this->view->assign(array(
             'form'     => $form,
-            'messages' => $this->_helper->messenger->getCurrentMessages(),
         ));
     }
 
@@ -704,12 +699,11 @@ class Ot_AccountController extends Zend_Controller_Action
 
     }
 
-public function masqueradeAction()
+    /*public function masqueradeAction()
     {
 
         $this->_helper->pageTitle('Masquerade');
 
-        $this->view->messages = $this->_helper->messenger->getMessages();
         $this->view->masquerading = false;
 
         $identity = Zend_Auth::getInstance()->getIdentity();
@@ -756,7 +750,6 @@ public function masqueradeAction()
 
     public function unmasqueradeAction()
     {
-    	$this->view->messages = $this->_helper->messenger->getMessages();
 
         $identity = Zend_Auth::getInstance()->getIdentity();
 
@@ -776,6 +769,6 @@ public function masqueradeAction()
 
         $this->_helper->redirector->gotoRoute(array('action' => 'masquerade'), 'account', true);
 
-    }
+    }*/
 
 }

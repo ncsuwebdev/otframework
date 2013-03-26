@@ -41,7 +41,6 @@ class Ot_CacheController extends Zend_Controller_Action
         
         $this->view->assign(array(
             'form'     => $form,
-            'messages' => $this->_helper->messenger->getMessages()
         ));
         
         $this->_helper->pageTitle('ot-cache-index:title');

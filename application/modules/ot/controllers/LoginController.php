@@ -39,7 +39,6 @@ class Ot_LoginController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $messages = array();
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
         if (Zend_Auth::getInstance()->hasIdentity()) {
@@ -225,7 +224,9 @@ class Ot_LoginController extends Zend_Controller_Action
                 if (count($result->getMessages()) == 0) {
                     $this->_helper->messenger->addError('msg-error-invalidUsername');
                 } else {
-                    $messages = array_merge($messages, $result->getMessages());
+                    foreach ($result->getMessages() as $m) {
+                        $this->_helper->messenger->addInfo($m);
+                    }
                 }
             }
         }
@@ -244,14 +245,13 @@ class Ot_LoginController extends Zend_Controller_Action
         }
 
         if (isset($req->uri) && $req->uri != '') {
-            $messages[] = 'msg-info-loginBeforeContinuing';
+            $this->_helper->messenger->addInfo('msg-info-loginBeforeContinuing');
         }
 
 
         $this->view->assign(array(
             'loginForms' => $loginForms,
             'realm'      => $realm,
-            'messages'   => array_merge($this->_helper->messenger->getMessages(), $messages),
         ));
 
     }

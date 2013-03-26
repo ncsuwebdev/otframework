@@ -85,7 +85,6 @@ class Ot_EmailqueueController extends Zend_Controller_Action
             'sort'          => $filterSort,
             'direction'     => $filterDirection,
             'triggers'      => $triggers,
-            'messages'      => $this->_helper->messenger->getMessages(),
         ));        
     }        
     

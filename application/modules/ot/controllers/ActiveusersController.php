@@ -50,7 +50,6 @@ class Ot_ActiveusersController extends Zend_Controller_Action
         
         $this->view->assign(array(
             'activeUsers' => $allActiveUsers,
-            'messages'    => $this->_helper->messenger->getMessages()
         ));
     }
 }

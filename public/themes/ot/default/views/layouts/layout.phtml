@@ -55,40 +55,16 @@ echo "\n";
     <div class="container">
 
         <?php
-            $zrMessages = array();
-            $fmMessages = array();
-            $mMessages = array();
-
-            if (Zend_Registry::isRegistered('flashMessages')) {
-                $zrMessages = Zend_Registry::get('flashMessages');
-            }
-
-            $mMessages = (isset($this->messages) && is_array($this->messages)) ? $this->messages : array();
-            $messages = array_merge($zrMessages, $fmMessages, $mMessages);
-
-
-            if (count($messages) > 0) {
-                
-                $sprites = array(
-                    'error'   => 'error',
-                    'info'    => 'info',
-                    'warning' => 'block',
-                    'success' => 'success',
-                );
-                
-                if (count($messages) != 0) {
-                    foreach ($messages as $m) {
-                        $type = (is_object($m)) ? $m->type : 'info';
-                        $message = (is_object($m)) ? $m->message : $m;
-                        
-                        echo '<div class="alert alert-' . (isset($sprites[$type]) ? $sprites[$type] : 'info') . '">'                        
-                        . $this->translate($message)
-                        . '</div>'
-                        ;
-                    }
-                }
-            }
-            ?>
+        $_messageLevelMap = array(
+            'error'   => 'error',
+            'info'    => 'info',
+            'warning' => 'block',
+            'success' => 'success',
+        );
+        ?>
+        <?php foreach($this->messages() as $m): ?>
+            <div class="alert alert-<?php echo (isset($_messageLevelMap[$m['level']])) ? $_messageLevelMap[$m['level']] : 'info'; ?>"><?php echo $this->translate($m['message']); ?></div>
+        <?php endforeach; ?>
         
         <h1><?php echo $this->title; ?></h1>
         <?php echo $this->layout()->content; ?>

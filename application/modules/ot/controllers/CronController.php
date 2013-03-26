@@ -74,7 +74,6 @@ class Ot_CronController extends Zend_Controller_Action
         $this->view->assign(array(
             'defaultRole'    => $role->find($this->_helper->configVar('defaultRole')),
             'guestHasAccess' => $this->_helper->hasAccess('index', 'ot_cronjob', $this->_helper->configVar('defaultRole')),
-            'messages'       => $this->_helper->messenger->getMessages(),
             'cronjobs'       => $jobs,
         ));
         

@@ -86,7 +86,6 @@ class Ot_AclController extends Zend_Controller_Action
         $this->view->assign(array(
             'defaultRole'    => $thisDefaultRole,
             'roles'          => $roles,
-            'messages'       => $this->_helper->messenger->getMessages(),
             'guestHasAccess' => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole')),
         ));
 
@@ -190,7 +189,6 @@ class Ot_AclController extends Zend_Controller_Action
         $this->_helper->pageTitle("ot-acl-details:title", $thisRole->name);
 
         $this->view->assign(array(
-            'messages'        => $this->_helper->messenger->getMessages(),
             'inheritRole'     => $inheritRoleName,
             'remoteResources' => $remoteResources,
             'guestHasAccess'  => $this->_helper->hasAccess('index', 'ot_api', $this->_helper->configVar('defaultRole')),
