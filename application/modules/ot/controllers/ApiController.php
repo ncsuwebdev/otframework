@@ -81,12 +81,12 @@ class Ot_ApiController extends Zend_Controller_Action
             }
 
             $otAccount = new Ot_Model_DbTable_Account();
-            $thisAccount = $otAccount->find($thisApp->accountId);
+            $thisAccount = $otAccount->getByAccountId($thisApp->accountId);
 
             if (is_null($thisAccount)) {
                 return $this->_errorOutput('No user found for this API key', $returnType, 403);
             }
-
+            
             $acl = new Ot_Acl('remote');
 
             if (count($thisAccount->role) > 1) {
@@ -104,8 +104,8 @@ class Ot_ApiController extends Zend_Controller_Action
 
                 $acl->addRole(new Zend_Acl_Role($roleName), $roles);
 
-            } else if (count($thisAccount->role) == 1) {
-                $thisAccount->role = $thisAccount->role[0];
+            } elseif (count($thisAccount->role) == 1) {
+                $thisAccount->role = array_pop($thisAccount->role);
             }
 
             if (!$acl->hasRole($thisAccount->role)) {
@@ -223,85 +223,4 @@ class Ot_ApiController extends Zend_Controller_Action
 
         return true;
     }
-
-
-    /*
-    protected $_class = 'Internal_Api';
-
-    protected $_parameters = array();
-
-    public function indexAction()
-    {
-        $api = new Ot_Api();
-        $allMethods = $api->describe();
-
-        $this->view->api = $allMethods;
-
-        $this->_helper->pageTitle('ot-api-index:title');
-    }
-
-    public function xmlAction()
-    {
-        $this->_helper->viewRenderer->setNeverRender();
-        $this->_helper->layout->disableLayout();
-
-        $access = new Ot_Api_Access();
-
-        $request = Oauth_Request::fromRequest();
-
-        if (!$access->validate($request, $this->_request->getParam('method'))) {
-            return $access->raiseError($access->getMessage(), Ot_Api_Access::API_XML);
-        }
-
-        $server = new Zend_Rest_Server();
-        $server->setClass($this->_class);
-        $server->handle($request->getParameters());
-    }
-
-    public function jsonAction()
-    {
-        $this->_helper->viewRenderer->setNeverRender();
-        $this->_helper->layout->disableLayout();
-
-        $access = new Ot_Api_Access();
-
-        $request = Oauth_Request::fromRequest();
-
-        if (!$access->validate($request, $this->_request->getParam('method'))) {
-            return $access->raiseError($access->getMessage(), Ot_Api_Access::API_JSON);
-        }
-
-        $server = new Zend_Rest_Server();
-
-        $server->setClass($this->_class);
-        $server->returnResponse(true); // if this is true, it doesn't send headers or echo, and returns the response instead
-
-        $jsoncallback = "";
-
-        if ($request->getParameter('jsoncallback') != '') {
-            $htmlEntityFilter = new Zend_Filter_HtmlEntities();
-            $jsoncallback = $htmlEntityFilter->filter($request->getParameter('jsoncallback'));
-        }
-
-        $response = $server->handle($request->getParameters());
-
-        if (!headers_sent()) {
-        	// headers haven't been sent yet, but there's a Content-Type: text/xml in there because
-        	// we're using zend rest server to grab xml to parse to json
-        	$headers = $server->getHeaders();
-            foreach ($headers as $header) {
-            	if($header == 'Content-Type: text/xml') {
-            	   $header = 'Content-Type: application/json';
-            	}
-                header($header);
-            }
-        }
-
-        if ($jsoncallback == "") {
-            echo Zend_Json::fromXml($response);
-        } else {
-            echo $jsoncallback . '(' . Zend_Json::fromXml($response) . ')';
-        }
-    }
-    */
 }

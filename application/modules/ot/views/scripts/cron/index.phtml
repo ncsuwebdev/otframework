@@ -57,41 +57,41 @@
         <?php foreach ($this->cronjobs as $c): ?>
             <div class="job well well-small">
                 <div class="row">
-                <div class="span1 status <?php echo ($c['isEnabled']) ? 'enabled' : 'disabled'; ?>">
+                    <div class="span1 status <?php echo ($c['isEnabled']) ? 'enabled' : 'disabled'; ?>">
 
-                </div>
-                <div class="span5">
-                    <h3 class="name"><?php echo $c['job']->getName(); ?></h3>
-                    <div class="description"><?php echo $c['job']->getDescription(); ?></div>
-                    <div class="schedule">
-                        <?php
-                        if ($c['lastRunDt'] != 0) {
-                            echo 'Last executed ' . $this->elapsedTime($c['lastRunDt']);
-                        } else {
-                            echo $this->translate('ot-cron-index:neverRun');
-                        }
-                        ?>
                     </div>
-                </div>
-                <div class="span5 actions pull-right">
-                    <?php if ($this->acl['toggle']): ?>
-                        <a href="#toggleModal<?php echo $c['job']->getKey(); ?>" data-toggle="modal" class="btn <?php echo ($c['isEnabled']) ? 'btn-danger' : 'btn-success'; ?>">
+                    <div class="span5">
+                        <h3 class="name"><?php echo $c['job']->getName(); ?></h3>
+                        <div class="description"><?php echo $c['job']->getDescription(); ?></div>
+                        <div class="schedule">
                             <?php
-                            if ($c['isEnabled']) {
-                                echo '<i class="icon-white icon-minus"></i> ' . $this->translate('ot-cron-index:disable');
+                            if ($c['lastRunDt'] != 0) {
+                                echo 'Last executed ' . $this->elapsedTime($c['lastRunDt']);
                             } else {
-                                echo '<i class="icon-white icon-plus"></i> ' . $this->translate('ot-cron-index:enable');
+                                echo $this->translate('ot-cron-index:neverRun');
                             }
                             ?>
-                        </a>
-                    <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="span5 actions pull-right">
+                        <?php if ($this->acl['toggle']): ?>
+                            <a href="#toggleModal<?php echo $c['job']->getKey(); ?>" data-toggle="modal" class="btn <?php echo ($c['isEnabled']) ? 'btn-danger' : 'btn-success'; ?>">
+                                <?php
+                                if ($c['isEnabled']) {
+                                    echo '<i class="icon-white icon-minus"></i> ' . $this->translate('ot-cron-index:disable');
+                                } else {
+                                    echo '<i class="icon-white icon-plus"></i> ' . $this->translate('ot-cron-index:enable');
+                                }
+                                ?>
+                            </a>
+                        <?php endif; ?>
 
-                    <?php if ($c['isEnabled']): ?>
-                        <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'job', 'jobKey' => $c['job']->getKey()), 'ot', true); ?>" class="btn"><i class="icon icon-cog"></i> <?php echo $this->translate('ot-cron-index:runNow'); ?></a>
-                    <?php endif; ?>
-                </div>                  
+                        <?php if ($c['isEnabled']): ?>
+                            <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'job', 'jobKey' => $c['job']->getKey()), 'ot', true); ?>" class="btn"><i class="icon icon-cog"></i> <?php echo $this->translate('ot-cron-index:runNow'); ?></a>
+                        <?php endif; ?>
+                    </div>                  
+                </div>
             </div>
-                    
             <?php if ($this->acl['toggle']): ?>
             <div id="toggleModal<?php echo $c['job']->getKey(); ?>" class="modal hide fade">
                 <div class="modal-header">
