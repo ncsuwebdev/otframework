@@ -46,11 +46,7 @@ class Db_016_otframework_cleanup extends Ot_Migrate_Migration_Abstract
         
         $query = "DELETE FROM `" . $this->tablePrefix . "tbl_ot_nav` where `module` = 'ot' AND `controller` = 'account' AND `action` = 'change-roles';";
         
-        $dba->query($query);          
-        
-        $query = "INSERT INTO `" . $this->tablePrefix . "tbl_ot_nav` (`parent`, `display`, `module`, `controller`, `action`, `link`, `target`) VALUES (3, 'Active Users', 'ot', 'activeusers', 'index', '', '_self')";
-        
-        $dba->query($query); 
+        $dba->query($query);
                 
     }
     
