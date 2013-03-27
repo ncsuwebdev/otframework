@@ -16,11 +16,13 @@ if (!$auth->hasIdentity()) {
     echo '<a href="' . $this->url(array(), 'account', true) . '" id="authMyAccount">';
 
     if ($identity->firstName != '' && $identity->lastName != '') {
-        echo $identity->firstName . ' ' . $identity->lastName;
+        $name = $identity->firstName . ' ' . $identity->lastName;
     } else {
-        echo $auth->getIdentity()->username;
+        $name = $auth->getIdentity()->username;
     }
 
+    echo $auth->getIdentity()->username;
+   
     echo "</a>";
 
     echo ' &nbsp; | &nbsp; <a href="#logoutModal" data-toggle="modal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';

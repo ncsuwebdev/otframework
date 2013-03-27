@@ -30,11 +30,15 @@
 
 class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
 {
-    public function overrideTranslation($text = 'Edit Text')
+    protected $_request = null;
+    
+    protected $_isAllowed = false;
+    
+    public function overrideTranslation()
     {
         $zcf = Zend_Controller_Front::getInstance();
         
-        $request = $zcf->getRequest();
+        $this->_request = $zcf->getRequest();
         
         $registry = new Ot_Config_Register();
 
@@ -43,12 +47,27 @@ class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
         
         $role = (!$auth->hasIdentity()) ? $registry->defaultRole->getValue() : $auth->getIdentity()->role;
         
+        $this->_isAllowed = $acl->isAllowed($role, 'ot_translate', 'index');
+        
+        return $this;
+    }
+    
+    public function editLink($text = 'Edit Text')
+    {        
         $html = array();
         
-        if ($acl->isAllowed($role, 'ot_translate', 'index')) {
-            
-            $html[] = '<a href="#overrideTranslationModal" data-toggle="modal">' . $text . '</a>';
-            
+        if ($this->_isAllowed) {            
+            $html[] = '<a id="overrideTranslationLink" href="#overrideTranslationModal" data-toggle="modal">' . $text . '</a>';            
+        }
+        
+        return join(PHP_EOL, $html);
+    }
+    
+    public function editModal()
+    {
+        $html = array();
+        
+        if ($this->_isAllowed) {
             // modal
             $html[] = '<div id="overrideTranslationModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
             $html[] = '  <div class="modal-header">';
@@ -57,9 +76,9 @@ class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
             $html[] = '  </div>';
             $html[] = '  <div class="modal-body">';
             $html[] = '    <p>' . $this->view->translate("ot-translate-index:header") . '</p>';
-            $html[] = '    <input type="hidden" id="overrideTranslation_m" value="' . $request->getModuleName() . '"/>';
-            $html[] = '    <input type="hidden" id="overrideTranslation_c" value="' . $request->getControllerName() . '"/>';
-            $html[] = '    <input type="hidden" id="overrideTranslation_a" value="' . $request->getActionName() . '"/>';
+            $html[] = '    <input type="hidden" id="overrideTranslation_m" value="' . $this->_request->getModuleName() . '"/>';
+            $html[] = '    <input type="hidden" id="overrideTranslation_c" value="' . $this->_request->getControllerName() . '"/>';
+            $html[] = '    <input type="hidden" id="overrideTranslation_a" value="' . $this->_request->getActionName() . '"/>';
             $html[] = '    <div id="overrideTranslationContent"></div>';
             $html[] = '  </div>';
             $html[] = '  <div class="modal-footer">';
@@ -67,10 +86,6 @@ class Ot_View_Helper_OverrideTranslation extends Zend_View_Helper_Translate
             $html[] = '    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
             $html[] = '  </div>';
             $html[] = '</div>';
-            
-            //$html[] = $this->view->url(array('controller' => 'translate', 'm' => $request->getModuleName(), 'c' => $request->getControllerName(), 'a' => $request->getActionName()), 'ot',true);
-            
-            
         }
         
         return join(PHP_EOL, $html);

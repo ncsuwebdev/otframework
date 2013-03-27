@@ -33,8 +33,6 @@
 }
 
 #header .row #site-title {
-    background-image: url(../images/top-header-bg.png);
-    background-repeat: repeat-x;
     height: 88px;
     color: #FFF;
 }
@@ -44,17 +42,25 @@
     margin-left: 15px;
     padding: 14px 0;
     text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #header {
-    background-color: #ae0001;
     margin-bottom: 5px;
+    background-image: url(../images/top-header-bg.png);
+    background-repeat: repeat-x;
 }
 
+#header .row #auth-wrapper {    
+    background-color: #ae0001;
+    padding: 34px 0 0 0;
+    height: 54px;
+}
 #header .row #site-auth {
     color: #FFF;
     text-align: center;
-    padding: 34px 0;
 }
 
 #header .row #site-auth a {
@@ -89,10 +95,23 @@
     background-color: #C00;
     margin-top: 5px;
     padding-top: 5px;
+    height: 35px;
 }
 
-#footer a {
-    color: #FFF;
+#footer .row #footer-nav span {
+    padding-left: 10px;
+    padding-right: 10px;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    text-align: left;
+    line-height: 30px;
+    font-size: 11px;
+}
+
+a#overrideTranslationLink {
+    float: right;
+    color: #FFFFFF;
+    padding-right: 10px;
 }
 
 #footer .row ul {
@@ -104,7 +123,6 @@
 #footer ul li {
     float: left;
     display: inline;
-    font-size: .625em;
     text-transform: uppercase;
     padding: 4px 12px 4px 11px;
 }

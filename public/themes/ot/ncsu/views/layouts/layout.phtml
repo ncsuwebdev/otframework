@@ -49,7 +49,9 @@ echo $brandingBar->getIframeHtml();
                 <h1><?php echo $this->configVar('appTitle'); ?></h1>
             </div>
             <div id="site-auth" class="span4">
-                <?php echo $this->render('auth.phtml'); ?>
+                <div id="auth-wrapper">
+                    <?php echo $this->render('auth.phtml'); ?>
+                </div>
             </div>
         </div>
     </div>
@@ -97,23 +99,16 @@ echo $brandingBar->getIframeHtml();
 
     </div> <!-- /container -->
     <div class="container">
-        <?php echo $this->overrideTranslation($this->translate('theme-layouts-layout:editText')); ?>
+        
     </div>
 
     <div class="container" id="footer">
         <div class="row">
             <div class="span12" id="footer-nav">
-                <ul aria-label="Services Navigation">
-                    <li><a href="http://www.ncsu.edu/emergency-information/">Emergency Information</a></li>
-                    <li><a href="http://www.ncsu.edu/privacy/" title="North Carolina State University Privacy Policy">Privacy</a></li>
-                    <li><a href="http://www.ncsu.edu/copyright/" title="North Carolina State University copyright policy">Copyright</a></li>
-                    <li><a class="track" href="http://oit.ncsu.edu/itaccess/legislation-and-policies" title="North Carolina State University website accessibility information">Accessibility</a></li>
-                    <li><a class="track" href="http://oied.ncsu.edu/oied/">Diversity</a></li>
-                    <li><a class="track" href="http://policies.ncsu.edu/" title="North Carolina State University Policies">University Policies</a></li>
-                    <li><a href="http://www.ncsu.edu/about-site/" title="About the North Carolina State University website">About the Site</a></li>
-                    <li><a class="track" href="https://jobs.ncsu.edu/" title="Jobs at North Carolina State University">Jobs</a></li>
-                    <li><a href="http://www.ncsu.edu/contact-us/" title="Contact North Carolina State University">Contact Us</a></li>
-                </ul>
+                <span>
+                    <?php echo $this->configVar('appTitle'); ?> - &copy; <?php echo date('Y'); ?>
+                    <?php echo $this->overrideTranslation()->editLink($this->translate('theme-layouts-layout:editText')); ?>
+                </span>
             </div>
         </div>
 
@@ -144,6 +139,8 @@ echo $brandingBar->getIframeHtml();
             </form>
         </div>
     </div>
+    
+    <?php echo $this->overrideTranslation()->editModal(); ?>
 </body>
 </html>
 
