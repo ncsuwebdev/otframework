@@ -26,9 +26,10 @@ body {
 }
 
 #footer {
-    padding-top: 20px;
+    padding-top: 10px;
     height: 60px;
     color: #999999;
+    font-size: 12px;
 }
 
 a#overrideTranslationLink {
