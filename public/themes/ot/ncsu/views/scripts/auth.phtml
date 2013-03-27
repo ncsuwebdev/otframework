@@ -15,12 +15,6 @@ if (!$auth->hasIdentity()) {
 
     echo '<a href="' . $this->url(array(), 'account', true) . '" id="authMyAccount">';
 
-    if ($identity->firstName != '' && $identity->lastName != '') {
-        $name = $identity->firstName . ' ' . $identity->lastName;
-    } else {
-        $name = $auth->getIdentity()->username;
-    }
-
     echo $auth->getIdentity()->username;
    
     echo "</a>";

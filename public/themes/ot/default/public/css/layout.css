@@ -1,8 +1,3 @@
-body {
-    padding-top: 60px;
-    padding-bottom: 40px;
-}
-
 .sidebar-nav {
     padding: 9px 0;
 }
@@ -15,4 +10,27 @@ body {
         padding-left: 5px;
         padding-right: 5px;
     }
+}
+
+body {
+    background-color: #EFEFEF;
+}
+
+
+/* Wrapper for page content to push down footer */
+#wrap {
+    padding-top: 60px;
+    padding-bottom: 40px;
+    background-color: #FFFFFF;
+    min-height: 400px;
+}
+
+#footer {
+    padding-top: 20px;
+    height: 60px;
+    color: #999999;
+}
+
+a#overrideTranslationLink {
+    float: right;
 }

@@ -13,17 +13,13 @@ if (!$auth->hasIdentity()) {
     
     echo $this->translate('theme-scripts-auth:welcome') . ' ';
     
-    if ($identity->firstName != '' && $identity->lastName != '') {
-        echo $identity->firstName . ' ' . $identity->lastName;    
-    } else {
-        echo $auth->getIdentity()->username;
-    }
-    
-    echo '&nbsp; | &nbsp;';
+    echo '<a href="' . $this->url(array(), 'account', true) . '" id="authMyAccount">';
 
-    echo '<a href="' . $this->url(array(), 'account', true) . '" id="authMyAccount">' . $this->translate('theme-scripts-auth:myAccount') . '</a>'
-        . '&nbsp; | &nbsp;'
-        . '<a href="#authLogoutDialog" data-toggle="modal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';
+    echo $auth->getIdentity()->username;
+   
+    echo "</a>";
+    
+    echo ' &nbsp; | &nbsp; <a href="#logoutModal" data-toggle="modal">' . $this->translate('theme-scripts-auth:logOut') . '</a>';
 
     $identity = $auth->getIdentity();
 
