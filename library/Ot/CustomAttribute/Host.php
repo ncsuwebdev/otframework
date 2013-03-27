@@ -70,6 +70,7 @@ class Ot_CustomAttribute_Host
                      ->setDescription($r['description'])
                      ->setOptions(unserialize($r['options']))
                      ->setName($this->getKey() . $r['attributeId'])
+                     ->setRequired($r['required'])
                      ;
             
             $attributes[$this->getKey() . $r['attributeId']] = $r;

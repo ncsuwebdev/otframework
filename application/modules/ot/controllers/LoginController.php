@@ -234,7 +234,7 @@ class Ot_LoginController extends Zend_Controller_Action
         // If we have a single adapter that auto logs in, we forward on.
         if (count($loginForms) == 1) {
 
-            $method = array_pop($loginForms);
+            $method = reset($loginForms);
 
             if ($method['autoLogin']) {
                 $authRealm->realm = $method['realm'];

@@ -7,6 +7,7 @@ class Ot_Var_Type_Multicheckbox extends Ot_Var_Abstract
         $elm->setDescription($this->getDescription());
         $elm->setMultiOptions($this->getOptions());        
         $elm->setValue($this->getValue());
+        $elm->setRequired($this->getRequired());
                
         return $elm;
     }

@@ -6,17 +6,19 @@ abstract class Ot_Var_Abstract
     protected $_description;
     protected $_defaultValue;
     protected $_options;
-    protected $_value;
+    protected $_required;
+    protected $_value;    
     
     private $_cryptKey;
 
-    public function __construct($name = '', $label = '', $description = '', $defaultValue = '', $options = array())
+    public function __construct($name = '', $label = '', $description = '', $defaultValue = '', $options = array(), $required = false)
     {
         $this->setName($name);
         $this->setLabel($label);
         $this->setDescription($description);
         $this->setDefaultValue($defaultValue);
         $this->setOptions($options);
+        $this->setRequired($required);
         
         $this->_cryptKey = 'config_' . $this->getName();
     }
@@ -74,6 +76,17 @@ abstract class Ot_Var_Abstract
     public function getOptions()
     {
         return $this->_options;
+    }
+
+    public function setRequired($_required)
+    {
+        $this->_required = (bool) $_required;
+        return $this;
+    }
+
+    public function getRequired()
+    {
+        return $this->_required;
     }
     
     abstract public function renderFormElement();

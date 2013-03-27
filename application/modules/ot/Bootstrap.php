@@ -310,7 +310,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
     {
         $accountVars = array();
 
-        $accountVars[] = new Ot_Var_Type_Text('department', 'University Department', 'Your university department', 'OIT');
+        $accountVars[] = new Ot_Var_Type_Text('department', 'University Department', 'Your university department', 'OIT', array(), true);
 
         $aar = new Ot_Account_Attribute_Register();
         $aar->registerVars($accountVars);

@@ -65,6 +65,8 @@ class Ot_CustomAttribute_FieldType
             throw new Exception('Invalid var type found.  Must be of class Ot_Var_Abstract');
         }
         
-        return new $this->_varClassname();
+        $var = new $this->_varClassname();
+        
+        return $var;
     }    
 }

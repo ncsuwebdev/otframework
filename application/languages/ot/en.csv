@@ -305,7 +305,7 @@ ot-cron-index:runNow;Run Now
 ot-cron-index:cannotRun;Cannot run a disabled job
 ot-cron-index:neverRun;Job has never run
 ot-cron-index:noJobsFound;No Cron Jobs Found.
-ot-cron-index:noAccess;The deafult role (%1$s) does not have access to ot_cronjob. CRON jobs will not run correctly until access is granted to the default role (%1$s).
+ot-cron-index:noAccess;The default role (%1$s) does not have access to ot_cronjob. CRON jobs will not run correctly until access is granted to the default role (%1$s).
 ot-cron-index:editAcl;Click here to edit the ACL.
 
 ot-cron-toggle:title;Toggle Cron Job Status

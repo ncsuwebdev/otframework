@@ -15,14 +15,6 @@
  */
 class Ot_Action_Helper_Messenger extends Zend_Controller_Action_Helper_FlashMessenger
 {
-    /**
-     * $_namespace - Instance namespace, default is 'default'
-     *
-     * @var string
-     */
-
-    protected $_namespace = 'messengerDefault';
-
     const MSG_SUCCESS = 'success';
 
     const MSG_ERROR = 'error';
@@ -43,15 +35,6 @@ class Ot_Action_Helper_Messenger extends Zend_Controller_Action_Helper_FlashMess
         $msg->type = $type;
         $msg->message = $message;
 
-        $messages = array();
-        if (Zend_Registry::isRegistered('flashMessages')) {
-            $messages = Zend_Registry::get('flashMessages');
-        }
-
-        $messages[] = $msg;
-
-        Zend_Registry::set('flashMessages', $messages);
-        
         return parent::addMessage($msg);
     }
 

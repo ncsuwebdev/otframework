@@ -6,6 +6,7 @@ class Ot_Var_Type_Password extends Ot_Var_Abstract
         $elm = new Zend_Form_Element_Text($this->getName(), array('label' => $this->getLabel() . ':', 'class' => 'mask'));
         $elm->setDescription($this->getDescription());
         $elm->setValue($this->getValue());
+        $elm->setRequired($this->getRequired());
         return $elm;
     }
     

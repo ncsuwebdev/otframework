@@ -36,18 +36,21 @@ class Ot_View_Helper_Messages extends Zend_View_Helper_Abstract
      * @param var variable to get
      */
     public function messages()
-    {
-        $zrMessages = array();
-        
-        if (Zend_Registry::isRegistered('flashMessages')) {
-            $zrMessages = Zend_Registry::get('flashMessages');
-        }
-        
+    {                
         $messenger = Zend_Controller_Action_HelperBroker::getStaticHelper('messenger');
         
-        $fmMessages = $messenger->getMessages();
+        $messages = $messenger->getMessages();
         
-        $messages = array_merge($zrMessages, $fmMessages);
+        //add any messages from this request
+        if ($messenger->hasCurrentMessages()) {
+            $messages = array_merge(
+                $messages,
+                $messenger->getCurrentMessages()
+            );
+            
+            //we don't need to display them twice.
+            $messenger->clearCurrentMessages();
+        }
         
         $messageList = array();
         

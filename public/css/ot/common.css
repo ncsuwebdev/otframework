@@ -30,14 +30,6 @@ table.list td.noResults {
     width: 500px;
 }
 
-.row1 {
-    background-color: #FFFFFF;
-}
-
-.row2 {
-    background-color: #F0F0F0;
-}
-
 table.form {
     display: block;
     border-collapse: collapse;
@@ -59,14 +51,6 @@ table.form label {
     cursor: pointer;
 }
 
-.floatLeft {
-    float: left;    
-}
-
-.floatRight {
-    float: right;   
-}
-
 div.elm {
     margin-bottom: 10px;
     line-height: 20px;
@@ -76,77 +60,9 @@ div.elm label input {
 	margin-right: 0.5em;
 }
 
-div.zend_form {
-    margin: 20px 0px;
-}
-
-div.zend_form label.optional, div.zend_form label.required {
-    font-weight: bold;
-    display: block;
-    line-height: 20px;
-    height: 20px;
-    white-space: nowrap;
-    margin-right: 10px;
-}
-
-ul.errors {
-    background-image: url(../../../images/ot/error_arrow.png);
-    background-repeat: no-repeat;
-    background-position: 10px 0px;
-    font-size: .78em;
-    list-style: none;
-    margin: 0px;
-    padding: 5px 0px;
-    max-width: 400px;
-}
-
-ul.errors li {
-    border: 2px solid #C00;
-    color: #000;    
-    margin: 0px;
-    padding: 0px 10px;
-    background-color: #FFCFCF;
-}
-
-.alert {
-    padding:4px 1px 4px 4px;
-    margin:4px auto;
-    border-radius:4px;
-}
-
-.alert-error {
-    background:#fcc;
-    border:2px solid #b00;
-}
-
-.alert-success {
-    background:#cfc;
-    border:2px solid #0b0;
-}
-
-.alert-warning {
-    background:#ffc;
-    border:2px solid #fd0;
-}
-
-.alert-info {
-	color:#363636;
-    background:#fbf9ee;
-    border:1px solid #fcefa1;
-}
-
-.alert .ui-icon {
-	margin:0 0.5em 0 0;
-}
-
-.alert-error::before { content: 'Error: '; font-weight:bold; }
-g.alert-warning::before { content: 'Warning: '; font-weight:bold; }
-g.alert-info::before { content: 'Notice: '; font-weight:bold; }
-
 span.required {
     color: #C00;
 }
-
 
 div.maintenance {
     font-size: 1.3em;

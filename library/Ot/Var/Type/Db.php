@@ -6,6 +6,7 @@ class Ot_Var_Type_Db extends Ot_Var_Abstract
         $elm = new Ot_Form_Element_Db($this->getName(), array('label' => $this->getLabel() . ':'));
         $elm->setDescription($this->getDescription());
         $elm->setValue($this->getValue());
+        $elm->setRequired($this->getRequired());
         return $elm;
     }      
     
