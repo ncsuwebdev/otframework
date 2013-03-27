@@ -37,78 +37,40 @@ class Ot_FrontController_Plugin_Htmlheader extends Zend_Controller_Plugin_Abstra
 
         $baseUrl = $view->baseUrl();
         
-        $themePath = $view->applicationThemePath;
-        
-        $themeConfig = new Zend_Config_Xml(realpath(APPLICATION_PATH . '/../public/' . $view->applicationThemePath) . '/config.xml', 'production', true);
+        $hr = new Ot_Layout_HeadRegister();
         
         $registry = new Ot_Config_Register();
         
-        
-        $view->headLink()->appendStylesheet('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css');
-        $view->headLink()->appendStylesheet($baseUrl . '/' . $themePath . '/public/jQueryUI/ui.all.css');
-        $view->headLink()->appendStylesheet($baseUrl . '/css/ot/common.css');                
-        
-        if (isset($themeConfig->css->file)) {
-            $css = array();
-            if (is_array($themeConfig->css->file)) {
-                foreach ($themeConfig->css->file as $c) {
-                    $css[] = $c;
-                }
-            } else {
-                $css[] = $themeConfig->css->file;
-            }
-            
-            foreach ($css as $c) {
-                $path = $c->path;
+        foreach ($hr->getCssFiles() as $position => $scripts) {
+            foreach ($scripts as $s) {
                 
-                if (!preg_match('/^http/i', $path)) {
-                    $path = $baseUrl . '/public/' . $themePath . '/public/css/' . $path;
+                if (!preg_match('/\/\//', $s)) {
+                    $s = $baseUrl . '/' . $s;
                 }
                 
-                if ($c->order == 'append') {
-                    $view->headLink()->appendStylesheet($path);
-                } elseif ($c->order == 'prepend') {
-                    $view->headLink()->prependStylesheet($path);                    
-                }
-            }
-        }
-                
-        $view->headLink()->appendStylesheet($baseUrl . '/css/app.css');
-
-        $view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
-        $view->headScript()->appendFile('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
-        $view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
-        $view->headScript()->appendFile($baseUrl . '/scripts/ot/global.js');
-        
-        if (isset($themeConfig->scripts->file)) {
-
-            $js = array();
-            if (is_array($themeConfig->scripts->file)) {
-                foreach ($themeConfig->scripts->file as $c) {
-                    $js[] = $c;
-                }
-            } else {
-                $js[] = $themeConfig->scripts->file;
-            }
-            
-            foreach ($js as $s) {
-                $path = $s->path;
-                
-                if (!preg_match('/^http/i', $path)) {
-                    $path = $baseUrl . '/public/' . $themePath . '/public/scripts/' . $path;
-                }
-                
-                if ($s->order == 'append') {
-                    $view->headScript()->appendFile($path);
-                } elseif ($s->order == 'prepend') {
-                    $view->headScript()->prependFile($path);
+                if ($position == 'append') {
+                    $view->headLink()->appendStylesheet($s);
+                } else {
+                    $view->headLink()->prependStylesheet($s);
                 }
             }
         }
         
-        
-        $view->headScript()->appendFile($baseUrl . '/scripts/app.js');
+        foreach ($hr->getJsFiles() as $position => $scripts) {
+            foreach ($scripts as $s) {
                 
+                if (!preg_match('/\/\//', $s)) {
+                    $s = $baseUrl . '/' . $s;
+                }
+                
+                if ($position == 'append') {
+                    $view->headScript()->appendFile($s);
+                } else {
+                    $view->headScript()->prependFile($s);
+                }
+            }
+        }
+        
         $acl    = Zend_Registry::get('acl');
         $auth   = Zend_Auth::getInstance();
         

@@ -47,39 +47,39 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $fc->registerPlugin(new Ot_FrontController_Plugin_ActiveUsers());
     }
 
-    public function _initTheme()
+    public function _initThemes()
     {
         $this->bootstrap('vars');
+        $this->bootstrap('registerThemes');
 
         $layout = Zend_Layout::getMvcInstance();
         $view = $layout->getView();
 
-        $registry = new Ot_Config_Register();
+        $cr = new Ot_Config_Register();
+        $tr = new Ot_Layout_ThemeRegister();                
 
-        $theme = ($registry->theme->getValue() != '') ? $registry->theme->getValue() : 'default';
-
-        $appBasePath = APPLICATION_PATH . "/../public/themes";
-        $otBasePath = APPLICATION_PATH . "/../public/themes/ot";
-
-        if (!is_dir($appBasePath . "/" . $theme)) {
-
-            if (!is_dir($otBasePath . '/' . $theme)) {
-                $theme = 'default';
+        $theme = ($cr->getVar('theme')->getValue() != '') ? $cr->getVar('theme')->getValue() : 'default';
+        
+        $thisTheme = $tr->getTheme($theme);
+        
+        $hr = new Ot_Layout_HeadRegister();
+        
+        foreach ($thisTheme->getCss() as $position => $cssFiles) {
+            foreach ($cssFiles as $c) {
+                $hr->registerCssFile($c, $position);
             }
-
-            $themePath = $otBasePath . '/' . $theme;
-
-        } else {
-            $themePath = $appBasePath . '/' . $theme;
         }
-
-        $layout->setLayoutPath($themePath . '/views/layouts');
-
-        $view->applicationThemePath = str_replace(APPLICATION_PATH . "/../public/", "", $themePath);
-
-        $view->addScriptPath(array($themePath . '/views/scripts/'))
-             ->addHelperPath(array($themePath . '/views/helpers/'));
-
+        
+        foreach ($thisTheme->getJs() as $position => $jsFiles) {
+            foreach ($jsFiles as $j) {
+                $hr->registerJsFile($j, $position);
+            }
+        }
+        
+        $layout->setLayoutPath($thisTheme->getPath() . '/views/layouts');
+        
+        $view->addScriptPath(array($thisTheme->getPath() . '/views/scripts/'))
+             ->addHelperPath(array($thisTheme->getPath() . '/views/helpers/'));
     }
 
     public function _initRoutes()
@@ -305,14 +305,55 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $cfor = new Ot_CustomAttribute_HostRegister();
         $cfor->registerHosts($hosts);
     }
+    
+    public function _initHead()
+    {
+        $this->bootstrap('registerThemes');
+        
+        $hr = new Ot_Layout_HeadRegister();
+        
+        $hr->registerCssFile('css/ot/common.css', 'prepend');        
+        $hr->registerCssFile('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css', 'prepend');
+        
+        $hr->registerJsFile('scripts/ot/global.js', 'prepend');
+        $hr->registerJsFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js', 'prepend');
+        $hr->registerJsFile('//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js', 'prepend');
+        $hr->registerJsFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', 'prepend');
+    }
 
+    public function _initRegisterThemes()
+    {        
+        $tr = new Ot_Layout_ThemeRegister(); 
+        
+        $defaultTheme = new Ot_Layout_Theme('default', 'Default Theme', 'The default theme.', realpath(APPLICATION_PATH . '/../public/themes/ot/default'));                
+        $defaultTheme->addCss('themes/ot/default/public/jQueryUI/ui.all.css', 'prepend');
+        $defaultTheme->addCss('themes/ot/default/public/css/layout.css', 'prepend');
+        
+        $ncsuTheme = new Ot_Layout_Theme('ncsu', 'NC State Theme', 'Theme based on the NC State Homepage', realpath(APPLICATION_PATH . '/../public/themes/ot/ncsu'));        
+                   
+        $ncsuTheme->addCss('themes/ot/ncsu/public/jQueryUI/ui.all.css', 'prepend');
+        $ncsuTheme->addCss('themes/ot/ncsu/public/css/layout.css', 'prepend');   
+        $ncsuTheme->addCss('css/ncsubootstrap/css/ncsu-bootstrap.css', 'prepend');
+        
+        $ncsuTheme->addJs('themes/ot/ncsu/public/scripts/default.js', 'prepend'); 
+        
+        $tr->registerTheme($defaultTheme);
+        $tr->registerTheme($ncsuTheme);        
+    }
+    
     public function _initAccountAttributeVars()
     {
+        /**
+         * This is an example of how to add an Account Var
+         */
+        
+        /*
         $accountVars = array();
 
         $accountVars[] = new Ot_Var_Type_Text('department', 'University Department', 'Your university department', 'OIT', array(), true);
 
         $aar = new Ot_Account_Attribute_Register();
-        $aar->registerVars($accountVars);
+        $aar->registerVars($accountVars);        
+         */
     }
 }

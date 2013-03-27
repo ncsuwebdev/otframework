@@ -6,39 +6,14 @@ class Ot_Var_Type_Theme extends Ot_Var_Abstract
         $elm = new Zend_Form_Element_Select($this->getName(), array('label' => $this->getLabel() . ':'));
         $elm->setRequired($this->getRequired());
         
-        /* Obtain all directories in the theme folder, add them to the theme
-         * array.
-         */
-        $dirs = array(
-            'otThemes'  => 'public/themes/ot/',
-            'appThemes' => 'public/themes/'
-        );
-
-        foreach ($dirs as $dir) {
-
-            $dirPath = APPLICATION_PATH . '/../' . $dir;
-
-            $themeDirs = scandir($dirPath);
-
-            foreach ($themeDirs as $theme) {
-
-                $path = $dirPath . $theme;
-
-                /* Keep only the directories that are themes (criteria being
-                 * that they contain a config.xml); load name and description
-                 * into the array
-                 */
-                if (file_exists($path . '/config.xml')) {
-
-                    $xml = simplexml_load_file($path . '/config.xml');
-                    $name        = trim((string)$xml->production->theme->name);
-                    $description = trim((string)$xml->production->theme->description);
-
-                    $elm->addMultiOption($theme, $name . ' - ' . $description);
-                }
-            }
+        $tr = new Ot_Layout_ThemeRegister();
+        
+        $themes = $tr->getThemes();
+        
+        foreach ($themes as $t) {
+            $elm->addMultiOption($t->getName(), $t->getLabel() . ' - ' . $t->getDescription());
         }
-
+        
         $elm->setDescription($this->getDescription());
         $elm->setValue($this->getValue());
         return $elm;
