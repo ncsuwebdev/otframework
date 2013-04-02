@@ -43,7 +43,9 @@ class Ot_ApiController extends Zend_Controller_Action
     }
 
     public function indexAction()
-    {        
+    {                
+        $returnType = 'json';
+        
         try {
             $apiRegister = new Ot_Api_Register();
 
@@ -51,7 +53,6 @@ class Ot_ApiController extends Zend_Controller_Action
 
             $params = $this->_getAllParams();
 
-            $returnType = 'json';
             if (isset($params['type']) && in_array(strtolower($returnType), array('json', 'php'))) {
                 $returnType = strtolower($params['type']);
             }
@@ -128,6 +129,8 @@ class Ot_ApiController extends Zend_Controller_Action
         }
 
         $data = array();
+        
+        $apiObject = $thisEndpoint->getEndpointObj();
 
         if ($this->_request->isPost()) {
 
@@ -136,7 +139,7 @@ class Ot_ApiController extends Zend_Controller_Action
             }
 
             try {
-                $data = $thisEndpoint->getMethod()->post($params);
+                $data = $apiObject->post($params);
             } catch (Exception $e) {
                 return $this->_errorOutput($e->getMessage(), $returnType);
             }
@@ -148,7 +151,7 @@ class Ot_ApiController extends Zend_Controller_Action
             }
 
             try {
-                $data = $thisEndpoint->getMethod()->put($params);
+                $data = $apiObject->put($params);
             } catch (Exception $e) {
                 return $this->_errorOutput($e->getMessage(), $returnType);
             }
@@ -161,7 +164,7 @@ class Ot_ApiController extends Zend_Controller_Action
             }
 
             try {
-                $data = $thisEndpoint->getMethod()->delete($params);
+                $data = $apiObject->delete($params);
             }  catch (Exception $e) {
                 return $this->_errorOutput($e->getMessage(), $returnType);
             }
@@ -173,7 +176,7 @@ class Ot_ApiController extends Zend_Controller_Action
             }
 
             try {
-                $data = $thisEndpoint->getMethod()->get($params);
+                $data = $apiObject->get($params);
             }  catch (Exception $e) {
                 return $this->_errorOutput($e->getMessage(), $returnType);
             }

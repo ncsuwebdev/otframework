@@ -3,12 +3,13 @@ class Ot_Api_Endpoint
 {
     protected $_name;
     protected $_description;
-    protected $_method;
+    protected $_methodClassname;
 
-    public function __construct($name = '', $description = '', $module = '', $controller = '', $action = '')
+    public function __construct($name = '', $description = '', $methodClassname = '')
     {
         $this->setName($name)
-             ->setDescription($description);
+             ->setDescription($description)
+             ->setMethodClassname($methodClassname);
     }
 
     public function setName($_name)
@@ -33,14 +34,25 @@ class Ot_Api_Endpoint
         return $this->_description;
     }
 
-    public function setMethod(Ot_Api_EndpointTemplate $_method)
+    public function setMethodClassname($_method)
     {
-        $this->_method = $_method;
+        $this->_methodClassname = $_method;
         return $this;
     }
 
-    public function getMethod()
+    public function getMethodClassname()
     {
-        return $this->_method;
+        return $this->_methodClassname;
+    }
+    
+    public function getEndpointObj()
+    {
+        $reflection = new ReflectionClass($this->_methodClassname);
+        
+        if (!$reflection->isSubclassOf('Ot_Api_EndpointTemplate')) {
+            throw new Exception('Invalid API endpoint type.  Must implement Ot_Api_EndpointTemplate');
+        }
+        
+        return new $this->_methodClassname;
     }
 }

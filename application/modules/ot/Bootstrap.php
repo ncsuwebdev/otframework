@@ -262,21 +262,14 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
     {
         $register = new Ot_Api_Register();
 
-        $endpoint = new Ot_Api_Endpoint('ot-account', 'Deals with the accounts in the system');
-        $endpoint->setMethod(new Ot_Apiendpoint_Account());
-        $register->registerApiEndpoint($endpoint);
-
-        $endpoint = new Ot_Api_Endpoint('ot-version', 'Returns the OT Framework version numbers');
-        $endpoint->setMethod(new Ot_Apiendpoint_Version());
-        $register->registerApiEndpoint($endpoint);
-
-        $endpoint = new Ot_Api_Endpoint('ot-cron', 'Deals with the cron jobs in the system');
-        $endpoint->setMethod(new Ot_Apiendpoint_Cron());
-        $register->registerApiEndpoint($endpoint);
-
-        $endpoint = new Ot_Api_Endpoint('ot-myaccount', 'Deals with the current API account');
-        $endpoint->setMethod(new Ot_Apiendpoint_MyAccount());
-        $register->registerApiEndpoint($endpoint);
+        $endpoints = array();
+        
+        $endpoints[] = new Ot_Api_Endpoint('ot-account', 'Deals with the accounts in the system', 'Ot_Apiendpoint_Account');
+        $endpoints[] = new Ot_Api_Endpoint('ot-version', 'Returns the OT Framework version numbers', 'Ot_Apiendpoint_Version');
+        $endpoints[] = new Ot_Api_Endpoint('ot-cron', 'Deals with the cron jobs in the system', 'Ot_Apiendpoint_Cron');
+        $endpoints[] = new Ot_Api_Endpoint('ot-myaccount', 'Deals with the current API account', 'Ot_Apiendpoint_MyAccount');
+        
+        $register->registerApiEndpoints($endpoints);
     }
 
     public function _initCustomFields()

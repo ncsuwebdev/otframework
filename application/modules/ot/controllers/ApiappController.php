@@ -141,9 +141,7 @@ class Ot_ApiappController extends Zend_Controller_Action
                 'description' => $e->getDescription(),
             );
 
-            $classname = get_class($e->getMethod());
-
-            $reflection = new ReflectionClass($classname);
+            $reflection = new ReflectionClass($e->getMethodClassname());
 
             $methods = $reflection->getMethods();
 
@@ -152,7 +150,7 @@ class Ot_ApiappController extends Zend_Controller_Action
                 // the api "module" here is really a kind of placeholder
                 $aclResource = 'api_' . strtolower($e->getName());
 
-                if (in_array($m->name, $apiMethods) && $m->class == $classname && $acl->isAllowed($role, $aclResource, $m->name)) {
+                if (in_array($m->name, $apiMethods) && $m->class == $e->getMethodClassname() && $acl->isAllowed($role, $aclResource, $m->name)) {
 
                     $instructions = 'No instructions provided';
 
