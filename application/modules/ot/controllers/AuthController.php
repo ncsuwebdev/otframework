@@ -75,9 +75,17 @@ class Ot_AuthController extends Zend_Controller_Action
 
         $numEnabledAdapters = $authAdapter->getNumberOfEnabledAdapters();
 
-        if ($numEnabledAdapters > 1) {
+        if ($numEnabledAdapters < 1) {
             throw new Ot_Exception_Data('ot-auth-toggle:mustBeOneAdapter');
         }
+        
+        $auth = Zend_Auth::getInstance();
+        
+        $identity = $auth->getIdentity();
+        
+        if ($identity->realm == $adapter->adapterKey) {
+            throw new Ot_Exception_Access('You can not toggle the status of the authentication adapter that you are currently logged in with.');
+        }        
 
         if ($this->_request->isPost()) {
 
