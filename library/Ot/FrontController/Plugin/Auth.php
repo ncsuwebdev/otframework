@@ -78,6 +78,12 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         if (!$acl->has($resource)) {
             $resource = null;
         }
+        
+        $apiRequest = false;
+        
+        if ($resource == 'ot_api' && $action == 'index') {
+            $apiRequest = true;
+        }
 
         $registry = new Ot_Config_Register();
 
@@ -87,7 +93,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
         $account = new Ot_Model_DbTable_Account();
         $thisAccount = null;
         
-        if ($auth->hasIdentity() && $auth->getIdentity() != '' && !is_null($auth->getIdentity())) {
+        if (!$apiRequest && $auth->hasIdentity() && $auth->getIdentity() != '' && !is_null($auth->getIdentity())) {
 
             $identity = $auth->getIdentity();
 
@@ -190,7 +196,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 ? $account->timezone : date_default_timezone_get()
             );
                 
-            $role = $thisAccount->role;
+            $role = $thisAccount->role;            
         }
         
         if ($role == '' || !$acl->hasRole($role)) {
@@ -216,7 +222,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             }
         }
         
-        if ($request->isXmlHttpRequest()) {
+        if ($apiRequest || $request->isXmlHttpRequest()) {
             return;
         }        
         
@@ -227,7 +233,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
                 && $request->getActionName() == 'logout')) {
                 
                 $required = $registry->requiredAccountFields->getValue();
-                
+                                
                 $valid = true;
                 
                 if (is_array($required)) {
@@ -258,7 +264,7 @@ class Ot_FrontController_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             $logger->setEventItem('role', $auth->getIdentity()->role);
         }
 
-        if (!is_null($requestUri)) {
+        if (!$apiRequest && !is_null($requestUri)) {
             $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
             $req->uri = $requestUri;
         }

@@ -62,6 +62,10 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         
         $thisTheme = $tr->getTheme($theme);
         
+        if (is_null($thisTheme)) {
+            $thisTheme = $tr->getTheme('default');
+        }
+        
         $hr = new Ot_Layout_HeadRegister();
         
         foreach ($thisTheme->getCss() as $position => $cssFiles) {
