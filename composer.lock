@@ -1,5 +1,5 @@
 {
-    "hash": "b8249f210b1724a213a07911cf230741",
+    "hash": "5624fb656ae76ca383bcc2f04ee0fc69",
     "packages": [
         {
             "name": "bombayworks/zendframework1",
@@ -64,12 +64,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Emagister/zend-form-decorators-bootstrap.git",
-                "reference": "c08fddcaef6074cd5463ebcd86a0a602d4ae2cb3"
+                "reference": "f296783e153d37a8f66cdec85d7ceca6c97ef44c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Emagister/zend-form-decorators-bootstrap/zipball/c08fddcaef6074cd5463ebcd86a0a602d4ae2cb3",
-                "reference": "c08fddcaef6074cd5463ebcd86a0a602d4ae2cb3",
+                "url": "https://api.github.com/repos/Emagister/zend-form-decorators-bootstrap/zipball/f296783e153d37a8f66cdec85d7ceca6c97ef44c",
+                "reference": "f296783e153d37a8f66cdec85d7ceca6c97ef44c",
                 "shasum": ""
             },
             "require": {
@@ -90,7 +90,7 @@
             ],
             "authors": [
                 {
-                    "name": "EmagisterTech",
+                    "name": "Emagister Tech",
                     "email": "php@emagister.com",
                     "homepage": "http://engineering.emagister.com",
                     "role": "Developer"
@@ -106,7 +106,7 @@
                 "zend form",
                 "zend form decorators"
             ],
-            "time": "2013-02-27 18:49:23"
+            "time": "2013-04-02 20:41:44"
         },
         {
             "name": "ncsuwebdev/ncsubootstrap",
@@ -142,16 +142,16 @@
         },
         {
             "name": "ncsuwebdev/php-ncstate",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ncsuwebdev/PHP-Ncstate.git",
-                "reference": "1.0.6"
+                "reference": "1.0.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ncsuwebdev/PHP-Ncstate/zipball/1.0.6",
-                "reference": "1.0.6",
+                "url": "https://api.github.com/repos/ncsuwebdev/PHP-Ncstate/zipball/1.0.7",
+                "reference": "1.0.7",
                 "shasum": ""
             },
             "require": {
@@ -178,7 +178,7 @@
                 "ncstate",
                 "ncsu"
             ],
-            "time": "2013-02-06 20:22:08"
+            "time": "2013-04-05 14:25:19"
         }
     ],
     "packages-dev": null,
