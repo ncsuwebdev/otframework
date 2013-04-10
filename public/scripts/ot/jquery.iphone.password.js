@@ -87,7 +87,7 @@ $.fn.iphonePassword = function(options) {
         
         var caretMoved = true;
         function sel(ev) {
-            if(!caretMoved && (jQuery.browser.safari || jQuery.browser.webkit)) {
+            if(!caretMoved && (Modernizr.hasEvent('change', ret.text))) {
                 caretMoved = true;
                 ret.text.change();
             }
@@ -104,7 +104,7 @@ $.fn.iphonePassword = function(options) {
                 ret.text.unbind("propertychange").change();
             }
         }
-        if($.browser.msie) {
+        if(this.outerHTML != null) {
             var htm = this.outerHTML.replace("password", "text");
             ret.text = $(htm).val(ret.pass.val()).bind("propertychange", ieChange);
             ret.pass.closest("form").submit(function() {
@@ -135,10 +135,10 @@ $.fn.iphonePassword = function(options) {
                 tr = tr.substring(0,lp + added) + tr.substring(lp);
             ret.pass.val(tr);
             ret.text.attr("real", tr).attr("autocomplete", "off").removeAttr("lastpos");
-            if($.browser.msie) ret.text.bind("propertychange", ieChange);
+            if(Modernizr.hasEvent('propertychange', ret.text)) ret.text.bind("propertychange", ieChange);
         }).keyup(sel).mouseup(sel).select(sel)
         .bind("input", function() {
-            if(jQuery.browser.opera || jQuery.browser.mozilla) ret.text.change();
+            if(Modernizr.hasEvent('change', ret.text)) ret.text.change();
             else caretMoved = false;
          })
         .focus(function() {ret.focused = true;}).blur(function() {ret.focused = false;})

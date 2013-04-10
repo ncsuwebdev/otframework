@@ -42,6 +42,7 @@ class Ot_ConfigController extends Zend_Controller_Action
         $register = new Ot_Config_Register();
 
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/public/css/ot/jquery.plugin.tipsy.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/modernizr.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.plugin.tipsy.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/jquery.iphone.password.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/public/scripts/ot/caret.js');
