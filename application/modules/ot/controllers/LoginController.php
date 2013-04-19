@@ -161,7 +161,7 @@ class Ot_LoginController extends Zend_Controller_Action
                         'username'  => $username,
                         'password'  => md5($password),
                         'realm'     => $realm,
-                        'role'      => $registry->newAccountRole->getValue(),
+                        'role'      => $this->_helper->configVar('newAccountRole'),
                         'lastLogin' => time(),
                     );
 
@@ -553,7 +553,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
                         try {
                             $accountData['accountId'] = $account->insert($accountData);
-                            
+
                             $aar = new Ot_Account_Attribute_Register();
 
                             $vars = $aar->getVars($accountData['accountId']);
@@ -584,15 +584,15 @@ class Ot_LoginController extends Zend_Controller_Action
 
                                     $a['var']->setValue($values['customAttributes'][$attributeName]);
 
-                                    $thisHost->saveAttribute($a['var'], $this->_userData['accountId'], $a['attributeId']);                                
+                                    $thisHost->saveAttribute($a['var'], $this->_userData['accountId'], $a['attributeId']);
                                 }
-                            }                              
+                            }
                         } catch (Exception $e) {
                             $dba->rollback();
                             throw $e;
                         }
 
-                        
+
                         $dba->commit();
 
                         $this->_helper->messenger->addSuccess('msg-info-accountCreated');

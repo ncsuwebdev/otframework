@@ -42,7 +42,7 @@
                     "ZendX_": "extras/library/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "library/",
                 "extras/library/"
@@ -64,12 +64,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Emagister/zend-form-decorators-bootstrap.git",
-                "reference": "f296783e153d37a8f66cdec85d7ceca6c97ef44c"
+                "reference": "cccc8d96229c810f13d1fc8c191d7c67aff83632"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Emagister/zend-form-decorators-bootstrap/zipball/f296783e153d37a8f66cdec85d7ceca6c97ef44c",
-                "reference": "f296783e153d37a8f66cdec85d7ceca6c97ef44c",
+                "url": "https://api.github.com/repos/Emagister/zend-form-decorators-bootstrap/zipball/cccc8d96229c810f13d1fc8c191d7c67aff83632",
+                "reference": "cccc8d96229c810f13d1fc8c191d7c67aff83632",
                 "shasum": ""
             },
             "require": {
@@ -81,7 +81,7 @@
                     "Twitter_": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -90,7 +90,7 @@
             ],
             "authors": [
                 {
-                    "name": "Emagister Tech",
+                    "name": "EmagisterTech",
                     "email": "php@emagister.com",
                     "homepage": "http://engineering.emagister.com",
                     "role": "Developer"
@@ -106,7 +106,7 @@
                 "zend form",
                 "zend form decorators"
             ],
-            "time": "2013-04-02 20:41:44"
+            "time": "2013-04-17 11:10:59"
         },
         {
             "name": "ncsuwebdev/ncsubootstrap",
@@ -123,7 +123,7 @@
                 "shasum": ""
             },
             "type": "library",
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Jason Austin",
@@ -163,7 +163,7 @@
                     "Ncstate": "/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Jason Austin",

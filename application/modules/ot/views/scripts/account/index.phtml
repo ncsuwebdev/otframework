@@ -1,7 +1,7 @@
 <?php if ($this->userData['authAdapter']['enabled'] == 0): ?>
 <div class="alert alert-block">
-    <b>WARNING!</b> This account uses the <?php echo $this->userData['authAdapter']['name']; ?> 
-    authentication adapter which is currently disabled.  <a href="<?php echo $this->url(array('controller' => 'auth'), 'ot', true); ?>">Enable this adapter</a> 
+    <b>WARNING!</b> This account uses the <?php echo $this->userData['authAdapter']['name']; ?>
+    authentication adapter which is currently disabled.  <a href="<?php echo $this->url(array('controller' => 'auth'), 'ot', true); ?>">Enable this adapter</a>
     to allow this user to log in.
 </div>
 <?php endif; ?>
@@ -14,12 +14,12 @@
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane<?php echo ($this->tab == 'account') ? ' active' : ''; ?>" id="data">        
+    <div class="tab-pane<?php echo ($this->tab == 'account') ? ' active' : ''; ?>" id="data">
             <div class="row">
                 <div class="span8">
                     <?php echo $this->translate('ot-account-index:userDataHeader'); ?>
                     <br /><br />
-                    
+
                     <?php if ($this->acl['edit'] || $this->acl['changePassword'] || $this->acl['delete']) : ?>
                         <?php if ($this->acl['edit']): ?>
                             <a href="<?php echo $this->url(array('action' => 'edit', 'accountId' => $this->userData['accountId']), 'account', true); ?>" class="btn">
@@ -37,7 +37,7 @@
                             <a href="#deleteUser" data-toggle="modal" class="btn btn-danger">
                                 <i class="icon-white icon-minus"></i>
                             <?php echo $this->translate('ot-account-index:linkDeleteUser'); ?>
-                            </a>                    
+                            </a>
                             <div id="deleteUser" class="modal hide fade">
                                 <div class="modal-header">
                                     <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
@@ -56,11 +56,11 @@
                                     </form>
                                 </div>
                             </div>
-                        <?php endif; ?>    
+                        <?php endif; ?>
                         <br /><br />
 
                     <?php endif; ?>
-            
+
                     <table class="form">
                         <tbody>
                             <tr>
@@ -101,7 +101,7 @@
                                 <td><?php echo $this->defaultVal($attr->getDisplayValue()); ?></td>
                             </tr>
                             <?php endforeach; ?>
-                            
+
                             <?php foreach($this->userData['customAttributes'] as $attr) : ?>
                             <tr>
                                 <td><label><?php echo $attr->getLabel(); ?>:</label></td>
@@ -116,15 +116,15 @@
                         <?php echo $this->gravatar($this->userData['emailAddress'], array('imgSize' => 300)); ?>
                         <h5>Account Avatar</h5>
                         <p>
-                            To change your account's picture, signup for an account at 
-                            <a href="http://gravatar.com" target="_blank">Gravatar.com</a> and 
-                            associate a picture with your account's email address 
-                            (<?php echo $this->userData['emailAddress']; ?>). 
+                            To change your account's picture, signup for an account at
+                            <a href="http://gravatar.com" target="_blank">Gravatar.com</a> and
+                            associate a picture with your account's email address
+                            (<?php echo $this->userData['emailAddress']; ?>).
                         </p>
-                        <p>                            
-                            <a href="http://gravatar.com" target="_blank" class="btn btn-primary">Change picture...</a>  
+                        <p>
+                            <a href="http://gravatar.com" target="_blank" class="btn btn-primary">Change picture...</a>
                         </p>
-                    </div>       
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,8 +140,8 @@
                     <?php echo $this->translate('ot-account-index:apiapp-addButton'); ?>
                 </a>
             <?php endif; ?>
-        
-        
+
+
             <?php if ($this->acl['apiDocs']): ?>
                 <a href="<?php echo $this->url(array('action' => 'api-docs'), 'apiapp', true); ?>" class="btn">
                     <i class="icon icon-list-alt"></i>
@@ -155,7 +155,7 @@
 
         <?php if (count($this->apiApps) != 0): ?>
             <?php foreach ($this->apiApps as $c): ?>
-        
+
         <div class="apiapp well">
             <div class="row">
                 <div class="span1">
@@ -174,29 +174,32 @@
                 <div class="span3 actions pull-right">
                     <?php if ($this->acl['apiAppDelete']): ?>
                         <a href="#deleteApiApp<?php echo $c['appId']; ?>" data-toggle="modal" class="btn btn-danger"><i class="icon-white icon-ban-circle"></i> <?php echo $this->translate('ot-apiapp-details:appDeleteButton'); ?></a>
-                        <div id="deleteApiApp<?php echo $c['appId']; ?>" class="modal hide fade">
-                            <div class="modal-header">
-                                <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
-                                <h3>Delete Api App <?php echo $c['name']; ?></h3>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to remove this API App?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <form style="margin: 0;" method="post" action="<?php echo $this->url(array('action' => 'delete'), 'apiapp', true); ?>">
-                                    <input type="hidden" name="appId" value="<?php echo $c['appId']; ?>" />
-                                    <input type="hidden" name="accountId" value="<?php echo $this->userData['accountId']; ?>" />
-                                    <input type="submit" name="submit" value="Yes, Delete" class="btn btn-danger" />
-                                    <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
-                                </form>
-                            </div>
-                        </div>
                     <?php endif; ?>
-                        
+
                     <?php if ($this->acl['apiAppEdit']): ?>
                         <a href="<?php echo $this->url(array('action' => 'edit', 'appId' => $c['appId'], 'accountId' => $this->userData['accountId']), 'apiapp', true); ?>" class="btn"><i class="icon icon-pencil"></i> <?php echo $this->translate('ot-apiapp-details:appEditButton'); ?></a>
                     <?php endif; ?>
                 </div>
+
+                <?php if ($this->acl['apiAppDelete']): ?>
+                    <div id="deleteApiApp<?php echo $c['appId']; ?>" class="modal hide fade">
+                        <div class="modal-header">
+                            <a class="close" data-dismiss="modal" class="close" href="#">&times;</a>
+                            <h3>Delete Api App <?php echo $c['name']; ?></h3>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to remove this API App?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <form style="margin: 0;" method="post" action="<?php echo $this->url(array('action' => 'delete'), 'apiapp', true); ?>">
+                                <input type="hidden" name="appId" value="<?php echo $c['appId']; ?>" />
+                                <input type="hidden" name="accountId" value="<?php echo $this->userData['accountId']; ?>" />
+                                <input type="submit" name="submit" value="Yes, Delete" class="btn btn-danger" />
+                                <input type="button" name="cancel" value="Cancel" class="btn" data-dismiss="modal" />
+                            </form>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
             <?php endforeach; ?>

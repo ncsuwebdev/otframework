@@ -183,7 +183,7 @@ class Ot_ApiappController extends Zend_Controller_Action
     {
         $apiApp = new Ot_Model_DbTable_ApiApp();
 
-        $form = new Ot_Form_ApiApp();       
+        $form = new Ot_Form_ApiApp();
 
         if ($this->_request->isPost()) {
             if ($form->isValid($_POST)) {
@@ -204,13 +204,13 @@ class Ot_ApiappController extends Zend_Controller_Action
                 $this->_helper->messenger->addError('ot-apiapp-add:problemSubmitting');
             }
         }
-        
+
         $this->_helper->pageTitle('ot-apiapp-add:title');
-        
+
         $this->view->assign(array(
             'form' => $form,
         ));
-        
+
     }
 
     /**
@@ -218,7 +218,7 @@ class Ot_ApiappController extends Zend_Controller_Action
      *
      */
     public function editAction()
-    {        
+    {
         $get = Zend_Registry::get('getFilter');
 
         if (!isset($get->appId)) {
@@ -268,17 +268,15 @@ class Ot_ApiappController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        $this->_helper->pageTitle('ot-apiapp-delete:title');
+        $appId = $this->_getParam('appId', null);
 
-        $get = Zend_Registry::get('getFilter');
-
-        if (!isset($get->appId)) {
+        if (is_null($appId)) {
             throw new Ot_Exception_Input('ot-apiapp-delete:appIdNotSet');
         }
 
         $apiApp = new Ot_Model_DbTable_ApiApp();
 
-        $thisApp = $apiApp->find($get->appId);
+        $thisApp = $apiApp->find($appId);
         if (is_null($thisApp)) {
             throw new Ot_Exception_Data('ot-apiapp-delete:appNotFound');
         }
@@ -287,18 +285,18 @@ class Ot_ApiappController extends Zend_Controller_Action
             throw new Ot_Exception_Access('ot-apiapp-delete:notAllowedtoEdit');
         }
 
-        $form = Ot_Form_Template::delete('deleteApiApp', 'ot-apiapp-delete:deleteLabel');
 
-        if ($this->_request->isPost() && $form->isValid($_POST)) {
+        if ($this->_request->isPost()) {
+
             $apiApp->delete($thisApp->appId);
 
             $this->_helper->messenger->addSuccess('ot-apiapp-delete:applicationRemoved');
 
             $this->_helper->redirector->gotoRoute(array('tab' => 'apps', 'accountId' => $this->_userData['accountId']), 'account', true);
-        }
 
-        $this->view->form = $form;
-        $this->view->apiApp = $thisApp;
+        } else {
+            throw new Ot_Exception_Access('You can not access this method directly');
+        }        
     }
 
     protected function _getImage($imageId)
