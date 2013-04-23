@@ -83,7 +83,7 @@ class Ot_Db_Table extends Zend_Db_Table
     {
         $args = func_get_args();
         
-        $result = parent::find($args);
+        $result = call_user_func_array(array('parent', 'find'), $args);
         
         if (count($this->_primary) == 1) {
             if ($result instanceof Zend_Db_Table_Rowset && $result->count() == 1) {

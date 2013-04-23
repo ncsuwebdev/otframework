@@ -76,7 +76,7 @@ class Ot_Cron_Dispatcher
 
                 $lastRunDt = $cs->getLastRunDt($job->getKey());
 
-                $jobObj = $thisJob->getJobObj();
+                $jobObj = $job->getJobObj();
                 
                 $jobObj->execute($lastRunDt);
 
