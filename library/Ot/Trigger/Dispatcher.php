@@ -83,8 +83,14 @@ class Ot_Trigger_Dispatcher
         foreach ($actions as $a) {
             $helper = new $a->actionKey;
 
-            $data = $helper->getDbTable()->find($a->triggerActionId)->toArray();
-
+            $data = $helper->getDbTable()->find($a->triggerActionId);
+            
+            if (is_null($data)) {
+                continue;
+            }            
+            
+            $data = $data->toArray();
+            
             foreach ($data as &$d) {
                 foreach ($this->_vars as $key => $value) {
                     if (is_array($value)) {

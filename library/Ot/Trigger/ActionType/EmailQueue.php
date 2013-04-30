@@ -30,9 +30,9 @@
  */
 class Ot_Trigger_ActionType_EmailQueue extends Ot_Trigger_ActionType_Abstract
 {
-    protected $_form = 'Ot_Form_TriggerActionTypeEmail';
+    protected $_form = 'Ot_Form_TriggerActionTypeEmailQueue';
     
-    protected $_dbtable = 'Ot_Model_DbTable_TriggerActionTypeEmail';
+    protected $_dbtable = 'Ot_Model_DbTable_TriggerActionTypeEmailQueue';
     
     /**
      * Action called when a trigger is executed.
