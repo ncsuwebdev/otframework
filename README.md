@@ -14,7 +14,7 @@ Features include:
 * Navigation editor
 * Application configuration system
 * Centralized caching
-* Centralized loggin
+* Centralized logging
 * Database migration system for versioned databases
 * Database backup system
 * Utility library for common tasks
