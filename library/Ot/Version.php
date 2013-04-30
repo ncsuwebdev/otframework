@@ -35,7 +35,7 @@ class Ot_Version
      *
      * @var string
      */
-    const VERSION = '3.0.0';
+    const VERSION = '3.0.1';
 
     public function getVersions()
     {
