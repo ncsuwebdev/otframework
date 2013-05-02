@@ -27,7 +27,9 @@ class Ot_Form_LoginRealm extends Twitter_Bootstrap_Form_Vertical
 
         $this->addElement('submit', 'submit', array(
             'buttonType' => Twitter_Bootstrap_Form_Element_Submit::BUTTON_PRIMARY,
-            'label'      => 'ot-login-index:login'
+            'label'      => 'ot-login-index:login',
+            'class'      => 'pull-left',
+            'style'      => 'margin-right: 10px;'
         ));
         $buttons[] = 'submit';
 
@@ -35,7 +37,8 @@ class Ot_Form_LoginRealm extends Twitter_Bootstrap_Form_Vertical
 
             $this->addElement('button', 'signup_' . $realm, array(
                 'label'         => 'ot-login-index:signUp',
-                'type'          => 'button'
+                'type'          => 'button',
+                'class'         => 'pull-left'
             ));
 
             $buttons[] = 'signup_' . $realm;
