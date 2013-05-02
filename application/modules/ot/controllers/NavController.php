@@ -177,7 +177,7 @@ class Ot_NavController extends Zend_Controller_Action
             $this->_otNav->getAdapter()->commit();
             
             $cache = Zend_Registry::get('cache');
-            $cache->remove('configObject');
+            $cache->remove('Ot_Navigation_Container');
             
             $logOptions = array('attributeName' => 'navigation', 'attributeId' => 'modified');
                     
