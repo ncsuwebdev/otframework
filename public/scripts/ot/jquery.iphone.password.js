@@ -1,153 +1,91 @@
-/**
- * jQuery Caret Range plugin is needed to run
- */
-
-String.prototype.repeat = function( num ) {
-    return new Array(num + 1).join(this);
-}
 $.fn.iphonePassword = function(options) {
-    var defaults = {
-        duration: 3000,
-        mask: '\u25CF'
-    }
+    
     var values = Array();
     this.each(function() {
+        
+        $that = $(this);
+
         var ret = {
-            isMasked: true,
+            
+            isMasked: false,
             pass:null,
             text:null,
-            focused:false,
-            timeout:null,
-            opts: null,
         
-            maskNow: function(ival) {
-                clearTimeout(ret.timeout);
-                if(ret.opts.mask != null) {
-                    var vl;
-                    var ss = ret.text.caret().start;
-                    if($.isArray(ival)) {
-                        vl = ret.opts.mask.repeat(ival[0])
-                            + ret.text.val().substring(ival[0], ival[1])
-                            + ret.opts.mask.repeat(ret.text.val().length - ival[1]);
-                    } else {
-                        vl = ret.opts.mask.repeat(ret.text.val().length);
-                    }
-                    if(vl!=ret.text.val()) {
-                    	  ret.text.removeAttr("lastpos").val(vl);
-                    }
-                    if(ret.focused) {
-                        ret.text.caret(ss, ss);
-                    }
+            maskNow: function() {
+                
+                if (Modernizr.testProp('textShadow')) {
+                    
+                    $that.css({
+                        'color': 'transparent',
+                        'text-shadow': '0 0 7px rgba(0,0,0,0.5)'
+                    });
+                    
+                } else {
+                    
+                    var textColor = $that.css('color');
+                    $that.css({
+                        'background-color': textColor
+                    });
                 }
+                
             },
         
-            reMask: function(ival) {
-                if(ret.opts.mask == null) return;
-                ret.maskNow(ival);
-                if($.isArray(ival)) {
-                    ret.timeout = setTimeout(ret.maskNow, ret.opts.duration);
-                }
+            reMask: function() {
+                $that.maskNow();
             },
         
             unMask: function() {
-                clearTimeout(ret.timeout);
-                ret.opts.mask = null;
-                ret.text.val(ret.pass.val());
+                
+                if (Modernizr.testProp('textShadow')) {
+                    $that.css({
+                        'color': '',
+                        'text-shadow': ''
+                    });               
+                    
+                } else {
+                    
+                    $that.css({
+                        'background-color': ''
+                    });
+                }
             }
         }
-              
-        ret.opts = $.extend(defaults, options);
-        ret.pass = $(this);
         
-        var $link = $('<a style="margin-left: 5px;" class="toggleLink" href="">Unmask</a>');
+        $that.attr('autocomplete', 'off');
         
-        ret.pass.after($link);
+        var $link = $('<a style="margin-left: 5px;" class="toggleLink" href="">Mask</a>');
+        
+        if ($that.val() != '') {
+            ret.maskNow();
+            ret.isMasked = true;
+            $link.text('Unmask');
+        }
+        
+        $that.after($link);
         
         $link.click(function(e) {
+            
             e.stopPropagation();
             e.preventDefault();
             
             if (ret.isMasked) {
-                ret.unMask();   
-                $link.text('Remask');
+                ret.unMask();
+                $link.text('Mask');
                 ret.isMasked = false;
                 
             } else {
                 
                 $link.text('Unmask');
-                
-                ret.opts.mask = '\u25CF';
-                var t = ret.opts.mask.repeat(ret.text.val().length);
-                ret.text.removeAttr('lastpos').val(t);
-                
                 ret.maskNow();
                 ret.isMasked = true;
             }
         });
         
-        var caretMoved = true;
-        function sel(ev) {
-            if(!caretMoved && (Modernizr.hasEvent('change', ret.text))) {
-                caretMoved = true;
-                ret.text.change();
-            }
-            var el = $(ev.target);
-            var range = el.caret();
-            if(range.start != range.end) {
-                el.attr("lastpos", range.start + "," + range.end)
-            } else {
-                el.removeAttr("lastpos");
-            }
-        }
-        var ieChange = function(ev) {
-            if(event.propertyName=="value") {
-                ret.text.unbind("propertychange").change();
-            }
-        }
-        if(this.outerHTML != null) {
-            var htm = this.outerHTML.replace("password", "text");
-            ret.text = $(htm).val(ret.pass.val()).bind("propertychange", ieChange);
-            ret.pass.closest("form").submit(function() {
-                ret.text.attr("disabled", "disabled");
-            });
-        } else {
-            ret.text = ret.pass.clone().attr("type", "text");
-        }
-        
-        var last = null;
-        ret.text.attr("autocomplete", "off").removeAttr("name").change(function(evt) {
-        	if(last==ret.text.val()) return;
-            var t = last = ret.text.val();
-            var tr = ret.pass.val();
-            var lp = ret.text.attr("lastpos");
-            if(lp == null) {
-                lp = $(evt.target).caret().end - (t.length - tr.length);
-            } else {
-                lp = lp.split(",");
-                tr = tr.substring(0, parseInt(lp[0])) + tr.substring(parseInt(lp[1]));
-                lp = parseInt(lp[0]);
-            }
-            var added = t.length - tr.length;
-            if(added > 0) {
-                tr = tr.substring(0,lp) + t.substring(lp, lp + added) + tr.substring(lp);
-                ret.reMask([lp, lp + added]);
-            } else
-                tr = tr.substring(0,lp + added) + tr.substring(lp);
-            ret.pass.val(tr);
-            ret.text.attr("real", tr).attr("autocomplete", "off").removeAttr("lastpos");
-            if(Modernizr.hasEvent('propertychange', ret.text)) ret.text.bind("propertychange", ieChange);
-        }).keyup(sel).mouseup(sel).select(sel)
-        .bind("input", function() {
-            if(Modernizr.hasEvent('change', ret.text)) ret.text.change();
-            else caretMoved = false;
-         })
-        .focus(function() {ret.focused = true;}).blur(function() {ret.focused = false;})
-        ret.pass.after(ret.text).hide().removeAttr("id");
-        ret.reMask();
-        
-        values.push(ret);
-        
+        values.push(ret);        
+                
     });
+    
+    
     values = $(values);
     values.$ = this;
     return values;
