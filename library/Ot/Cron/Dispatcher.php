@@ -42,6 +42,7 @@ class Ot_Cron_Dispatcher
         $cs = new Ot_Model_DbTable_CronStatus();
 
         if (!is_null($jobKey)) {
+            
             $thisJob = $register->getJob($jobKey);
 
             if (is_null($jobKey)) {
@@ -55,8 +56,15 @@ class Ot_Cron_Dispatcher
             $lastRunDt = $cs->getLastRunDt($thisJob->getKey());
             
             $jobObj = $thisJob->getJobObj();
+                        
+            // make sure job isn't already running
+            if (($pid = Ot_Cron_Lock::lock($thisJob->getKey())) == FALSE) {  
+                return;
+            }
             
             $jobObj->execute($lastRunDt);
+            
+            Ot_Cron_Lock::unlock($thisJob->getKey());
 
             $cs->executed($thisJob->getKey(), time());
             
@@ -68,6 +76,7 @@ class Ot_Cron_Dispatcher
         $jobs = $register->getJobs();
 
     	foreach ($jobs as $job) {
+            
             if ($this->shouldExecute($job->getSchedule(), $now)) {                
 
                 if (!$cs->isEnabled($job->getKey())) {
@@ -78,7 +87,13 @@ class Ot_Cron_Dispatcher
 
                 $jobObj = $job->getJobObj();
                 
+                if (($pid = Ot_Cron_Lock::lock($thisJob->getKey())) == FALSE) {  
+                    continue;
+                }
+                
                 $jobObj->execute($lastRunDt);
+                
+                Ot_Cron_Lock::unlock($thisJob->getKey());
 
                 $cs->executed($job->getKey(), time());
             }
