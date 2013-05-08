@@ -128,7 +128,7 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
         foreach ($vars as $varName => $var) {
             $data->accountAttributes[$varName] = $var;
         }
-        
+                
         $cahr = new Ot_CustomAttribute_HostRegister();
         
         $thisHost = $cahr->getHost('Ot_Profile');
@@ -150,7 +150,7 @@ class Ot_Model_DbTable_Account extends Ot_Db_Table
             'name'        => $adapter->name,
             'description' => $adapter->description
         );
-        
+                
         return $data;
     }
 

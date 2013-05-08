@@ -357,16 +357,18 @@ class Ot_AccountController extends Zend_Controller_Action
      */
     public function editAction()
     {
+        
+                
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
         $me = (Zend_Auth::getInstance()->getIdentity()->accountId == $this->_userData['accountId']);
-
-        $form = new Ot_Form_Account(false, $me);
         
         $formData = $this->_userData;
+              
         
         if (isset($formData['accountAttributes'])) {
             foreach ($formData['accountAttributes'] as $key => $a) {
+                
                 $formData['accountAttributes'][$key] = $a->getValue();
             }
         }
@@ -377,6 +379,9 @@ class Ot_AccountController extends Zend_Controller_Action
             }
         }
         
+        
+        $form = new Ot_Form_Account(false, $me);  
+                
         $form->populate($formData);       
         
         $acl = Zend_Registry::get('acl');
