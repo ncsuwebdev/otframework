@@ -87,13 +87,13 @@ class Ot_Cron_Dispatcher
 
                 $jobObj = $job->getJobObj();
                 
-                if (($pid = Ot_Cron_Lock::lock($thisJob->getKey())) == FALSE) {  
+                if (($pid = Ot_Cron_Lock::lock($job->getKey())) == FALSE) {  
                     continue;
                 }
                 
                 $jobObj->execute($lastRunDt);
                 
-                Ot_Cron_Lock::unlock($thisJob->getKey());
+                Ot_Cron_Lock::unlock($job->getKey());
 
                 $cs->executed($job->getKey(), time());
             }
