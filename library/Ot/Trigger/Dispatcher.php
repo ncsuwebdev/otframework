@@ -77,6 +77,11 @@ class Ot_Trigger_Dispatcher
      */
     public function dispatch($key)
     {
+        // if the trigger system is globally disabled just return
+        if ($this->_helper->configVar('triggerSystem') == false) {
+            return;
+        }
+        
         $action = new Ot_Model_DbTable_TriggerAction();
         $actions = $action->getActionsForTrigger($key);
 
