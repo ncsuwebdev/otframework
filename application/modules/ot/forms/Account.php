@@ -59,7 +59,7 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $timezone->setValue(date_default_timezone_get());
 
         // Role select box
-        $roleSelect = $this->createElement('multiSelect', 'role', array('label' => 'model-account-role'));
+        $roleSelect = $this->createElement('multiselect', 'role', array('label' => 'model-account-role'));
         $roleSelect->setRequired(true);
         $roleSelect->setDescription('You may select multiple roles for a user');
 
