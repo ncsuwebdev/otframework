@@ -1,5 +1,9 @@
 {
-    "hash": "5624fb656ae76ca383bcc2f04ee0fc69",
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "29b930d11180d21957f6b92f879ccf00",
     "packages": [
         {
             "name": "bombayworks/zendframework1",
@@ -42,7 +46,7 @@
                     "ZendX_": "extras/library/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 "library/",
                 "extras/library/"
@@ -90,7 +94,7 @@
             ],
             "authors": [
                 {
-                    "name": "EmagisterTech",
+                    "name": "Emagister Tech",
                     "email": "php@emagister.com",
                     "homepage": "http://engineering.emagister.com",
                     "role": "Developer"
@@ -110,16 +114,16 @@
         },
         {
             "name": "ncsuwebdev/ncsubootstrap",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ncsuwebdev/ncsubootstrap.git",
-                "reference": "1.0.1"
+                "reference": "1.0.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/1.0.1",
-                "reference": "1.0.1",
+                "url": "https://api.github.com/repos/ncsuwebdev/ncsubootstrap/zipball/1.0.2",
+                "reference": "1.0.2",
                 "shasum": ""
             },
             "type": "library",
@@ -138,7 +142,7 @@
                 "ncstate",
                 "ncsu"
             ],
-            "time": "2013-03-12 13:52:17"
+            "time": "2013-05-08 18:03:25"
         },
         {
             "name": "ncsuwebdev/php-ncstate",
@@ -163,7 +167,7 @@
                     "Ncstate": "/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Jason Austin",
@@ -181,12 +185,20 @@
             "time": "2013-04-05 14:25:19"
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+
+    ],
     "aliases": [
 
     ],
     "minimum-stability": "stable",
     "stability-flags": {
         "emagister/zend-form-decorators-bootstrap": 20
-    }
+    },
+    "platform": {
+        "php": ">=5.3.0"
+    },
+    "platform-dev": [
+
+    ]
 }
