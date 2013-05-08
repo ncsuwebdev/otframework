@@ -3,7 +3,7 @@ $.fn.iphonePassword = function(options) {
     var values = Array();
     this.each(function() {
         
-        $that = $(this);
+        var $that = $(this);
 
         var ret = {
             
