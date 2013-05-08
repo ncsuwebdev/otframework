@@ -15,10 +15,10 @@
 
 .job h3.name {
     margin-top: 0px;
+    margin-bottom: 5px;
 }
 
 .job div.description {
-    color: #666666;
     margin-bottom: 10px;
 }
 
@@ -33,6 +33,8 @@ div.job {
 
 .job div.schedule {
     font-style: italic;
+    color: #888;
+    font-size: 0.9em;
 }
 
 #alertBox {

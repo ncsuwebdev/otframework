@@ -60,11 +60,13 @@
                     <div class="span1 status <?php echo ($c['isEnabled']) ? 'enabled' : 'disabled'; ?>">
 
                     </div>
-                    <div class="span5">
+                    <div class="span7">
                         <h3 class="name"><?php echo $c['job']->getName(); ?></h3>
                         <div class="description"><?php echo $c['job']->getDescription(); ?></div>
                         <div class="schedule">
                             <?php
+                            echo "Executes " . lcfirst($c['schedule']) . ' ';
+                            
                             if ($c['lastRunDt'] != 0) {
                                 echo 'Last executed ' . $this->elapsedTime($c['lastRunDt']);
                             } else {
@@ -73,9 +75,9 @@
                             ?>
                         </div>
                     </div>
-                    <div class="span5 actions pull-right">
+                    <div class="span3 actions pull-right">
                         <?php if ($this->acl['toggle']): ?>
-                            <a href="#toggleModal<?php echo $c['job']->getKey(); ?>" data-toggle="modal" class="btn <?php echo ($c['isEnabled']) ? 'btn-danger' : 'btn-success'; ?>">
+                            <a href="#toggleModal<?php echo $c['job']->getKey(); ?>" data-toggle="modal" class="btn btn-mini <?php echo ($c['isEnabled']) ? 'btn-danger' : 'btn-success'; ?>">
                                 <?php
                                 if ($c['isEnabled']) {
                                     echo '<i class="icon-white icon-minus"></i> ' . $this->translate('ot-cron-index:disable');
@@ -87,7 +89,7 @@
                         <?php endif; ?>
 
                         <?php if ($c['isEnabled']): ?>
-                            <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'job', 'jobKey' => $c['job']->getKey()), 'ot', true); ?>" class="btn"><i class="icon icon-cog"></i> <?php echo $this->translate('ot-cron-index:runNow'); ?></a>
+                            <a href="<?php echo $this->url(array('controller' => 'cron', 'action' => 'job', 'jobKey' => $c['job']->getKey()), 'ot', true); ?>" class="btn btn-mini"><i class="icon icon-cog"></i> <?php echo $this->translate('ot-cron-index:runNow'); ?></a>
                         <?php endif; ?>
                     </div>                  
                 </div>
