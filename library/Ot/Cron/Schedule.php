@@ -106,8 +106,8 @@ class Ot_Cron_Schedule
         // Split input liberal. Single or multiple Spaces, Tabs and Newlines are all allowed as separators.
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if(count($elements = preg_split('/\s+/', $cronSpec)) < 5)
-            throw new \Exception('Invalid specification.');
-    
+            throw new Exception('Invalid specification.');
+           
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Named ranges in cron entries
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ class Ot_Cron_Schedule
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $newCron = new Ot_Cron_Schedule($language);
         $newCron->_cronMinutes        = $newCron->cronInterpret($elements[0],                               0,                           59, array(),            'minutes');
-        $newCron->_cronHours        = $newCron->cronInterpret($elements[1],                               0,                           23, array(),            'hours');
+        $newCron->_cronHours        = $newCron->cronInterpret($elements[1],                               0,                           23, array(),            'hours');        
         $newCron->_cronDaysOfMonth    = $newCron->cronInterpret($elements[2],                            1,                           31, array(),            'daysOfMonth');
         $newCron->_cronMonths        = $newCron->cronInterpret($elements[3],                            1,                           12, $arrMonths,        'months');
         $newCron->_cronDaysOfWeek    = $newCron->cronInterpret($elements[4],                            0,                            6, $arrDaysOfWeek,    'daysOfWeek');
@@ -155,9 +155,10 @@ class Ot_Cron_Schedule
     //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     final private function cronInterpret($specification, $rangeMin, $rangeMax, $namedItems, $errorName)
-    {
+    {       
+        
         if((!is_string($specification)) && (!(is_int($specification))))
-            throw new \Exception('Invalid specification.');
+            throw new Exception('Invalid specification.');
     
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Multiple values, separated by comma
@@ -171,7 +172,7 @@ class Ot_Cron_Schedule
         {
             $hasRange        = (($posRange        = strpos($segment, '-')) !== FALSE);
             $hasInterval    = (($posIncrement    = strpos($segment, '/')) !== FALSE);
-            
+                       
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Check: Increment without range is invalid
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
