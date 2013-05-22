@@ -1,47 +1,41 @@
 <?php
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Plugin:        StreamlineFoundation
-//
-// Class:        Schedule
-//
-// Description:    Provides scheduling mechanics including creating a schedule, testing if a specific moment is part of the schedule, moving back
-//                and forth between scheduled moments in time and translating the created schedule back to a human readable form.
-//
-// Usage:        ::fromCronString() creates a new Schedule class and requires a string in the cron ('* * * * *', $language) format.
-//
-//                ->next(<datetime>) returns the first scheduled datetime after <datetime> in array format.
-//                ->nextAsString(<datetime>) does the same with an ISO string as the result.
-//                ->nextAsTime(<datetime>) does the same with a UNIX timestamp as the result.
-//
-//                ->previous(<datetime>) returns the first scheduled datetime before <datetime> in array format.
-//                ->previousAsString(<datetime>) does the same with an ISO string as the result.
-//                ->previousAsTime(<datetime>) does the same with a UNIX timestamp as the result.
-//
-//                ->asNaturalLanguage() returns the entire schedule in natural language form.
-//
-//                In the next and previous functions, <datetime> can be a UNIX timestamp, an ISO string or an array format such as returned by
-//                next() and previous().
-//
-// Copyright:    2012 Joost Brugman (joost@brugmanholding.com, joost@joostbrugman.com)
-//        
-//                This file is part of the Streamline plugin "StreamlineFoundation" and referenced in the next paragraphs inside this comment block as "this
-//                plugin". It is based on the Streamline application framework.
-//
-//                This plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
-//                published by the Free Software Foundation, either version 3 of the License, or any later version. This plugin is distributed in the
-//                hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-//                PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public
-//                License along with Streamline.  If not, see <http://www.gnu.org/licenses/>.
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * Plugin:        StreamlineFoundation
+ *
+ * Class:        Schedule
+ *
+ * Description:    Provides scheduling mechanics including creating a schedule, testing if a specific moment is part of the schedule, moving back
+ *                and forth between scheduled moments in time and translating the created schedule back to a human readable form.
+ *
+ * Usage:        ::fromCronString() creates a new Schedule class and requires a string in the cron ('* * * * *', $language) format.
+ *
+ *                ->next(<datetime>) returns the first scheduled datetime after <datetime> in array format.
+ *                ->nextAsString(<datetime>) does the same with an ISO string as the result.
+ *                ->nextAsTime(<datetime>) does the same with a UNIX timestamp as the result.
+ *
+ *                ->previous(<datetime>) returns the first scheduled datetime before <datetime> in array format.
+ *                ->previousAsString(<datetime>) does the same with an ISO string as the result.
+ *                ->previousAsTime(<datetime>) does the same with a UNIX timestamp as the result.
+ *
+ *                ->asNaturalLanguage() returns the entire schedule in natural language form.
+ *
+ *                In the next and previous functions, <datetime> can be a UNIX timestamp, an ISO string or an array format such as returned by
+ *                next() and previous().
+ *
+ * Copyright:    2012 Joost Brugman (joost@brugmanholding.com, joost@joostbrugman.com)
+ *        
+ *                This file is part of the Streamline plugin "StreamlineFoundation" and referenced in the next paragraphs inside this comment block as "this
+ *                plugin". It is based on the Streamline application framework.
+ *
+ *                This plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
+ *                published by the Free Software Foundation, either version 3 of the License, or any later version. This plugin is distributed in the
+ *                hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ *                PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public
+ *                License along with Streamline.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 class Ot_Cron_Schedule
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // The cron variables
-    //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // The actual minutes, hours, daysOfMonth, months, daysOfWeek and years selected by the provided cron specification.
     private    $_minutes            = array();
     private    $_hours                = array();
@@ -58,37 +52,30 @@ class Ot_Cron_Schedule
     private $_cronDaysOfWeek    = array();
     private $_cronYears            = array();
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
     // The language table
-    //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private $_lang                = FALSE;
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Minimum and maximum years to cope with the Year 2038 problem in UNIX. We run PHP which most likely runs on a UNIX environment so we
-    // must assume vulnerability.
-    //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * Minimum and maximum years to cope with the Year 2038 problem in UNIX. We run PHP which most likely runs on a UNIX environment so we
+     * must assume vulnerability.
+     */    
     protected $RANGE_YEARS_MIN    = 1970;    // Must match date range supported by date(). See also: http://en.wikipedia.org/wiki/Year_2038_problem
     protected $RANGE_YEARS_MAX    = 2037;    // Must match date range supported by date(). See also: http://en.wikipedia.org/wiki/Year_2038_problem
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Function:    __construct
-    //
-    // Description:    Performs only base initialization, including language initialization.
-    //
-    // Parameters:    $language            The languagecode of the chosen language.
-    //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * Function:    __construct
+     *
+     * Description:    Performs only base initialization, including language initialization.
+     *
+     * Parameters:    $language            The languagecode of the chosen language.
+     */
     public function __construct($language = 'en')
     {
         $this->initLang($language);
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    fromCronString
     //
@@ -99,69 +86,64 @@ class Ot_Cron_Schedule
     //
     // Result:        A new Schedule object. An \Exception is thrown if the specification is invalid.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final public static function fromCronString($cronSpec = '* * * * * *', $language = 'en')
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Split input liberal. Single or multiple Spaces, Tabs and Newlines are all allowed as separators.
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        // Split input liberal. Single or multiple Spaces, Tabs and Newlines are all allowed as separators.        
         if(count($elements = preg_split('/\s+/', $cronSpec)) < 5)
             throw new \Exception('Invalid specification.');
     
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Named ranges in cron entries
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        // Named ranges in cron entries        
         $arrMonths        = array('JAN' => 1, 'FEB' => 2, 'MAR' => 3, 'APR' => 4, 'MAY' => 5, 'JUN' => 6, 'JUL' => 7, 'AUG' => 8, 'SEP' => 9, 'OCT' => 10, 'NOV' => 11, 'DEC' => 12);
         $arrDaysOfWeek    = array('SUN' => 0, 'MON' => 1, 'TUE' => 2, 'WED' => 3, 'THU' => 4, 'FRI' => 5, 'SAT' => 6);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Translate the cron specification into arrays that hold specifications of the actual dates
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        $newCron = new Ot_Cron_Schedule($language);
-        $newCron->_cronMinutes        = $newCron->cronInterpret($elements[0],                               0,                           59, array(),            'minutes');
-        $newCron->_cronHours        = $newCron->cronInterpret($elements[1],                               0,                           23, array(),            'hours');
-        $newCron->_cronDaysOfMonth    = $newCron->cronInterpret($elements[2],                            1,                           31, array(),            'daysOfMonth');
-        $newCron->_cronMonths        = $newCron->cronInterpret($elements[3],                            1,                           12, $arrMonths,        'months');
-        $newCron->_cronDaysOfWeek    = $newCron->cronInterpret($elements[4],                            0,                            6, $arrDaysOfWeek,    'daysOfWeek');
-        $newCron->_cronYears        = $newCron->cronInterpret($elements[5], $newCron->RANGE_YEARS_MIN, $newCron->RANGE_YEARS_MAX, array(),            'years');
         
-        $newCron->_minutes            = $newCron->cronCreateItems($newCron->_cronMinutes);
-        $newCron->_hours            = $newCron->cronCreateItems($newCron->_cronHours);
-        $newCron->_daysOfMonth        = $newCron->cronCreateItems($newCron->_cronDaysOfMonth);
-        $newCron->_months            = $newCron->cronCreateItems($newCron->_cronMonths);
-        $newCron->_daysOfWeek        = $newCron->cronCreateItems($newCron->_cronDaysOfWeek);
-        $newCron->_years            = $newCron->cronCreateItems($newCron->_cronYears);
+        // Translate the cron specification into arrays that hold specifications of the actual dates        
+        $newCron = new Ot_Cron_Schedule($language);
+        $newCron->_cronMinutes     = $newCron->cronInterpret($elements[0], 0, 59, array(), 'minutes');
+        $newCron->_cronHours       = $newCron->cronInterpret($elements[1], 0, 23, array(), 'hours');
+        $newCron->_cronDaysOfMonth = $newCron->cronInterpret($elements[2], 1, 31, array(), 'daysOfMonth');
+        $newCron->_cronMonths      = $newCron->cronInterpret($elements[3], 1, 12, $arrMonths, 'months');
+        $newCron->_cronDaysOfWeek  = $newCron->cronInterpret($elements[4], 0, 6, $arrDaysOfWeek, 'daysOfWeek');
+        $newCron->_cronYears       = $newCron->cronInterpret($elements[5], $newCron->RANGE_YEARS_MIN, $newCron->RANGE_YEARS_MAX, array(), 'years');
+        
+        $newCron->_minutes     = $newCron->cronCreateItems($newCron->_cronMinutes);
+        $newCron->_hours       = $newCron->cronCreateItems($newCron->_cronHours);
+        $newCron->_daysOfMonth = $newCron->cronCreateItems($newCron->_cronDaysOfMonth);
+        $newCron->_months      = $newCron->cronCreateItems($newCron->_cronMonths);
+        $newCron->_daysOfWeek  = $newCron->cronCreateItems($newCron->_cronDaysOfWeek);
+        $newCron->_years       = $newCron->cronCreateItems($newCron->_cronYears);
         
         return $newCron;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Function:    cronInterpret
-    //
-    // Description:    Interprets a single field from a cron specification. Throws an \Exception if the specification is in some way invalid.
-    //
-    // Parameters:    $specification        The actual text from the spefication, such as 12-38/3
-    //                $rangeMin            The lowest value for specification.
-    //                $rangeMax            The highest value for specification
-    //                $namesItems            A key/value pair where value is a value between $rangeMin and $rangeMax and key is the name for that value.
-    //                $errorName            The name of the category to use in case of an error.
-    //
-    // Result:        An array with entries, each of which is an array with the following fields:
-    //                'number1'            The first number of the range or the number specified
-    //                'number2'            The second number of the range if a range is specified
-    //                'hasInterval'        TRUE if a range is specified. FALSE otherwise
-    //                'interval'            The interval if a range is specified.
-    //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /*
+     * Function:    cronInterpret
+     * 
+     * Description:    Interprets a single field from a cron specification. Throws an \Exception if the specification is in some way invalid.
+     * 
+     * Parameters:    $specification        The actual text from the spefication, such as 12-38/3
+     *                $rangeMin            The lowest value for specification.
+     *                $rangeMax            The highest value for specification
+     *                $namesItems            A key/value pair where value is a value between $rangeMin and $rangeMax and key is the name for that value.
+     *                $errorName            The name of the category to use in case of an error.
+     *
+     * Result:        An array with entries, each of which is an array with the following fields:
+     *                'number1'            The first number of the range or the number specified
+     *                'number2'            The second number of the range if a range is specified
+     *                'hasInterval'        TRUE if a range is specified. FALSE otherwise
+     *                'interval'            The interval if a range is specified.
+     */    
     final private function cronInterpret($specification, $rangeMin, $rangeMax, $namedItems, $errorName)
     {
         if((!is_string($specification)) && (!(is_int($specification))))
             throw new \Exception('Invalid specification.');
     
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Multiple values, separated by comma
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        // Multiple values, separated by comma        
         $specs = array();
         $specs['rangeMin'] = $rangeMin;
         $specs['rangeMax'] = $rangeMax;
@@ -172,20 +154,20 @@ class Ot_Cron_Schedule
             $hasRange        = (($posRange        = strpos($segment, '-')) !== FALSE);
             $hasInterval    = (($posIncrement    = strpos($segment, '/')) !== FALSE);
             
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Check: Increment without range is invalid
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             if(!$hasRange && $hasInterval)                                                throw new \Exception("Invalid Range ($errorName).");
             
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Check: Increment must be final specification
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             if($hasRange && $hasInterval)
                 if($posIncrement < $posRange)                                            throw new \Exception("Invalid order ($errorName).");
             
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // GetSegments
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             $segmentNumber1        = $segment;
             $segmentNumber2        = '';
             $segmentIncrement    = '';
@@ -202,9 +184,9 @@ class Ot_Cron_Schedule
                 $segmentNumber1 = substr($segmentNumber1, 0, $posRange);
             }
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Get and validate first value in range
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             if($segmentNumber1 == '*')
             {
                 $intNumber1 = $rangeMin;
@@ -217,9 +199,9 @@ class Ot_Cron_Schedule
                 if(((string) ($intNumber1 = (int) $segmentNumber1)) != $segmentNumber1)        throw new \Exception("Invalid symbol ($errorName).");
                 if(($intNumber1 < $rangeMin) || ($intNumber1 > $rangeMax))                    throw new \Exception("Out of bounds ($errorName).");
 
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
                 // Get and validate second value in range
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
                 if($hasRange)
                 {
                     if(array_key_exists(strtoupper($segmentNumber2), $namedItems)) $segmentNumber2 = $namedItems[strtoupper($segmentNumber2)];
@@ -229,18 +211,18 @@ class Ot_Cron_Schedule
                 }
             }
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Get and validate increment
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             if($hasInterval)
             {
                 if(($intIncrement = (int) $segmentIncrement) != $segmentIncrement)        throw new \Exception("Invalid symbol ($errorName).");
                 if($intIncrement < 1)                                                    throw new \Exception("Out of bounds ($errorName).");
             }
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Apply range and increment
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             $elem = array();
             $elem['number1'] = $intNumber1;
             $elem['hasInterval'] = $hasRange;
@@ -254,7 +236,7 @@ class Ot_Cron_Schedule
         return $specs;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    cronCreateItems
     //
@@ -271,7 +253,7 @@ class Ot_Cron_Schedule
     //                [40] => 1
     //                [50] => 1
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final private function cronCreateItems($cronInterpreted)
     {
         $items = array();
@@ -288,7 +270,7 @@ class Ot_Cron_Schedule
         return $items;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    dtFromParameters
     //
@@ -301,7 +283,7 @@ class Ot_Cron_Schedule
     //
     // Result:        An array with indices 0-4 holding the actual interpreted values for $minute, $hour, $day, $month and $year.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final private function dtFromParameters($time = FALSE)
     {
         if($time === FALSE)
@@ -329,7 +311,7 @@ class Ot_Cron_Schedule
         return $arrDt[4].'-'.(strlen($arrDt[3]) == 1 ? '0' : '').$arrDt[3].'-'.(strlen($arrDt[2]) == 1 ? '0' : '').$arrDt[2].' '.(strlen($arrDt[1]) == 1 ? '0' : '').$arrDt[1].':'.(strlen($arrDt[0]) == 1 ? '0' : '').$arrDt[0].':00';
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    match
     //
@@ -342,17 +324,17 @@ class Ot_Cron_Schedule
     //
     // Result:        TRUE if the schedule matches the specified datetime. FALSE otherwise.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final public function match($time = FALSE)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Convert parameters to array datetime
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $arrDT = $this->dtFromParameters($time);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Verify match
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
 
         // Years
         if(!array_key_exists($arrDT[4], $this->_years)) return FALSE;
@@ -370,7 +352,7 @@ class Ot_Cron_Schedule
         return TRUE;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    next
     //
@@ -388,19 +370,19 @@ class Ot_Cron_Schedule
     //                3                    Next scheduled month
     //                4                    Next scheduled year
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final public function next($time = FALSE)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Convert parameters to array datetime
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $arrDT = $this->dtFromParameters($time);
 
         while(1)
         {
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Verify the current date is in range. If not, move into range and consider this the next position
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             if(!array_key_exists($arrDT[4], $this->_years))
             {
                 if(($arrDT[4] = $this->getEarliestItem($this->_years, $arrDT[4], FALSE)) === FALSE)
@@ -434,9 +416,9 @@ class Ot_Cron_Schedule
                 break;
             }
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Advance minute, hour, date, month and year while overflowing.
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             $daysInThisMonth = date('t', strtotime($arrDT[4].'-'.$arrDT[3]));
             if($this->advanceItem($this->_minutes, 0, 59, & $arrDT[0]))
                 if($this->advanceItem($this->_hours, 0, 23, & $arrDT[1]))
@@ -447,16 +429,16 @@ class Ot_Cron_Schedule
             break;
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // If Datetime now points to a day that is schedule then return.
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $dayOfWeek = date('w', strtotime($this->dtAsString($arrDT)));
         if(array_key_exists($dayOfWeek, $this->_daysOfWeek))
             return $arrDT;
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Otherwise move to next scheduled date
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         return $this->next($arrDT);
     }
     
@@ -470,7 +452,7 @@ class Ot_Cron_Schedule
         return strtotime($this->dtAsString($this->next($time)));
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    advanceItem
     //
@@ -483,35 +465,35 @@ class Ot_Cron_Schedule
     //
     // Result:        FALSE if current did not overflow (reset back to the earliest possible value). TRUE if it did.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final private function advanceItem($arrItems, $rangeMin, $rangeMax, & $current)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Advance pointer
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $current++;
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // If still before start, move to earliest
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         if($current < $rangeMin)
             $current = $this->getEarliestItem($arrItems);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Parse items until found or overflow
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         for(;$current <= $rangeMax; $current++)
             if(array_key_exists($current, $arrItems))
                 return FALSE; // We did not overflow
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Or overflow
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $current = $this->getEarliestItem($arrItems);
         return TRUE;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    getEarliestItem
     //
@@ -520,35 +502,35 @@ class Ot_Cron_Schedule
     // Parameters:    $arrItems            A reference to the collection in which to search.
     //                $afterItem            The highest index that is to be skipped.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final private function getEarliestItem($arrItems, $afterItem = FALSE, $allowOverflow = TRUE)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // If no filter is specified, return the earliest listed item.
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         if($afterItem === FALSE)
         {
             reset($arrItems);
             return key($arrItems);
         }
         
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Or parse until we passed $afterItem
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         foreach($arrItems as $key => $value)
             if($key > $afterItem)
                 return $key;
         
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // If still nothing found, we may have exhausted our options.
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         if(!$allowOverflow)
             return FALSE;
         reset($arrItems);
         return key($arrItems);
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    previous
     //
@@ -566,19 +548,19 @@ class Ot_Cron_Schedule
     //                3                    Previous scheduled month
     //                4                    Previous scheduled year
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final public function previous($time = FALSE)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Convert parameters to array datetime
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $arrDT = $this->dtFromParameters($time);
 
         while(1)
         {
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Verify the current date is in range. If not, move into range and consider this the previous position
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             if(!array_key_exists($arrDT[4], $this->_years))
             {
                 if(($arrDT[4] = $this->getLatestItem($this->_years, $arrDT[4], FALSE)) === FALSE)
@@ -612,9 +594,9 @@ class Ot_Cron_Schedule
                 break;
             }
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Recede minute, hour, date, month and year while overflowing.
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             $daysInPreviousMonth = date('t', strtotime('-1 month', strtotime($arrDT[4].'-'.$arrDT[3])));
             if($this->recedeItem($this->_minutes, 0, 59, & $arrDT[0]))
                 if($this->recedeItem($this->_hours, 0, 23, & $arrDT[1]))
@@ -625,16 +607,16 @@ class Ot_Cron_Schedule
             break;
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // If Datetime now points to a day that is schedule then return.
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $dayOfWeek = date('w', strtotime($this->dtAsString($arrDT)));
         if(array_key_exists($dayOfWeek, $this->_daysOfWeek))
             return $arrDT;
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Otherwise move to next scheduled date
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         return $this->previous($arrDT);
     }
     
@@ -648,7 +630,7 @@ class Ot_Cron_Schedule
         return strtotime($this->dtAsString($this->previous($time)));
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    recedeItem
     //
@@ -661,35 +643,35 @@ class Ot_Cron_Schedule
     //
     // Result:        FALSE if current did not overflow (reset back to the highest possible value). TRUE if it did.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final private function recedeItem($arrItems, $rangeMin, $rangeMax, & $current)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Recede pointer
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $current--;
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // If still above highest, move to highest
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         if($current > $rangeMax)
             $current = $this->getLatestItem($arrItems, $rangeMax + 1);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Parse items until found or overflow
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         for(;$current >= $rangeMin; $current--)
             if(array_key_exists($current, $arrItems))
                 return FALSE; // We did not overflow
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Or overflow
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $current = $this->getLatestItem($arrItems, $rangeMax + 1);
         return TRUE;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //
     // Function:    getLatestItem
     //
@@ -698,21 +680,21 @@ class Ot_Cron_Schedule
     // Parameters:    $arrItems            A reference to the collection in which to search.
     //                $beforeItem            The lowest index that is to be skipped.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     final private function getLatestItem($arrItems, $beforeItem = FALSE, $allowOverflow = TRUE)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // If no filter is specified, return the latestlisted item.
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         if($beforeItem === FALSE)
         {
             end($arrItems);
             return key($arrItems);
         }
         
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Or parse until we passed $beforeItem
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         end($arrItems);
         do
         {
@@ -720,9 +702,9 @@ class Ot_Cron_Schedule
                 return $key;
         } while(prev($arrItems));
         
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // If still nothing found, we may have exhausted our options.
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         if(!$allowOverflow)
             return FALSE;
         end($arrItems);
@@ -730,7 +712,7 @@ class Ot_Cron_Schedule
     }
 
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    
     //
@@ -740,7 +722,7 @@ class Ot_Cron_Schedule
     //
     // Result:
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function getClass($spec)
     {
         if(!$this->classIsSpecified($spec))        return '0';
@@ -748,7 +730,7 @@ class Ot_Cron_Schedule
                                                 return '2';
     }
     
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    
     //
@@ -759,7 +741,7 @@ class Ot_Cron_Schedule
     //
     // Result:
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function classIsSpecified($spec)
     {
         if($spec['elements'][0]['hasInterval'] == FALSE)            return TRUE;
@@ -769,7 +751,7 @@ class Ot_Cron_Schedule
         return FALSE;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    
     //
@@ -780,7 +762,7 @@ class Ot_Cron_Schedule
     //
     // Result:
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function classIsSingleFixed($spec)
     {
         return (count($spec['elements']) == 1) && (!$spec['elements'][0]['hasInterval']);
@@ -1049,7 +1031,7 @@ class Ot_Cron_Schedule
         return $txt;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    natlangRange
     //
@@ -1059,7 +1041,7 @@ class Ot_Cron_Schedule
     //
     // Result:
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function natlangRange($spec, $entryFunction, $p1 = FALSE)
     {
         $arrIntervals = array();
@@ -1072,13 +1054,13 @@ class Ot_Cron_Schedule
         return $txt;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    natlangElementMinute
     //
     // Description:    Converts an entry from the minute specification to natural language.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function natlangElementMinute($elem)
     {
         if(!$elem['hasInterval'])
@@ -1093,13 +1075,13 @@ class Ot_Cron_Schedule
         return $txt;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    natlangElementHour
     //
     // Description:    Converts an entry from the hour specification to natural language.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function natlangElementHour($elem, $asBetween)
     {
         if(!$elem['hasInterval'])
@@ -1116,13 +1098,13 @@ class Ot_Cron_Schedule
         return $txt;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    natlangElementDayOfMonth
     //
     // Description:    Converts an entry from the day of month specification to natural language.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function natlangElementDayOfMonth($elem)
     {
         if(!$elem['hasInterval'])
@@ -1134,13 +1116,13 @@ class Ot_Cron_Schedule
         return $txt;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    natlangElementDayOfMonth
     //
     // Description:    Converts an entry from the month specification to natural language.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function natlangElementMonth($elem)
     {
         if(!$elem['hasInterval'])
@@ -1152,13 +1134,13 @@ class Ot_Cron_Schedule
         return $txt;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    natlangElementYear
     //
     // Description:    Converts an entry from the year specification to natural language.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final private function natlangElementYear($elem)
     {
         if(!$elem['hasInterval'])
@@ -1170,7 +1152,7 @@ class Ot_Cron_Schedule
         return $txt;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     //
     // Function:    asNaturalLanguage
     //
@@ -1180,15 +1162,15 @@ class Ot_Cron_Schedule
     //
     // Result:        A string containing a natural language text.
     //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
     final public function asNaturalLanguage()
     {
         $switchForceDateExplaination = FALSE;
         $switchDaysOfWeekAreExcluding = TRUE;
     
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Generate Time String
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $txtMinutes                    = array();
         $txtMinutes[0]                = $this->natlangApply('elemMin: every_minute');
         $txtMinutes[1]                = $this->natlangElementMinute($this->_cronMinutes['elements'][0]);
@@ -1208,7 +1190,7 @@ class Ot_Cron_Schedule
 
         switch($classMinutes.$classHours)
         {
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Special case: Unspecified date + Unspecified month
             //
             // Rule: The language for unspecified fields is omitted if a more detailed field has already been explained.
@@ -1216,25 +1198,25 @@ class Ot_Cron_Schedule
             // The minutes field always yields an explaination, at the very least in the form of 'every minute'. This rule states that if the
             // hour is not specified, it can be omitted because 'every minute' is already sufficiently clear.
             //
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             case '00':
                 $txtTime = $txtMinutes[0];
                 break;
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Special case: Fixed minutes and fixed hours
             //
             // The default writing would be something like 'every 20 minutes past 04:00', but the more common phrasing would be: At 04:20.
             //
             // We will switch ForceDateExplaination on, so that even a non-specified date yields an explaination (e.g. 'every day')
             //
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             case '11':
                 $txtTime = $this->natlangApply('elemMin: at_X:Y', $this->natlangPad2($this->_cronHours['elements'][0]['number1']), $this->natlangPad2($this->_cronMinutes['elements'][0]['number1']));
                 $switchForceDateExplaination = TRUE;
                 break;
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Special case: Between :00 and :59
             //
             // If hours are specified, but minutes are not, then the minutes string will yield something like 'every minute'. We must the
@@ -1243,14 +1225,14 @@ class Ot_Cron_Schedule
             //
             // We will switch ForceDateExplaination on, so that even a non-specified date yields an explaination (e.g. 'every day')
             //
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             case '01':
             case '02':
                 $txtTime = $txtMinutes[$classMinutes].' '.$txtHours[$classHours]['between'];
                 $switchForceDateExplaination = TRUE;
                 break;
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Special case: Past the hour
             //
             // If minutes are specified and hours are specified, then the specification of minutes is always limited to a maximum of 60 minutes
@@ -1258,7 +1240,7 @@ class Ot_Cron_Schedule
             //
             // We will switch ForceDateExplaination on, so that even a non-specified date yields an explaination (e.g. 'every day')
             //
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             case '12':
             case '22':
             case '21':
@@ -1271,9 +1253,9 @@ class Ot_Cron_Schedule
                 break;
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Generate Date String
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $txtDaysOfMonth        = array();
         $txtDaysOfMonth[0]    = '';
         $txtDaysOfMonth[1]    = $this->natlangApply('elemDOM: on_the_X', $this->natlangApply('ordinal: '.$this->_cronDaysOfMonth['elements'][0]['number1']));
@@ -1292,7 +1274,7 @@ class Ot_Cron_Schedule
 
         switch($classDaysOfMonth.$classMonths)
         {
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Special case: Unspecified date + Unspecified month
             //
             // Rule: The language for unspecified fields is omitted if a more detailed field has already been explained.
@@ -1303,7 +1285,7 @@ class Ot_Cron_Schedule
             // There are some time specifications that do not contain an 'every' reference, but reference a specific time of day. In those cases
             // the date explaination is enforced.
             //
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             case '00':
                 $txtDate = '';
                 break;
@@ -1313,9 +1295,9 @@ class Ot_Cron_Schedule
                 break;
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Generate Year String
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $txtYears            = array();
         $txtYears[0]        = '';
         $txtYears[1]        = ' '.$this->natlangApply('elemYear: in_X', $this->_cronYears['elements'][0]['number1']);
@@ -1324,9 +1306,9 @@ class Ot_Cron_Schedule
         $classYears            = $this->getClass($this->_cronYears);
         $txtYear = $txtYears[$classYears];
         
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // Generate DaysOfWeek String
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         $collectDays = 0;
         foreach($this->_cronDaysOfWeek['elements'] as $elem)
         {
