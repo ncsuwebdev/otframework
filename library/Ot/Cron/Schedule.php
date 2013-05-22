@@ -235,6 +235,7 @@ class Ot_Cron_Schedule
             }
             $specs['elements'][] = $elem;
         }
+        
         return $specs;
     }
 
@@ -422,11 +423,11 @@ class Ot_Cron_Schedule
             // Advance minute, hour, date, month and year while overflowing.
             
             $daysInThisMonth = date('t', strtotime($arrDT[4].'-'.$arrDT[3]));
-            if($this->advanceItem($this->_minutes, 0, 59, & $arrDT[0]))
-                if($this->advanceItem($this->_hours, 0, 23, & $arrDT[1]))
-                    if($this->advanceItem($this->_daysOfMonth, 0, $daysInThisMonth, & $arrDT[2]))
-                        if($this->advanceItem($this->_months, 1, 12, & $arrDT[3]))
-                            if($this->advanceItem($this->_years, $this->RANGE_YEARS_MIN, $this->RANGE_YEARS_MAX, & $arrDT[4]))
+            if($this->advanceItem($this->_minutes, 0, 59, $arrDT[0]))
+                if($this->advanceItem($this->_hours, 0, 23, $arrDT[1]))
+                    if($this->advanceItem($this->_daysOfMonth, 0, $daysInThisMonth, $arrDT[2]))
+                        if($this->advanceItem($this->_months, 1, 12, $arrDT[3]))
+                            if($this->advanceItem($this->_years, $this->RANGE_YEARS_MIN, $this->RANGE_YEARS_MAX, $arrDT[4]))
                                 return FALSE;
             break;
         }
@@ -600,11 +601,11 @@ class Ot_Cron_Schedule
             // Recede minute, hour, date, month and year while overflowing.
             
             $daysInPreviousMonth = date('t', strtotime('-1 month', strtotime($arrDT[4].'-'.$arrDT[3])));
-            if($this->recedeItem($this->_minutes, 0, 59, & $arrDT[0]))
-                if($this->recedeItem($this->_hours, 0, 23, & $arrDT[1]))
-                    if($this->recedeItem($this->_daysOfMonth, 0, $daysInPreviousMonth, & $arrDT[2]))
-                        if($this->recedeItem($this->_months, 1, 12, & $arrDT[3]))
-                            if($this->recedeItem($this->_years, $this->RANGE_YEARS_MIN, $this->RANGE_YEARS_MAX, & $arrDT[4]))
+            if($this->recedeItem($this->_minutes, 0, 59, $arrDT[0]))
+                if($this->recedeItem($this->_hours, 0, 23, $arrDT[1]))
+                    if($this->recedeItem($this->_daysOfMonth, 0, $daysInPreviousMonth, $arrDT[2]))
+                        if($this->recedeItem($this->_months, 1, 12, $arrDT[3]))
+                            if($this->recedeItem($this->_years, $this->RANGE_YEARS_MIN, $this->RANGE_YEARS_MAX, $arrDT[4]))
                                 return FALSE;
             break;
         }

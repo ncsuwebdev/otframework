@@ -71,6 +71,15 @@ class Ot_CronController extends Zend_Controller_Action
                 $cschedule .= ' *';
             }
             
+            $parts = explode(' ', $cschedule);
+            
+            $parts[0] = preg_replace('/\*\//', '0-59/', $parts[0]);
+            $parts[1] = preg_replace('/\*\//', '0-23/', $parts[1]);
+            $parts[2] = preg_replace('/\*\//', '1-31/', $parts[2]);
+            $parts[3] = preg_replace('/\*\//', '1-12/', $parts[3]);
+            $parts[4] = preg_replace('/\*\//', '0-6/', $parts[4]);
+            
+            $cschedule = implode($parts, ' ');
             try {
                 $schedule = Ot_Cron_Schedule::fromCronString($cschedule);
             } catch (Exception $e) {
