@@ -77,8 +77,18 @@ class Ot_Trigger_Dispatcher
      */
     public function dispatch($key)
     {
+
+        $vr = new Ot_Config_Register();
+        $triggerSystem = $vr->getVar('triggerSystem');
+        
+        if (is_null($triggerSystem)) {
+            $triggerSystem = false;
+        } else {
+            $triggerSystem = $triggerSystem->getValue();
+        }
+        
         // if the trigger system is globally disabled just return
-        if ($this->_helper->configVar('triggerSystem') == false) {
+        if ($triggerSystem == false) {
             return;
         }
         

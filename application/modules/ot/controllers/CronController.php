@@ -70,20 +70,18 @@ class Ot_CronController extends Zend_Controller_Action
             if (count(explode(' ', $cschedule)) == 5) {
                 $cschedule .= ' *';
             }
-                        
+            
             try {
                 $schedule = Ot_Cron_Schedule::fromCronString($cschedule);
-                
-                $scheduleLanguage = $schedule->asNaturalLanguage();
-            } catch (Exception $e) {                
-                $scheduleLanguage = $j->getSchedule();
+            } catch (Exception $e) {
+                $schedule = null;
             }
             
             $jobs[] = array(
                 'job'       => $j,
                 'isEnabled' => (isset($cjStatus[$j->getKey()]) && $cjStatus[$j->getKey()]['status'] == 'enabled'),
                 'lastRunDt' => (isset($cjStatus[$j->getKey()])) ? $cjStatus[$j->getKey()]['lastRunDt'] : 0,
-                'schedule'  => $scheduleLanguage,
+                'schedule'  => (is_null($schedule)) ? $cschedule : $schedule->asNaturalLanguage(),
             );
         }
         

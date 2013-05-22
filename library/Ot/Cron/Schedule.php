@@ -92,29 +92,30 @@ class Ot_Cron_Schedule
         
         // Split input liberal. Single or multiple Spaces, Tabs and Newlines are all allowed as separators.        
         if(count($elements = preg_split('/\s+/', $cronSpec)) < 5)
-            throw new \Exception('Invalid specification.');
-    
-        
-        // Named ranges in cron entries        
+            throw new Exception('Invalid specification.');
+           
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Named ranges in cron entries
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $arrMonths        = array('JAN' => 1, 'FEB' => 2, 'MAR' => 3, 'APR' => 4, 'MAY' => 5, 'JUN' => 6, 'JUL' => 7, 'AUG' => 8, 'SEP' => 9, 'OCT' => 10, 'NOV' => 11, 'DEC' => 12);
         $arrDaysOfWeek    = array('SUN' => 0, 'MON' => 1, 'TUE' => 2, 'WED' => 3, 'THU' => 4, 'FRI' => 5, 'SAT' => 6);
 
         
         // Translate the cron specification into arrays that hold specifications of the actual dates        
         $newCron = new Ot_Cron_Schedule($language);
-        $newCron->_cronMinutes     = $newCron->cronInterpret($elements[0], 0, 59, array(), 'minutes');
-        $newCron->_cronHours       = $newCron->cronInterpret($elements[1], 0, 23, array(), 'hours');
-        $newCron->_cronDaysOfMonth = $newCron->cronInterpret($elements[2], 1, 31, array(), 'daysOfMonth');
-        $newCron->_cronMonths      = $newCron->cronInterpret($elements[3], 1, 12, $arrMonths, 'months');
-        $newCron->_cronDaysOfWeek  = $newCron->cronInterpret($elements[4], 0, 6, $arrDaysOfWeek, 'daysOfWeek');
-        $newCron->_cronYears       = $newCron->cronInterpret($elements[5], $newCron->RANGE_YEARS_MIN, $newCron->RANGE_YEARS_MAX, array(), 'years');
+        $newCron->_cronMinutes        = $newCron->cronInterpret($elements[0],                               0,                           59, array(),            'minutes');
+        $newCron->_cronHours        = $newCron->cronInterpret($elements[1],                               0,                           23, array(),            'hours');        
+        $newCron->_cronDaysOfMonth    = $newCron->cronInterpret($elements[2],                            1,                           31, array(),            'daysOfMonth');
+        $newCron->_cronMonths        = $newCron->cronInterpret($elements[3],                            1,                           12, $arrMonths,        'months');
+        $newCron->_cronDaysOfWeek    = $newCron->cronInterpret($elements[4],                            0,                            6, $arrDaysOfWeek,    'daysOfWeek');
+        $newCron->_cronYears        = $newCron->cronInterpret($elements[5], $newCron->RANGE_YEARS_MIN, $newCron->RANGE_YEARS_MAX, array(),            'years');
         
-        $newCron->_minutes     = $newCron->cronCreateItems($newCron->_cronMinutes);
-        $newCron->_hours       = $newCron->cronCreateItems($newCron->_cronHours);
-        $newCron->_daysOfMonth = $newCron->cronCreateItems($newCron->_cronDaysOfMonth);
-        $newCron->_months      = $newCron->cronCreateItems($newCron->_cronMonths);
-        $newCron->_daysOfWeek  = $newCron->cronCreateItems($newCron->_cronDaysOfWeek);
-        $newCron->_years       = $newCron->cronCreateItems($newCron->_cronYears);
+        $newCron->_minutes            = $newCron->cronCreateItems($newCron->_cronMinutes);
+        $newCron->_hours            = $newCron->cronCreateItems($newCron->_cronHours);
+        $newCron->_daysOfMonth        = $newCron->cronCreateItems($newCron->_cronDaysOfMonth);
+        $newCron->_months            = $newCron->cronCreateItems($newCron->_cronMonths);
+        $newCron->_daysOfWeek        = $newCron->cronCreateItems($newCron->_cronDaysOfWeek);
+        $newCron->_years            = $newCron->cronCreateItems($newCron->_cronYears);
         
         return $newCron;
     }
@@ -138,9 +139,10 @@ class Ot_Cron_Schedule
      *                'interval'            The interval if a range is specified.
      */    
     final private function cronInterpret($specification, $rangeMin, $rangeMax, $namedItems, $errorName)
-    {
+    {       
+        
         if((!is_string($specification)) && (!(is_int($specification))))
-            throw new \Exception('Invalid specification.');
+            throw new Exception('Invalid specification.');
     
         
         // Multiple values, separated by comma        
@@ -153,8 +155,8 @@ class Ot_Cron_Schedule
         {
             $hasRange        = (($posRange        = strpos($segment, '-')) !== FALSE);
             $hasInterval    = (($posIncrement    = strpos($segment, '/')) !== FALSE);
-            
-            
+                       
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Check: Increment without range is invalid
             
             if(!$hasRange && $hasInterval)                                                throw new \Exception("Invalid Range ($errorName).");
