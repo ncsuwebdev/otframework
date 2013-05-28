@@ -85,7 +85,7 @@ class Ot_CustomAttribute_Host
                    . $attrValModel->getAdapter()->quoteInto('hostParentId = ?', $hostParentId)
                    ;
             
-            $attrValues = $attrValModel->fetchAll();
+            $attrValues = $attrValModel->fetchAll($where);
             
             foreach ($attrValues as $a) {
                 if (isset($attributes[$this->getKey() . $a->attributeId])) {
