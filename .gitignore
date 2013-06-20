@@ -6,3 +6,4 @@ application.ini
 /nbproject/
 /vendor/
 /public/css/ncsubootstrap
+/overrides/maintenanceMode
