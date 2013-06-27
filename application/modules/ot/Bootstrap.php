@@ -345,13 +345,13 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
          * This is an example of how to add an Account Var
          */
         
-        
+        /*
         $accountVars = array();
 
         $accountVars[] = new Ot_Var_Type_Text('dept', 'My Department', 'Your university department', 'PWD', array(), true);
 
         $aar = new Ot_Account_Attribute_Register();
         $aar->registerVars($accountVars);        
-        
+        */
     }
 }
