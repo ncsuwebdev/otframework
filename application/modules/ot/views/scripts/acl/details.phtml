@@ -86,7 +86,7 @@
         <div class="tab-content">
             <div id="tabs-application" class="tab-pane<?php echo ($this->scope == 'application') ? ' active' : ''; ?>">
                 <?php if ($this->role['editable']): ?>
-                <form method="post" action="">        
+                <form method="post" action="" id="aclEditor">        
                     <input type="hidden" name="scope" value="application" />
                 <?php endif; ?>
                     <?php foreach ($this->resources as $module => $controllers) : ?>
@@ -152,7 +152,7 @@
             </div>
             <div id="tabs-remote" class="tab-pane<?php echo ($this->scope == 'remote') ? ' active' : ''; ?>">
                 <?php if ($this->role['editable']): ?>
-                <form method="post" action="">     
+                <form method="post" action="" id="aclRemoteEditor">     
                     <input type="hidden" name="scope" value="remote" />
                 <?php endif; ?>
                     <?php foreach ($this->remoteResources as $module => $controllers) : ?>

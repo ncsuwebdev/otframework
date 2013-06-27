@@ -138,6 +138,7 @@ class Ot_AclController extends Zend_Controller_Action
                     }
                 }
             }
+            unset($c);
         }
         unset($r);
 
@@ -164,7 +165,8 @@ class Ot_AclController extends Zend_Controller_Action
                 throw new Ot_Exception('Scope not found.');            
             }
             
-            $scope = $_POST['scope'];            
+            $scope = $_POST['scope'];  
+            unset($_POST['scope']);
             
             $rules = $this->_processAccessList($_POST, $thisRole->inheritRoleId, $scope);
             
@@ -440,13 +442,14 @@ class Ot_AclController extends Zend_Controller_Action
             $acl = new Ot_Acl();
 
             $resources = $acl->getResources($inheritRoleId);
+            
             $acl = $this->_acl;
         }
 
         if ($inheritRoleId == 0) {
             $inheritRoleId = null;
         }
-
+        
         $rules = array();
 
         foreach ($resources as $module => $controllers) {
@@ -483,15 +486,15 @@ class Ot_AclController extends Zend_Controller_Action
                                 'type'      => 'deny',
                                 'resource'  => $resource,
                                 'privilege' => '*',
-                            );
+                            );                                                        
                         }
 
                         $parts = array_keys($actions['part']);
-
+                        
                         foreach ($parts as $action) {
                             if (isset($data[$module][$controller]['part'][$action])) {
                                 if ($data[$module][$controller]['part'][$action] == 'allow'
-                                    && !$acl->isAllowed($inheritRoleId, $resource, $action)) {
+                                    && ($acl->isAllowed($inheritRoleId, $resource) || !$acl->isAllowed($inheritRoleId, $resource, $action))) {
                                     $rules[] = array(
                                         'type'      => 'allow',
                                         'resource'  => $resource,
