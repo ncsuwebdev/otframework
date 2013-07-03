@@ -31,23 +31,25 @@
 class Ot_Form_Decorator_Imageupload extends Zend_Form_Decorator_Abstract
 {
     public function render($content)
-    {
+    {        
+        $output = '';
         
-        $output = '<img id="' 
-                . $this->getOption('id') 
-                . '" src="' 
-                . $this->getOption('src') 
-                . '" alt="'
-                . $this->getOption('alt')
-                . '" style="display:block'
-                . '" />';
+        if ($this->getOption('src') != '') {
+            $output = '<img id="' 
+                    . $this->getOption('id') 
+                    . '" src="' 
+                    . $this->getOption('src') 
+                    . '" alt="'
+                    . $this->getOption('alt')
+                    . '" style="display:block'
+                    . '" /><br /><br />Change To:<br />';
+        }
         
         $content = explode('<input', $content);
         
-        // this has already been rendered so we don't need it
-        unset($content[3]);
+        $firstElement = array_shift($content);
         
-        $ret = $content[0] . $output . '<input ' . $content[1] . '<input ' . $content[2];
+        $ret = $firstElement . $output . '<input ' . implode('<input ', $content);
         
         return $ret;
     }
