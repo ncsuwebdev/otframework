@@ -195,7 +195,6 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $paginator = new Zend_Paginator($adapter);
         $paginator->setCurrentPageNumber($this->_getParam('page', 1));
-        $paginator->setItemCountPerPage(2);
 
 
         $aa = new Ot_Model_DbTable_AuthAdapter();
