@@ -127,7 +127,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'edit'   => $this->_helper->hasAccess('edit'),
             'delete' => $this->_helper->hasAccess('delete'),
         );
-
+        
         $filterUsername = $this->_getParam('username');
         $filterFirstName = $this->_getParam('firstName');
         $filterLastName = $this->_getParam('lastName');
@@ -137,7 +137,7 @@ class Ot_AccountController extends Zend_Controller_Action
         $filterDirection = $this->_getParam('direction', 'asc');
 
         $form = new Ot_Form_UserSearch();
-        $form->populate($_GET);
+        $form->populate($this->getAllParams());
 
         $account = new Ot_Model_DbTable_Account();
         $accountTbl = $account->info('name');
@@ -169,7 +169,6 @@ class Ot_AccountController extends Zend_Controller_Action
             $select->distinct();
         }
 
-
         if ($filterSort == 'name') {
             $select->order('firstName ' . $filterDirection);
             $select->order('lastName ' . $filterDirection);
@@ -177,11 +176,26 @@ class Ot_AccountController extends Zend_Controller_Action
             $select->order($filterSort . ' ' . $filterDirection);
         }
 
-
+        $filterOptions = array(
+            'username'  => $filterUsername,
+            'lastname'  => $filterLastName,
+            'firstname' => $filterFirstName,
+            'direction' => $filterDirection,
+            'role'      => $filterRole,
+            'sort'      => $filterSort,
+        );
+        
+        foreach ($filterOptions as $key => $value) {
+            if (!$value) {
+                unset($filterOptions[$key]);
+            }
+        }
+        
         $adapter = new Zend_Paginator_Adapter_DbSelect($select);
 
         $paginator = new Zend_Paginator($adapter);
         $paginator->setCurrentPageNumber($this->_getParam('page', 1));
+        $paginator->setItemCountPerPage(2);
 
 
         $aa = new Ot_Model_DbTable_AuthAdapter();
@@ -195,7 +209,7 @@ class Ot_AccountController extends Zend_Controller_Action
         }
 
         $this->_helper->pageTitle('ot-account-all:title');
-
+        
         $this->view->assign(array(
             'paginator'     => $paginator,
             'form'          => $form,
@@ -203,6 +217,7 @@ class Ot_AccountController extends Zend_Controller_Action
             'sort'          => $filterSort,
             'direction'     => $filterDirection,
             'adapters'      => $adapterMap,
+            'filterOptions' => array('urlParams' => $filterOptions),
         ));
     }
 

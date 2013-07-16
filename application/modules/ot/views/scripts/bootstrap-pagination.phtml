@@ -1,8 +1,16 @@
+<?php 
+$urlParams = array();
+
+if (isset($this->urlParams)) {
+    $urlParams = $this->urlParams;
+}
+
+?>
 <div class="pagination">
-	<ul>
+    <ul>
         <!-- Previous page link -->
         <?php if (isset($this->previous)): ?>
-            <li class="prev"><a href="<?php echo $this->url(array('page' => $this->previous)); ?>">&larr; Previous</a></li>
+            <li class="prev"><a href="<?php echo $this->url(array_merge($urlParams, array('page' => $this->previous))); ?>">&larr; Previous</a></li>
         <?php else: ?>
             <li class="prev disabled"><a href="#">&larr; Previous</a></li>
         <?php endif; ?>
@@ -10,7 +18,7 @@
         <!-- Numbered page links -->
         <?php foreach ($this->pagesInRange as $page): ?>
             <?php if ($page != $this->current): ?>
-                <li><a href="<?php echo $this->url(array('page' => $page)); ?>"><?php echo $page; ?></a></li>
+                <li><a href="<?php echo $this->url(array_merge($urlParams, array('page' => $page))); ?>"><?php echo $page; ?></a></li>
             <?php else: ?>
                 <li class="active"><a href="#"><?php echo $page; ?></a></li>
             <?php endif; ?>
@@ -18,10 +26,10 @@
         
         <!-- Next page link -->
         <?php if (isset($this->next)): ?>
-              <li class="next"><a href="<?php echo $this->url(array('page' => $this->next)); ?>">Next &rarr;</a></li>
+            <li class="next"><a href="<?php echo $this->url(array_merge($urlParams, array('page' => $this->next))); ?>">Next &rarr;</a></li>
         <?php else: ?>
-        	<li class="next disabled"><a href="#">Next &rarr;</a></li>
+            <li class="next disabled"><a href="#">Next &rarr;</a></li>
         <?php endif; ?>
         
-	</ul>
+    </ul>
 </div>

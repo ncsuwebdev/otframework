@@ -40,7 +40,7 @@
     </table>
     
     <div id="itemFooter">
-        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'bootstrap-pagination.phtml'); ?>
+        <?php echo $this->paginationControl($this->paginator, 'Sliding', 'bootstrap-pagination.phtml', $this->filterOptions); ?>
     </div>
 <?php else: ?>    
     <div class="noItems">No user accounts found.</div>    
