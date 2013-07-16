@@ -256,7 +256,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
     {
         $cronjobs = array();
         
-        $cronjobs[] = new Ot_Cron_Job('Ot_EmailQueue', 'Email Queue', 'Processes emails from the queue', '* * * * *', 'Ot_Cronjob_EmailQueue');
+        $cronjobs[] = new Ot_Cron_Job('Ot_EmailQueue', 'Email Queue', 'Processes emails from the queue', '* * * * *', 'Ot_Cronjob_Emailqueue');
         
         $register = new Ot_Cron_JobRegister();
         $register->registerJobs($cronjobs);
