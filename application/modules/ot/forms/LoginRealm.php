@@ -38,7 +38,7 @@ class Ot_Form_LoginRealm extends Twitter_Bootstrap_Form_Vertical
             $this->addElement('button', 'signup_' . $realm, array(
                 'label'         => 'ot-login-index:signUp',
                 'type'          => 'button',
-                'class'         => 'pull-left'
+                'class'         => 'pull-left signup'
             ));
 
             $buttons[] = 'signup_' . $realm;
