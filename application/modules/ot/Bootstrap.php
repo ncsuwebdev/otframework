@@ -284,6 +284,7 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         
         $varTypes[] = new Ot_CustomAttribute_FieldType('date', 'Date selector', 'Ot_Var_Type_Date');
         $varTypes[] = new Ot_CustomAttribute_FieldType('multiselect', 'Multi-Select Box', 'Ot_Var_Type_Multiselect', true);
+        $varTypes[] = new Ot_CustomAttribute_FieldType('multicheck', 'Multi Checkbox', 'Ot_Var_Type_Multicheckbox', true);
         $varTypes[] = new Ot_CustomAttribute_FieldType('select', 'Dropdown Box', 'Ot_Var_Type_Select', true);
         $varTypes[] = new Ot_CustomAttribute_FieldType('text', 'Short Text Box', 'Ot_Var_Type_Text');
         $varTypes[] = new Ot_CustomAttribute_FieldType('textarea', 'Textarea', 'Ot_Var_Type_Textarea');

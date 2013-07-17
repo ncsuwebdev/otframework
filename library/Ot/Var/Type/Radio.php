@@ -8,6 +8,7 @@ class Ot_Var_Type_Radio extends Ot_Var_Abstract
         $elm->setMultiOptions($this->getOptions());
         $elm->setValue($this->getValue());
         $elm->setRequired($this->getRequired());
+        $elm->setSeparator('');
         return $elm;
     }
     

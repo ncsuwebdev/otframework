@@ -22,6 +22,7 @@ class Ot_Var_Type_Ranking extends Ot_Var_Abstract
         $elm->setMultiOptions($this->_rankingOptions);
         $elm->setValue($this->getValue());
         $elm->setRequired($this->getRequired());
+        $elm->setSeparator('');
         return $elm;
     }
     

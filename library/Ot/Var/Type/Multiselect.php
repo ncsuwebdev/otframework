@@ -8,7 +8,7 @@ class Ot_Var_Type_Multiselect extends Ot_Var_Abstract
         $elm->setMultiOptions($this->getOptions());        
         $elm->setValue($this->getValue());        
         $elm->setRequired($this->getRequired());
-        $elm->setAttrib('style', 'width:200px;height:80px');
+        $elm->setAttrib('style', 'width:300px;height:100px');
                
         return $elm;
     }
