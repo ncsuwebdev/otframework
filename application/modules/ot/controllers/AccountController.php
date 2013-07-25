@@ -99,10 +99,15 @@ class Ot_AccountController extends Zend_Controller_Action
 
         $apiApps = $apiApp->getAppsForAccount($this->_userData['accountId'], 'access')->toArray();
 
+        $pageRegister = new Ot_Account_Profile_Register();
+        
+        $pages = $pageRegister->getPages();
+        
         $this->view->assign(array(
             'userData'          => $this->_userData,
             'apiApps'           => $apiApps,
             'tab'               => $this->_getParam('tab', 'account'),
+            'pages'             => $pages,
         ));
 
         $this->_helper->pageTitle(

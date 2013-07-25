@@ -355,4 +355,20 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $aar->registerVars($accountVars);        
         */
     }
+    
+    public function _initAccountProfilePages()
+    {
+        /**
+         * This is an example of how to add an account profile tab to the profile page
+         */
+        
+        
+        $accountPages = array();
+
+        $accountPages[] = new Ot_Account_Profile_Page('test', 'This Is A Test', 'default', 'index', 'test', array('mytest' => 'value'));
+
+        $apr = new Ot_Account_Profile_Register();
+        $apr->registerPages($accountPages);        
+        
+    }
 }

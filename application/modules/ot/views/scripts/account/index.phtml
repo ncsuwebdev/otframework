@@ -11,6 +11,9 @@
     <?php if ($this->acl['guestApiAccess']): ?>
     <li<?php echo ($this->tab == 'apps') ? ' class="active"' : ''; ?>><a href="#apps" data-toggle="tab"><?php echo $this->translate('ot-account-index:apps'); ?></a></li>
     <?php endif; ?>
+    <?php foreach ($this->pages as $p): ?>    
+    <li<?php echo ($this->tab == $p->getId()) ? ' class="active"' : ''; ?>><a href="#<?php echo $p->getId(); ?>" data-toggle="tab"><?php echo $p->getLabel(); ?></a></li>
+    <?php endforeach; ?>
 </ul>
 
 <div class="tab-content">
@@ -209,6 +212,12 @@
 
     </div>
     <?php endif; ?>
+    
+    <?php foreach ($this->pages as $p): ?>
+    <div class="tab-pane<?php echo ($this->tab == $p->getId()) ? ' active' : ''; ?>" id="<?php echo $p->getId(); ?>">
+        <?php echo $this->action($p->getAction(), $p->getController(), $p->getModule(), array_merge(array('accountId' => $this->userData['accountId']), $p->getVars())); ?>
+    </div>
+    <?php endforeach; ?>
 </div>
 
 <div class="clearfix"></div>
