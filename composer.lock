@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "29b930d11180d21957f6b92f879ccf00",
+    "hash": "c99ad7b736d4bc0c895eec199b8bcdcf",
     "packages": [
         {
             "name": "bombayworks/zendframework1",
@@ -146,16 +146,16 @@
         },
         {
             "name": "ncsuwebdev/php-ncstate",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ncsuwebdev/PHP-Ncstate.git",
-                "reference": "1.0.7"
+                "reference": "1.0.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ncsuwebdev/PHP-Ncstate/zipball/1.0.7",
-                "reference": "1.0.7",
+                "url": "https://api.github.com/repos/ncsuwebdev/PHP-Ncstate/zipball/1.0.8",
+                "reference": "1.0.8",
                 "shasum": ""
             },
             "require": {
@@ -167,7 +167,7 @@
                     "Ncstate": "/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Jason Austin",
@@ -182,7 +182,7 @@
                 "ncstate",
                 "ncsu"
             ],
-            "time": "2013-04-05 14:25:19"
+            "time": "2013-07-25 17:33:19"
         }
     ],
     "packages-dev": [

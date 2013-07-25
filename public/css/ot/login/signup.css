@@ -11,3 +11,10 @@ div.zend_form {
     background-color: #FFF;
     padding: 10px;
 }
+
+
+
+textarea {
+    width: 220px;
+    height: 100px;
+}

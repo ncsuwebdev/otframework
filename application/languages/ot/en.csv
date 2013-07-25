@@ -569,7 +569,7 @@ msg-error-usernameTaken;This username is already taken.  Please choose another n
 
 msg-info-passwordResetRequest;A password reset request was sent to the email address on file.
 msg-info-passwordReset;Your password has been reset.
-msg-info-accountCreated;Your account was created successfully. You may now log in.
+msg-info-accountCreated;Your account was created successfully.
 
 msg-info-none;None
 

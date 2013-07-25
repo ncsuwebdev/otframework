@@ -510,7 +510,7 @@ class Ot_LoginController extends Zend_Controller_Action
                 $this->view->translate('ot-login-signup:realmNotFound', array('<b>' . $realm . '</b>'))
             );
         }
-
+        
         if ($adapter->enabled == 0) {
             throw new Ot_Exception_Access('msg-error-authNotSupported');
         }
@@ -595,8 +595,6 @@ class Ot_LoginController extends Zend_Controller_Action
 
                         $dba->commit();
 
-                        $this->_helper->messenger->addSuccess('msg-info-accountCreated');
-
                         $loggerOptions = array(
                             'attributeName' => 'accountId',
                             'attributeId' => $accountData['accountId'],
@@ -611,8 +609,50 @@ class Ot_LoginController extends Zend_Controller_Action
                         $dt->password    = $form->getValue('password');
                         $dt->loginMethod = $realm;
                         $dt->dispatch('Login_Index_Signup');
+                        
+                        $authAdapterModel = new Ot_Model_DbTable_AuthAdapter();
+                        $adapter          = $authAdapterModel->find($realm);
+                        $className        = (string)$adapter->class;
 
-                        return $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
+                        // Set up the authentication adapter
+                        $authAdapter = new $className($accountData['username'], $form->getValue('password'));
+
+                        $auth = Zend_Auth::getInstance();
+
+                        $authRealm = new Zend_Session_Namespace('authRealm');        
+                        $authRealm->setExpirationHops(1);
+                        $authRealm->realm = $realm;
+                        $authRealm->autoLogin = $authAdapter->autoLogin();
+
+                        // Attempt authentication, saving the result
+                        $result = $auth->authenticate($authAdapter);
+
+                        $authRealm->unsetAll();
+                        
+                        $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
+                                
+                        $this->_helper->messenger->addSuccess('msg-info-accountCreated');
+                        
+                        if ($result->isValid()) {                                                        
+                            
+                            $account     = new Ot_Model_DbTable_Account();
+                            $thisAccount = $account->getByUsername($accountData['username'], $realm);
+                            
+                            $auth->getStorage()->write($thisAccount);
+                
+                            if (isset($req->uri) && $req->uri != '') {
+                                $uri = $req->uri;
+
+                                $req->unsetAll();
+                                
+                                $this->_helper->redirector->gotoUrl($uri);
+                            } else {                                                    
+                                
+                                $this->_helper->redirector->gotoRoute(array(), 'default', true);
+                            }
+                        } else {                                         
+                            $this->_helper->redirector->gotoRoute(array('realm' => $realm), 'login', true);
+                        }
                     }
                 } else {
                     $this->_helper->messenger->addError('msg-error-passwordsNotMatch');
