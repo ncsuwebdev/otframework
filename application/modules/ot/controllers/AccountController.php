@@ -370,9 +370,7 @@ class Ot_AccountController extends Zend_Controller_Action
      *
      */
     public function editAction()
-    {
-        
-                
+    {                       
         $req = new Zend_Session_Namespace(Zend_Registry::get('siteUrl') . '_request');
 
         $me = (Zend_Auth::getInstance()->getIdentity()->accountId == $this->_userData['accountId']);

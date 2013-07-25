@@ -68,7 +68,7 @@ class Ot_Form_Signup extends Twitter_Bootstrap_Form_Horizontal
         foreach ($vars as $v) {
             $elm = $v->renderFormElement();
             $elm->clearDecorators();
-            $elm->setBelongsTo('attributes');
+            $elm->setBelongsTo('accountAttributes');
 
             $this->addElement($elm);
         }

@@ -68,12 +68,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Emagister/zend-form-decorators-bootstrap.git",
-                "reference": "cccc8d96229c810f13d1fc8c191d7c67aff83632"
+                "reference": "323abe0afba89e898d7c1471d606411800277f57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Emagister/zend-form-decorators-bootstrap/zipball/cccc8d96229c810f13d1fc8c191d7c67aff83632",
-                "reference": "cccc8d96229c810f13d1fc8c191d7c67aff83632",
+                "url": "https://api.github.com/repos/Emagister/zend-form-decorators-bootstrap/zipball/323abe0afba89e898d7c1471d606411800277f57",
+                "reference": "323abe0afba89e898d7c1471d606411800277f57",
                 "shasum": ""
             },
             "require": {
@@ -94,7 +94,7 @@
             ],
             "authors": [
                 {
-                    "name": "Emagister Tech",
+                    "name": "EmagisterTech",
                     "email": "php@emagister.com",
                     "homepage": "http://engineering.emagister.com",
                     "role": "Developer"
@@ -110,7 +110,7 @@
                 "zend form",
                 "zend form decorators"
             ],
-            "time": "2013-04-17 11:10:59"
+            "time": "2013-07-12 08:51:54"
         },
         {
             "name": "ncsuwebdev/ncsubootstrap",

@@ -564,7 +564,7 @@ class Ot_LoginController extends Zend_Controller_Action
                                 if (isset($values['accountAttributes'][$varName])) {
                                     $var->setValue($values['accountAttributes'][$varName]);
 
-                                    $aar->save($var, $this->_userData['accountId']);
+                                    $aar->save($var, $accountData['accountId']);
                                 }
                             }
 
@@ -584,7 +584,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
                                     $a['var']->setValue($values['customAttributes'][$attributeName]);
 
-                                    $thisHost->saveAttribute($a['var'], $this->_userData['accountId'], $a['attributeId']);
+                                    $thisHost->saveAttribute($a['var'], $accountData['accountId'], $a['attributeId']);
                                 }
                             }
                         } catch (Exception $e) {
