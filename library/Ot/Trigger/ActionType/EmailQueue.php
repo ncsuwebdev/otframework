@@ -46,9 +46,19 @@ class Ot_Trigger_ActionType_EmailQueue extends Ot_Trigger_ActionType_Abstract
         $mail = new Zend_Mail();
 
         $to = explode(',', $data['to']);
-        array_walk($to, 'trim');
-
+        
+        $toFiltered = array();
         foreach ($to as $t) {
+            if (trim($t) != '') {
+                $toFiltered[] = trim($t);
+            }
+        }
+                
+        if (count($toFiltered) == 0) {
+            return; 
+        }
+                
+        foreach ($toFiltered as $t) {
             $mail->addTo($t);
         }
         
