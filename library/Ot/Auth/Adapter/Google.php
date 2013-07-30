@@ -93,7 +93,7 @@ class Ot_Auth_Adapter_Google implements Zend_Auth_Adapter_Interface, Ot_Auth_Ada
     public function authenticate()
     {
         if (AUTH_GOOGLE_CONSUMER_KEY == '' || AUTH_GOOGLE_CONSUMER_SECRET == '') {
-            throw new Exception('Yahoo authentication options must be set in the application configuration.');
+            throw new Exception('Google authentication options must be set in the application configuration.');
         }
         
         $session = new Zend_Session_Namespace('ot_auth_adapter_google');
