@@ -18,14 +18,16 @@ $('document').ready(function() {
     
     // setup the li so we have all information we need to edit it and such
     // also add the control buttons to each one (the move handle, edit, and delete)
-    $('ul#masterList li').each(function() {
+    $('#navList ol li').each(function(index, el) {
         
-        var newId = "navEditor_" + $(this).attr('id');
-        $(this).attr('id', newId);
+        $this = $(el);
         
-        var a    = $(this).children('a:not(.controlButton)');
+        var newId = "navEditor_" + $this.attr('id');
+        $this.attr('id', newId);
+        
+        var a    = $this.find('a.link');
         var link = a.attr('href');
-        var linkTarget = $(this).children('a').attr('target').toLowerCase();
+        var linkTarget = a.attr('target').toLowerCase();
             
         if (linkTarget == "_self") {
             if (baseUrl != "") {            
@@ -38,8 +40,8 @@ $('document').ready(function() {
             a.attr('href', link);
         }    
         
-        if ($(this).children('ul').children().length != 0) {
-            $(this).addClass('liOpen');
+        if ($this.children('ol').children().length != 0) {
+            $this.addClass('liOpen');
         }
     });
     
@@ -55,10 +57,8 @@ $('document').ready(function() {
         }
     });
     
-    $('ul#masterList').disableSelection();
-    
     // set up the sortable stuff
-    initDragDrop();
+    $('#navList').nestable({});
     
     // show or hide the prefix for external links
     $('#externalLink').click(function() {
@@ -107,7 +107,7 @@ $('document').ready(function() {
     // does the stuff to save the nav to the database
     $('#saveNavButton').click(function() {
         
-        var dataArray = serialize($('ul#masterList'));
+        var dataArray = serialize($('#navList'));
         var str = $.toJSON(dataArray);
         
         $.post(saveUrl, {data: str}, 
@@ -131,6 +131,8 @@ $('document').ready(function() {
                 $('<option>').attr('value', item.name).text(item.name).appendTo('#moduleBox');
         });
     });
+    
+    /*
     
     // the modal dialog for adding and editing a menu item
     $("#navElementDialog").dialog({ 
@@ -181,7 +183,7 @@ $('document').ready(function() {
                                       
                     var newLi = $('<li id="newElement' + newElementIdCounter + '" name="' + display + '"><a title="' + module + ':' + controller + ':' + action + '" href="' + link + '" target="' + linkTarget + '">' + display + '</a></li>');
                     
-                    $('ul#masterList').prepend(newLi);
+                    $('ul#navList').prepend(newLi);
                     
                     addControlButtons(newLi);             
                     newLi.prepend('<div class="dropzone"></div>');
@@ -214,6 +216,7 @@ $('document').ready(function() {
             }      
         }       
     }, "close");
+        */
     
     $('#addElementButton').click(function(e) {
         e.preventDefault();
@@ -221,64 +224,66 @@ $('document').ready(function() {
         $("#navElementDialog").dialog("open");
     });
     
-    initialStructureCache = $.toJSON(serialize($('ul#masterList')));
+    initialStructureCache = $.toJSON(serialize($('#navList ol')));
     $(window).on('beforeunload', catchUnload);
+    
+    console.log(initialStructureCache);
     
 });
 
-function initDragDrop() {
-    
-    $('ul#masterList li').draggable({
-        handle: ' > span.moveHandle',
-        opacity: .8,
-        addClasses: false,
-        helper: 'clone',
-        zIndex: 100,
-        start: function(e, ui) {
-            sitemapHistory.saveState(this);
-        }
-    });
-    
-    $('ul#masterList li a, ul#masterList div.dropzone').droppable({
-        accept: 'ul#masterList li',
-        tolerance: 'pointer',
-        drop: function(e, ui) {
-            
-            var li = $(this).parent();
-            
-            //if we're dropping this on an element and it's the first child, we'll need a ul to drop into.
-            if (li.children('ul').length == 0 && !$(this).hasClass('dropzone')) {
-                li.append('<ul>');
-            }
-            
-            //ui.draggable is our reference to the item that's been dragged.
-            if ($(this).hasClass('dropzone')) {
-                li.before(ui.draggable);
-            }
-            else {
-                li.addClass('liOpen')
-                  .removeClass('liClosed')
-                  .children('ul').append(ui.draggable);
-            }
-            
-            $('#masterList li.liOpen').not(':has(li:not(.ui-draggable-dragging))').removeClass('liOpen');
-            
-            //reset our background colours.
-            li.find('a,.dropzone').css({ backgroundColor: '', borderColor: '' });
-            li.find('.dropzone').css({ backgroundColor: '', borderColor: '' });
-            
-            sitemapHistory.commit();
-        },
-        over: function() {
-            $(this).filter('a').css({ backgroundColor: '#ccc' });
-            $(this).filter('.dropzone').css({ borderColor: '#aaa' });
-        },
-        out: function() {
-            $(this).filter('a').css({ backgroundColor: '' });
-            $(this).filter('.dropzone').css({ borderColor: '' });
-        }
-    });
-}
+//function initDragDrop() {
+//    
+//    $('#navList li').draggable({
+//        handle: ' > span.moveHandle',
+//        opacity: .8,
+//        addClasses: false,
+//        helper: 'clone',
+//        zIndex: 100,
+//        start: function(e, ui) {
+//            sitemapHistory.saveState(this);
+//        }
+//    });
+//    
+//    $('#navList li a, ul#masterList div.dropzone').droppable({
+//        accept: 'ul#masterList li',
+//        tolerance: 'pointer',
+//        drop: function(e, ui) {
+//            
+//            var li = $(this).parent();
+//            
+//            //if we're dropping this on an element and it's the first child, we'll need a ul to drop into.
+//            if (li.children('ul').length == 0 && !$(this).hasClass('dropzone')) {
+//                li.append('<ul>');
+//            }
+//            
+//            //ui.draggable is our reference to the item that's been dragged.
+//            if ($(this).hasClass('dropzone')) {
+//                li.before(ui.draggable);
+//            }
+//            else {
+//                li.addClass('liOpen')
+//                  .removeClass('liClosed')
+//                  .children('ul').append(ui.draggable);
+//            }
+//            
+//            $('#masterList li.liOpen').not(':has(li:not(.ui-draggable-dragging))').removeClass('liOpen');
+//            
+//            //reset our background colours.
+//            li.find('a,.dropzone').css({ backgroundColor: '', borderColor: '' });
+//            li.find('.dropzone').css({ backgroundColor: '', borderColor: '' });
+//            
+//            sitemapHistory.commit();
+//        },
+//        over: function() {
+//            $(this).filter('a').css({ backgroundColor: '#ccc' });
+//            $(this).filter('.dropzone').css({ borderColor: '#aaa' });
+//        },
+//        out: function() {
+//            $(this).filter('a').css({ backgroundColor: '' });
+//            $(this).filter('.dropzone').css({ borderColor: '' });
+//        }
+//    });
+//}
 
 /**
  * A custom function to serialize the menu in a way that we can use on the backend to 
@@ -287,20 +292,23 @@ function initDragDrop() {
 function serialize (items) {
     var serial = [];
     var i = 0;
-    items.children('li').each(function() {
+    items.children('li').each(function(index, el) {
         
-        var linkTarget = ($(this).children('target').legnth != 0) ? $(this).children('a:not(.controlButton)').attr('target') : '_self';
+        $this = $(el);
+        var $link = $(el).find('a.link');
+        
+        var linkTarget = ($this.children('target').length != 0) ? $link.attr('target') : '_self';
         linkTarget = linkTarget.toLowerCase();
         
-        var link = $(this).children('a:not(.controlButton)').attr('href');
-        link = (link != undefined) ? link : "";
+        var href = $link.attr('href');
+        href = (href != undefined) ? href : "";
                 
         serial[i] = {
-            display:     $(this).attr('name'),
-            permissions: ($(this).children('a:not(.controlButton)').length != 0) ? $(this).children('a:not(.controlButton)').attr('title') : '',
-            link:        link,
+            display:     $this.attr('name'),
+            permissions: ($this.find('a.link').length != 0) ? $this.find('a.link').attr('title') : '',
+            link:        href,
             target:      linkTarget,
-            children:    ($(this).children('ul').length != 0) ? serialize($(this).children('ul')) : []
+            children:    ($this.children('ol').length != 0) ? serialize($(this).children('ol')) : []
         };
         i++;
     });
@@ -314,9 +322,8 @@ function serialize (items) {
  */
 function addControlButtons(el) {
     
-    $(el).prepend('<a class="btn controlButton" title="Edit"><i class="icon icon-pencil"></i></a>');
-    $(el).prepend('<a class="btn btn-danger controlButton" title="Delete"><i class="icon-white icon-minus"></i></a>');
-    $(el).prepend('<i class="icon icon-resize-vertical"></i>');   
+    $(el).prepend('<a class="btn btn-mini controlButton" title="Edit"><i class="icon icon-pencil"></i></a>');
+    $(el).prepend('<a class="btn btn-mini btn-danger controlButton" title="Delete"><i class="icon-white icon-minus"></i></a>');
 }
 
 /**
@@ -328,13 +335,13 @@ function setupLiveEvents() {
     
     // Prevent any links from sending the user to that page.  We need this since
     // we actually use the href as a property.
-    $(document).on("click", 'ul#masterList li a:not(.controlButton)', function(e) {
+    $(document).on("click", '#navList ol li a:not(.controlButton)', function(e) {
         e.preventDefault();
         e.stopPropagation();
         return false;
     });
         
-    $('ul#masterList li').on('click', '.deleteElement', function(e) {
+    $('#navList ol li').on('click', '.deleteElement', function(e) {
         if (confirm("Are you sure you want to delete this element?  This action cannot be undone.")) {
             $(this).parent().slideUp('normal', 
                 function() {
@@ -342,13 +349,13 @@ function setupLiveEvents() {
                 });                
         }
         
-        
+        e.stopImmediatePropagation();
         e.stopPropagation();
     });
 
 
     // populates the modal dialog with the link's properties when you click edit
-    $('ul#masterList li').on('click', '.editElement', function(e) {
+    $('#navList ol li').on('click', '.editElement', function(e) {
         
         var el = $(this).parent();
         
@@ -405,8 +412,8 @@ var sitemapHistory = {
             h.itemParent.prepend(h.item);
         }
         //checks the classes on the lists
-        $('#masterList li.liOpen').not(':has(li)').removeClass('liOpen');
-        $('#masterList li:has(ul li):not(.liClosed)').addClass('liOpen');
+        $('#navList li.liOpen').not(':has(li)').removeClass('liOpen');
+        $('#navList li:has(ol li):not(.liClosed)').addClass('liOpen');
     }
 };
 
@@ -416,13 +423,14 @@ var sitemapHistory = {
  * then it doesn't do anything.
  */
 function catchUnload(e) {
-	currentStructure = $.toJSON(serialize($('ul#masterList')));
+    
+	currentStructure = $.toJSON(serialize($('#navList')));
 	
 	if(currentStructure != initialStructureCache) {
-		$('#saveNavButton').addClass('highlight');
-		e.preventDefault();
-		return 'Navigation edited, but not yet saved.';
+            $('#saveNavButton').addClass('highlight');
+            e.preventDefault();
+            return 'Navigation edited, but not yet saved.';
 	} else {
-		$(window).off('beforeunload', catchUnload);
+            $(window).off('beforeunload', catchUnload);
 	}
 }

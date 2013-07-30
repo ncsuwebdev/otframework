@@ -1,25 +1,25 @@
 <?php
         
-$html = array('<ul id="masterList">');
+$html = array('<div class="dd" id="navList">');
+$html[] = '  <ol class="dd-list">';
  
 $html = array_merge($html, editSubmenu($this->container, 0));     
  
-$html[] = '</ul>';
+$html[] = '  </ol>';
+$html[] = '</div>';
  
 echo join(PHP_EOL, $html);
 
-function editSubmenu($pages, $parentId) 
+function editSubmenu($pages, $parentId)
 {
     $html = array();
     
     foreach ($pages as $p) {
         
-        $html[] = '<li name="' . $p->getLabel() . '" id="navItem_' . $parentId . '_' . $p->getId() . '">';
-                
-        $html[] = '<div class="dropzone"></div>';
-        
-        $html[] = '<i class="icon icon-resize-vertical"></i>';
+        $html[] = '    <li class="dd-item" data-id="' . $p->getId() . '" name="' . $p->getLabel() . '" id="navItem_' . $parentId . '_' . $p->getId() . '">';
     
+        $html[] = '        <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">';
+        
         $resource = explode('_', $p->getResource());
         $privilege = $p->getPrivilege();
         
@@ -27,27 +27,22 @@ function editSubmenu($pages, $parentId)
         $controller = $resource[1];
         $action = $privilege;
         
-        $html[] = '<a target="' . $p->getTarget() . '" title="' . $module . ':' . $controller . ':' . $action . '" href="' . $p->getHref() . '">';
-     
-        $html[] = $p->getLabel();
-
-        $html[] = '</a>';
+        $html[] = '            <a class="link" target="' . $p->getTarget() . '" title="' . $module . ':' . $controller . ':' . $action . '" href="' . $p->getHref() . '">' . $p->getLabel() . '</a>';
+        $html[] = '            <a class="btn btn-mini btn-danger controlButton deleteElement" title="Delete"><i class="icon-white icon-minus"></i></a>';
+        $html[] = '            <a class="btn btn-mini controlButton editElement" title="Edit"><i class="icon icon-pencil"></i></a>';
         
-        $html[] = '<a class="btn btn-danger controlButton deleteElement" title="Delete"><i class="icon-white icon-minus"></i></a>';
-    
-        $html[] = '<a class="btn controlButton editElement" title="Edit"><i class="icon icon-pencil"></i></a>';    
-        
+        $html[] = '        </div>';
         
         if (!empty($p->pages)) {
                 
-            $html[] = '<ul>';
+            $html[] = '        <ol class="dd-list">';
             
             $html = array_merge($html, editSubmenu($p->pages, $p->getId()));            
     
-            $html[] = '</ul>';
+            $html[] = '        </ol>';
         }
         
-        $html[] = "</li>";        
+        $html[] = "    </li>"; 
     }
     
     return $html;
