@@ -86,6 +86,8 @@ class Ot_CustomController extends Zend_Controller_Action
         
         $this->_helper->pageTitle('ot-custom-details:title', $thisHost->getName());
         
+        $this->view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
+        
         $this->view->assign(array(
             'attributes' => $thisHost->getAttributes(),
             'host'       => $thisHost,

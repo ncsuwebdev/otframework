@@ -48,7 +48,7 @@ $('document').ready(function() {
     // add the live events to watch for edit and delete buttons
     setupLiveEvents();
    
-    // set up the sortable stuff
+    // set up the nestable sortable stuff
     $('#navList').nestable({});
     
     // show or hide the prefix for external links
