@@ -540,7 +540,8 @@ class Ot_LoginController extends Zend_Controller_Action
                         'role'         => $this->_helper->configVar('newAccountRole'),
                         'emailAddress' => $form->getValue('emailAddress'),
                         'firstName'    => $form->getValue('firstName'),
-                        'lastName'     => $form->getValue('lastName'),
+                        'lastName'     => $form->getValue('lastName'),                        
+                        'timezone'     => $form->getValue('timezone'),
                     );
 
                     $account = new Ot_Model_DbTable_Account();
@@ -580,7 +581,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
                             foreach ($customAttributes as $attributeName => $a) {
 
-                                if (isset($values['customAttributes'][$attributeName])) {
+                                if (array_key_exists($attributeName, $values['customAttributes'])) {
 
                                     $a['var']->setValue($values['customAttributes'][$attributeName]);
 

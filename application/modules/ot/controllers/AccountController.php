@@ -298,7 +298,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         
                         foreach ($customAttributes as $attributeName => $a) {
                             
-                            if (isset($values['customAttributes'][$attributeName])) {
+                            if (array_key_exists($attributeName, $values['customAttributes'])) {
                                 
                                 $a['var']->setValue($values['customAttributes'][$attributeName]);
 
@@ -473,7 +473,7 @@ class Ot_AccountController extends Zend_Controller_Action
                         
                         foreach ($customAttributes as $attributeName => $a) {
                             
-                            if (isset($values['customAttributes'][$attributeName])) {
+                            if (array_key_exists($attributeName, $values['customAttributes'])) {
                                 
                                 $a['var']->setValue($values['customAttributes'][$attributeName]);
 
