@@ -49,6 +49,7 @@ class Ot_AuthController extends Zend_Controller_Action
             'numEnabledAdapters' => $authAdapter->getNumberOfEnabledAdapters()
         ));
 
+        $this->view->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
         $this->_helper->pageTitle('ot-auth-index:title');
     }
 
