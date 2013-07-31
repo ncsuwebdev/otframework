@@ -93,7 +93,7 @@ function Controller (module, name) {
         position : 'center, right',
         offset : [15,15],
         predelay : 250,
-        delay : 250,
+        delay : 250
     });
     
     /**

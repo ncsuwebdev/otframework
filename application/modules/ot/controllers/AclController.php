@@ -185,9 +185,6 @@ class Ot_AclController extends Zend_Controller_Action
 
         }        
 
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.tipsy.css');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.tipsy.js');
-
         $this->_helper->pageTitle("ot-acl-details:title", $thisRole->name);
 
         $this->view->assign(array(

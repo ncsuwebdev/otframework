@@ -1,44 +1,52 @@
-<div id="navElementDialog" title="<?php echo $this->translate("ot-nav-index:addElement"); ?>">
-    <form id="navElementForm">
-        <fieldset>
-            <legend><?php echo $this->translate("ot-nav-index:display"); ?></legend>
+<div class="modal hide fade" id="navElementModal">
+    
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="modal-title"><?php echo $this->translate("ot-nav-index:addElement"); ?></h3>
+    </div>
+    <div class="modal-body">
         
+        <form class="form-horizontal" id="navElementForm">
+            <legend><?php echo $this->translate("ot-nav-index:display"); ?></legend>
+
             <span><label for="display"><?php echo $this->translate("ot-nav-index:label"); ?></label></span>
             <div class="elm"><input id="displayBox" name="display" type="text" value="" size="25" /></div>
-            
+
             <span><label for="externalLink"><?php echo $this->translate("ot-nav-index:externalLink"); ?></label></span>
             <div class="elm"><input id="externalLink" name="externalLink" type="checkbox" value="yes" size="25" /></div>
-            
+
             <span><label for="link"><?php echo $this->translate("ot-nav-index:link"); ?></label></span>
-            <div class="elm"><span id="linkPrefix"><?php echo $this->siteUrl; ?>/</span><input id="linkBox" name="link" type="text" value="" size="25" /></div>
-        </fieldset>
-        <fieldset>
+            <div class="elm"><span id="linkPrefix"><?php echo $this->siteUrl; ?>/</span><input class="input-small" id="linkBox" name="link" type="text" value="" size="25" /></div>
+
             <legend><?php echo $this->translate("ot-nav-index:permissions"); ?></legend>
-            
+
             <span><label for="module"><?php echo $this->translate("ot-nav-index:module"); ?></label></span>
             <div class="elm"><select id="moduleBox" name="module"></select></div>
-            
+
             <span><label for="controller"><?php echo $this->translate("ot-nav-index:controller"); ?></label></span>
             <div class="elm"><select id="controllerBox" name="module"></select></div>
-            
+
             <span><label for="action"><?php echo $this->translate("ot-nav-index:action"); ?></label></span>
             <div class="elm"><select id="actionBox" name="module"></select></div>
-            
-            <div class="ui-state-highlight ui-corner-all">
+
+            <div class="">
                 <span class="ui-icon ui-icon-info"></span>
                 <?php echo $this->translate("ot-nav-index:noPermissions"); ?>
             </div>
-            
-        </fieldset>   
-    </form>
+
+        </form>
+        
+    </div>
+    <div class="modal-footer">
+        <a href="#" id="navElementSaveButton" class="btn btn-primary">Save</a>
+        <a href="#" data-dismiss="modal" class="btn">Cancel</a>
+    </div>
 </div>
+
 <a href="#" id="saveNavButton" class="btn"><?php echo $this->translate("ot-nav-index:linkSave"); ?></a>
 &nbsp;
-<a href="#" id="addElementButton" class="btn btn-success navElementModal"><i class="icon-white icon-plus"></i> <?php echo $this->translate("ot-nav-index:linkAdd"); ?></a>
+<a href="#navElementModal" role="button" id="addElementButton" class="btn btn-success navElementModal"><i class="icon-white icon-plus"></i> <?php echo $this->translate("ot-nav-index:linkAdd"); ?></a>
 &nbsp;
-<a href="#" id="undoMoveButton" class="btn btn-warning"><i class="icon-white icon-repeat"></i> <?php echo $this->translate("ot-nav-index:undoMove"); ?></a>
-<br /><br />
-<span id="undoMessage"><?php echo $this->translate('ot-nav-index:undoMoveMessage'); ?></span>
 <br /><br /> 
 <div id="navEditorContainer">
 <?php echo $this->navigation()->menu()->setOnlyActiveBranch(false)->setRenderParents(false)->setPartial('nav-edit.phtml'); ?>          

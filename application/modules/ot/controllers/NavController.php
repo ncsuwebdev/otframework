@@ -78,13 +78,15 @@ class Ot_NavController extends Zend_Controller_Action
             'save' => $this->_helper->hasAccess('save')
         );
         
-        $this->_helper->pageTitle('ot-nav-index:title');;
+        $this->_helper->pageTitle('ot-nav-index:title');
         
         $this->view->assign(array(
-            'siteUrl' => Zend_Registry::get('siteUrl')
+            'siteUrl' => Zend_Registry::get('siteUrl'),
         ));
-        
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.json.js');        
+               
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/ot/jquery.plugin.nestable.css');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.nestable.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/scripts/ot/jquery.plugin.json.js');
     }
 
     

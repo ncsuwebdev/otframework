@@ -425,7 +425,7 @@ ot-translate-index:changeText;<b>Change Text to: </b>(leave blank for no changes
 ot-translate-index:removeText;Remove custom text and reset to default
 ot-translate-index:noChange;No text can be changed on this page.
 
-ot-trigger-availableTitle;Available Placehoders
+ot-trigger-availableTitle;Available Placeholders
 ot-trigger-availableHeader;These variables are available for inclusion in your scripts.  The placeholders will be processed with actual data when a trigger is executed.
 ot-trigger-table:variable;Placeholder
 ot-trigger-table:description;Description

@@ -54,7 +54,7 @@ class Ot_Form_EmailqueueSearch extends Zend_Form
         $submit->setDecorators(array(
                    array('ViewHelper', array('helper' => 'formSubmit')),
                    array(array('wrapperAll' => 'HtmlTag'), array('tag' => 'div', 'class' => 'submit')),
-                   array('HtmlTag', array('tag' => 'div', 'class' => 'ui-helper-clearfix')),
+                   array('HtmlTag', array('tag' => 'div', 'class' => 'clearfix')),
                  ));
         
         $this->addElements(array($submit, $sort, $direction));

@@ -101,8 +101,8 @@
                             <tbody>
                             <?php foreach ($controllers as $controller => $actions) : ?>
                             <tr class="controller">
-                                <td title="<?php echo $actions['description']; ?>" class="td1 description">
-                                <?php echo ucwords($controller); ?>
+                                <td class="td1 description">
+                                    <span class="tooltiptitle" data-toggle="tooltip" title="<?php echo $actions['description']; ?>"><?php echo ucwords($controller); ?></span>
                                 </td>
                                 <td style="text-align: center" class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
                                 <?php if (!empty($actions['all']['access'])) : ?>
@@ -167,8 +167,8 @@
                             <tbody>
                             <?php foreach ($controllers as $controller => $actions) : ?>
                             <tr class="controller">
-                                <td title="<?php echo $actions['description']; ?>" class="td1 description">
-                                <?php echo $controller; ?>
+                                <td class="td1 description">
+                                <span class="tooltiptitle" data-toggle="tooltip" title="<?php echo $actions['description']; ?>"><?php echo $controller; ?></span>                                
                                 </td>
                                 <td style="text-align: center" class="<?php if (!empty($actions['all']['access'])) { echo 'access'; } else { if (!empty($actions['someaccess'])) { echo 'someAccess'; } else { echo 'noAccess'; }} ?>">
                                 <?php if (!empty($actions['all']['access'])) : ?>
