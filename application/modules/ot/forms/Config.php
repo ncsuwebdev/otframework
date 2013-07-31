@@ -42,7 +42,7 @@ class Ot_Form_Config extends Twitter_Bootstrap_Form
                     array(array('wrapperField' => 'HtmlTag'), array('tag' => 'div', 'class' => 'fields')),                
                     array('Label', array('placement' => 'append', 'class' => 'field-label')),      
                     array('Description', array('placement' => 'append', 'tag' => 'div', 'class' => 'field-description')),                     
-                    array(array('empty' => 'HtmlTag'), array('placement' => 'append', 'tag' => 'div', 'class' => 'ui-helper-clearfix')),
+                    array(array('empty' => 'HtmlTag'), array('placement' => 'append', 'tag' => 'div', 'class' => 'clearfix')),
                     array(array('wrapperAll' => 'HtmlTag'), array( 'tag' => 'div', 'class' => 'field-group')),                    
                 ));
                 
