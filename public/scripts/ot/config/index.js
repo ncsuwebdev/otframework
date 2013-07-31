@@ -1,5 +1,5 @@
 $('document').ready(function() {
-    $('.tips').tipsy({gravity: 'w', fade: false});
+    $('.tips').tooltip();
 
     $('#section').change(function(e) {
         $('fieldset').hide();

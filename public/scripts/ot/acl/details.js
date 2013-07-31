@@ -1,5 +1,7 @@
 $('document').ready(function() {
-    $('.description').tipsy({gravity: 'e', fade: true});
+    //$('.description').tipsy({gravity: 'e', fade: true});
+    
+    $('.tooltiptitle').tooltip();
     
     $('.allAccess').each(function() {
 
