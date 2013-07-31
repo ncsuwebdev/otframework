@@ -324,12 +324,10 @@ class Ot_Bootstrap extends Ot_Application_Module_Bootstrap
         $tr = new Ot_Layout_ThemeRegister(); 
         
         $defaultTheme = new Ot_Layout_Theme('default', 'Default Theme', 'The default theme.', realpath(APPLICATION_PATH . '/../public/themes/ot/default'));                
-        //$defaultTheme->addCss('themes/ot/default/public/jQueryUI/ui.all.css', 'prepend');
         $defaultTheme->addCss('themes/ot/default/public/css/layout.css', 'prepend');
         
         $ncsuTheme = new Ot_Layout_Theme('ncsu', 'NC State Theme', 'Theme based on the NC State Homepage', realpath(APPLICATION_PATH . '/../public/themes/ot/ncsu'));        
                    
-        //$ncsuTheme->addCss('themes/ot/ncsu/public/jQueryUI/ui.all.css', 'prepend');
         $ncsuTheme->addCss('themes/ot/ncsu/public/css/layout.css', 'prepend');   
         $ncsuTheme->addCss('css/ncsubootstrap/css/ncsu-bootstrap.css', 'prepend');
         
