@@ -19,6 +19,7 @@ span#linkPrefix {
     padding-right: 3px;    
 }
 
+
 div.elm {
     margin-bottom: 10px;
     line-height: 20px;
@@ -46,6 +47,7 @@ fieldset legend {
     padding: 0 5px;
     font-weight: bold;
 }
+
 
 #saveNavButton.highlight {
 	border: 2px solid #fb3;
