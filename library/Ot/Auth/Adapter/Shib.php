@@ -31,4 +31,4 @@
  * @copyright  Copyright (c) 2007 NC State University Office of
  *             Information Technology
  */
-class Ot_Auth_Adapter_Shib implements \NCSU\Auth\Adapter\ShibAuthAdapter {}
+class Ot_Auth_Adapter_Shib extends \NCSU\Auth\Adapter\ShibAuthAdapter {}
