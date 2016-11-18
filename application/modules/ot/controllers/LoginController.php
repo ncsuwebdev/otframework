@@ -64,7 +64,7 @@ class Ot_LoginController extends Zend_Controller_Action
 
         $loginForms = array();
 
-        $realm = 'local'; //set a default value for $realm, since it's required
+        $realm = 'shib'; //set a default value for $realm, since it's required
 
         foreach ($adapters as $adapter) {
 
