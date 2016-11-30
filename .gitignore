@@ -1,6 +1,7 @@
 application.ini
 .DS_Store
 .DS_Store?
+.idea/
 
 /nbproject/private/
 /nbproject/
