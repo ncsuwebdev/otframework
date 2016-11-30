@@ -50,9 +50,8 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
 
         // Email address field
         $email = $this->createElement('text', 'emailAddress', array('label' => 'model-account-emailAddress'));
-        $email->setRequired(true)
-              ->addFilter('StringTrim')
-              ->addValidator('EmailAddress');
+        $email->addFilter('StringTrim')
+            ->setAttrib('readonly', 'readonly');
 
         $timezone = $this->createElement('select', 'timezone', array('label' => 'model-account-timezone'));
         $timezone->addMultiOptions(Ot_Model_Timezone::getTimezoneList());
@@ -101,14 +100,14 @@ class Ot_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         if (is_null($thisHost)) {
             throw new Ot_Exception_Data('msg-error-objectNotSetup');
         }
-        
+
         $customAttributes = $thisHost->getAttributes();
-        
+
         foreach ($customAttributes as $a) {
             $elm = $a['var']->renderFormElement();
             $elm->clearDecorators();
             $elm->setBelongsTo('customAttributes');
-            
+
             $this->addElement($elm);
         }
 
