@@ -381,7 +381,12 @@ class Ot_AccountController extends Zend_Controller_Action
         $me = (Zend_Auth::getInstance()->getIdentity()->accountId == $this->_userData['accountId']);
         
         $formData = $this->_userData;
-              
+
+        // override email, populate with unity
+        if (isset($formData['username'])) {
+            // @TODO: Move string portion to config
+            $formData['emailAddress'] = $formData['username'] . "@ncsu.edu";
+        }
         
         if (isset($formData['accountAttributes'])) {
             foreach ($formData['accountAttributes'] as $key => $a) {
