@@ -41,7 +41,7 @@ class Ot_EmailqueueController extends Zend_Controller_Action
         $filterTrigger = $this->_getParam('trigger', 'any');
 
         $filterSort = $this->_getParam('sort', 'queueDt');
-        $filterDirection = $this->_getParam('direction', 'asc');
+        $filterDirection = $this->_getParam('direction', 'desc');
 
         $form = new Ot_Form_EmailqueueSearch();
         $form->populate($_GET);
