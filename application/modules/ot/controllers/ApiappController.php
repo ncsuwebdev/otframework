@@ -287,8 +287,9 @@ class Ot_ApiappController extends Zend_Controller_Action
 
 
         if ($this->_request->isPost()) {
-
-            $apiApp->delete($thisApp->appId);
+    
+            $where = $apiApp->getAdapter()->quoteInto('appId = ?', $thisApp->appId);
+            $apiApp->delete($where);
 
             $this->_helper->messenger->addSuccess('ot-apiapp-delete:applicationRemoved');
 
